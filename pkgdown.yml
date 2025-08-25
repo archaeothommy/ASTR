@@ -1,5 +1,9 @@
 pandoc: 3.1.11
 pkgdown: 2.1.3
 pkgdown_sha: ~
-articles: {}
-last_built: 2025-08-25T13:38Z
+articles:
+  ASTR: ASTR.html
+last_built: 2025-08-25T15:31Z
+urls:
+  reference: https://example.com/reference
+  article: https://example.com/articles
