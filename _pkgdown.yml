@@ -1,4 +1,11 @@
-url: ~
+url: https://example.com
+
+home:
+  title: 'ASTR: Archaeological Science Toolbox in R'
+  description: |
+    coming soon
+
 template:
   bootstrap: 5
+  light-switch: true
 

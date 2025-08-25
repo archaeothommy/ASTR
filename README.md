@@ -20,5 +20,5 @@ You can install the development version of ASTR from
 
 ``` r
 # install.packages("pak")
-pak::pak("archaeothommy/ASTR")
+#pak::pak("archaeothommy/ASTR")
 ```
