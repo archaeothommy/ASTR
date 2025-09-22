@@ -1,0 +1,38 @@
+---
+title: "Workflow"
+format: html
+---
+
+Please find below the suggested steps to write a function for the ASTR package. 
+
+# Preparation 
+
+You can do all these steps within R Studio in the "git" and "Files" panes. 
+
+One team member: 
+
+1. Pull the latest version of ASTR from Github. 
+2. Create a new branch, name is like the function or something else telling. 
+3. Make sure you are working on the new branch. 
+4. Place copies of the relevant documents located in the folder `dev_guide` in the proper directories and rename them to the function name while leaving "ASTR_" intact. Usually, these are at least: 
+  * Folder `R`: ASTR_function.R
+  * Folder `tests`: ASTR_test.R
+5. Push the changes to GitHub. 
+
+All: pull the latest version from Github and switch to the new branch. 
+
+# Writing
+
+1. Populate the files according to the guidelines in them. 
+  * Function body
+  * Documentation
+  * Examples (part of the documentation block)
+  * Tests (in the test file)
+ 
+2. Check the function: 
+  * Make sure all tests succeed
+  * Lint function
+
+# Document the function
+
+[Use markdown tags](https://roxygen2.r-lib.org/articles/markdown.html), to insert links, lists and other formatted text in the documentation. They are more easily readable than the [native Roxygen tags](https://roxygen2.r-lib.org/articles/formatting.html). 
