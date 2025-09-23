@@ -7,7 +7,7 @@
 
 [![R-CMD-check](https://github.com/archaeothommy/ASTR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/archaeothommy/ASTR/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/archaeothommy/ASTR/graph/badge.svg)](https://app.codecov.io/gh/archaeothommy/ASTR)
+coverage](https://codecov.io/gh/archaeothommy/ASTR/graph/badge.svg)](https://codecov.io/gh/archaeothommy/ASTR)
 
 <!-- badges: end -->
 
