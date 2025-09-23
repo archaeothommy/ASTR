@@ -9,3 +9,17 @@ template:
   bootstrap: 5
   light-switch: true
 
+navbar:
+  structure:
+    left: [reference, articles, news]
+    right: [search, github]
+
+# reference:
+#  - title: "Data import and export"
+#    desc: >
+#      Functions to import and export data
+#    contents:
+#    - <function>
+#  - title: ...
+# see  https://pkgdown.r-lib.org/articles/pkgdown.html#reference for further details
+# repeat for articles and other section, see e.g. https://github.com/r-lib/usethis/blob/main/_pkgdown.yml

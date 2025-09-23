@@ -2,10 +2,10 @@
 #' <Title of function>
 #'
 #' @description
-#' < What the function does, 1 or 2 sentences>
+#' <What the function does, 1 or 2 sentences>
 #'
 #' @details
-#' < Any text written here goes into the "Details" section >
+#' <Any text written here goes into the "Details" section>
 #'
 #'
 #' @param argument1 < Explain type of argument and what it does here. If you set
@@ -14,10 +14,10 @@
 #' @param ... Further arguments passed to <name functions>.
 #'
 #' @references
-#' < include here any relevant literature references>
+#' <include here any relevant literature references>
 #'
 #' @returns
-#' < Describe the output of the function. This part goes into the "Value" section>
+#' <Describe the output of the function. This part goes into the "Value" section>
 #'
 #' @export # remove if the function should not be visible to the user
 #'
