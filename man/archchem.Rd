@@ -15,7 +15,7 @@ read_archchem(path)
 
 \method{format}{archchem}(x, ...)
 
-\method{print}{archchem}(x, only_header = FALSE, ...)
+\method{print}{archchem}(x, ...)
 
 remove_units(x, ...)
 }

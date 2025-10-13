@@ -56,13 +56,11 @@ format.archchem <- function(x, ...) {
 
 #' @rdname archchem
 #' @export
-print.archchem <- function(x, only_header = FALSE, ...) {
+print.archchem <- function(x, ...) {
   # own format function
   cat(format(x, ...), "\n")
-  if (!only_header) {
-    # add table printed like a tibble
-    x %>% `class<-`(c("tbl", "tbl_df", "data.frame")) %>% print
-  }
+  # add table printed like a tibble
+  x %>% `class<-`(c("tbl", "tbl_df", "data.frame")) %>% print
 }
 
 #' @rdname archchem
