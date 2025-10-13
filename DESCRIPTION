@@ -14,14 +14,17 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
-    vdiffr,
+    vdiffr
+Imports:
     checkmate,
-    readr,
-    tibble,
     dplyr,
+    magrittr,
     purrr,
-    units,
-    magrittr
+    readr,
+    rlang,
+    tibble,
+    tidyselect,
+    units
 Config/testthat/edition: 3
 Depends: 
     R (>= 3.5)
