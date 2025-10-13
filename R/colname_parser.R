@@ -1,3 +1,10 @@
+#### column type constructor mechanism ####
+
+# define the correct constructor function for an archchem column
+# based on some clever parsing of the column name
+# SI-unit column types are defined with the units package
+# https://cran.r-project.org/web/packages/units/index.html
+# (so the udunits library)
 colnames_to_constructor <- function(x) {
   purrr::map(
     colnames(x),
@@ -69,7 +76,7 @@ colnames_to_constructor <- function(x) {
   )
 }
 
-#### define regex patters ####
+#### regex validators ####
 
 is_isotope_ratio_colname <- function(colname) {
   grepl(isotope_ratio(), colname, perl = TRUE)
@@ -90,6 +97,8 @@ extract_unit_string <- function(colname) {
 extract_delta_epsilon_string <- function(colname) {
   substr(colname, 1, 1)
 }
+
+#### regex patterns ####
 
 # collate vectors to string with | to indicate OR in regex
 isotopes_list <- \() { paste0(isotopes, collapse = "|") }
