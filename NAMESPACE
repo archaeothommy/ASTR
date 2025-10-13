@@ -2,3 +2,5 @@
 
 export(as.archchem)
 export(read_archchem)
+importFrom(magrittr,"%>%")
+importFrom(rlang,.data)

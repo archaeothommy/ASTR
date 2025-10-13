@@ -20,7 +20,8 @@ Suggests:
     tibble,
     dplyr,
     purrr,
-    units
+    units,
+    magrittr
 Config/testthat/edition: 3
 Depends: 
     R (>= 3.5)

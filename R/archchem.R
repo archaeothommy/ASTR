@@ -13,7 +13,7 @@ as.archchem <- function(x, ...) {
   # input checks
   checkmate::assert_data_frame(x)
   # determine and apply column types
-  modify_columns(x) |>
+  modify_columns(x) %>%
     # turn into tibble-derived object
     tibble::new_tibble(., nrow = nrow(.), class = "archchem")
 }

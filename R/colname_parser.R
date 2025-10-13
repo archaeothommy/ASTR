@@ -46,16 +46,17 @@ colnames_to_constructor <- function(x) {
 #### define regex patters ####
 
 is_isotope_ratio_colname <- function(colname) {
-  grepl(concentrations,colname, perl = TRUE)
+  grepl(isotope_ratio(), colname, perl = TRUE)
 }
 is_elemental_ratio_colname <- function(colname) {
-  grepl(concentrations,colname, perl = TRUE)
+  grepl(elemental_ratio(), colname, perl = TRUE)
 }
 is_concentration_colname <- function(colname) {
-  grepl(concentrations,colname, perl = TRUE)
+  grepl(concentrations(), colname, perl = TRUE)
 }
 extract_unit_string <- function(colname) {
-  regexpr("(?<=_).*", colname, perl = TRUE)
+  pos <- regexpr("(?<=_).*", colname, perl = TRUE)
+  regmatches(colname, pos)
 }
 
 # collate vectors to string with | to indicate OR in regex
