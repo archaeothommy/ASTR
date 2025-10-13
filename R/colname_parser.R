@@ -25,9 +25,16 @@ colnames_to_constructor <- function(x) {
         if (is_concentration_colname(colname)) {
           # get unit from column name
           unit_from_col <- extract_unit_string(colname)
+          # handling special cases
+          unit_from_col_modified <- dplyr::case_match(
+            unit_from_col,
+            c("at%", "wt%") ~ "%",
+            .default = unit_from_col
+          )
+          # applying unit
           construct_unit <- purrr::partial(
             units::set_units,
-            value = unit_from_col,
+            value = unit_from_col_modified,
             mode = "standard"
           ) |>
             purrr::compose(as.numeric)
