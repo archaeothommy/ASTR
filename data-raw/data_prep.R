@@ -15,8 +15,6 @@ elements <- c(
   "V", "W", "Xe", "Y", "Yb", "Zn", "Zr"
 )
 
-usethis::use_data(elements, overwrite = T)
-
 oxides <- c(
   # retrieved from https://www.wikidoc.org/index.php/Oxide,
   # sorted according to alphabet
@@ -33,8 +31,6 @@ oxides <- c(
   "Tm2O3", "UO2", "UO3", "V2O3", "V2O5", "VO", "VO2", "W2O3", "WO2", "WO3",
   "XeO3", "XeO4", "Y2O3", "Yb2O3", "ZnO", "ZrO2"
 )
-
-usethis::use_data(oxides, overwrite = T)
 
 isotopes <- c(
   # all naturally occurring isotopes, retrieved from https://www.ciaaw.org/isotopic-abundances.htm
@@ -75,7 +71,7 @@ isotopes <- c(
   "232Th", "231Pa", "234U", "235U", "238U"
 )
 
-usethis::use_data(isotopes, overwrite = T)
+usethis::use_data(elements, oxides, isotopes, overwrite = T, internal = T)
 
 # units <- c(
 #   # This is mostly to check for potential typos in units, not for hard matching

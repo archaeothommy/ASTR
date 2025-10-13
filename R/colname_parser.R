@@ -92,18 +92,9 @@ extract_delta_epsilon_string <- function(colname) {
 }
 
 # collate vectors to string with | to indicate OR in regex
-isotopes_list <- \() {
-  utils::data("isotopes", package = "ASTR", envir = environment())
-  paste0(isotopes, collapse = "|")
-}
-elements_list <- \() {
-  utils::data("elements", package = "ASTR", envir = environment())
-  paste0(elements, collapse = "|")
-}
-oxides_list <- \() {
-  utils::data("oxides", package = "ASTR", envir = environment())
-  paste0(oxides, collapse = "|")
-}
+isotopes_list <- \() { paste0(isotopes, collapse = "|") }
+elements_list <- \() { paste0(elements, collapse = "|") }
+oxides_list <- \() { paste0(oxides, collapse = "|") }
 ox_elem_list <- \() paste0(oxides_list(), "|", elements_list())
 ox_elem_iso_list <- \() paste0(ox_elem_list(), "|", isotopes_list())
 

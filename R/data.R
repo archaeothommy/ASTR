@@ -6,7 +6,7 @@
 #'
 #' @family chemical_reference_data
 #' @name elements
-NULL
+"elements"
 
 #' Oxides
 #'
@@ -17,7 +17,7 @@ NULL
 #'
 #' @family chemical_reference_data
 #' @name oxides
-NULL
+"oxides"
 
 #' Isotopes
 #'
@@ -28,4 +28,4 @@ NULL
 #'
 #' @family chemical_reference_data
 #' @name isotopes
-NULL
+"isotopes"
