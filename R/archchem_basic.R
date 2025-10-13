@@ -64,3 +64,28 @@ print.archchem <- function(x, only_header = FALSE, ...) {
     x %>% `class<-`(c("tbl", "tbl_df", "data.frame")) %>% print
   }
 }
+
+#' @rdname archchem
+#' @export
+remove_units <- function(x, ...) {
+  UseMethod("remove_units")
+}
+
+#' @export
+remove_units.default <- function(x, ...) {
+  stop("x is not an object of class archchem")
+}
+
+#' @export
+remove_units.archchem <- function(x, ...) {
+   without_units <- dplyr::mutate(
+      x,
+      dplyr::across(
+        tidyselect::where(\(x) {
+          class(x) == "units"
+        }),
+        units::drop_units
+      )
+    )
+   tibble::as_tibble(without_units)
+}

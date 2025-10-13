@@ -6,6 +6,7 @@
 \alias{read_archchem}
 \alias{format.archchem}
 \alias{print.archchem}
+\alias{remove_units}
 \title{\strong{archchem}}
 \usage{
 as.archchem(df, ...)
@@ -15,6 +16,8 @@ read_archchem(path)
 \method{format}{archchem}(x, ...)
 
 \method{print}{archchem}(x, only_header = FALSE, ...)
+
+remove_units(x, ...)
 }
 \arguments{
 \item{df}{a data.frame}
