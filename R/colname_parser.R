@@ -1,0 +1,116 @@
+colnames_to_constructor <- function(x) {
+  purrr::map(
+    colnames(x),
+    function(colname) {
+      # use while for hacky switch statement
+      while (TRUE) {
+        # ratios
+        if (is_isotope_ratio_colname(colname) || is_elemental_ratio_colname(colname)) {
+          # create a partial constructor function,
+          # where the unit is already set
+          construct_unit <- purrr::partial(
+            units::set_units,
+            value = "1", # dimensionless unit, unscaled
+            mode = "standard"
+          ) |>
+            # compose it with a function to
+            # make the input numeric
+            # (this will be called first)
+            purrr::compose(as.numeric)
+          # return constructor function ready to be applied
+          return(construct_unit)
+          break
+        }
+        # concentrations
+        if (is_concentration_colname(colname)) {
+          # get unit from column name
+          unit_from_col <- extract_unit_string(colname)
+          construct_unit <- purrr::partial(
+            units::set_units,
+            value = unit_from_col,
+            mode = "standard"
+          ) |>
+            purrr::compose(as.numeric)
+          return(construct_unit)
+          break
+        }
+        # everything not recognized by the parser:
+        # guess the column type
+        return(readr::parse_guess)
+        break
+      }
+    }
+  )
+}
+
+#### define regex patters ####
+
+is_isotope_ratio_colname <- function(colname) {
+  grepl(concentrations,colname, perl = TRUE)
+}
+is_elemental_ratio_colname <- function(colname) {
+  grepl(concentrations,colname, perl = TRUE)
+}
+is_concentration_colname <- function(colname) {
+  grepl(concentrations,colname, perl = TRUE)
+}
+extract_unit_string <- function(colname) {
+  regexpr("(?<=_).*", colname, perl = TRUE)
+}
+
+# collate vectors to string with | to indicate OR in regex
+isotopes_list <- \() {
+  utils::data("isotopes", package = "ASTR", envir = environment())
+  paste0(isotopes, collapse = "|")
+}
+elements_list <- \() {
+  utils::data("elements", package = "ASTR", envir = environment())
+  paste0(elements, collapse = "|")
+}
+oxides_list <- \() {
+  utils::data("oxides", package = "ASTR", envir = environment())
+  paste0(oxides, collapse = "|")
+}
+ox_elem_list <- \() paste0(oxides_list(), "|", elements_list())
+ox_elem_iso_list <- \() paste0(ox_elem_list(), "|", isotopes_list())
+
+# define regex pattern for isotope ratio:
+# any isotope followed by a / and another isotope, e.g. 206Pb/204Pb
+isotope_ratio <- \() paste0("(", isotopes_list(), ")/(", isotopes_list(), ")")
+
+# define regex pattern for delta and espilon notation:
+# letter d OR e followed by any isotope
+isotope_notation <- \() {
+  paste0(
+    "(", paste0(c("d", "e"), collapse = "|"),
+    ")(", isotopes_list(), ")"
+  )
+}
+
+# define regex pattern for element ratios:
+# any combination of two elements or oxides connected by + , - or / that may or
+# may not be enclosed in parentheses followed by a / and any combination of two
+# elements or oxides connected by +, -, or / that may or may not be enclosed in
+# parentheses, e.g. Sb/As, SiO2/Feo, (Al2O3+SiO2)/(K2O-Na20), (Feo/Mno)/(SiO2)
+elemental_ratio <- \() {
+  paste0(
+    "\\(?(", ox_elem_list(), ")([\\+-/](",
+    ox_elem_list(), "))?\\)?/\\(?(",
+    ox_elem_list(), ")([\\+-/](",
+    ox_elem_list(), "))?\\)?"
+  )
+}
+
+# define regex pattern for concentrations:
+# any combination of one or more elements, isotopes, or oxides connected by
+# + or - and followed by an underscore that may or may be enclosed in
+# parentheses, e.g. Sb_, Feo+SiO2_, (Al2O3+SiO2)_
+# The underscore enforces that concentrations always have a unit and prevents
+# partial matching in elemental ratios
+concentrations <- \() {
+  paste0(
+    "^\\(?(",
+    ox_elem_iso_list(), ")(?!/)((\\+|-)(",
+    ox_elem_iso_list(), "))*\\)?_"
+  )
+}
