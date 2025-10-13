@@ -4,18 +4,26 @@
 \alias{archchem}
 \alias{as.archchem}
 \alias{read_archchem}
+\alias{format.archchem}
+\alias{print.archchem}
 \title{\strong{archchem}}
 \usage{
-as.archchem(x, ...)
+as.archchem(df, ...)
 
 read_archchem(path)
+
+\method{format}{archchem}(x, ...)
+
+\method{print}{archchem}(x, only_header = FALSE, ...)
 }
 \arguments{
-\item{x}{a data.frame}
+\item{df}{a data.frame}
 
 \item{...}{further arguments passed to or from other methods}
 
 \item{path}{path to the file that should be read}
+
+\item{x}{an object of class archchem}
 }
 \description{
 A data format for chemical analysis datasets in archaeology

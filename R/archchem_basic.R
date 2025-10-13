@@ -5,17 +5,24 @@
 #'
 #' @description A data format for chemical analysis datasets in archaeology
 #'
-#' @param x a data.frame
+#' @param df a data.frame
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-as.archchem <- function(x, ...) {
+as.archchem <- function(df, ...) {
   # input checks
-  checkmate::assert_data_frame(x)
+  checkmate::assert_data_frame(df)
   # determine and apply column types
-  modify_columns(x) %>%
+  modify_columns(df) %>%
     # turn into tibble-derived object
     tibble::new_tibble(., nrow = nrow(.), class = "archchem")
+}
+
+modify_columns <- function(x) {
+  # determine column type constructors from column names
+  constructors <- colnames_to_constructor(x)
+  # apply column type constructors
+  purrr::map2(x, constructors, function(col, f) f(col))
 }
 
 #' @param path path to the file that should be read
@@ -35,10 +42,25 @@ read_archchem <- function(path) {
   as.archchem(input_file)
 }
 
-modify_columns <- function(x) {
-  # determine column type constructors from column names
-  constructors <- colnames_to_constructor(x)
-  # apply column type constructors
-  purrr::map2(x, constructors, function(col, f) f(col))
+#' @param x an object of class archchem
+#' @rdname archchem
+#' @export
+format.archchem <- function(x, ...) {
+  out_str <- list()
+  # compile information
+  out_str$title <- "\033[1marchchem table\033[22m"
+  # merge information
+  return_value <- paste(out_str, collapse = "\n", sep = "")
+  invisible(return_value)
 }
 
+#' @rdname archchem
+#' @export
+print.archchem <- function(x, only_header = FALSE, ...) {
+  # own format function
+  cat(format(x, ...), "\n")
+  if (!only_header) {
+    # add table printed like a tibble
+    x %>% `class<-`(c("tbl", "tbl_df", "data.frame")) %>% print
+  }
+}
