@@ -21,17 +21,36 @@ colnames_to_constructor <- function(x) {
           return(construct_unit)
           break
         }
+        # delta/epsilon ratios
+        if (is_isotope_delta_epsilon(colname)) {
+          delta_epsilon <- extract_delta_epsilon_string(colname)
+          construct_unit <- purrr::partial(
+            units::set_units,
+            value = "%",
+            mode = "standard"
+          ) |>
+            purrr::compose(\(x) {
+              if (delta_epsilon == "d") {
+                x/10 # per mille -> percent
+              } else if (delta_epsilon == "e") {
+                x/100 # parts per 10000 -> percent
+              }
+            }) |>
+            purrr::compose(as.numeric)
+          return(construct_unit)
+          break
+        }
         # concentrations
         if (is_concentration_colname(colname)) {
           # get unit from column name
           unit_from_col <- extract_unit_string(colname)
-          # handling special cases
+          # handle special cases
           unit_from_col_modified <- dplyr::case_match(
             unit_from_col,
             c("at%", "wt%") ~ "%",
             .default = unit_from_col
           )
-          # applying unit
+          # apply unit
           construct_unit <- purrr::partial(
             units::set_units,
             value = unit_from_col_modified,
@@ -55,6 +74,9 @@ colnames_to_constructor <- function(x) {
 is_isotope_ratio_colname <- function(colname) {
   grepl(isotope_ratio(), colname, perl = TRUE)
 }
+is_isotope_delta_epsilon <- function(colname) {
+  grepl(isotope_delta_epsilon(), colname, perl = TRUE)
+}
 is_elemental_ratio_colname <- function(colname) {
   grepl(elemental_ratio(), colname, perl = TRUE)
 }
@@ -64,6 +86,9 @@ is_concentration_colname <- function(colname) {
 extract_unit_string <- function(colname) {
   pos <- regexpr("(?<=_).*", colname, perl = TRUE)
   regmatches(colname, pos)
+}
+extract_delta_epsilon_string <- function(colname) {
+  substr(colname, 1, 1)
 }
 
 # collate vectors to string with | to indicate OR in regex
@@ -88,7 +113,7 @@ isotope_ratio <- \() paste0("(", isotopes_list(), ")/(", isotopes_list(), ")")
 
 # define regex pattern for delta and espilon notation:
 # letter d OR e followed by any isotope
-isotope_notation <- \() {
+isotope_delta_epsilon <- \() {
   paste0(
     "(", paste0(c("d", "e"), collapse = "|"),
     ")(", isotopes_list(), ")"
