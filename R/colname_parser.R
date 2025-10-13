@@ -38,9 +38,9 @@ colnames_to_constructor <- function(x) {
           ) |>
             purrr::compose(\(x) {
               if (delta_epsilon == "d") {
-                x/10 # per mille -> percent
+                x / 10 # per mille -> percent
               } else if (delta_epsilon == "e") {
-                x/100 # parts per 10000 -> percent
+                x / 100 # parts per 10000 -> percent
               }
             }) |>
             purrr::compose(as.numeric)
@@ -101,9 +101,15 @@ extract_delta_epsilon_string <- function(colname) {
 #### regex patterns ####
 
 # collate vectors to string with | to indicate OR in regex
-isotopes_list <- \() { paste0(isotopes, collapse = "|") }
-elements_list <- \() { paste0(elements, collapse = "|") }
-oxides_list <- \() { paste0(oxides, collapse = "|") }
+isotopes_list <- \() {
+  paste0(isotopes, collapse = "|")
+}
+elements_list <- \() {
+  paste0(elements, collapse = "|")
+}
+oxides_list <- \() {
+  paste0(oxides, collapse = "|")
+}
 ox_elem_list <- \() paste0(oxides_list(), "|", elements_list())
 ox_elem_iso_list <- \() paste0(ox_elem_list(), "|", isotopes_list())
 

@@ -60,7 +60,9 @@ print.archchem <- function(x, ...) {
   # own format function
   cat(format(x, ...), "\n")
   # add table printed like a tibble
-  x %>% `class<-`(c("tbl", "tbl_df", "data.frame")) %>% print
+  x %>%
+    `class<-`(c("tbl", "tbl_df", "data.frame")) %>%
+    print()
 }
 
 #' @rdname archchem
@@ -76,14 +78,14 @@ remove_units.default <- function(x, ...) {
 
 #' @export
 remove_units.archchem <- function(x, ...) {
-   without_units <- dplyr::mutate(
-      x,
-      dplyr::across(
-        tidyselect::where(\(x) {
-          class(x) == "units"
-        }),
-        units::drop_units
-      )
+  without_units <- dplyr::mutate(
+    x,
+    dplyr::across(
+      tidyselect::where(\(x) {
+        class(x) == "units"
+      }),
+      units::drop_units
     )
-   tibble::as_tibble(without_units)
+  )
+  tibble::as_tibble(without_units)
 }

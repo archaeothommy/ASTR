@@ -79,4 +79,3 @@ usethis::use_data(elements, oxides, isotopes, overwrite = T, internal = T)
 # )
 #
 # usethis::use_data(isotopes, overwrite = T)
-

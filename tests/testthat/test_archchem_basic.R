@@ -6,4 +6,3 @@ test_that("reading of a basic example table works as expected", {
     as.data.frame(example)
   })
 })
-
