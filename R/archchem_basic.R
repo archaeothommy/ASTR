@@ -9,7 +9,7 @@
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-as.archchem <- function(df, ...) {
+as_archchem <- function(df, ...) {
   # input checks
   checkmate::assert_data_frame(df)
   # determine and apply column types
@@ -39,7 +39,7 @@ read_archchem <- function(path) {
     # remove columns without a header
     dplyr::select(!tidyselect::starts_with("..."))
   # transform to desired data type
-  as.archchem(input_file)
+  as_archchem(input_file)
 }
 
 #' @param x an object of class archchem

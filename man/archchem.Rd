@@ -2,14 +2,14 @@
 % Please edit documentation in R/archchem_basic.R
 \name{archchem}
 \alias{archchem}
-\alias{as.archchem}
+\alias{as_archchem}
 \alias{read_archchem}
 \alias{format.archchem}
 \alias{print.archchem}
 \alias{remove_units}
 \title{\strong{archchem}}
 \usage{
-as.archchem(df, ...)
+as_archchem(df, ...)
 
 read_archchem(path)
 

@@ -71,7 +71,7 @@ isotopes <- c(
   "232Th", "231Pa", "234U", "235U", "238U"
 )
 
-usethis::use_data(elements, oxides, isotopes, overwrite = T, internal = T)
+usethis::use_data(elements, oxides, isotopes, overwrite = TRUE, internal = TRUE)
 
 # units <- c(
 #   # This is mostly to check for potential typos in units, not for hard matching
