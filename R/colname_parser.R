@@ -19,7 +19,7 @@ colnames_to_constructor <- function(x) {
             units::set_units,
             value = "1", # dimensionless unit, unscaled
             mode = "standard"
-          ) |>
+          ) %>%
             # compose it with a function to
             # make the input numeric
             # (this will be called first)
@@ -35,14 +35,14 @@ colnames_to_constructor <- function(x) {
             units::set_units,
             value = "%",
             mode = "standard"
-          ) |>
+          ) %>%
             purrr::compose(\(x) {
               if (delta_epsilon == "d") {
                 x / 10 # per mille -> percent
               } else if (delta_epsilon == "e") {
                 x / 100 # parts per 10000 -> percent
               }
-            }) |>
+            }) %>%
             purrr::compose(as.numeric)
           return(construct_unit)
           break
@@ -62,7 +62,7 @@ colnames_to_constructor <- function(x) {
             units::set_units,
             value = unit_from_col_modified,
             mode = "standard"
-          ) |>
+          ) %>%
             purrr::compose(as.numeric)
           return(construct_unit)
           break
