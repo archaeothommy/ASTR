@@ -101,25 +101,25 @@ extract_delta_epsilon_string <- function(colname) {
 #### regex patterns ####
 
 # collate vectors to string with | to indicate OR in regex
-isotopes_list <- \() {
+isotopes_list <- function() {
   paste0(isotopes, collapse = "|")
 }
-elements_list <- \() {
+elements_list <- function() {
   paste0(elements, collapse = "|")
 }
-oxides_list <- \() {
+oxides_list <- function() {
   paste0(oxides, collapse = "|")
 }
-ox_elem_list <- \() paste0(oxides_list(), "|", elements_list())
-ox_elem_iso_list <- \() paste0(ox_elem_list(), "|", isotopes_list())
+ox_elem_list <- function() paste0(oxides_list(), "|", elements_list())
+ox_elem_iso_list <- function() paste0(ox_elem_list(), "|", isotopes_list())
 
 # define regex pattern for isotope ratio:
 # any isotope followed by a / and another isotope, e.g. 206Pb/204Pb
-isotope_ratio <- \() paste0("(", isotopes_list(), ")/(", isotopes_list(), ")")
+isotope_ratio <- function() paste0("(", isotopes_list(), ")/(", isotopes_list(), ")")
 
 # define regex pattern for delta and espilon notation:
 # letter d OR e followed by any isotope
-isotope_delta_epsilon <- \() {
+isotope_delta_epsilon <- function() {
   paste0(
     "(", paste0(c("d", "e"), collapse = "|"),
     ")(", isotopes_list(), ")"
@@ -131,7 +131,7 @@ isotope_delta_epsilon <- \() {
 # may not be enclosed in parentheses followed by a / and any combination of two
 # elements or oxides connected by +, -, or / that may or may not be enclosed in
 # parentheses, e.g. Sb/As, SiO2/Feo, (Al2O3+SiO2)/(K2O-Na20), (Feo/Mno)/(SiO2)
-elemental_ratio <- \() {
+elemental_ratio <- function() {
   paste0(
     "\\(?(", ox_elem_list(), ")([\\+-/](",
     ox_elem_list(), "))?\\)?/\\(?(",
@@ -146,7 +146,7 @@ elemental_ratio <- \() {
 # parentheses, e.g. Sb_, Feo+SiO2_, (Al2O3+SiO2)_
 # The underscore enforces that concentrations always have a unit and prevents
 # partial matching in elemental ratios
-concentrations <- \() {
+concentrations <- function() {
   paste0(
     "^\\(?(",
     ox_elem_iso_list(), ")(?!/)((\\+|-)(",

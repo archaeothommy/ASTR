@@ -35,7 +35,7 @@ read_archchem <- function(path) {
     col_types = readr::cols(.default = readr::col_character()),
     na = c("", "n/a", "NA"),
     name_repair = "unique_quiet"
-  ) |>
+  ) %>%
     # remove columns without a header
     dplyr::select(!tidyselect::starts_with("..."))
   # transform to desired data type
