@@ -1,7 +1,6 @@
 # reading of a basic example table works as expected
 
     Code
-      test_input <- read_archchem("input_format.csv")
       as.data.frame(test_input)
     Output
         206Pb/204Pb Al2O3_% SiO2+Al2O3_ppt 204Pb_ppm other other2 K2O_wt%       d18O
