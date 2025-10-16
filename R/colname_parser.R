@@ -36,7 +36,7 @@ colnames_to_constructor <- function(x) {
             value = "%",
             mode = "standard"
           ) %>%
-            purrr::compose(\(x) {
+            purrr::compose(function(x) {
               if (delta_epsilon == "d") {
                 x / 10 # per mille -> percent
               } else if (delta_epsilon == "e") {

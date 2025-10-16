@@ -81,7 +81,7 @@ remove_units.archchem <- function(x, ...) {
   without_units <- dplyr::mutate(
     x,
     dplyr::across(
-      tidyselect::where(\(x) {
+      tidyselect::where(function(x) {
         class(x) == "units"
       }),
       units::drop_units
