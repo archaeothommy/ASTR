@@ -9,3 +9,4 @@
 ^dev_guide$
 ^data-raw$
 ^\.lintr$
+^LICENSE\.md$
