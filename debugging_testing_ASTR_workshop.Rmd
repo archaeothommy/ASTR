@@ -10,6 +10,10 @@ editor_options:
 
 ## Debugging
 
+Finding and fixing issues in code.
+
+### Demonstration
+
 - See faulty function `testfun` in test.R
 - Build the package
 - Run with `ASTR::testfun(3)`to demonstrate how the function fails
@@ -24,5 +28,89 @@ Interactive:
 - Set input variables in global environment `x <- 3`
 - Run the function with the REPL
 
+## Testing
 
+Running code to validate its behavior.
+
+### Goals
+
+- Validation: Making sure that the code performs exactly as expected,
+              also for edge cases.
+- Robustness: Ensuring that future modifications by the code do not interfere
+              with the expected behavior.
+- Documentation: Showing how the code is intended to be used.
+(- Planning: Describing expectations for code that still needs to be written;
+             test-driven development.)
+
+### Types of tests (as relevant for R package development)
+
+- Unit tests: Low level tests of individual pieces of code (functions).
+- Integration/Functional tests: Tests to check workflows and the interaction
+                                of functions.
+
+- Golden/Snapshot tests: Validate the output of a function against a pre-defined,
+                         supposedly correct, "golden" output
+- Property tests: Run tests not on specific-predefined input, but on dynamically
+                  generated input that fulfills certain properties.
+
+### Setup
+
+- The testthat R package: https://testthat.r-lib.org
+- A good introduction: https://r-pkgs.org/testing-basics.html
+
+- Tests live in `tests/testthat` and require some technical overhead/settings
+- Tests for a certain context (e.g. pca analysis) live in files named `test_....R`
+- All tests can be run with `devtools::test()` (or Ctrl+Shift+T in RStudio)
+
+### Examples
+
+```{r}
+library(testthat)
+```
+
+#### Unit tests
+
+Function of interest:
+
+```{r}
+testfun <- function(x) {
+  y <- x + 5
+  z <- y + 6
+  return(z)
+}
+```
+
+Basic test setup by defining expectations:
+
+```{r}
+# working
+test_that("behaves as expected for specific input", {
+  expect_equal(testfun(3), 14)
+})
+# failing
+test_that("behaves as expected for specific input", {
+  expect_equal(testfun(3), 13)
+})
+# multiple expectations
+test_that("behaves as expected for specific input", {
+  expect_equal(testfun(3), 14)
+  expect_equal(testfun(4), 15)
+})
+# expectations implemented in testthat
+test_that("behaves as expected for specific input", {
+  expect_true(testfun(3) == 14)
+  expect_gt(testfun(3), 13)
+  expect_type(testfun(3), "double")
+  expect_error(testfun("my_string"))
+  expect_silent(testfun(3))
+})
+```
+
+#### Snapshot tests
+
+...
+
+#### Plot tests
+
+#### Property tests
 
