@@ -156,6 +156,7 @@ Test if a plot can be reproduced.
 
 - :warning: The exact rendering of a plot depends on many factors. Plot tests tend to be extremely brittle.
 - vdiffr is a testthat extension for monitoring the appearance of R plots. It generates reproducible SVG files and registers them as testthat snapshots.
+- https://github.com/r-lib/vdiffr
 
 Demonstration as above:
 
@@ -179,6 +180,8 @@ test_that("as_archchem transform input data.frames correctly", {
 
 Run tests not on specific-predefined input, but on dynamically generated input that fulfills certain properties.
 
+- quickcheck https://github.com/armcn/quickcheck
+
 Motivation:
 
 ```{r}
@@ -193,7 +196,8 @@ test_that("behaves as expected for specific input", {
 })
 ```
 
-- The quickcheck R package (named after its Haskell ancestor) allows to test more generally for properties of functions, by trying lots of inputs.
+- The quickcheck R package (named after its Haskell ancestor) allows to test more generally for properties of functions, by trying lots of random inputs.
+- https://github.com/armcn/quickcheck
 
 ```{r}
 library(quickcheck)
@@ -206,4 +210,4 @@ test_that("map won't fail with any vector as input", {
 })
 ```
 
-
+:warning: Running many of iterations frequently may be pointless and wastefull.
