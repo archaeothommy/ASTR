@@ -34,24 +34,31 @@ Running code to validate its behavior.
 
 ### Goals
 
-- Validation: Making sure that the code performs exactly as expected,
-              also for edge cases.
-- Robustness: Ensuring that future modifications by the code do not interfere
-              with the expected behavior.
-- Documentation: Showing how the code is intended to be used.
-(- Planning: Describing expectations for code that still needs to be written;
-             test-driven development.)
+- Validation:
+    Making sure that the code performs exactly as expected,
+    also for edge cases.
+- Robustness:
+    Ensuring that future modifications by the code do not interfere
+    with the expected behavior.
+- Documentation:
+    Showing how the code is intended to be used.
+(- Planning:
+    Describing expectations for code that still needs to be written;
+    test-driven development.)
 
 ### Types of tests (as relevant for R package development)
 
-- Unit tests: Low level tests of individual pieces of code (functions).
-- Integration/Functional tests: Tests to check workflows and the interaction
-                                of functions.
+- Unit tests:
+    Low level tests of individual pieces of code (functions).
+- Integration/Functional tests:
+    Tests to check workflows and the interaction of functions.
 
-- Golden/Snapshot tests: Validate the output of a function against a pre-defined,
-                         supposedly correct, "golden" output.
-- Property tests: Run tests not on specific-predefined input, but on dynamically
-                  generated input that fulfills certain properties.
+- Golden/Snapshot tests:
+    Validate the output of a function against a pre-defined,
+    supposedly correct, "golden" output.
+- Property based tests:
+    Run tests not on specific-predefined input, but on dynamically
+    generated input that fulfills certain properties.
 
 ### Setup
 
@@ -120,7 +127,7 @@ Example: https://github.com/nevrome/currycarbon
 - :warning: Excessive use can get unwieldy.
 - testthat can automatically generate and update output snapshots in a human-readable form.
 
-#### Demonstration
+##### Demonstration
 
 - Copy the following test to `test_archchem_basic.R`
 
@@ -143,7 +150,68 @@ test_that("as_archchem transform input data.frames correctly", {
 - Accept change with `testthat::snapshot_accept('archchem_basic')`
 - Run tests again to register the difference.
 
-#### Plot tests
+##### Plot tests
 
-#### Property tests
+Test if a plot can be reproduced.
+
+- :warning: The exact rendering of a plot depends on many factors. Plot tests tend to be extremely brittle.
+- vdiffr is a testthat extension for monitoring the appearance of R plots. It generates reproducible SVG files and registers them as testthat snapshots.
+
+Demonstration as above:
+
+```{r}
+library(ggplot2) # add to tests/testthat/setup.R
+
+p <- ggplot() +
+  geom_point(
+    data = iris,
+    aes(x = Sepal.Length, y = Sepal.Width, colour = Species)
+  )
+
+test_that("as_archchem transform input data.frames correctly", {
+  expect_snapshot({
+    vdiffr::expect_doppelganger("Iris data test plot", p)
+  })
+})
+```
+
+#### Property based tests
+
+Run tests not on specific-predefined input, but on dynamically generated input that fulfills certain properties.
+
+Motivation:
+
+```{r}
+# increment the first element of any numerical vector by 1
+# and return a numerical vector
+testfun2 <- function(x) {
+  x[1] <- x[1] + 1
+  return(x)
+}
+
+# working
+test_that("behaves as expected for specific input", {
+  expect_equal(testfun2(c(1,2,3)), c(2,2,3))
+})
+test_that("behaves as expected for specific input", {
+  expect_vector(testfun2(c(1,2,3)))
+})
+# but
+test_that("behaves as expected for specific input", {
+  expect_vector(testfun2(c()))
+})
+```
+
+- The quickcheck R package (named after its Haskell ancestor) allows to test more generally for properties of functions, by trying lots of inputs.
+
+```{r}
+library(quickcheck)
+test_that("map won't fail with any vector as input", {
+  for_all(
+    a = any_vector(),
+    property = function(a) purrr::map(a, identity) %>% expect_silent()
+  )
+})
+```
+
 
