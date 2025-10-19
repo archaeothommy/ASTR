@@ -1,0 +1,28 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Debugging & testing in R
+
+- Some practical advice how to (1) debug R code and how to (2) use testing in R package development.
+
+## Debugging
+
+- See faulty function `testfun` in test.R
+- Build the package
+- Run with `ASTR::testfun(3)`to demonstrate how the function fails
+
+With the debugger:
+
+- Set debug flags, rebuild the package
+- Run again and use the debugger
+
+Interactive:
+
+- Set input variables in global environment `x <- 3`
+- Run the function with the REPL
+
+
+
