@@ -182,23 +182,14 @@ Run tests not on specific-predefined input, but on dynamically generated input t
 Motivation:
 
 ```{r}
-# increment the first element of any numerical vector by 1
-# and return a numerical vector
-testfun2 <- function(x) {
-  x[1] <- x[1] + 1
-  return(x)
-}
-
+testfun2 <- function(x) { log(x) }
 # working
 test_that("behaves as expected for specific input", {
-  expect_equal(testfun2(c(1,2,3)), c(2,2,3))
-})
-test_that("behaves as expected for specific input", {
-  expect_vector(testfun2(c(1,2,3)))
+  expect_lt(testfun2(3), 3)
 })
 # but
 test_that("behaves as expected for specific input", {
-  expect_vector(testfun2(c()))
+  expect_lt(testfun2(-1), -1)
 })
 ```
 
@@ -208,8 +199,9 @@ test_that("behaves as expected for specific input", {
 library(quickcheck)
 test_that("map won't fail with any vector as input", {
   for_all(
-    a = any_vector(),
-    property = function(a) purrr::map(a, identity) %>% expect_silent()
+    a = numeric_(len = 1),
+    property = function(a) { expect_lt(testfun2(a), a) },
+    tests = 100
   )
 })
 ```
