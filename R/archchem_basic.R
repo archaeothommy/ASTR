@@ -26,15 +26,54 @@ modify_columns <- function(x) {
 }
 
 #' @param path path to the file that should be read
+#' @param delim A character string with the separator for tabular data. Use
+#'   `\t` for tab-separated data. Must be provided for all file
+#'   types except `.xlsx` or `.xls`.
+#' @param na Character vector of strings to be interpret as missing values.
 #' @rdname archchem
 #' @export
-read_archchem <- function(path) {
+read_archchem <- function(path, delim, na = c("", "n/a", "NA")) {
+  ext <- strsplit(basename(path), split = "\\.")[[1]][-1] # extract file format
+
+  if (!(ext %in% c("xlsx", "xls", "csv")) && missing(delim)) {
+    stop("Missing argument: delim")
+  }
+
+  if (ext %in% c("xlsx", "xls") && !requireNamespace("readxl")) {
+    stop("Import of Excel files requires the package `readxl`. Please install it or choose another file format.")
+  }
+
   # read input as character columns only
-  input_file <- readr::read_csv(
-    path,
-    col_types = readr::cols(.default = readr::col_character()),
-    na = c("", "n/a", "NA"),
-    name_repair = "unique_quiet"
+  input_file <- switch(ext,
+    csv = {
+      readr::read_csv(
+        path,
+        col_types = readr::cols(.default = readr::col_character()),
+        na = na,
+        name_repair = "unique_quiet"
+      )
+    },
+    xlsx = {
+      readxl::read_excel(
+        path,
+        col_types = "text",
+        na = na
+      )
+    },
+    xls = {
+      readxl::read_excel(
+        path,
+        col_types = "character",
+        na = na
+      )
+    },
+    readr::read_delim(
+      path,
+      delim = delim,
+      col_types = readr::cols(.default = readr::col_character()),
+      na = na,
+      name_repair = "unique_quiet"
+    )
   ) %>%
     # remove columns without a header
     dplyr::select(!tidyselect::starts_with("..."))

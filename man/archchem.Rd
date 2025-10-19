@@ -11,7 +11,7 @@
 \usage{
 as_archchem(df, ...)
 
-read_archchem(path)
+read_archchem(path, delim, na = c("", "n/a", "NA"))
 
 \method{format}{archchem}(x, ...)
 
@@ -25,6 +25,12 @@ remove_units(x, ...)
 \item{...}{further arguments passed to or from other methods}
 
 \item{path}{path to the file that should be read}
+
+\item{delim}{A character string with the separator for tabular data. Use
+\verb{\\t} for tab-separated data. Must be provided for all file
+types except \code{.xlsx} or \code{.xls}.}
+
+\item{na}{Character vector of strings to be interpret as missing values.}
 
 \item{x}{an object of class archchem}
 }
