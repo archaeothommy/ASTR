@@ -54,14 +54,14 @@ read_archchem <- function(path, delim, na = c("", "n/a", "NA")) {
       )
     },
     xlsx = {
-      readxl::read_excel(
+      readxl::read_xlsx(
         path,
         col_types = "text",
         na = na
       )
     },
     xls = {
-      readxl::read_excel(
+      readxl::read_xls(
         path,
         col_types = "character",
         na = na
