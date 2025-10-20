@@ -5,6 +5,7 @@
 #' @export
 testfun <- function(x) {
   y <- x + 5
-  z <- y + "cheesecake"
+  s <- "cheesecake"
+  z <- y + s
   return(z)
 }

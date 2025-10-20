@@ -14,7 +14,7 @@ Finding and fixing issues in code.
 
 ### Demonstration
 
-- See faulty function `testfun` in test.R
+- See faulty function `testfun` in `R/test.R`
 - Build the package
 - Run with `ASTR::testfun(3)`to demonstrate how the function fails
 
@@ -72,10 +72,6 @@ Running code to validate its behavior.
 
 ### Examples
 
-```{r}
-library(testthat)
-```
-
 #### Unit tests
 
 Low level tests of individual pieces of code (functions).
@@ -93,21 +89,22 @@ testfun <- function(x) {
 Basic test setup by defining expectations:
 
 ```{r}
+library(testthat)
 # working
-test_that("behaves as expected for specific input", {
+test_that("testfun behaves as expected for specific input", {
   expect_equal(testfun(3), 14)
 })
 # failing
-test_that("behaves as expected for specific input", {
+test_that("testfun behaves as expected for specific input", {
   expect_equal(testfun(3), 13)
 })
 # multiple expectations
-test_that("behaves as expected for specific input", {
+test_that("testfun behaves as expected for specific input", {
   expect_equal(testfun(3), 14)
   expect_equal(testfun(4), 15)
 })
 # expectations implemented in testthat
-test_that("behaves as expected for specific input", {
+test_that("testfun behaves as expected for specific input", {
   expect_true(testfun(3) == 14)
   expect_gt(testfun(3), 13)
   expect_type(testfun(3), "double")
@@ -143,22 +140,22 @@ test_that("as_archchem transform input data.frames correctly", {
 })
 ```
 
-- Run tests with `devtools::test()`: Snapshot gets automatically created
-- Inspect .md at `tests/testthat/_snaps`
-- Run tests again to see the tests pass
-- Modify test and run again to see a snapshot test fail
-- Accept change with `testthat::snapshot_accept('archchem_basic')`
+- Run tests with `devtools::test()`: Snapshot gets automatically created.
+- Inspect .md at `tests/testthat/_snaps`.
+- Run tests again to see the tests pass.
+- Modify test and run again to see a snapshot test fail.
+- Accept change with `testthat::snapshot_accept('archchem_basic')`.
 - Run tests again to register the difference.
 
 ##### Plot tests
 
 Test if a plot can be reproduced.
 
-- :warning: The exact rendering of a plot depends on many factors. Plot tests tend to be extremely brittle.
+- :warning: The exact rendering of a plot depends on many factors. Plot tests tend to be brittle.
 - vdiffr is a testthat extension for monitoring the appearance of R plots. It generates reproducible SVG files and registers them as testthat snapshots.
 - https://github.com/r-lib/vdiffr
 
-Demonstration as above:
+Demonstration (as above):
 
 ```{r}
 library(ggplot2) # add to tests/testthat/setup.R
@@ -180,18 +177,16 @@ test_that("as_archchem transform input data.frames correctly", {
 
 Run tests not on specific-predefined input, but on dynamically generated input that fulfills certain properties.
 
-- quickcheck https://github.com/armcn/quickcheck
-
 Motivation:
 
 ```{r}
 testfun2 <- function(x) { log(x) }
 # working
-test_that("behaves as expected for specific input", {
+test_that("testfun2 behaves as expected for specific input", {
   expect_lt(testfun2(3), 3)
 })
 # but
-test_that("behaves as expected for specific input", {
+test_that("testfun2 behaves as expected for specific input", {
   expect_lt(testfun2(-1), -1)
 })
 ```
@@ -200,8 +195,8 @@ test_that("behaves as expected for specific input", {
 - https://github.com/armcn/quickcheck
 
 ```{r}
-library(quickcheck)
-test_that("map won't fail with any vector as input", {
+library(quickcheck) # add to tests/testthat/setup.R
+test_that("testfun2 won't fail with any numerical input", {
   for_all(
     a = numeric_(len = 1),
     property = function(a) { expect_lt(testfun2(a), a) },
@@ -210,4 +205,4 @@ test_that("map won't fail with any vector as input", {
 })
 ```
 
-:warning: Running many of iterations frequently may be pointless and wastefull.
+:warning: Running many of iterations frequently may be wasteful.
