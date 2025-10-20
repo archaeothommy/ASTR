@@ -113,13 +113,13 @@ test_that("testfun behaves as expected for specific input", {
 })
 ```
 
-Example: https://github.com/ropensci/c14bazAAR
+Example: https://github.com/ropensci/c14bazAAR (`tests/testthat`)
 
 #### Golden/Snapshot tests
 
 Validate the output of a function against a pre-defined, supposedly correct, "golden" output.
 
-Example: https://github.com/nevrome/currycarbon
+Example: https://github.com/nevrome/currycarbon (`test/golden`)
 
 - :warning: Excessive use can get unwieldy.
 - testthat can automatically generate and update output snapshots in a human-readable form.
@@ -206,3 +206,27 @@ test_that("testfun2 won't fail with any numerical input", {
 ```
 
 :warning: Running many of iterations frequently may be wasteful.
+
+## Exercise
+
+- Clone the ASTR repo: `git clone git@github.com:archaeothommy/ASTR.git`
+- Switch to this branch: `git switch debugging_testing_demonstration`
+- Place the following function in a new .R file `reverse.R`
+
+```{r}
+reverse <- function(x) {
+  n <- length(x)
+  for (i in 1:floor(n/2)) {
+    a <- x[i]
+    b <- x[(n+1)-i]
+    x[i] <- b
+    x[(n+1)-i] <- a
+  }
+  return(x)
+}
+```
+
+It takes a vector and reverses its elements: `reverse(c(1,2,3,4))`.
+
+- Build the package
+- Add meaningful tests in a new file `tests/testthat/test_reverse.R` and run them
