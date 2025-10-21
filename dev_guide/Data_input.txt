@@ -1,0 +1,27 @@
+# Data input
+
+* units to add: counts or cps, g, 
+* elements: LE
+* LOI *must* be provided as concentration
+* Elements for elements, oxides for oxides, followed by _<unit>; principally currently defined patterns
+* Conversion between oxides and elements; consider environment (oxidising/reducing) through switch in conversion function
+* Recommendation on metadata columns, check for other obligatory metadata in the function where they are needed
+* analytical precision: _err2SD, _errSD, _errSD%, _errSD%, _errSE, _err2SE, including switch in read in function if all errors are the same (e.g. error = "2SD")
+* Create identifier columns with name "ID", if not create inside <filename><rownumber>, input argument to specify which column in ID column
+* Identify and flag missing values as warning, specifying exact location
+* Summary of the read-in results
+* Metadata columns are specified to recognise typos etc. in column headers
+
+
+# Handling bdl values
+* identifier for bdl values + value to what it should be replaced with
+* should be feature of the as. function
+
+# Data validation/checking
+* Concentration way beyond analytical precision: with argument taking threshold expressed as multiples of analytical precision: warning
+* Duplicates (ID and/or if entire rows are the same): Flag as warning
+* Concentrations are reasonably constrained with argument taking min+max threshold and default value: warning
+
+* check potential function in robcompositions (and elsewhere)
+
+read_archem("path", MEtadata = c(…), id = "", bdl_is = c(…), bdl_to = "")
