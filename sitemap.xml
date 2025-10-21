@@ -1,11 +1,17 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://archaeothommy.github.io/ASTR/404.html</loc></url>
+<url><loc>https://archaeothommy.github.io/ASTR/LICENSE-text.html</loc></url>
+<url><loc>https://archaeothommy.github.io/ASTR/LICENSE.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/articles/ASTR.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/articles/index.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/authors.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/index.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/news/index.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/ASTR-package.html</loc></url>
+<url><loc>https://archaeothommy.github.io/ASTR/reference/archchem.html</loc></url>
+<url><loc>https://archaeothommy.github.io/ASTR/reference/elements.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/index.html</loc></url>
+<url><loc>https://archaeothommy.github.io/ASTR/reference/isotopes.html</loc></url>
+<url><loc>https://archaeothommy.github.io/ASTR/reference/oxides.html</loc></url>
 </urlset>
 
