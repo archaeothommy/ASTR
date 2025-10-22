@@ -21,7 +21,7 @@ test_that("check_columns_exist throws error when columns are missing", {
 test_that("check_columns_exist throws error on non-dataframe input", {
   expect_error(
     check_columns_exist("not_a_dataframe", c("name")),
-    regexp = "Data needs to be a tibble or data frame!"
+    regexp = "Must be of type 'data.frame', not 'character'"
   )
 })
 
