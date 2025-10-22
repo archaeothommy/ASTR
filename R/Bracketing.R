@@ -16,9 +16,9 @@
 #' <include here any relevant literature references>
 #'
 #' @returns
-#' <Describe the output of the function. This part goes into the "Value" section>
+#' This function is a useful tool for automating a common practice in handling isotope data. It reduces the likelihood of human error and saves time.
 #'
-#' @export # remove if the function should not be visible to the user
+#' @export
 #'
 #' @examples
 #' <write here any example code. These are small simple examples on how to use
