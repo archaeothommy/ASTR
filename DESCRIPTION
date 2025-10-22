@@ -14,8 +14,7 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
-    vdiffr,
-    tibble
+    vdiffr
 Imports:
     checkmate,
     dplyr,
