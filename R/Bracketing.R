@@ -2,7 +2,7 @@
 #' Managing standard bracketing
 #'
 #' @description
-#' Working with standard bracketing during analysis
+#' Working with standard bracketing during analysis laboratory
 #'
 #' @details
 #' <Any text written here goes into the "Details" section>
@@ -25,10 +25,10 @@
 #' the function or to highlight specific features>
 
 Bracketing <- function(df, std = "", pos=0) { # update name and arguments. The ellipsis parameter is special in R, use with care!
-  
+
   if std=="":
     print("You need to assign the ID of the standard.")
     return ()
-  
-  
+
+
 }
