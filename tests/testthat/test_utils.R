@@ -1,5 +1,5 @@
 # Sample tibble for tests
-df <- tibble(
+df <- tibble::tibble(
   id = 1:2,
   name = c("Alice", "Bob"),
   age = c(30, 25),
@@ -40,7 +40,7 @@ test_that("filter_columns_with_id throws error if required column is missing", {
 })
 
 test_that("filter_columns_with_id throws error if 'id' is missing", {
-  df_no_id <- tibble(
+  df_no_id <- tibble::tibble(
     name = c("Alice", "Bob"),
     age = c(30, 25)
   )
