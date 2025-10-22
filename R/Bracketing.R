@@ -6,7 +6,7 @@
 #'
 #' @details
 #' <Any text written here goes into the "Details" section>
-#'
+#'details details  vvvvvvvvvvvvvvvvvvvv
 #'
 #' @param df < Dataframe with analysis results from the machine>
 #' @param ID_std string, <ID of the standard for bracketing>. The default value is "".
@@ -25,10 +25,10 @@
 #' the function or to highlight specific features>
 
 Bracketing <- function(df, std = "", pos=0) { # update name and arguments. The ellipsis parameter is special in R, use with care!
-  
+
   if std=="":
     print("You need to assign the ID of the standard.")
     return ()
-  
-  
+
+
 }
