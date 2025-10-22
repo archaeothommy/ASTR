@@ -2,14 +2,13 @@
 % Please edit documentation in R/ASTR_PbIso_AgeModels.R
 \name{age_models}
 \alias{age_models}
-\alias{LI_model_age}
-\alias{Stacey_Kramers_1975}
-\alias{Cumming_Richards_1975}
-\alias{Albarede_et_al_2012}
-\alias{Albarede_Juteau_1984}
+\alias{pb_iso_age_model}
+\alias{stacey_kramers_1975}
+\alias{cumming_richards_1975}
+\alias{albarede_juteau_1984}
 \title{Calculate lead isotope age models}
 \usage{
-LI_model_age(
+pb_iso_age_model(
   data,
   ratio_206_204 = "206Pb/204Pb",
   ratio_207_204 = "207Pb/204Pb",
@@ -17,21 +16,21 @@ LI_model_age(
   model = c("SK75", "CR75", "AJ84", "all")
 )
 
-Stacey_Kramers_1975(
+stacey_kramers_1975(
   data,
   ratio_206_204 = "206Pb/204Pb",
   ratio_207_204 = "207Pb/204Pb",
   ratio_208_204 = "208Pb/204Pb"
 )
 
-Cumming_Richards_1975(
+cumming_richards_1975(
   data,
   ratio_206_204 = "206Pb/204Pb",
   ratio_207_204 = "207Pb/204Pb",
   ratio_208_204 = NULL
 )
 
-Albarede_Juteau_1984(
+albarede_juteau_1984(
   data,
   ratio_206_204 = "206Pb/204Pb",
   ratio_207_204 = "207Pb/204Pb",
@@ -67,15 +66,15 @@ the output by the abbreviations given above.
 \description{
 The functions calculate the age model and their respective mu and kappa
 values according to the publications they are named after (see
-\emph{References}). \code{\link[=LI_model_age]{LI_model_age()}} provides a wrapper for them and allows
+\emph{References}). \code{\link[=pb_iso_age_model]{pb_iso_age_model()}} provides a wrapper for them and allows
 to calculate all age models simultaneously.
 }
 \details{
 The implemented age models are:
 \itemize{
-\item Stacey & Kramers (1975): \code{\link[=Stacey_Kramers_1975]{Stacey_Kramers_1975()}}
-\item Cumming & Richards (1975): \code{\link[=Cumming_Richards_1975]{Cumming_Richards_1975()}}
-\item Albarède & Juteau (1984): \code{\link[=Albarede_Juteau_1984]{Albarede_Juteau_1984()}}
+\item Stacey & Kramers (1975): \code{\link[=stacey_kramers_1975]{stacey_kramers_1975()}}
+\item Cumming & Richards (1975): \code{\link[=cumming_richards_1975]{cumming_richards_1975()}}
+\item Albarède & Juteau (1984): \code{\link[=albarede_juteau_1984]{albarede_juteau_1984()}}
 }
 
 The used model is indicated in the column names of the output by the initials
@@ -86,7 +85,7 @@ See the references for the respective publications of the age models. The
 function for the age model of Albarède & Juteau (1984) is based on the
 MATLAB-script of F. Albarède (version 2020-11-06).
 
-The ratio of 208Pb/204Pb is not necessary for \link{Cumming_Richards_1975}.
+The ratio of 208Pb/204Pb is not necessary for \link{cumming_richards_1975}.
 The function takes it as argument only to be consistent with the input of the
 other age model functions. If provided, it will be ignored.
 
@@ -95,8 +94,22 @@ according to F. Albarède and is therefore not implemented. Instead, use the
 age model published in Albarède & Juteau (1984).
 }
 \examples{
-# example code
+# creating example data
+data <- tibble::tibble(
+  `206Pb/204Pb` = runif(5, min = 18, max = 18.5),
+  `207Pb/204Pb` = runif(5, min = 15, max = 15.5),
+  `208Pb/204Pb` = runif(5, min = 2, max = 2.2)
+)
 
+# calculate values for all age models
+pb_iso_age_model(data, model = "all")
+
+# calculate values for a specific age model
+pb_iso_age_model(data, model = "SK75")
+stacey_kramers_1975(data)
+
+# Include model age parameters in the dataset
+cbind(data, pb_iso_age_model(data, model = "SK75"))
 }
 \references{
 Albarède, F. and Juteau, M. (1984) Unscrambling the lead model
