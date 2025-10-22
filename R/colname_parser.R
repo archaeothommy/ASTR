@@ -5,12 +5,17 @@
 # SI-unit column types are defined with the units package
 # https://cran.r-project.org/web/packages/units/index.html
 # (so the udunits library)
-colnames_to_constructor <- function(x) {
-  purrr::map(
+colnames_to_constructors <- function(x, context) {
+  purrr::imap(
     colnames(x),
-    function(colname) {
+    function(colname, idx) {
       # use while for hacky switch statement
       while (TRUE) {
+        # contextual columns
+        if (idx %in% context || colname %in% context) {
+          return(identity)
+          break
+        }
         # ratios
         if (is_isotope_ratio_colname(colname) || is_elemental_ratio_colname(colname)) {
           # create a partial constructor function,
@@ -68,9 +73,12 @@ colnames_to_constructor <- function(x) {
           break
         }
         # everything not recognized by the parser:
-        # guess the column type
-        return(readr::parse_guess)
-        break
+        # stop with an error
+        stop(paste0(
+          "Column name \"",
+          colname,
+          "\" could not be parsed. Did you mean to set it as a contextual column?"
+        ))
       }
     }
   )

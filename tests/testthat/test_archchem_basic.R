@@ -1,7 +1,8 @@
 # golden tests
 
 test_input <- read_archchem(
-  system.file("extdata", "input_format.csv", package = "ASTR")
+  system.file("extdata", "input_format.csv", package = "ASTR"),
+  context = c("other", "other2")
 )
 
 test_that("reading of a basic example table works as expected", {

@@ -9,18 +9,18 @@
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-as_archchem <- function(df, ...) {
+as_archchem <- function(df, context = c(), ...) {
   # input checks
   checkmate::assert_data_frame(df)
   # determine and apply column types
-  modify_columns(df) %>%
+  modify_columns(df, context) %>%
     # turn into tibble-derived object
     tibble::new_tibble(., nrow = nrow(.), class = "archchem")
 }
 
-modify_columns <- function(x) {
+modify_columns <- function(x, context = c()) {
   # determine column type constructors from column names
-  constructors <- colnames_to_constructor(x)
+  constructors <- colnames_to_constructors(x, context)
   # apply column type constructors
   purrr::map2(x, constructors, function(col, f) f(col))
 }
@@ -32,7 +32,9 @@ modify_columns <- function(x) {
 #' @param na Character vector of strings to be interpret as missing values.
 #' @rdname archchem
 #' @export
-read_archchem <- function(path, delim, na = c("", "n/a", "NA")) {
+read_archchem <- function(
+  path, context = c(), delim = "\t", na = c("", "n/a", "NA")
+) {
   ext <- strsplit(basename(path), split = "\\.")[[1]][-1] # extract file format
 
   if (!(ext %in% c("xlsx", "xls", "csv")) && missing(delim)) {
@@ -78,7 +80,7 @@ read_archchem <- function(path, delim, na = c("", "n/a", "NA")) {
     # remove columns without a header
     dplyr::select(!tidyselect::starts_with("..."))
   # transform to desired data type
-  as_archchem(input_file)
+  as_archchem(input_file, context)
 }
 
 #' @param x an object of class archchem
