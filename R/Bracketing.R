@@ -6,7 +6,8 @@
 #'
 #' @details
 #' This function corrects for instrumental drift or mass bias during isotopic analyses.
-#' The measured isotope value of each sample is linearly interpolated between the two standard measurements taken immediately before and after the sample measurement
+#' The measured isotope value of each sample is linearly interpolated between the two standard measurements taken immediately before and after the sample measurement.
+#' This function is a useful tool for automating a common practice in handling isotope data. It reduces the likelihood of human error and saves time.
 #'
 #' @param df Data frame containing isotope data. It must include at least two columns: one with sample IDs and another with isotope ratios, ordered according to the sequence of analysis.
 #' @param ID_std Character string indicating the ID of the standard used for bracketing.The same ID must be used consistently throughout the column.
@@ -16,7 +17,7 @@
 #' Mason, Thomas F.D., Dominik J. Weiss, Matthew Horstwood, Randall R. Parrish, Sara S. Russell, Eta Mullaneb and Barry J. Colesa. 2004. High-precision Cu and Zn isotope analysis by plasma source mass spectrometry. Journal of Analytical Atomic Spectrometry, 19, 209-217. DOI	https://doi.org/10.1039/B306958C
 #'
 #' @returns
-#' This function is a useful tool for automating a common practice in handling isotope data. It reduces the likelihood of human error and saves time.
+#' A data frame
 #'
 #' @export
 #'
