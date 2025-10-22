@@ -13,7 +13,7 @@
 #' @param pos Integer indicating the row position of the first standard in the bracketing sequence.
 #'
 #' @references
-#' <include here any relevant literature references>
+#' Mason, Thomas F.D., Dominik J. Weiss, Matthew Horstwood, Randall R. Parrish, Sara S. Russell, Eta Mullaneb and Barry J. Colesa. 2004. High-precision Cu and Zn isotope analysis by plasma source mass spectrometry. Journal of Analytical Atomic Spectrometry, 19, 209-217. DOI	https://doi.org/10.1039/B306958C
 #'
 #' @returns
 #' This function is a useful tool for automating a common practice in handling isotope data. It reduces the likelihood of human error and saves time.
