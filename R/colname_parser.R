@@ -13,7 +13,15 @@ colnames_to_constructors <- function(x, context) {
       while (TRUE) {
         # contextual columns
         if (idx %in% context || colname %in% context) {
-          return(identity)
+          return(
+            function(x) {
+              readr::parse_guess(
+                x
+                # TODO: Add anything here that may be
+                # passed to read_archchem, e.g. NA values
+              )
+            }
+          )
           break
         }
         # ratios
