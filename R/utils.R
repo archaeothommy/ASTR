@@ -1,9 +1,7 @@
 #' @export
 check_columns_exist <- function(data, columns) {
   #
-  if (!checkmate::assert_data_frame(df)) {
-    stop("Data needs to be a tibble or data frame!")
-  }
+  checkmate::assert_data_frame(data)
 
   missing_cols <- setdiff(columns, colnames(data))
 
