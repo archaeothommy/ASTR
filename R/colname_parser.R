@@ -15,69 +15,88 @@ colnames_to_constructors <- function(x, context) {
         if (idx %in% context || colname %in% context) {
           return(
             function(x) {
-              readr::parse_guess(
+              x <- readr::parse_guess(
                 x
                 # TODO: Add anything here that may be
                 # passed to read_archchem, e.g. NA values
               )
+              x <- add_class(x, "archchem_context")
+              return(x)
             }
           )
           break
         }
         # ratios
-        if (is_isotope_ratio_colname(colname) || is_elemental_ratio_colname(colname)) {
-          # create a partial constructor function,
-          # where the unit is already set
-          construct_unit <- purrr::partial(
-            units::set_units,
-            value = "1", # dimensionless unit, unscaled
-            mode = "standard"
-          ) %>%
-            # compose it with a function to
-            # make the input numeric
-            # (this will be called first)
-            purrr::compose(as.numeric)
-          # return constructor function ready to be applied
-          return(construct_unit)
+        if (is_isotope_ratio_colname(colname)) {
+          return(
+            function(x) {
+              x <- as.numeric(x)
+              x <- add_class(x, c("archchem_isotope", "archchem_ratio"))
+              return(x)
+            }
+          )
           break
         }
-        # delta/epsilon ratios
         if (is_isotope_delta_epsilon(colname)) {
           delta_epsilon <- extract_delta_epsilon_string(colname)
-          construct_unit <- purrr::partial(
-            units::set_units,
-            value = "%",
-            mode = "standard"
-          ) %>%
-            purrr::compose(function(x) {
-              if (delta_epsilon == "d") {
-                x / 10 # per mille -> percent
-              } else if (delta_epsilon == "e") {
-                x / 100 # parts per 10000 -> percent
-              }
-            }) %>%
-            purrr::compose(as.numeric)
-          return(construct_unit)
+          return(
+            function(x) {
+              # if (delta_epsilon == "d") {
+              #   x / 10 # per mille -> percent
+              # } else if (delta_epsilon == "e") {
+              #   x / 100 # parts per 10000 -> percent
+              # }
+              x <- as.numeric(x)
+              x <- add_class(x, c("archchem_element", "archchem_ratio"))
+              return(x)
+            }
+          )
+          break
+        }
+        if (is_elemental_ratio_colname(colname)) {
+          return(
+            function(x) {
+              x <- as.numeric(x)
+              x <- add_class(x, c("archchem_element", "archchem_ratio"))
+              return(x)
+            }
+          )
           break
         }
         # concentrations
-        if (is_concentration_colname(colname)) {
-          # get unit from column name
+        if (is_concentration_fraction_colname(colname)) {
           unit_from_col <- extract_unit_string(colname)
           # handle special cases
-          unit_from_col_modified <- dplyr::case_match(
-            unit_from_col,
-            c("at%", "wt%") ~ "%",
-            .default = unit_from_col
+          # unit_from_col_modified <- dplyr::case_match(
+          #   unit_from_col,
+          #   c("at%", "wt%") ~ "%",
+          #   .default = unit_from_col
+          # )
+          return(
+            function(x) {
+              x <- as.numeric(x)
+              x <- add_class(x, c("archchem_concentration_fraction"))
+              return(x)
+            }
           )
-          # apply unit
-          construct_unit <- purrr::partial(
-            units::set_units,
-            value = unit_from_col_modified,
-            mode = "standard"
-          ) %>%
-            purrr::compose(as.numeric)
-          return(construct_unit)
+          break
+        }
+        if (is_concentration_other_colname(colname)) {
+          unit_from_col <- extract_unit_string(colname)
+          # handle special cases
+          # unit_from_col_modified <- dplyr::case_match(
+          #   unit_from_col,
+          #   c("at%", "wt%") ~ "%",
+          #   .default = unit_from_col
+          # )
+          return(
+            function(x) {
+              x <- as.numeric(x)
+              x <- units::set_units(x, value = unit_from_col, mode = "standard")
+              x <- add_class(x, c("archchem_concentration_SI"))
+              return(x)
+            }
+          )
           break
         }
         # everything not recognized by the parser:
@@ -92,6 +111,11 @@ colnames_to_constructors <- function(x, context) {
   )
 }
 
+add_class <- function(x, class) {
+  class(x) <- c(class(x), class)
+  return(x)
+}
+
 #### regex validators ####
 
 is_isotope_ratio_colname <- function(colname) {
@@ -103,8 +127,11 @@ is_isotope_delta_epsilon <- function(colname) {
 is_elemental_ratio_colname <- function(colname) {
   grepl(elemental_ratio(), colname, perl = TRUE)
 }
-is_concentration_colname <- function(colname) {
-  grepl(concentrations(), colname, perl = TRUE)
+is_concentration_fraction_colname <- function(colname) {
+  grepl(concentrations_fraction(), colname, perl = TRUE)
+}
+is_concentration_other_colname <- function(colname) {
+  grepl(concentrations_other(), colname, perl = TRUE)
 }
 extract_unit_string <- function(colname) {
   pos <- regexpr("(?<=_).*", colname, perl = TRUE)
@@ -128,6 +155,10 @@ oxides_list <- function() {
 }
 ox_elem_list <- function() paste0(oxides_list(), "|", elements_list())
 ox_elem_iso_list <- function() paste0(ox_elem_list(), "|", isotopes_list())
+
+fraction_type_list <- function() {
+  paste0(c("ppm", "ppb", "ppt", "%", "wt%", "at%", "w/w%", "‰"), collapse = "|")
+}
 
 # define regex pattern for isotope ratio:
 # any isotope followed by a / and another isotope, e.g. 206Pb/204Pb
@@ -162,7 +193,16 @@ elemental_ratio <- function() {
 # parentheses, e.g. Sb_, Feo+SiO2_, (Al2O3+SiO2)_
 # The underscore enforces that concentrations always have a unit and prevents
 # partial matching in elemental ratios
-concentrations <- function() {
+concentrations_fraction <- function() {
+  paste0(
+    "^\\(?(",
+    ox_elem_iso_list(), ")(?!/)((\\+|-)(",
+    ox_elem_iso_list(), "))*\\)?_",
+    fraction_type_list()
+  )
+}
+
+concentrations_other <- function() {
   paste0(
     "^\\(?(",
     ox_elem_iso_list(), ")(?!/)((\\+|-)(",
