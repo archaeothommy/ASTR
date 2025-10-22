@@ -2,7 +2,7 @@
 #' Managing standard bracketing
 #'
 #' @description
-#' Working with standard bracketing during analysis
+#' Working with standard bracketing during analysis laboratory
 #'
 #' @details
 #' <Any text written here goes into the "Details" section>
