@@ -7,6 +7,8 @@
 #'
 #' @param df a data.frame
 #' @param ... further arguments passed to or from other methods
+#' @param id_column ...
+#' @param context ...
 #'
 #' @export
 as_archchem <- function(df, id_column = "ID", context = c(), ...) {

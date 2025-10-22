@@ -157,7 +157,10 @@ ox_elem_list <- function() paste0(oxides_list(), "|", elements_list())
 ox_elem_iso_list <- function() paste0(ox_elem_list(), "|", isotopes_list())
 
 fraction_type_list <- function() {
-  paste0(c("ppm", "ppb", "ppt", "%", "wt%", "at%", "w/w%", "‰"), collapse = "|")
+  paste0(c(
+    "ppm", "ppb", "ppt", "%", "wt%", "at%", "w/w%",
+    "\u2030" # for the per-mille symbol
+  ), collapse = "|")
 }
 
 # define regex pattern for isotope ratio:

@@ -28,6 +28,10 @@ remove_units(x, ...)
 \arguments{
 \item{df}{a data.frame}
 
+\item{id_column}{...}
+
+\item{context}{...}
+
 \item{...}{further arguments passed to or from other methods}
 
 \item{path}{path to the file that should be read}
