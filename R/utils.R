@@ -11,7 +11,7 @@ check_columns_exist <- function(data, columns) {
     stop(paste("Columns missing in dataset:", paste(missing_cols, collapse = ", ")))
   }
 
-  return(TRUE)
+  TRUE
 }
 
 
@@ -24,6 +24,5 @@ filter_columns_with_id <- function(data, columns) {
 
   data_filtered <- data[, required_cols]
 
-  return(data_filtered)
+  data_filtered
 }
-

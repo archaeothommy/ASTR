@@ -48,4 +48,5 @@ test_that("filter_columns_with_id throws error if 'id' is missing", {
     filter_columns_with_id(df_no_id, c("name")),
     regexp = "Columns missing in dataset: id"
   )
-})
+}
+)
