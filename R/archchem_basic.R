@@ -9,13 +9,26 @@
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-as_archchem <- function(df, context = c(), ...) {
+as_archchem <- function(df, id_column = "ID", context = c(), ...) {
   # input checks
   checkmate::assert_data_frame(df)
+  checkmate::assert_names(colnames(df), must.include = id_column)
+  # add ID column to context for the following operation
+  if (class(context) != "character") {
+    context <- colnames(df)[context]
+  }
+  context <- append(context, id_column)
   # determine and apply column types
-  modify_columns(df, context) %>%
+  df <- modify_columns(df, context) %>%
     # turn into tibble-derived object
     tibble::new_tibble(., nrow = nrow(.), class = "archchem")
+  # create/move ID column
+  df <- df %>%
+    dplyr::mutate(
+      ID = .data[[id_column]],
+    ) %>%
+    dplyr::relocate("ID", .before = 1)
+  return(df)
 }
 
 modify_columns <- function(x, context = c()) {
@@ -33,7 +46,10 @@ modify_columns <- function(x, context = c()) {
 #' @rdname archchem
 #' @export
 read_archchem <- function(
-  path, context = c(), delim = "\t", na = c("", "n/a", "NA")
+  path, id_column = "ID", context = c(),
+  delim = "\t",
+  # TODO: also read Excel output in the form #...! as NA
+  na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.")
 ) {
   ext <- strsplit(basename(path), split = "\\.")[[1]][-1] # extract file format
 
@@ -80,7 +96,7 @@ read_archchem <- function(
     # remove columns without a header
     dplyr::select(!tidyselect::starts_with("..."))
   # transform to desired data type
-  as_archchem(input_file, context)
+  as_archchem(input_file, id_column = id_column, context = context)
 }
 
 #' @param x an object of class archchem

@@ -12,7 +12,7 @@ colnames_to_constructors <- function(x, context) {
       # use while for hacky switch statement
       while (TRUE) {
         # contextual columns
-        if (idx %in% context || colname %in% context) {
+        if (colname == "ID" || idx %in% context || colname %in% context) {
           return(
             function(x) {
               x <- readr::parse_guess(

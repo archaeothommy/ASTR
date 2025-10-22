@@ -9,9 +9,15 @@
 \alias{remove_units}
 \title{\strong{archchem}}
 \usage{
-as_archchem(df, context = c(), ...)
+as_archchem(df, id_column = "ID", context = c(), ...)
 
-read_archchem(path, context = c(), delim = "\\t", na = c("", "n/a", "NA"))
+read_archchem(
+  path,
+  id_column = "ID",
+  context = c(),
+  delim = "\\t",
+  na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.")
+)
 
 \method{format}{archchem}(x, ...)
 
