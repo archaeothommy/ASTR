@@ -2,6 +2,7 @@
 
 test_input <- read_archchem(
   system.file("extdata", "input_format.csv", package = "ASTR"),
+  id_column = "other",
   context = c("other", "other2")
 )
 
