@@ -1,16 +1,16 @@
 
-#' Managing standard bracketing
+#' Standard Sample Bracketing
 #'
 #' @description
-#' Working with standard bracketing during analysis laboratory
+#' Performs Standard Sample Bracketing (SSB) correction for isotope ratio data.
 #'
 #' @details
-#' <Any text written here goes into the "Details" section>
-#'details details  vvvvvvvvvvvvvvvvvvvv
+#' This function corrects for instrumental drift or mass bias during isotopic analyses.
+#' The measured isotope value of each sample is linearly interpolated between the two standard measurements taken immediately before and after the sample measurement
 #'
-#' @param df < Dataframe with analysis results from the machine>
-#' @param ID_std string, <ID of the standard for bracketing>. The default value is "".
-#' @param pos integer <position of the first line for bracketing>.
+#' @param df Data frame containing isotope data. It must include at least two columns: one with sample IDs and another with isotope ratios, ordered according to the sequence of analysis.
+#' @param ID_std Character string indicating the ID of the standard used for bracketing.The same ID must be used consistently throughout the column.
+#' @param pos Integer indicating the row position of the first standard in the bracketing sequence.
 #'
 #' @references
 #' <include here any relevant literature references>
