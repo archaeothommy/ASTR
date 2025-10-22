@@ -83,12 +83,11 @@ colnames_to_constructors <- function(x, context) {
         }
         if (is_concentration_other_colname(colname)) {
           unit_from_col <- extract_unit_string(colname)
-          # handle special cases
-          # unit_from_col_modified <- dplyr::case_match(
-          #   unit_from_col,
-          #   c("at%", "wt%") ~ "%",
-          #   .default = unit_from_col
-          # )
+          unit_from_col <- dplyr::case_match(
+            unit_from_col,
+            c("cps") ~ "count/s",
+            .default = unit_from_col
+          )
           return(
             function(x) {
               x <- as.numeric(x)
@@ -163,7 +162,9 @@ fraction_type_list <- function() {
 
 # define regex pattern for isotope ratio:
 # any isotope followed by a / and another isotope, e.g. 206Pb/204Pb
-isotope_ratio <- function() paste0("(", isotopes_list(), ")/(", isotopes_list(), ")")
+isotope_ratio <- function() {
+  paste0("(", isotopes_list(), ")/(", isotopes_list(), ")")
+}
 
 # define regex pattern for delta and espilon notation:
 # letter d OR e followed by any isotope
