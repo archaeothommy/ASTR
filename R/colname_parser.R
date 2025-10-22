@@ -151,7 +151,8 @@ elements_list <- function() {
   paste0(elements, collapse = "|")
 }
 oxides_list <- function() {
-  paste0(oxides, collapse = "|")
+  all_oxide_like_states <- c(oxides, special_oxide_states)
+  paste0(all_oxide_like_states, collapse = "|")
 }
 ox_elem_list <- function() paste0(oxides_list(), "|", elements_list())
 ox_elem_iso_list <- function() paste0(ox_elem_list(), "|", isotopes_list())
