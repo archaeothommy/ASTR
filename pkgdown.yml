@@ -3,7 +3,7 @@ pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   ASTR: ASTR.html
-last_built: 2025-10-21T16:18Z
+last_built: 2025-10-22T12:34Z
 urls:
   reference: https://archaeothommy.github.io/ASTR/reference
   article: https://archaeothommy.github.io/ASTR/articles
