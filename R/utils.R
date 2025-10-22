@@ -1,7 +1,7 @@
 #' @export
 check_columns_exist <- function(data, columns) {
   #
-  if (!is.data.frame(data)) {
+  if (!checkmate::assert_data_frame(df)) {
     stop("Data needs to be a tibble or data frame!")
   }
 
