@@ -16,7 +16,8 @@ read_archchem(
   id_column = "ID",
   context = c(),
   delim = "\\t",
-  na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.")
+  na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "#DIV/0!", "#VALUE!",
+    "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!")
 )
 
 \method{format}{archchem}(x, ...)

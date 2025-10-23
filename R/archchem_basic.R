@@ -51,7 +51,8 @@ read_archchem <- function(
   path, id_column = "ID", context = c(),
   delim = "\t",
   # TODO: also read Excel output in the form #...! as NA
-  na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.")
+  na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.",
+         "#DIV/0!", "#VALUE!", "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!")
 ) {
   ext <- strsplit(basename(path), split = "\\.")[[1]][-1] # extract file format
 
