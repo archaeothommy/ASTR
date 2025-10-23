@@ -41,7 +41,7 @@ ASTR follows the following naming and data conventions, which are described in d
 -   Analytical precision should be indicated in the column name as: `_err2SD`, `_errSD`, `_err2SD%`, `_errSD%`, `_errSE`, `_err2SE` without indicating the unit. The unit will be inferred from the corresponding composition column. SD, 2SD, SE, and 2SE can be expressed in absolute or relative values. We strongly recommend that the uncertainty is included in the datatable, and properly noted following the conventions described.  
 
 | Components | Accepted formats |
-|------------------------------------|------------------------------------|
+|----|----|
 | Oxides and elements | `SiO2` ; `Si` |
 | Total iron | `FeOtot` ; `Fe2O3tot` |
 | Loss on ignition | `LOI` |
