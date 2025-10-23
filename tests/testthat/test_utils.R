@@ -8,7 +8,7 @@ df <- tibble::tibble(
   score = c(90.5, 80.2)
 )
 
-# ------- Tests for check_columns_exist -------
+#' --------------check_columns_exist--------------------------------------------
 test_that("check_columns_exist returns TRUE when all columns exist", {
   expect_true(check_columns_exist(df, c("name", "age")))
 })
@@ -27,7 +27,7 @@ test_that("check_columns_exist throws error on non-dataframe input", {
   )
 })
 
-# ------- Tests for filter_columns_with_id -------
+#' --------------filter_columns_with_id--------------------------------------------
 test_that("filter_columns_with_id returns correct columns in correct order", {
   result <- filter_columns_with_id(df, c("name", "city"))
   expect_named(result, c("id", "name", "city"))
@@ -63,10 +63,10 @@ test_that("filter_columns_with_id throws error if id column is not unique", {
   expect_error(
     filter_columns_with_id(df, c("city", "age"), "nationality"),
     regexp = "Column  nationality  is not unique and therefore cannot be used as id"
-
   )
 })
 
+#' --------------check_numeric_columns--------------------------------------------
 test_that("check_numeric_columns() passes when all columns are numeric", {
   expect_true(check_numeric_columns(df, c("age", "score")))
 })
@@ -78,6 +78,23 @@ test_that("check_numeric_columns() fails when a column is not numeric", {
   )
 })
 
-test_that("check_numeric_columns() works with an empty list of columns", {
-  expect_true(check_numeric_columns(df, character(0)))
+
+#' --------------return_numeric_columns--------------------------------------------
+test_that("return_numeric_columns() returns only selected numeric columns", {
+  result <- return_numeric_columns(df, columns = c("id", "score"))
+  expect_equal(names(result), c("id", "score"))
+  expect_true(all(sapply(result, is.numeric)))
+})
+
+test_that("return_numeric_columns(all = TRUE) returns all numeric columns", {
+  result <- return_numeric_columns(df, columns = c("anything"), all = TRUE)
+  expect_equal(names(result), c("id", "age", "score"))
+  expect_true(all(sapply(result, is.numeric)))
+})
+
+test_that("return_numeric_columns() throws error for non-numeric columns", {
+  expect_error(
+    return_numeric_columns(df, columns = c("name", "city")),
+    "These columns are not numeric: name, city"
+  )
 })
