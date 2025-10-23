@@ -25,7 +25,7 @@ read_archchem(
   id_column = "ID",
   context = c(),
   delim = "\\t",
-  na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "#DIV/0!", "#VALUE!",
+  na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.", "#DIV/0!", "#VALUE!",
     "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"),
   bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
   bdl_strategy = function() {
@@ -45,6 +45,10 @@ remove_units(x, ...)
 \item{id_column}{...}
 
 \item{context}{...}
+
+\item{bdl}{...}
+
+\item{bdl_strategy}{...}
 
 \item{...}{further arguments passed to or from other methods}
 

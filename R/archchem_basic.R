@@ -9,6 +9,8 @@
 #' @param ... further arguments passed to or from other methods
 #' @param id_column ...
 #' @param context ...
+#' @param bdl ...
+#' @param bdl_strategy ...
 #'
 #' @export
 as_archchem <- function(
@@ -24,7 +26,7 @@ as_archchem <- function(
   checkmate::assert_data_frame(df)
   checkmate::assert_names(colnames(df), must.include = id_column)
   # add ID column to context for the following operation
-  if (class(context) != "character") {
+  if (!inherits(context, "character")) {
     context <- colnames(df)[context]
   }
   context <- append(context, id_column)
@@ -44,7 +46,7 @@ as_archchem <- function(
 get_cols_with_class <- function(x, classes) {
   dplyr::select(x, tidyselect::where(
     function(x) {
-      any(class(x) %in% classes)
+      inherits(x, classes)
     }
   ))
 }
@@ -52,7 +54,7 @@ get_cols_with_class <- function(x, classes) {
 get_cols_without_class <- function(x, classes) {
   dplyr::select(x, tidyselect::where(
     function(x) {
-      !any(class(x) %in% classes)
+      !inherits(x, classes)
     }
   ))
 }
