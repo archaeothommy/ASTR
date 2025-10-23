@@ -16,17 +16,16 @@
 #'
 #' See the references for the respective publications of the age models. The
 #' function for the age model of Albarède & Juteau (1984) is based on the
-#' MATLAB-script of F. Albarède (version 2020-11-06).
+#' MATLAB-script of F. Albarède (version 2020-11-06). The age model published
+#' in Albarède et al. (2012) should not be used according to F. Albarède and is
+#' therefore not implemented. Instead, he recommends to use the age model
+#' published in Albarède & Juteau (1984).
 #'
 #' The ratio of 208Pb/204Pb is not necessary for [cumming_richards_1975].
 #' The function takes it as argument only to be consistent with the input of the
 #' other age model functions. If provided, it will be ignored.
 #'
-#' The age model published in Albarède et al. (2012) should not be used
-#' according to F. Albarède and is therefore not implemented. Instead, use the
-#' age model published in Albarède & Juteau (1984).
-#'
-#' @param data The data object from which the age model should be calculated.
+#' @param df The data frame from which the age model should be calculated.
 #' @param ratio_206_204 Name of the column with the 206Pb/204Pb ratio as
 #' character string. Default is `206Pb/204Pb`.
 #' @param ratio_207_204 Name of the column with the 207Pb/204Pb ratio as
@@ -35,14 +34,14 @@
 #' character string. Default is `208Pb/204Pb`.
 #' @param model Character string with the abbreviation of the model to
 #'   calculate:
-#'   * `SK75` for Stacey and Kramers 1975
-#'   * `CR75` for Cumming and Richards 1975
-#'   * `AJ84` for Albarède and Juteau 1984
+#'   * `SK75` for Stacey & Kramers (1975)
+#'   * `CR75` for Cumming & Richards (1975)
+#'   * `AJ84` for Albarède & Juteau (1984)
 #'   * `all` for all models at once
 #'
-#' @return A data frame with the model age, mu, and kappa value(s) for the
-#' respective age models. The used model is indicated in the column names of
-#' the output by the abbreviations given above.
+#' @return The data frame provided as input with columns added for the model
+#' age, mu, and kappa value(s) of the respective age models. The used model is
+#' indicated in the column names of the output by the abbreviations given above.
 #'
 #' @export
 #'
@@ -69,34 +68,51 @@
 #'
 #' @examples
 #' # creating example data
-#' data <- tibble::tibble(
+#' df <- tibble::tibble(
 #'   `206Pb/204Pb` = runif(5, min = 18, max = 18.5),
 #'   `207Pb/204Pb` = runif(5, min = 15, max = 15.5),
 #'   `208Pb/204Pb` = runif(5, min = 2, max = 2.2)
 #' )
 #'
 #' # calculate values for all age models
-#' pb_iso_age_model(data, model = "all")
+#' pb_iso_age_model(df, model = "all")
 #'
 #' # calculate values for a specific age model
-#' pb_iso_age_model(data, model = "SK75")
-#' stacey_kramers_1975(data)
+#' pb_iso_age_model(df, model = "SK75")
+#' stacey_kramers_1975(df)
 #'
-#' # Include model age parameters in the dataset
-#' cbind(data, pb_iso_age_model(data, model = "SK75"))
-pb_iso_age_model <- function(data,
+
+pb_iso_age_model <- function(df,
                              ratio_206_204 = "206Pb/204Pb",
                              ratio_207_204 = "207Pb/204Pb",
                              ratio_208_204 = "208Pb/204Pb",
                              model = c("SK75", "CR75", "AJ84", "all")) {
+
+  checkmate::assert_character(model)
+
   switch(model,
-    SK75 = stacey_kramers_1975(data, ratio_206_204, ratio_207_204, ratio_208_204),
-    CR75 = cumming_richards_1975(data, ratio_206_204, ratio_207_204),
-    AJ84 = albarede_juteau_1984(data, ratio_206_204, ratio_207_204, ratio_208_204),
+    SK75 = stacey_kramers_1975(df, ratio_206_204, ratio_207_204, ratio_208_204),
+    CR75 = cumming_richards_1975(df, ratio_206_204, ratio_207_204),
+    AJ84 = albarede_juteau_1984(df, ratio_206_204, ratio_207_204, ratio_208_204),
     all = cbind(
-      stacey_kramers_1975(data, ratio_206_204, ratio_207_204, ratio_208_204),
-      cumming_richards_1975(data, ratio_206_204, ratio_207_204),
-      albarede_juteau_1984(data, ratio_206_204, ratio_207_204, ratio_208_204)
+      df,
+      stacey_kramers_1975(
+        df,
+        ratio_206_204,
+        ratio_207_204,
+        ratio_208_204
+      )[c("model_age_SK75", "mu_SK75", "kappa_SK75")],
+      cumming_richards_1975(
+        df,
+        ratio_206_204,
+        ratio_207_204
+      )[c("model_age_CR75", "mu_CR75", "kappa_CR75")],
+      albarede_juteau_1984(
+        df,
+        ratio_206_204,
+        ratio_207_204,
+        ratio_208_204
+      )[c("model_age_AJ84", "mu_AJ84", "kappa_AJ84")]
     ),
     stop("This model is not supported.")
   )
@@ -106,7 +122,7 @@ pb_iso_age_model <- function(data,
 #' @rdname age_models
 #' @export
 
-stacey_kramers_1975 <- function(data,
+stacey_kramers_1975 <- function(df,
                                 ratio_206_204 = "206Pb/204Pb",
                                 ratio_207_204 = "207Pb/204Pb",
                                 ratio_208_204 = "208Pb/204Pb") {
@@ -135,14 +151,16 @@ stacey_kramers_1975 <- function(data,
 
   # Calculation and clean-up
 
-  model_age <- mapply(model_age_func, data[[ratio_206_204]], data[[ratio_207_204]])
+  model_age <- mapply(model_age_func, df[[ratio_206_204]], df[[ratio_207_204]])
   model_age <- replace(model_age, model_age <= -10001 * 10^6 | model_age >= t0 - 1 * 10^6, NA)
 
-  mu <- (data[[ratio_206_204]] - a0) / (exp(l238 * t0) - exp(l238 * model_age))
-  kappa <- (data[[ratio_208_204]] - c0) / (mu * (exp(l232 * t0) - exp(l232 * model_age)))
+  mu <- (df[[ratio_206_204]] - a0) / (exp(l238 * t0) - exp(l238 * model_age))
+  kappa <- (df[[ratio_208_204]] - c0) / (mu * (exp(l232 * t0) - exp(l232 * model_age)))
 
-  result <- data.frame("model_age_SK75" = model_age * 10^-6, "mu_SK75" = mu, "kappa_SK75" = kappa)
-  result <- round(result, 3)
+  result <- data.frame("model_age_SK75" = model_age * 10^-6, "mu_SK75" = mu, "kappa_SK75" = kappa) |>
+    round(3)
+
+  result <- cbind(df, result)
 
   result
 }
@@ -151,7 +169,7 @@ stacey_kramers_1975 <- function(data,
 #' @rdname age_models
 #' @export
 
-cumming_richards_1975 <- function(data,
+cumming_richards_1975 <- function(df,
                                   ratio_206_204 = "206Pb/204Pb",
                                   ratio_207_204 = "207Pb/204Pb",
                                   ratio_208_204 = NULL) {
@@ -188,15 +206,17 @@ cumming_richards_1975 <- function(data,
 
   # Calculation and clean-up
 
-  model_age <- mapply(model_age_func, data[[ratio_206_204]], data[[ratio_207_204]])
+  model_age <- mapply(model_age_func, df[[ratio_206_204]], df[[ratio_207_204]])
 
   model_age <- replace(model_age, model_age <= -10001 * 10^6 | model_age >= t0 - 1 * 10^6, NA)
 
   mu <- 137.88 * vp * (1 - e1 * model_age)
   kappa <- wp * (1 - e2 * model_age) / mu
 
-  result <- data.frame("model_age_CR75" = model_age * 10^-6, "mu_CR75" = mu, "kappa_CR75" = kappa)
-  result <- round(result, 3)
+  result <- data.frame("model_age_CR75" = model_age * 10^-6, "mu_CR75" = mu, "kappa_CR75" = kappa) |>
+    round(3)
+
+  result <- cbind(df, result)
 
   result
 }
@@ -204,7 +224,7 @@ cumming_richards_1975 <- function(data,
 #' @rdname age_models
 #' @export
 
-albarede_juteau_1984 <- function(data,
+albarede_juteau_1984 <- function(df,
                                  ratio_206_204 = "206Pb/204Pb",
                                  ratio_207_204 = "207Pb/204Pb",
                                  ratio_208_204 = "208Pb/204Pb") {
@@ -246,12 +266,14 @@ albarede_juteau_1984 <- function(data,
 
   # Calculation and clean-up
 
-  roots <- mapply(model_age_func, data[[ratio_206_204]], data[[ratio_207_204]])
+  roots <- mapply(model_age_func, df[[ratio_206_204]], df[[ratio_207_204]])
 
-  kappa <- (data[[ratio_208_204]] - zstar0) / (exp(l232 * t0) - exp(l232 * roots[1, ])) / roots[2, ]
+  kappa <- (df[[ratio_208_204]] - zstar0) / (exp(l232 * t0) - exp(l232 * roots[1, ])) / roots[2, ]
 
-  result <- data.frame("model_age_AJ84" = roots[1, ] * 10^-6, "mu_AJ84" = roots[2, ], "kappa_AJ84" = kappa)
-  result <- round(result, 3)
+  result <- data.frame("model_age_AJ84" = roots[1, ] * 10^-6, "mu_AJ84" = roots[2, ], "kappa_AJ84" = kappa) |>
+    round(3)
+
+  result <- cbind(df, result)
 
   result
 }

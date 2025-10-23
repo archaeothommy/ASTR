@@ -9,7 +9,7 @@
 \title{Calculate lead isotope age models}
 \usage{
 pb_iso_age_model(
-  data,
+  df,
   ratio_206_204 = "206Pb/204Pb",
   ratio_207_204 = "207Pb/204Pb",
   ratio_208_204 = "208Pb/204Pb",
@@ -17,28 +17,28 @@ pb_iso_age_model(
 )
 
 stacey_kramers_1975(
-  data,
+  df,
   ratio_206_204 = "206Pb/204Pb",
   ratio_207_204 = "207Pb/204Pb",
   ratio_208_204 = "208Pb/204Pb"
 )
 
 cumming_richards_1975(
-  data,
+  df,
   ratio_206_204 = "206Pb/204Pb",
   ratio_207_204 = "207Pb/204Pb",
   ratio_208_204 = NULL
 )
 
 albarede_juteau_1984(
-  data,
+  df,
   ratio_206_204 = "206Pb/204Pb",
   ratio_207_204 = "207Pb/204Pb",
   ratio_208_204 = "208Pb/204Pb"
 )
 }
 \arguments{
-\item{data}{The data object from which the age model should be calculated.}
+\item{df}{The data frame from which the age model should be calculated.}
 
 \item{ratio_206_204}{Name of the column with the 206Pb/204Pb ratio as
 character string. Default is \verb{206Pb/204Pb}.}
@@ -52,16 +52,16 @@ character string. Default is \verb{208Pb/204Pb}.}
 \item{model}{Character string with the abbreviation of the model to
 calculate:
 \itemize{
-\item \code{SK75} for Stacey and Kramers 1975
-\item \code{CR75} for Cumming and Richards 1975
-\item \code{AJ84} for Albarède and Juteau 1984
+\item \code{SK75} for Stacey & Kramers (1975)
+\item \code{CR75} for Cumming & Richards (1975)
+\item \code{AJ84} for Albarède & Juteau (1984)
 \item \code{all} for all models at once
 }}
 }
 \value{
-A data frame with the model age, mu, and kappa value(s) for the
-respective age models. The used model is indicated in the column names of
-the output by the abbreviations given above.
+The data frame provided as input with columns added for the model
+age, mu, and kappa value(s) of the respective age models. The used model is
+indicated in the column names of the output by the abbreviations given above.
 }
 \description{
 The functions calculate the age model and their respective mu and kappa
@@ -83,33 +83,30 @@ of the author's last names and the publication year (e. g.\code{SK75} for Stacey
 
 See the references for the respective publications of the age models. The
 function for the age model of Albarède & Juteau (1984) is based on the
-MATLAB-script of F. Albarède (version 2020-11-06).
+MATLAB-script of F. Albarède (version 2020-11-06). The age model published
+in Albarède et al. (2012) should not be used according to F. Albarède and is
+therefore not implemented. Instead, he recommends to use the age model
+published in Albarède & Juteau (1984).
 
 The ratio of 208Pb/204Pb is not necessary for \link{cumming_richards_1975}.
 The function takes it as argument only to be consistent with the input of the
 other age model functions. If provided, it will be ignored.
-
-The age model published in Albarède et al. (2012) should not be used
-according to F. Albarède and is therefore not implemented. Instead, use the
-age model published in Albarède & Juteau (1984).
 }
 \examples{
 # creating example data
-data <- tibble::tibble(
+df <- tibble::tibble(
   `206Pb/204Pb` = runif(5, min = 18, max = 18.5),
   `207Pb/204Pb` = runif(5, min = 15, max = 15.5),
   `208Pb/204Pb` = runif(5, min = 2, max = 2.2)
 )
 
 # calculate values for all age models
-pb_iso_age_model(data, model = "all")
+pb_iso_age_model(df, model = "all")
 
 # calculate values for a specific age model
-pb_iso_age_model(data, model = "SK75")
-stacey_kramers_1975(data)
+pb_iso_age_model(df, model = "SK75")
+stacey_kramers_1975(df)
 
-# Include model age parameters in the dataset
-cbind(data, pb_iso_age_model(data, model = "SK75"))
 }
 \references{
 Albarède, F. and Juteau, M. (1984) Unscrambling the lead model
