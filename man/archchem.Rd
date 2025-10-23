@@ -24,6 +24,7 @@ as_archchem(
   guess_context_type = TRUE,
   na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.", "#DIV/0!", "#VALUE!",
     "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"),
+  drop_columns = FALSE,
   ...
 )
 
@@ -38,7 +39,8 @@ read_archchem(
   bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
   bdl_strategy = function() {
      NA_character_
- }
+ },
+  drop_columns = FALSE
 )
 
 \method{format}{archchem}(x, ...)
@@ -78,6 +80,8 @@ function returning NA.}
 context columns.}
 
 \item{na}{Character vector of strings to be interpret as missing values.}
+
+\item{drop_columns}{...}
 
 \item{...}{further arguments passed to or from other methods}
 

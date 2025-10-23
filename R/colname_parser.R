@@ -9,7 +9,8 @@ colnames_to_constructors <- function(
   x,
   context,
   bdl, bdl_strategy,
-  guess_context_type, na
+  guess_context_type, na,
+  drop_columns
 ) {
   purrr::imap(
     colnames(x),
@@ -123,15 +124,20 @@ colnames_to_constructors <- function(
           )
           break
         }
-        # everything not recognized by the parser:
-        # stop with an error
-        stop(paste0(
+        # handle everything not recognized by the parser:
+        m <- paste0(
           "Column name \"",
           colname,
           "\" could not be parsed. ",
           "Either analytical columns do not conform to ASTR conventions or ",
           "contextual columns are not specified as such."
-        ))
+        )
+        if (drop_columns) {
+          warning(m)
+          return(function(x) { NULL })
+        } else {
+          stop(m)
+        }
       }
     }
   )

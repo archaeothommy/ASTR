@@ -23,7 +23,7 @@
 #' @param guess_context_type If TRUE, attempt to infer appropriate classes for
 #' context columns.
 #' @param na Character vector of strings to be interpret as missing values.
-#'
+#' @param drop_columns ...
 #'
 #' @return Returns a data structure `archchem`  which is a tibble derived-object
 #'
@@ -73,6 +73,7 @@ as_archchem <- function(
     "", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.",
     "#DIV/0!", "#VALUE!", "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"
   ),
+  drop_columns = FALSE,
   ...
 ) {
   # input checks
@@ -102,7 +103,7 @@ as_archchem <- function(
     )
   # determine and apply column types
   constructors <- colnames_to_constructors(
-    df, context, bdl, bdl_strategy, guess_context_type, na
+    df, context, bdl, bdl_strategy, guess_context_type, na, drop_columns
   )
   df <- purrr::map2(df, constructors, function(col, f) f(col))
   # turn into tibble-derived object
@@ -127,7 +128,8 @@ read_archchem <- function(
   bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
   bdl_strategy = function() {
     NA_character_
-  }
+  },
+  drop_columns = FALSE
 ) {
   ext <- strsplit(basename(path), split = "\\.")[[1]][-1] # extract file format
 
@@ -178,7 +180,8 @@ read_archchem <- function(
     input_file,
     id_column = id_column, context = context,
     bdl = bdl, bdl_strategy = bdl_strategy,
-    guess_context_type = guess_context_type, na = na
+    guess_context_type = guess_context_type, na = na,
+    drop_columns = drop_columns
   )
 }
 
