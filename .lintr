@@ -1,5 +1,6 @@
 linters: linters_with_defaults(
     line_length_linter(120L),
     commented_code_linter = NULL,
-    absolute_path_linter(lax = TRUE)
+    absolute_path_linter(lax = TRUE),
+    return_linter = NULL
   )
