@@ -191,10 +191,10 @@ cumming_richards_1975 <- function(df,
     stats::optimize(
       function(s, a, b) {
         (a0 - a + 137.88 * vp *
-          ((exp(l238 * t0) * (1 - e1 * (t0 - 1 / l238))) -
-            (exp(l238 * s) * (1 - e1 * (s - 1 / l238)))))^2 +
+           ((exp(l238 * t0) * (1 - e1 * (t0 - 1 / l238))) -
+              (exp(l238 * s) * (1 - e1 * (s - 1 / l238)))))^2 +
           (b0 - b + vp * ((exp(l235 * t0) * (1 - e1 * (t0 - 1 / l235))) -
-            (exp(l235 * s) * (1 - e1 * (s - 1 / l235)))))^2
+                            (exp(l235 * s) * (1 - e1 * (s - 1 / l235)))))^2
       },
       a = x, b = y,
       interval = c(-10000 * 10^6, t0),
