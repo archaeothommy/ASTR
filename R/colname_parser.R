@@ -51,7 +51,7 @@ colnames_to_constructors <- function(
           break
         }
         if (is_isotope_delta_epsilon(colname)) {
-          delta_epsilon <- extract_delta_epsilon_string(colname)
+          # delta_epsilon <- extract_delta_epsilon_string(colname)
           return(
             function(x) {
               # if (delta_epsilon == "d") {
@@ -221,17 +221,17 @@ isotope_delta_epsilon <- function() {
 # error states
 err <- function() {
   paste0(c(
-    err2SD(), errSD(),
-    err2SDpercent(), errSDpercent(),
-    err2SE(), errSE()
+    err_2sd(), err_sd(),
+    err_2sd_percent(), err_sd_percent(),
+    err_2se(), err_se()
   ), collapse = "|")
 }
-err2SD <- function() "\\_err2SD"
-errSD <- function() "\\_errSD"
-err2SDpercent <- function() "\\_err2SD%"
-errSDpercent <- function() "\\_errSD%"
-err2SE <- function() "\\_err2SE"
-errSE <- function() "\\_errSE"
+err_2sd <- function() "\\_err2SD"
+err_sd <- function() "\\_errSD"
+err_2sd_percent <- function() "\\_err2SD%"
+err_sd_percent <- function() "\\_errSD%"
+err_2se <- function() "\\_err2SE"
+err_se <- function() "\\_errSE"
 
 # define regex pattern for element ratios:
 # any combination of two elements or oxides connected by + , - or / that may or
