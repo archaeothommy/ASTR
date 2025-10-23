@@ -11,6 +11,8 @@
 #' @param context ...
 #' @param bdl ...
 #' @param bdl_strategy ...
+#' @param guess_context_type ...
+#' @param na Character vector of strings to be interpret as missing values.
 #'
 #' @export
 as_archchem <- function(
@@ -69,7 +71,6 @@ get_cols_without_class <- function(x, classes) {
 #' @param delim A character string with the separator for tabular data. Use
 #'   `\t` for tab-separated data. Must be provided for all file
 #'   types except `.xlsx` or `.xls`.
-#' @param na Character vector of strings to be interpret as missing values.
 #' @rdname archchem
 #' @export
 read_archchem <- function(

@@ -54,6 +54,8 @@ remove_units(x, ...)
 
 \item{bdl_strategy}{...}
 
+\item{guess_context_type}{...}
+
 \item{na}{Character vector of strings to be interpret as missing values.}
 
 \item{...}{further arguments passed to or from other methods}
