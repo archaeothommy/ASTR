@@ -134,8 +134,7 @@ as_numeric_info <- function(x, colname) {
       message <- conditionMessage(w)
       warning(paste0(
         "Issue when transforming column \"", colname, "\" to numeric values: "
-        ), message
-      )
+      ), message)
     }
   )
 }
