@@ -174,7 +174,7 @@ GeomKDE2d <- ggplot2::ggproto(
     # Detect fallback (points)
     if (!is.null(plot_data$type) && unique(plot_data$type) == "points") {
 
-       # prefer user-specified constants, then mapped, then defaults
+      # prefer user-specified constants, then mapped, then defaults
       col_val  <- colour  %||% common$colour %||% common$fill %||% "black"
       fill_val <- fill    %||% common$fill   %||% common$colour %||% col_val
       size_val <- (size   %||% common$size   %||% 1.5) * 2
@@ -218,6 +218,7 @@ GeomKDE2d <- ggplot2::ggproto(
     GeomPolygon$draw_panel(data = data,
                            panel_params = panel_params,
                            coord = coord)
+
     }
   },
 

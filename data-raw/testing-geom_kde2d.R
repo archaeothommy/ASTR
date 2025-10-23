@@ -112,6 +112,46 @@ ggplot(ad,
   geom_kde2d(size = 2) +
   theme_minimal()
 
+# 206Pb
+ggplot(ad,
+       aes(x = `206Pb/204Pb`,
+           y = `206Pb/207Pb`,
+           fill = `Mining site`)) +
+  geom_kde2d(size = 2) +
+  theme_minimal()
+
+ggplot(ad,
+       aes(x = `206Pb/204Pb`,
+           y = `208Pb/207Pb`,
+           fill = `Mining site`)) +
+  geom_kde2d(size = 2) +
+  theme_minimal()
+
+# etc
+ggplot(ad,
+       aes(x = `207Pb/204Pb`,
+           y = `208Pb/204Pb`,
+           fill = `Mining site`)) +
+  geom_kde2d(size = 2) +
+  theme_minimal()
+
+# can we compute KDEs on these cols?
+ks::kde(with(ad, c(`206Pb/204Pb`,
+                   `208Pb/204Pb`)))
+
+ks::kde(with(ad, c(`206Pb/204Pb`,
+                  `206Pb/207Pb`)))
+
+ks::kde(with(ad, c(`206Pb/204Pb`,
+                   `208Pb/207Pb`)))
+
+ks::kde(with(ad, c(`207Pb/204Pb`,
+                   `208Pb/204Pb`)))
+
+ks::kde(with(ad, c(`206Pb/204Pb`,
+                   `208Pb/207Pb`)))
+
+
 
 # Error in `geom_kde2d()`:
 #   ! Problem while converting geom to grob.
