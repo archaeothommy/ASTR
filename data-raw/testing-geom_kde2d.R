@@ -94,11 +94,17 @@ ggplot(iris,
 
 
 #-----------------------------------
-ad <- read_csv("data-raw/ArgentinaDatabase.csv") |>
-   select(`206Pb/204Pb`,
-          `208Pb/204Pb`,
-          `Mining site`)
+ad <- read_csv("data-raw/ArgentinaDatabase.csv")
 
+ # 207Pb
+ggplot(ad,
+       aes(x = `206Pb/204Pb`,
+           y = `207Pb/204Pb`,
+           fill = `Mining site`)) +
+  geom_kde2d(size = 2) +
+  theme_minimal()
+
+# 208Pb
 ggplot(ad,
        aes(x = `206Pb/204Pb`,
            y = `208Pb/204Pb`,
@@ -107,10 +113,10 @@ ggplot(ad,
   theme_minimal()
 
 
-Error in `geom_kde2d()`:
-  ! Problem while converting geom to grob.
-ℹ Error occurred in the 1st layer.
-Caused by error in `data.frame()`:
-  ! arguments imply differing number of rows: 0, 1
----
+# Error in `geom_kde2d()`:
+#   ! Problem while converting geom to grob.
+# ℹ Error occurred in the 1st layer.
+# Caused by error in `data.frame()`:
+#   ! arguments imply differing number of rows: 0, 1
+# ---
 
