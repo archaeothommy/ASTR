@@ -107,8 +107,6 @@ pb_iso_age_model(df, model = "all")
 pb_iso_age_model(df, model = "SK75")
 stacey_kramers_1975(df)
 
-# Include model age parameters in the dataset
-cbind(df, pb_iso_age_model(df, model = "SK75"))
 }
 \references{
 Albarède, F. and Juteau, M. (1984) Unscrambling the lead model

@@ -81,8 +81,7 @@
 #' pb_iso_age_model(df, model = "SK75")
 #' stacey_kramers_1975(df)
 #'
-#' # Include model age parameters in the dataset
-#' cbind(df, pb_iso_age_model(df, model = "SK75"))
+
 pb_iso_age_model <- function(df,
                              ratio_206_204 = "206Pb/204Pb",
                              ratio_207_204 = "207Pb/204Pb",
