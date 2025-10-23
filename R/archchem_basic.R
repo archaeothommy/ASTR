@@ -22,6 +22,11 @@ as_archchem <- function(
   # in case more sophisticated handling is desired:
   # bdl_strategy = function(x, colname) { bdl_lookup_table[colname] / sqrt(2) }
   # bdl_lookup_table = c("Fe_%" = 3)
+  guess_context_type = TRUE,
+  na = c(
+    "", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.",
+    "#DIV/0!", "#VALUE!", "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"
+  ),
   ...
 ) {
   # input checks
@@ -31,7 +36,9 @@ as_archchem <- function(
   if (!inherits(context, "character")) { context <- colnames(df)[context] }
   context <- append(context, id_column)
   # determine and apply column types
-  constructors <- colnames_to_constructors(df, context, bdl, bdl_strategy)
+  constructors <- colnames_to_constructors(
+    df, context, bdl, bdl_strategy, guess_context_type, na
+  )
   df <- purrr::map2(df, constructors, function(col, f) f(col))
   # turn into tibble-derived object
   df <- tibble::new_tibble(df, nrow = nrow(df), class = "archchem")
@@ -68,7 +75,7 @@ get_cols_without_class <- function(x, classes) {
 read_archchem <- function(
   path, id_column = "ID", context = c(),
   delim = "\t",
-  # TODO: also read Excel output in the form #...! as NA
+  guess_context_type = TRUE,
   na = c(
     "", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.",
     "#DIV/0!", "#VALUE!", "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"
@@ -126,7 +133,8 @@ read_archchem <- function(
   as_archchem(
     input_file,
     id_column = id_column, context = context,
-    bdl = bdl, bdl_strategy = bdl_strategy
+    bdl = bdl, bdl_strategy = bdl_strategy,
+    guess_context_type = guess_context_type, na = na
   )
 }
 

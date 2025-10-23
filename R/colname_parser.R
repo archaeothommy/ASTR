@@ -5,7 +5,12 @@
 # SI-unit column types are defined with the units package
 # https://cran.r-project.org/web/packages/units/index.html
 # (so the udunits library)
-colnames_to_constructors <- function(x, context, bdl, bdl_strategy) {
+colnames_to_constructors <- function(
+    x,
+    context,
+    bdl, bdl_strategy,
+    guess_context_type, na
+  ) {
   purrr::imap(
     colnames(x),
     function(colname, idx) {
@@ -15,11 +20,9 @@ colnames_to_constructors <- function(x, context, bdl, bdl_strategy) {
         if (colname == "ID" || idx %in% context || colname %in% context) {
           return(
             function(x) {
-              x <- readr::parse_guess(
-                x
-                # TODO: Add anything here that may be
-                # passed to read_archchem, e.g. NA values
-              )
+              if (guess_context_type) {
+                x <- readr::parse_guess(x, na = na)
+              }
               x <- add_class(x, "archchem_context")
               return(x)
             }
