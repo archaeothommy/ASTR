@@ -118,7 +118,9 @@ colnames_to_constructors <- function(
         stop(paste0(
           "Column name \"",
           colname,
-          "\" could not be parsed. Did you mean to set it as a contextual column?"
+          "\" could not be parsed. ",
+          "Either analytical columns do not conform to ASTR conventions or ",
+          "contextual columns are not specified as such."
         ))
       }
     }
