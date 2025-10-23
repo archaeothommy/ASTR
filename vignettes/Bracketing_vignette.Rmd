@@ -1,0 +1,226 @@
+---
+title: "Bracketing"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ASTR_Bracketing} # must match file name!
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ASTR)
+```
+
+# Introduction
+
+This vignette introduces the `standard_sample_bracketing()` function.
+
+Standard sample bracketing (SSB) is a calibration method used in mass spectrometry to correct for instrumental mass bias by measuring a standard solution with known isotopic composition immediately before and after each unknown sample.
+
+## Why SSB is needed?
+
+#### Mass Bias
+
+During isotope ratio measurements using MC-ICP-MS or TIMS, the instrument introduces mass bias (also known as mass fractionation).
+
+There are many causes of mass bias, for example:
+
+1.  Lighter isotopes are more easily ionized in the plasma (MC-ICP-MS) or during thermal emission (TIMS), leading to slightly higher signal intensity.
+
+2.  Under identical accelerating voltages, lighter ions acquire higher velocities ($v = \sqrt{2qV/m}$). They pass more efficiently through ion lenses and slits, while heavier ions are transmitted less efficiently.
+
+3.  Faraday cups or ion counters may have small differences in sensitivity for different masses, causing unequal signal amplification.
+
+The following table shows examples of true and measured Pb isotope ratios:
+
+|                   True ratio                   | Measured ratio |
+|:----------------------------------------------:|:--------------:|
+| $^{206}\mathrm{Pb}/^{204}\mathrm{Pb}$ = 16.941 |     16.928     |
+| $^{207}\mathrm{Pb}/^{204}\mathrm{Pb}$ = 15.549 |     15.530     |
+
+These effects cause a systematic fractionation of isotopes, typically enriching lighter isotopes in the measured signal. As a result, the measured isotope ratio deviates slightly from its true value.
+
+#### Mass bias Drifts Over Time
+
+In MC-ICP-MS and TIMS analyses, instrumental conditions vary slightly with time. Plasma temperature, gas flow, lens voltages, and detector sensitivity all change gradually during a measurement sequence.
+
+These variations alter the ionization efficiency and transmission of light versus heavy isotopes, causing the apparent isotope ratios to drift. As a result, a single calibration at the beginning of the run cannot fully correct the bias for later samples.
+
+The following table shows examples of the drifts over time:
+
+| Time  | True ratio | Measured | Drift (%) |
+|:-----:|:----------:|:--------:|:---------:|
+| 09:00 |   16.941   |  16.928  |  –0.08%   |
+| 09:10 |   16.941   |  16.930  |  –0.06%   |
+| 09:20 |   16.941   |  16.933  |  –0.05%   |
+
+To overcome this, the **SSB** technique is used, in which a known standard is measured before and after each sample to dynamically correct for time-dependent mass bias.
+
+# Principle of SSB
+
+The core concept of **SSB** is that each sample measurement is bracketed by two standard measurements. The average of the two standards is used to correct for instrumental mass bias drift.
+
+A typical analytical sequence follows this pattern:
+
+Std1 → Sample A → Std2 → Sample B → Std3 → Sample C → Std4 → ...
+
+In this sequence, each **standard (Std)** is a reference material with a known true isotope ratio (e.g., *NIST SRM 981*). Each **sample (Sample)** has an unknown isotope ratio that needs to be corrected.
+
+Because instrumental drift is generally slow and approximately linear over short time intervals, it can be assumed that the bias varies **linearly** between two consecutive standards.
+
+The SSB method usually does not report absolute isotope ratios directly, but rather expresses results as **δ values** relative to the reference standard：
+
+$$
+\delta^{y/x} = 
+\left(
+\frac{R_{\text{sample}}}{R_{\text{standard}}} - 1
+\right) \times 1000
+$$
+
+# Function Workflow
+
+The function developed here outputs the **SSB Linear value**, which represents the normalized isotope ratio relative to the bracketing standards.
+
+The relationship between the **SSB Linear value** and **δ values** can be expressed as:
+
+$$
+\delta^{y/x} = (\text{SSB Linear} - 1) \times 1000
+$$
+
+The SSB Linear is calculated as:
+
+$$
+\text{SSB Linear} =
+\frac{R_{\text{meas,sample}}}{
+\text{mean}(R_{\text{meas,std1}}, R_{\text{meas,std2}})}
+$$
+
+where:
+
+$R_{\text{meas,sample}}$: measured isotope ratio of the sample;\
+$R_{\text{meas,std1}}$, $R_{\text{meas,std2}}$: measured isotope ratios of the standards before and after the sample.
+
+To obtain the **final corrected isotope ratio** (i.e., absolute value), the SSB Linear is multiplied by the true isotope ratio of the reference standard:
+
+$$ R_{\text{corr,sample}} = \text{SSB Linear} \times R_{\text{true,std}} $$
+
+where $R_{\text{true,std}}$ is the true isotope ratio of the standard material (e.g., NIST SRM 981).
+
+------------------------------------------------------------------------
+
+**In practice**, each sample is typically measured multiple times to improve analytical precision. Each individual measurement is bracketed by two standard measurements (Std), and the SSB correction is calculated for each replicate separately.
+
+For example, if a sample is measured three times, the measurement sequence will be as follows:
+
+Std1 → Sample A1 → Std2 → Sample A2 → Std3 → Sample A3 → Std4
+
+Each sample replicate (Sample A1, Sample A2, Sample A3) is corrected using the average of the standards measured immediately before and after it. The final isotope ratio for the sample is then obtained as the mean of the three corrected values.
+
+$$
+\text{SSB Linear} = \frac{R_{meas,sample}}{\text{mean}(R_{meas,std1}, R_{meas,std2})}
+$$
+
+where $R_{meas,std1}$ and $R_{meas,std2}$ are the measured isotope ratios of the standards before and after the sample, respectively.
+
+After all three measurements of the same sample are corrected, their average is taken to obtain the final corrected ratio:
+
+$$
+R_{corr,avg} = \text{mean}(\text{SSB Linear}_1, \text{SSB Linear}_2, \text{SSB Linear}_3)
+$$
+
+To obtain the **absolute corrected isotope ratio**, this normalized value is multiplied by the true isotope ratio of the reference standard:
+
+$$
+R_{\text{corr,sample}} =
+R_{\text{corr,avg}} \times R_{\text{true,std}}
+$$
+
+where $R_{\text{true,std}}$ is the certified true isotope ratio of the reference standard (e.g., NIST SRM 981).
+
+# Function Purpose
+
+The main purpose of this function is to **simplify and speed up** the sample–standard bracketing (SSB) correction process.
+
+Traditionally, SSB corrections are performed manually in spreadsheets，which can be time-consuming and prone to human error, especially when multiple samples and replicates are involved.
+
+This function automates the calculation by:
+
+-   Performing all SSB Linear and averaging steps automatically;\
+-   Handling multiple samples and replicate measurements in one operation;\
+-   Ensuring consistent data processing and reproducibility.
+
+By using this function, users can obtain corrected isotope ratios more efficiently and avoid the repetitive manual calculations normally required for SSB correction.
+
+# Example Usage
+
+This section demonstrates how to use the `standard_sample_bracketing()` function\
+to perform SSB correction automatically from a dataset containing measured isotope ratios.
+
+#### Example dataset
+
+The input dataset should contain at least the following columns:
+
+-   **ID:** sample and standard identifiers (e.g., "Std", "Sample_A", "Sample_B", …);\
+-   **Isotope_data:** measured isotope ratios (e.g., $^{206}\mathrm{Pb}/^{204}\mathrm{Pb}$).
+
+Below is an example of the input data structure:
+
+| ID       | Isotope data |
+|----------|--------------|
+| Std      | 16.928       |
+| Sample A | 18.641       |
+| Std      | 16.932       |
+| Sample A | 18.643       |
+| Std      | 16.935       |
+| Sample A | 18.642       |
+| Std      | 16.938       |
+
+------------------------------------------------------------------------
+
+#### Running the function
+
+```{r example, echo=TRUE}
+# Load the package (if your package is not installed, use devtools::load_all("."))
+# library(ASTR)
+
+# Example data frame
+data <- data.frame(
+  ID = c("Std", "Sample_A", "Std", "Sample_A", "Std", "Sample_A", "Std"),
+  Isotope_data = c(16.928, 18.641, 16.932, 18.643, 16.935, 18.642, 16.938)
+)
+
+# Run the function
+result <- standard_sample_bracketing(
+  data = data,
+  ID_std = "Std",
+  header = "Isotope_data",
+  pos = 1,
+  mp = 1000
+)
+
+# Print results
+result
+```
+
+# Output Interpretation
+
+The `standard_sample_bracketing()` function returns a data frame summarizing the results of each bracketing cycle.
+
+-   **description**: the name of Sample.\
+-   **calculations**: represents the SSB Linear value.\
+-   **SE**: provides twice the standard deviation, which can be used as an estimate of analytical reproducibility.
+
+# Reference
+
+-   Mason, T., Weiss, D., Horstwood, M., Parrish, R., Russell, S., Mullane, E., & Coles, B. (2004). *High-precision Cu and Zn isotope analysis by plasma source mass spectrometry – Part 2. Correcting for mass discrimination effects.* Journal of Analytical Atomic Spectrometry, **19**, 209–217. <https://doi.org/10.1039/b306953b>
+
+-   Yang, Y., Hathorne, E., Siebert, C., Gutjahr, M., Fietzke, J., & Frank, M. (2024). *Unravelling instrumental mass fractionation of MC-ICP-MS using neodymium isotopes.* *Chemical Geology*, **662**, 122220. <https://doi.org/10.1016/j.chemgeo.2024.122220>
+
+-   National Institute of Standards and Technology (NIST). (1998). *Certificate of Analysis: Standard Reference Material 981 – Common Lead Isotopic Standard.* Gaithersburg, MD: U.S. Department of Commerce. <https://tsapps.nist.gov/srmext/certificates/archives/981.pdf>
