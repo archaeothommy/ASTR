@@ -24,6 +24,40 @@
 #' context columns.
 #' @param na Character vector of strings to be interpret as missing values.
 #'
+#'
+#' @return Returns a data structure `archchem`  which is a tibble derived-object
+#'
+#' The function prints a short summary about the dataset, including a list of
+#' all context columns and analytical data columns.
+#'
+#' @details The data files can be fairly freeform, i.e. no specified elements,
+#' oxides, or isotopic ratios are required and no exact order of these needs to
+#' be adhered to. Analyses can contain as many analytical columns as necessary.
+#'
+#' The column that contains the unique samples identification is specified using
+#' the `ID` argument. If the dataset contains duplicate ids, the following warning
+#' will return:
+#' Detected multiple data rows with the same ‘ID’, which were renamed
+#' consecutively using the following convention: `_1`,`_2`, ... `_n`
+#'
+#' Metadata contained within the dataset must be specified using the `context`
+#' argument. If any column in the dataframe is not specified as context and not
+#' recognised as an analytical column, this will result in the error:
+#' Column name <colname> could not be parsed. Either analytical columns do not
+#' conform to ASTR conventions or contextual columns are not specified as such.
+#'
+#' Below detection limit notation (i.e. ‘b.d.’, ‘bd’, ‘b.d.l.’, ‘bdl’, ‘<LOD’,
+#' or ‘<..’) for element and oxide concentrations is specified using the `bdl`
+#' argument. One or more notations can be used as is appropriate for the dataset,
+#' and can be notations not included in the list above. The argument
+#' `bdl_strategy` is used to specify the value for handling detection limits.
+#' This is to facilitate the different handling needs of the detection limit for
+#' future statistical applications, as opposed to automatically assigning such
+#' values as ‘NA’.
+#'
+#' Missing values (NA) are allowed anywhere in the data file body, and those
+#' found in an analytical data column will be replaced by `NA` automatically.
+#'
 #' @export
 as_archchem <- function(
   df, id_column = "ID", context = c(),
