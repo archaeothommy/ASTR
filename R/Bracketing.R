@@ -88,12 +88,9 @@ standard_sample_bracketing <- function(data, ID_std = "", header="", pos=0, mp=1
       else
         if (CurrentSample==df[i,1]){ #if the sample in the iteration is equal to the current sample, we only increase the counter
           counter<-counter+1
-<<<<<<< HEAD
           SampleMeasurement<- df[i, 2]
         }
-=======
 
->>>>>>> 4f4d6827e62ef70bf5dffbf02f7c81a8dbdfe41c
         else{ #time to calculate the average SBB for the previous sample, and prepare everything for the new one
 
           MeanSBBSamples<- MeanSBBSamples/counter #Calculate the mean
