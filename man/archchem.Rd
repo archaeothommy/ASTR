@@ -9,7 +9,16 @@
 \alias{remove_units}
 \title{\strong{archchem}}
 \usage{
-as_archchem(df, id_column = "ID", context = c(), ...)
+as_archchem(
+  df,
+  id_column = "ID",
+  context = c(),
+  bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
+  bdl_strategy = function() {
+     NA_character_
+ },
+  ...
+)
 
 read_archchem(
   path,
@@ -17,7 +26,11 @@ read_archchem(
   context = c(),
   delim = "\\t",
   na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "#DIV/0!", "#VALUE!",
-    "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!")
+    "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"),
+  bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
+  bdl_strategy = function() {
+     NA_character_
+ }
 )
 
 \method{format}{archchem}(x, ...)

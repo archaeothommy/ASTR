@@ -5,7 +5,7 @@
 # SI-unit column types are defined with the units package
 # https://cran.r-project.org/web/packages/units/index.html
 # (so the udunits library)
-colnames_to_constructors <- function(x, context) {
+colnames_to_constructors <- function(x, context, bdl, bdl_strategy) {
   purrr::imap(
     colnames(x),
     function(colname, idx) {
@@ -30,6 +30,7 @@ colnames_to_constructors <- function(x, context) {
         if (is_err(colname)) {
           return(
             function(x) {
+              x <- apply_bdl_strategy(x, colname, bdl, bdl_strategy)
               x <- as_numeric_info(x, colname)
               x <- add_class(x, c("archchem_error"))
             }
@@ -83,6 +84,7 @@ colnames_to_constructors <- function(x, context) {
           # )
           return(
             function(x) {
+              x <- apply_bdl_strategy(x, colname, bdl, bdl_strategy)
               x <- as_numeric_info(x, colname)
               x <- add_class(x, c("archchem_concentration_fraction"))
               return(x)
@@ -99,6 +101,7 @@ colnames_to_constructors <- function(x, context) {
           )
           return(
             function(x) {
+              x <- apply_bdl_strategy(x, colname, bdl, bdl_strategy)
               x <- as_numeric_info(x, colname)
               x <- units::set_units(x, value = unit_from_col, mode = "standard")
               x <- add_class(x, c("archchem_concentration_SI"))
@@ -135,6 +138,14 @@ as_numeric_info <- function(x, colname) {
       )
     }
   )
+}
+
+# colname only an argument in case we want to implement more specific handling
+# eventually
+apply_bdl_strategy <- function(x, colname, bdl, bdl_strategy) {
+  bdl_values <- which(grepl(paste(bdl, collapse = "|"), x, perl = FALSE))
+  x[bdl_values] <- bdl_strategy()
+  return(x)
 }
 
 #### regex validators ####

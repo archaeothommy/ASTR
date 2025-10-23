@@ -11,7 +11,15 @@
 #' @param context ...
 #'
 #' @export
-as_archchem <- function(df, id_column = "ID", context = c(), ...) {
+as_archchem <- function(
+  df, id_column = "ID", context = c(),
+  bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
+  bdl_strategy = function() { NA_character_ }, # this only allows static functions, essentially: bdl_replace = "NA"
+  #in case more sophisticated handling is desired:
+  #bdl_strategy = function(x, colname) { bdl_lookup_table[colname] / sqrt(2) }
+  #bdl_lookup_table = c("Fe_%" = 3)
+  ...
+) {
   # input checks
   checkmate::assert_data_frame(df)
   checkmate::assert_names(colnames(df), must.include = id_column)
@@ -21,7 +29,7 @@ as_archchem <- function(df, id_column = "ID", context = c(), ...) {
   }
   context <- append(context, id_column)
   # determine and apply column types
-  df <- modify_columns(df, context) %>%
+  df <- modify_columns(df, context, bdl, bdl_strategy) %>%
     # turn into tibble-derived object
     tibble::new_tibble(., nrow = nrow(.), class = "archchem")
   # create/move ID column
@@ -33,9 +41,25 @@ as_archchem <- function(df, id_column = "ID", context = c(), ...) {
   return(df)
 }
 
-modify_columns <- function(x, context = c()) {
+get_cols_with_class <- function(x, classes) {
+  dplyr::select(x, tidyselect::where(
+    function(x) {
+      any(class(x) %in% classes)
+    }
+  ))
+}
+
+get_cols_without_class <- function(x, classes) {
+  dplyr::select(x, tidyselect::where(
+    function(x) {
+      !any(class(x) %in% classes)
+    }
+  ))
+}
+
+modify_columns <- function(x, context = c(), bdl, bdl_strategy) {
   # determine column type constructors from column names
-  constructors <- colnames_to_constructors(x, context)
+  constructors <- colnames_to_constructors(x, context, bdl, bdl_strategy)
   # apply column type constructors
   purrr::map2(x, constructors, function(col, f) f(col))
 }
@@ -51,8 +75,10 @@ read_archchem <- function(
   path, id_column = "ID", context = c(),
   delim = "\t",
   # TODO: also read Excel output in the form #...! as NA
-  na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.",
-         "#DIV/0!", "#VALUE!", "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!")
+  na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.",
+         "#DIV/0!", "#VALUE!", "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"),
+  bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
+  bdl_strategy = function() { NA_character_ }
 ) {
   ext <- strsplit(basename(path), split = "\\.")[[1]][-1] # extract file format
 
@@ -99,7 +125,10 @@ read_archchem <- function(
     # remove columns without a header
     dplyr::select(!tidyselect::starts_with("..."))
   # transform to desired data type
-  as_archchem(input_file, id_column = id_column, context = context)
+  as_archchem(
+    input_file, id_column = id_column, context = context,
+    bdl = bdl, bdl_strategy = bdl_strategy
+  )
 }
 
 #' @param x an object of class archchem
