@@ -92,6 +92,7 @@ geom_kde2d <- function(mapping = NULL,
                        quantiles = 4,
                        min_prob = 0.02,
                        show.legend = NA,
+                       fallback_to_points = TRUE,
                        ...) {
   ggplot2::layer(
     geom = GeomKDE2d,

@@ -11,6 +11,7 @@ geom_kde2d(
   quantiles = 4,
   min_prob = 0.02,
   show.legend = NA,
+  fallback_to_points = TRUE,
   ...
 )
 }
