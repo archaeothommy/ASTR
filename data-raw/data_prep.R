@@ -32,6 +32,12 @@ oxides <- c(
   "XeO3", "XeO4", "Y2O3", "Yb2O3", "ZnO", "ZrO2"
 )
 
+special_oxide_states <- c(
+  "LOI", # loss of ignition
+  "FeOtot", # total iron
+  "Fe2O3tot"
+)
+
 isotopes <- c(
   # all naturally occurring isotopes, retrieved from https://www.ciaaw.org/isotopic-abundances.htm
   # sorted according to chemical element and isotope number
@@ -71,7 +77,13 @@ isotopes <- c(
   "232Th", "231Pa", "234U", "235U", "238U"
 )
 
-usethis::use_data(elements, oxides, isotopes, overwrite = TRUE, internal = TRUE)
+usethis::use_data(
+  elements,
+  oxides,
+  special_oxide_states,
+  isotopes,
+  overwrite = TRUE, internal = TRUE
+)
 
 # units <- c(
 #   # This is mostly to check for potential typos in units, not for hard matching

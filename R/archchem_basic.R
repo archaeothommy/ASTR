@@ -3,36 +3,135 @@
 #'
 #' @title \strong{archchem}
 #'
-#' @description A data format for chemical analysis datasets in archaeology
+#' @description A function to create a data format for chemical analysis datasets
+#' in archaeology containing numerical elemental and isotopic data. Loads data
+#' from a file (.csv, .xls, .xlsx) or object (dataframe) in R. The data format
+#' will contain analytical data as well as corresponding contextual information
+#' and metadata (labelled as context).
 #'
-#' @param df a data.frame
+#' @param df a data.frame containing the input table
+#' @param path  File path (including extension) to the file to read
 #' @param ... further arguments passed to or from other methods
+#' @param id_column name of the ID column present in df (or in the file at path).
+#' Defaults to "ID"
+#' @param context Columns that provide contextual (non-measurement) information;
+#' may be column names, integer positions, or a logical inclusion vector.
+#' @param bdl Strings representing “below detection limit” values. By default,
+#' the following are recognized: "b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<".
+#' @param bdl_strategy Function used to replace BDL strings. Defaults to a
+#' function returning NA.
+#' @param guess_context_type If TRUE, attempt to infer appropriate classes for
+#' context columns.
+#' @param na Character vector of strings to be interpret as missing values.
+#'
+#'
+#' @return Returns a data structure `archchem`  which is a tibble derived-object
+#'
+#' The function prints a short summary about the dataset, including a list of
+#' all context columns and analytical data columns.
+#'
+#' @details The data files can be fairly freeform, i.e. no specified elements,
+#' oxides, or isotopic ratios are required and no exact order of these needs to
+#' be adhered to. Analyses can contain as many analytical columns as necessary.
+#'
+#' The column that contains the unique samples identification is specified using
+#' the `ID` argument. If the dataset contains duplicate ids, the following warning
+#' will return:
+#' Detected multiple data rows with the same ‘ID’, which were renamed
+#' consecutively using the following convention: `_1`,`_2`, ... `_n`
+#'
+#' Metadata contained within the dataset must be specified using the `context`
+#' argument. If any column in the dataframe is not specified as context and not
+#' recognised as an analytical column, this will result in the error:
+#' Column name <colname> could not be parsed. Either analytical columns do not
+#' conform to ASTR conventions or contextual columns are not specified as such.
+#'
+#' Below detection limit notation (i.e. ‘b.d.’, ‘bd’, ‘b.d.l.’, ‘bdl’, ‘<LOD’,
+#' or ‘<..’) for element and oxide concentrations is specified using the `bdl`
+#' argument. One or more notations can be used as is appropriate for the dataset,
+#' and can be notations not included in the list above. The argument
+#' `bdl_strategy` is used to specify the value for handling detection limits.
+#' This is to facilitate the different handling needs of the detection limit for
+#' future statistical applications, as opposed to automatically assigning such
+#' values as ‘NA’.
+#'
+#' Missing values (NA) are allowed anywhere in the data file body, and those
+#' found in an analytical data column will be replaced by `NA` automatically.
 #'
 #' @export
-as_archchem <- function(df, ...) {
+as_archchem <- function(
+  df, id_column = "ID", context = c(),
+  bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
+  bdl_strategy = function() {
+    NA_character_
+  }, # this only allows static functions, essentially: bdl_replace = "NA"
+  # in case more sophisticated handling is desired:
+  # bdl_strategy = function(x, colname) { bdl_lookup_table[colname] / sqrt(2) }
+  # bdl_lookup_table = c("Fe_%" = 3)
+  guess_context_type = TRUE,
+  na = c(
+    "", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.",
+    "#DIV/0!", "#VALUE!", "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"
+  ),
+  ...
+) {
   # input checks
   checkmate::assert_data_frame(df)
+  checkmate::assert_names(colnames(df), must.include = id_column)
+  # add ID column to context for the following operation
+  if (!inherits(context, "character")) {
+    context <- colnames(df)[context]
+  }
+  context <- append(context, id_column)
   # determine and apply column types
-  modify_columns(df) %>%
-    # turn into tibble-derived object
-    tibble::new_tibble(., nrow = nrow(.), class = "archchem")
+  constructors <- colnames_to_constructors(
+    df, context, bdl, bdl_strategy, guess_context_type, na
+  )
+  df <- purrr::map2(df, constructors, function(col, f) f(col))
+  # turn into tibble-derived object
+  df <- tibble::new_tibble(df, nrow = nrow(df), class = "archchem")
+  # create/move ID column
+  df <- df %>%
+    dplyr::mutate(ID = .data[[id_column]]) %>%
+    dplyr::relocate("ID", .before = 1)
+  return(df)
 }
 
-modify_columns <- function(x) {
-  # determine column type constructors from column names
-  constructors <- colnames_to_constructor(x)
-  # apply column type constructors
-  purrr::map2(x, constructors, function(col, f) f(col))
+get_cols_with_class <- function(x, classes) {
+  dplyr::select(x, tidyselect::where(
+    function(x) {
+      inherits(x, classes)
+    }
+  ))
+}
+
+get_cols_without_class <- function(x, classes) {
+  dplyr::select(x, tidyselect::where(
+    function(x) {
+      !inherits(x, classes)
+    }
+  ))
 }
 
 #' @param path path to the file that should be read
 #' @param delim A character string with the separator for tabular data. Use
 #'   `\t` for tab-separated data. Must be provided for all file
 #'   types except `.xlsx` or `.xls`.
-#' @param na Character vector of strings to be interpret as missing values.
 #' @rdname archchem
 #' @export
-read_archchem <- function(path, delim, na = c("", "n/a", "NA")) {
+read_archchem <- function(
+  path, id_column = "ID", context = c(),
+  delim = "\t",
+  guess_context_type = TRUE,
+  na = c(
+    "", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.",
+    "#DIV/0!", "#VALUE!", "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"
+  ),
+  bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
+  bdl_strategy = function() {
+    NA_character_
+  }
+) {
   ext <- strsplit(basename(path), split = "\\.")[[1]][-1] # extract file format
 
   if (!(ext %in% c("xlsx", "xls", "csv")) && missing(delim)) {
@@ -78,7 +177,12 @@ read_archchem <- function(path, delim, na = c("", "n/a", "NA")) {
     # remove columns without a header
     dplyr::select(!tidyselect::starts_with("..."))
   # transform to desired data type
-  as_archchem(input_file)
+  as_archchem(
+    input_file,
+    id_column = id_column, context = context,
+    bdl = bdl, bdl_strategy = bdl_strategy,
+    guess_context_type = guess_context_type, na = na
+  )
 }
 
 #' @param x an object of class archchem

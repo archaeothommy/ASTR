@@ -9,9 +9,33 @@
 \alias{remove_units}
 \title{\strong{archchem}}
 \usage{
-as_archchem(df, ...)
+as_archchem(
+  df,
+  id_column = "ID",
+  context = c(),
+  bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
+  bdl_strategy = function() {
+     NA_character_
+ },
+  guess_context_type = TRUE,
+  na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.", "#DIV/0!", "#VALUE!",
+    "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"),
+  ...
+)
 
-read_archchem(path, delim, na = c("", "n/a", "NA"))
+read_archchem(
+  path,
+  id_column = "ID",
+  context = c(),
+  delim = "\\t",
+  guess_context_type = TRUE,
+  na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.", "#DIV/0!", "#VALUE!",
+    "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"),
+  bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
+  bdl_strategy = function() {
+     NA_character_
+ }
+)
 
 \method{format}{archchem}(x, ...)
 
@@ -20,7 +44,24 @@ read_archchem(path, delim, na = c("", "n/a", "NA"))
 remove_units(x, ...)
 }
 \arguments{
-\item{df}{a data.frame}
+\item{df}{a data.frame containing the input table}
+
+\item{id_column}{name of the ID column present in df (or in the file at path).
+Defaults to "ID"}
+
+\item{context}{Columns that provide contextual (non-measurement) information;
+may be column names, integer positions, or a logical inclusion vector.}
+
+\item{bdl}{Strings representing “below detection limit” values. By default,
+the following are recognized: "b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<".}
+
+\item{bdl_strategy}{Function used to replace BDL strings. Defaults to a
+function returning NA.}
+
+\item{guess_context_type}{If TRUE, attempt to infer appropriate classes for
+context columns.}
+
+\item{na}{Character vector of strings to be interpret as missing values.}
 
 \item{...}{further arguments passed to or from other methods}
 
@@ -30,10 +71,47 @@ remove_units(x, ...)
 \verb{\\t} for tab-separated data. Must be provided for all file
 types except \code{.xlsx} or \code{.xls}.}
 
-\item{na}{Character vector of strings to be interpret as missing values.}
-
 \item{x}{an object of class archchem}
 }
+\value{
+Returns a data structure \code{archchem}  which is a tibble derived-object
+
+The function prints a short summary about the dataset, including a list of
+all context columns and analytical data columns.
+}
 \description{
-A data format for chemical analysis datasets in archaeology
+A function to create a data format for chemical analysis datasets
+in archaeology containing numerical elemental and isotopic data. Loads data
+from a file (.csv, .xls, .xlsx) or object (dataframe) in R. The data format
+will contain analytical data as well as corresponding contextual information
+and metadata (labelled as context).
+}
+\details{
+The data files can be fairly freeform, i.e. no specified elements,
+oxides, or isotopic ratios are required and no exact order of these needs to
+be adhered to. Analyses can contain as many analytical columns as necessary.
+
+The column that contains the unique samples identification is specified using
+the \code{ID} argument. If the dataset contains duplicate ids, the following warning
+will return:
+Detected multiple data rows with the same ‘ID’, which were renamed
+consecutively using the following convention: \verb{_1},\verb{_2}, ... \verb{_n}
+
+Metadata contained within the dataset must be specified using the \code{context}
+argument. If any column in the dataframe is not specified as context and not
+recognised as an analytical column, this will result in the error:
+Column name \if{html}{\out{<colname>}} could not be parsed. Either analytical columns do not
+conform to ASTR conventions or contextual columns are not specified as such.
+
+Below detection limit notation (i.e. ‘b.d.’, ‘bd’, ‘b.d.l.’, ‘bdl’, ‘<LOD’,
+or ‘<..’) for element and oxide concentrations is specified using the \code{bdl}
+argument. One or more notations can be used as is appropriate for the dataset,
+and can be notations not included in the list above. The argument
+\code{bdl_strategy} is used to specify the value for handling detection limits.
+This is to facilitate the different handling needs of the detection limit for
+future statistical applications, as opposed to automatically assigning such
+values as ‘NA’.
+
+Missing values (NA) are allowed anywhere in the data file body, and those
+found in an analytical data column will be replaced by \code{NA} automatically.
 }

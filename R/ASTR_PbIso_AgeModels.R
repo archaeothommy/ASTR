@@ -81,13 +81,11 @@
 #' pb_iso_age_model(df, model = "SK75")
 #' stacey_kramers_1975(df)
 #'
-
 pb_iso_age_model <- function(df,
                              ratio_206_204 = "206Pb/204Pb",
                              ratio_207_204 = "207Pb/204Pb",
                              ratio_208_204 = "208Pb/204Pb",
                              model = c("SK75", "CR75", "AJ84", "all")) {
-
   checkmate::assert_character(model)
 
   switch(model,
