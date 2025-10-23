@@ -3,7 +3,9 @@ df <- tibble::tibble(
   id = 1:2,
   name = c("Alice", "Bob"),
   age = c(30, 25),
-  city = c("Rome", "Milan")
+  city = c("Rome", "Milan"),
+  nationality = c("Italy", "Italy"),
+  score = c(90.5, 80.2)
 )
 
 # ------- Tests for check_columns_exist -------
@@ -48,5 +50,34 @@ test_that("filter_columns_with_id throws error if 'id' is missing", {
     filter_columns_with_id(df_no_id, c("name")),
     regexp = "Columns missing in dataset: id"
   )
-}
-)
+})
+
+test_that("filter_columns_with_id throws error if custom id column is missing", {
+  expect_error(
+    filter_columns_with_id(df, c("city", "age"), "non_existing_col"),
+    regexp = "Columns missing in dataset: non_existing_col"
+  )
+})
+
+test_that("filter_columns_with_id throws error if id column is not unique", {
+  expect_error(
+    filter_columns_with_id(df, c("city", "age"), "nationality"),
+    regexp = "Column  nationality  is not unique and therefore cannot be used as id"
+
+  )
+})
+
+test_that("check_numeric_columns() passes when all columns are numeric", {
+  expect_true(check_numeric_columns(df, c("age", "score")))
+})
+
+test_that("check_numeric_columns() fails when a column is not numeric", {
+  expect_error(
+    check_numeric_columns(df, c("age", "name")),
+    regexp = "not numeric"
+  )
+})
+
+test_that("check_numeric_columns() works with an empty list of columns", {
+  expect_true(check_numeric_columns(df, character(0)))
+})
