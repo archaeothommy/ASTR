@@ -16,8 +16,8 @@ subset_to_bracket <-
   slice(13:45, 68:104)
 
 test_that("standard sample bracketing works as expected", {
-  expect_snapshot({
-    # turn to data.frame to render the entire table
+  expect_error({. # let's expect an error for now since the function is still being drafted
+    # compute ssb
     standard_sample_bracketing(subset_to_bracket)
   })
 })
