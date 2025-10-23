@@ -22,15 +22,15 @@ pointcoloud_distribution <- function(wod,
   # Get working data list
   wod_points <- wod[grep("204", names(wod))]
   # Finds hull for the ref Data
-  ref_hull <- convhulln(ref[grep("204", names(ref))])
+  ref_hull <- geometry::convhulln(ref[grep("204", names(ref))])
   # Checks if working points are within the hull
-  hull_inout <- inhulln(ref_hull, as.matrix(wod_points))
+  hull_inout <- geometry::inhulln(ref_hull, as.matrix(wod_points))
   # Identifes unique group names
   groups <- unique(ref[[groupby]])
   # Finds out if the points are within the hull of each indificual group
   group_inout <- sapply(groups, \(i) {
-    t <- convhulln(ref[ref[[groupby]] == i, grep("204", names(ref))])
-    inhulln(t, as.matrix(wod_points))
+    t <- geometry::convhulln(ref[ref[[groupby]] == i, grep("204", names(ref))])
+    geometry::inhulln(t, as.matrix(wod_points))
   })
   # Combines total and individual in and out logic
   hull_inclustion <- cbind(hull_inout, group_inout)
