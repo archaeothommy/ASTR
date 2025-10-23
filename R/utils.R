@@ -70,15 +70,27 @@ return_numeric_columns <- function(df, columns, all = FALSE) {
 get_analytical_columns <- function(x, ...) {
   UseMethod("remove_units")
 }
-
 #' @export
 get_analytical_columns.default <- function(x, ...) {
   stop("x is not an object of class archchem")
 }
-
 #' @export
 get_analytical_columns <- function(x) {
   get_cols_without_class(x, "archchem_context")
+}
+
+#' @rdname archchem
+#' @export
+get_contextual_columns <- function(x, ...) {
+  UseMethod("remove_units")
+}
+#' @export
+get_contextual_columns.default <- function(x, ...) {
+  stop("x is not an object of class archchem")
+}
+#' @export
+get_contextual_columns <- function(x) {
+  get_cols_with_class(x, c("archchem_id", "archchem_context"))
 }
 
 get_cols_with_class <- function(x, classes) {
