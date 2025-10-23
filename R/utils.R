@@ -60,3 +60,39 @@ return_numeric_columns <- function(df, columns, all = FALSE) {
   }
   df[columns]
 }
+
+
+
+#### Clemens' utils ####
+
+#' @rdname archchem
+#' @export
+get_analytical_columns <- function(x, ...) {
+  UseMethod("remove_units")
+}
+
+#' @export
+get_analytical_columns.default <- function(x, ...) {
+  stop("x is not an object of class archchem")
+}
+
+#' @export
+get_analytical_columns <- function(x) {
+  get_cols_without_class(x, "archchem_context")
+}
+
+get_cols_with_class <- function(x, classes) {
+  dplyr::select(x, tidyselect::where(
+    function(x) {
+      inherits(x, classes)
+    }
+  ))
+}
+
+get_cols_without_class <- function(x, classes) {
+  dplyr::select(x, tidyselect::where(
+    function(x) {
+      !inherits(x, classes)
+    }
+  ))
+}
