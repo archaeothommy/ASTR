@@ -108,18 +108,25 @@ ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +
 ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
   geom_kde2d(quantiles = 1, min_prob = 0, fill = NA)
 
+ # Creating an outline effect, and using coord_cartesian to expand the
+ # plot area so the full KDE regions show without clipping
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+  geom_kde2d(quantiles = 1, min_prob = 0, fill = NA) +
+  coord_cartesian(xlim = c(4, 8.2), ylim = c(2, 4.5), clip = "off")
+
 # Example of fallback behavior
 # Create a dataset where one group has too few points for density estimation
 set.seed(123)
 df <- data.frame(
-  x = c(rnorm(50), rnorm(50, 5), rnorm(3, 10)),
-  y = c(rnorm(50), rnorm(50, 5), rnorm(3, 10)),
-  group = rep(c("A", "B", "C"), c(50, 50, 3))
+  x = c(rnorm(50), rnorm(50, 5), rnorm(2, 10)),
+  y = c(rnorm(50), rnorm(50, 5), rnorm(2, 10)),
+  group = rep(c("A", "B", "C"), c(50, 50, 2))
 )
 
 # A message will indicate that group "C" is plotted as points
 ggplot(df, aes(x, y, fill = group, colour = group)) +
-  geom_kde2d(alpha = 0.4)
+  geom_kde2d(alpha = 0.4) +
+  theme_minimal()
 }
 \seealso{
 \code{\link[ggplot2]{geom_density_2d}}, \code{\link[ggplot2]{geom_point}}, \code{\link[ks]{kde}}

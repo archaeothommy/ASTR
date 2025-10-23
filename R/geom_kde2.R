@@ -66,6 +66,12 @@
 #' ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
 #'   geom_kde2d(quantiles = 1, min_prob = 0, fill = NA)
 #'
+#'  # Creating an outline effect, and using coord_cartesian to expand the
+#'  # plot area so the full KDE regions show without clipping
+#' ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+#'   geom_kde2d(quantiles = 1, min_prob = 0, fill = NA) +
+#'   coord_cartesian(xlim = c(4, 8.2), ylim = c(2, 4.5), clip = "off")
+#'
 #' # Example of fallback behavior
 #' # Create a dataset where one group has too few points for density estimation
 #' set.seed(123)
@@ -77,7 +83,8 @@
 #'
 #' # A message will indicate that group "C" is plotted as points
 #' ggplot(df, aes(x, y, fill = group, colour = group)) +
-#'   geom_kde2d(alpha = 0.4)
+#'   geom_kde2d(alpha = 0.4) +
+#'   theme_minimal()
 
 geom_kde2d <- function(mapping = NULL,
                        data = NULL,
