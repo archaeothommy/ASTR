@@ -228,7 +228,7 @@ GeomKDE2d <- ggplot2::ggproto(
   default_aes = ggplot2::aes(
     colour = NA,
     fill = "grey25",
-    size = 0.5,
+    size = 2,
     linetype = 1,
     linewidth = 1,
     alpha = 0.25
