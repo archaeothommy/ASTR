@@ -2,7 +2,7 @@
 title: "ASTR schema"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ASTR}
+  %\VignetteIndexEntry{ASTR schema}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
