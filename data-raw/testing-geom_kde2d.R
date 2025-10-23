@@ -135,24 +135,6 @@ ggplot(ad,
   geom_kde2d(size = 2) +
   theme_minimal()
 
-# can we compute KDEs on these cols?
-ks::kde(with(ad, c(`206Pb/204Pb`,
-                   `208Pb/204Pb`)))
-
-ks::kde(with(ad, c(`206Pb/204Pb`,
-                  `206Pb/207Pb`)))
-
-ks::kde(with(ad, c(`206Pb/204Pb`,
-                   `208Pb/207Pb`)))
-
-ks::kde(with(ad, c(`207Pb/204Pb`,
-                   `208Pb/204Pb`)))
-
-ks::kde(with(ad, c(`206Pb/204Pb`,
-                   `208Pb/207Pb`)))
-
-
-
 # Error in `geom_kde2d()`:
 #   ! Problem while converting geom to grob.
 # ℹ Error occurred in the 1st layer.

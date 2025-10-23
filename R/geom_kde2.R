@@ -184,6 +184,7 @@ GeomKDE2d <- ggplot2::ggproto(
       point_data <- data.frame(
         x = plot_data$x,
         y = plot_data$y,
+        group = plot_data$group,
         PANEL = common$PANEL,
         colour = col_val,
         fill = fill_val,
