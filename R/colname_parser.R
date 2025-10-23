@@ -6,11 +6,11 @@
 # https://cran.r-project.org/web/packages/units/index.html
 # (so the udunits library)
 colnames_to_constructors <- function(
-    x,
-    context,
-    bdl, bdl_strategy,
-    guess_context_type, na
-  ) {
+  x,
+  context,
+  bdl, bdl_strategy,
+  guess_context_type, na
+) {
   purrr::imap(
     colnames(x),
     function(colname, idx) {
@@ -118,7 +118,9 @@ colnames_to_constructors <- function(
         stop(paste0(
           "Column name \"",
           colname,
-          "\" could not be parsed. Did you mean to set it as a contextual column?"
+          "\" could not be parsed. ",
+          "Either analytical columns do not conform to ASTR conventions or ",
+          "contextual columns are not specified as such."
         ))
       }
     }

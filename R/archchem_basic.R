@@ -45,7 +45,9 @@ as_archchem <- function(
   checkmate::assert_data_frame(df)
   checkmate::assert_names(colnames(df), must.include = id_column)
   # add ID column to context for the following operation
-  if (!inherits(context, "character")) { context <- colnames(df)[context] }
+  if (!inherits(context, "character")) {
+    context <- colnames(df)[context]
+  }
   context <- append(context, id_column)
   # determine and apply column types
   constructors <- colnames_to_constructors(
