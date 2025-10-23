@@ -78,11 +78,15 @@ as_archchem <- function(
   # input checks
   checkmate::assert_data_frame(df)
   checkmate::assert_names(colnames(df), must.include = id_column)
-  # add ID column to context for the following operation
+  # prepare context column list
   if (!inherits(context, "character")) {
     context <- colnames(df)[context]
   }
   context <- append(context, id_column)
+  # add ID column to context for the following operation
+  df <- df %>%
+    dplyr::mutate(ID = .data[[id_column]]) %>%
+    dplyr::relocate("ID", .before = 1)
   # determine and apply column types
   constructors <- colnames_to_constructors(
     df, context, bdl, bdl_strategy, guess_context_type, na
@@ -90,27 +94,7 @@ as_archchem <- function(
   df <- purrr::map2(df, constructors, function(col, f) f(col))
   # turn into tibble-derived object
   df <- tibble::new_tibble(df, nrow = nrow(df), class = "archchem")
-  # create/move ID column
-  df <- df %>%
-    dplyr::mutate(ID = .data[[id_column]]) %>%
-    dplyr::relocate("ID", .before = 1)
   return(df)
-}
-
-get_cols_with_class <- function(x, classes) {
-  dplyr::select(x, tidyselect::where(
-    function(x) {
-      inherits(x, classes)
-    }
-  ))
-}
-
-get_cols_without_class <- function(x, classes) {
-  dplyr::select(x, tidyselect::where(
-    function(x) {
-      !inherits(x, classes)
-    }
-  ))
 }
 
 #' @param path path to the file that should be read

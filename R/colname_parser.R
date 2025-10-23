@@ -16,8 +16,18 @@ colnames_to_constructors <- function(
     function(colname, idx) {
       # use while for hacky switch statement
       while (TRUE) {
+        # ID column
+        if (colname == "ID") {
+          return(
+            function(x) {
+              x <- add_class(x, "archchem_id")
+              return(x)
+            }
+          )
+          break
+        }
         # contextual columns
-        if (colname == "ID" || idx %in% context || colname %in% context) {
+        if (idx %in% context || colname %in% context) {
           return(
             function(x) {
               if (guess_context_type) {
