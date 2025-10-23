@@ -51,6 +51,8 @@ standard_sample_bracketing <- function(data, ID_std = "", header="", pos=0, mp=1
   MeanSBBSamples<-0
   CurrentSample<-""
   SampleNames<- c()
+  SampleResults<-c()
+  SError<-c()
   counter<-0
   nsamples<-0
   i<-pos+1
@@ -61,12 +63,13 @@ standard_sample_bracketing <- function(data, ID_std = "", header="", pos=0, mp=1
 
       if(SecondStd==0) { #if true, we are closing the bracketing for the sample, so we need to calculate SBB
         SecondStd<-df[i,2]
+        nsamples<-nsamples+1
         StdMean<-(FirstStd+SecondStd)/2#calculate mean of both standards
         SBB<-SampleMeasurement/StdMean #calculate SBB per sample measurement
         MeanSBBSamples<- MeanSBBSamples+SBB #add the new sbb value to further on calculate the average per sample
         SampleNames<-append(SampleNames, CurrentSample)
-        print(CurrentSample)
-        print(SBB)
+        SampleResults<-append(SampleResults, SBB)
+        SError<-append(SError, "")
         FirstStd<-SecondStd #Define the second std as the first one to open the bracketing for the next sample
         SecondStd<-0 #Define the second std as zero to define the bracket as open
       }
@@ -83,13 +86,21 @@ standard_sample_bracketing <- function(data, ID_std = "", header="", pos=0, mp=1
 
       }
       else
-        if (CurrentSample==df[i,1]) #if the sample in the iteration is equal to the current sample, we only increase the counter
+        if (CurrentSample==df[i,1]){ #if the sample in the iteration is equal to the current sample, we only increase the counter
           counter<-counter+1
+          SampleMeasurement<- df[i, 2]
+        }
 
         else{ #time to calculate the average SBB for the previous sample, and prepare everything for the new one
 
           MeanSBBSamples<- MeanSBBSamples/counter #Calculate the mean
-          print(paste("Average ", CurrentSample, MeanSBBSamples ))
+          SampleNames<- append(SampleNames,paste("Average", CurrentSample))
+          SampleResults<-append(SampleResults, MeanSBBSamples)
+          nsamples<- nsamples+1
+          array<-SampleResults[(nsamples-counter):(nsamples-1)]
+          SE<- 2*sd(array)
+          SError<-append(SError, SE)
+
           CurrentSample<- df[i,1] #Define the new current sample
           counter<-1
         }
@@ -99,10 +110,16 @@ standard_sample_bracketing <- function(data, ID_std = "", header="", pos=0, mp=1
 
   }
 
+  ResultDF<-data.frame(
+    description = SampleNames,
+    calculations = SampleResults,
+    SE = SError
+  )
+  print(ResultDF)
 
 }
 
-#file <- read.csv2("C:/Users/aacevedomejia/Documents/Andrea/Project/Programming/test3.csv")
-#standard_sample_bracketing(file, "Std", "Isotope_data", 1, 1000)
+file <- read.csv2("C:/Users/aacevedomejia/Documents/Andrea/Project/Programming/test3.csv")
+standard_sample_bracketing(file, "Std", "Isotope_data", 1, 1000)
 
 
