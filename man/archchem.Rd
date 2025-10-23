@@ -73,22 +73,18 @@ types except \code{.xlsx} or \code{.xls}.}
 
 \item{x}{an object of class archchem}
 }
-<<<<<<< HEAD
 \value{
 Returns a data structure \code{archchem}  which is a tibble derived-object
 
 The function prints a short summary about the dataset, including a list of
 all context columns and analytical data columns.
 }
-=======
->>>>>>> 029a026f3486762927599b9397d6a72d264063a9
 \description{
 A function to create a data format for chemical analysis datasets
 in archaeology containing numerical elemental and isotopic data. Loads data
 from a file (.csv, .xls, .xlsx) or object (dataframe) in R. The data format
 will contain analytical data as well as corresponding contextual information
 and metadata (labelled as context).
-<<<<<<< HEAD
 }
 \details{
 The data files can be fairly freeform, i.e. no specified elements,
@@ -118,6 +114,4 @@ values as ‘NA’.
 
 Missing values (NA) are allowed anywhere in the data file body, and those
 found in an analytical data column will be replaced by \code{NA} automatically.
-=======
->>>>>>> 029a026f3486762927599b9397d6a72d264063a9
 }
