@@ -37,7 +37,7 @@
 #' The column that contains the unique samples identification is specified using
 #' the `ID` argument. If the dataset contains duplicate ids, the following warning
 #' will return:
-#' Detected multiple data rows with the same ‘ID’, which were renamed
+#' Detected multiple data rows with the same ‘ID’. They will be renamed
 #' consecutively using the following convention: `_1`,`_2`, ... `_n`
 #'
 #' Metadata contained within the dataset must be specified using the `context`
@@ -87,6 +87,19 @@ as_archchem <- function(
   df <- df %>%
     dplyr::mutate(ID = .data[[id_column]]) %>%
     dplyr::relocate("ID", .before = 1)
+  # handle ID duplicates
+  if (length(unique(df$ID)) != nrow(df)) {
+    warning("Detected multiple data rows with the same ID. They will be renamed ",
+            "consecutively using the following convention: _1, _2, ... _n")
+  }
+  df <- df %>%
+    dplyr::group_by(.data[["ID"]]) %>%
+    dplyr::mutate(
+      ID = dplyr::case_when(
+        dplyr::n() > 1 ~ paste0(.data[["ID"]], "_", as.character(dplyr::row_number())),
+        .default = .data[["ID"]]
+      )
+    )
   # determine and apply column types
   constructors <- colnames_to_constructors(
     df, context, bdl, bdl_strategy, guess_context_type, na

@@ -110,7 +110,7 @@ be adhered to. Analyses can contain as many analytical columns as necessary.
 The column that contains the unique samples identification is specified using
 the \code{ID} argument. If the dataset contains duplicate ids, the following warning
 will return:
-Detected multiple data rows with the same ‘ID’, which were renamed
+Detected multiple data rows with the same ‘ID’. They will be renamed
 consecutively using the following convention: \verb{_1},\verb{_2}, ... \verb{_n}
 
 Metadata contained within the dataset must be specified using the \code{context}
