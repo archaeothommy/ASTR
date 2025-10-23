@@ -89,8 +89,15 @@ GeomKDE2d <- ggplot2::ggproto(
   draw_group = function(data,
                         panel_params,
                         coord,
-                        quantiles,
-                        min_prob) {
+                        quantiles = 10,
+                        min_prob = 0.25,
+                        na.rm = FALSE,
+                        colour = NULL,
+                        fill = NULL,
+                        size = NULL,
+                        alpha = NULL,
+                        shape = NULL,
+                        linetype = NULL) {
     probs <- seq(0, 1, 1 / quantiles)
     probs <- probs[probs >= min_prob]
     probs <- probs[-length(probs)]
@@ -193,5 +200,8 @@ GeomKDE2d <- ggplot2::ggproto(
     size = 0.5,
     linetype = 1,
     alpha = 0.25
-  )
+  ),
+
+  extra_params = c("na.rm", "quantiles", "min_prob", "colour", "fill", "size", "alpha", "shape", "linetype")
+
 )
