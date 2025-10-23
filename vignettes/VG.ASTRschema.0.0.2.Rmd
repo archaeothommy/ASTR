@@ -38,7 +38,7 @@ ASTR follows the following naming and data conventions, which are described in d
 
 -   The following notations will be automatically identified and replaced with `NA`: *‘NA’*, *‘N.A.’*, *‘N/A’*, *‘na’*, *‘n/a’*, *‘-’*, and *‘n.d.’*. Values containing common excel error messages (*#DIV/0!*, *#VALUE!*, *#REF!*, *#NAME?*, *#NUM!*, *#N/A*, and *#NULL!*) are also replaced by `NA` automatically.
 
--   Analytical precision should be indicated in the column name as: `_err2SD`, `_errSD`, `_err2SD%`, `_errSD%`, `_errSE`, `_err2SE` without indicating the unit. The unit will be inferred from the corresponding composition column.
+-   Analytical precision should be indicated in the column name as: `_err2SD`, `_errSD`, `_err2SD%`, `_errSD%`, `_errSE`, `_err2SE` without indicating the unit. The unit will be inferred from the corresponding composition column. SD, 2SD, SE, and 2SE can be expressed in absolute or relative values. We strongly recommend that the uncertainty is included in the datatable, and properly noted following the conventions described.  
 
 | Components | Accepted formats |
 |------------------------------------|------------------------------------|
