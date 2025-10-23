@@ -60,7 +60,7 @@ colnames_to_constructors <- function(
               #   x / 100 # parts per 10000 -> percent
               # }
               x <- as_numeric_info(x, colname)
-              x <- add_class(x, c("archchem_element", "archchem_ratio"))
+              x <- add_class(x, c("archchem_isotope", "archchem_ratio"))
               return(x)
             }
           )
