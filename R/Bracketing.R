@@ -1,29 +1,33 @@
 
-#' Managing standard bracketing
+#' Standard Sample Bracketing
 #'
 #' @description
-#' Working with standard bracketing during analysis
+#' Performs Standard Sample Bracketing (SSB) correction for isotope ratio data.
 #'
 #' @details
-#' <Any text written here goes into the "Details" section>
+#' This function corrects for instrumental drift or mass bias during isotopic analyses.
+#' The measured isotope value of each sample is linearly interpolated between the two standard measurements taken immediately before and after the sample measurement.
+#' This function is a useful tool for automating a common practice in handling isotope data. It reduces the likelihood of human error and saves time.
 #'
 #'
 #' @param data < Dataframe with analysis results from the machine>
 #' @param ID_std string, <ID of the standard for bracketing>. The default value is "".
 #' @param pos integer <position of the first line for bracketing>.
 #' @param mp integer <multiplier>.
+
 #'
 #' @references
-#' <include here any relevant literature references>
+#' Mason, Thomas F.D., Dominik J. Weiss, Matthew Horstwood, Randall R. Parrish, Sara S. Russell, Eta Mullaneb and Barry J. Colesa. 2004. High-precision Cu and Zn isotope analysis by plasma source mass spectrometry. Journal of Analytical Atomic Spectrometry, 19, 209-217. DOI	https://doi.org/10.1039/B306958C
 #'
 #' @returns
-#' <Describe the output of the function. This part goes into the "Value" section>
+#' A data frame
 #'
-#' @export # remove if the function should not be visible to the user
+#' @export
 #'
 #' @examples
 #' <write here any example code. These are small simple examples on how to use
 #' the function or to highlight specific features>
+
 
 library(readr)
 library(tibble)
@@ -97,9 +101,10 @@ standard_sample_bracketing <- function(data, ID_std = "", header="", pos=0, mp=1
     
   }
 
+
 }
 
-file <- read.csv2("C:/Users/aacevedomejia/Documents/Andrea/Project/Programming/test3.csv")
-standard_sample_bracketing(file, "Std", "Isotope_data", 1, 1000)
+#file <- read.csv2("C:/Users/aacevedomejia/Documents/Andrea/Project/Programming/test3.csv")
+#standard_sample_bracketing(file, "Std", "Isotope_data", 1, 1000)
 
 
