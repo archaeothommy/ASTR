@@ -21,7 +21,7 @@ colnames_to_constructors <- function(
         if (colname == "ID") {
           return(
             function(x) {
-              x <- add_class(x, "archchem_id")
+              x <- add_archchem_class(x, "archchem_id")
               return(x)
             }
           )
@@ -34,7 +34,7 @@ colnames_to_constructors <- function(
               if (guess_context_type) {
                 x <- readr::parse_guess(x, na = na)
               }
-              x <- add_class(x, "archchem_context")
+              x <- add_archchem_class(x, "archchem_context")
               return(x)
             }
           )
@@ -46,7 +46,7 @@ colnames_to_constructors <- function(
             function(x) {
               x <- apply_bdl_strategy(x, colname, bdl, bdl_strategy)
               x <- as_numeric_info(x, colname)
-              x <- add_class(x, c("archchem_error"))
+              x <- add_archchem_class(x, c("archchem_error"))
             }
           )
         }
@@ -55,7 +55,7 @@ colnames_to_constructors <- function(
           return(
             function(x) {
               x <- as_numeric_info(x, colname)
-              x <- add_class(x, c("archchem_isotope", "archchem_ratio"))
+              x <- add_archchem_class(x, c("archchem_isotope", "archchem_ratio"))
               return(x)
             }
           )
@@ -71,7 +71,7 @@ colnames_to_constructors <- function(
               #   x / 100 # parts per 10000 -> percent
               # }
               x <- as_numeric_info(x, colname)
-              x <- add_class(x, c("archchem_element", "archchem_ratio"))
+              x <- add_archchem_class(x, c("archchem_element", "archchem_ratio"))
               return(x)
             }
           )
@@ -81,7 +81,7 @@ colnames_to_constructors <- function(
           return(
             function(x) {
               x <- as_numeric_info(x, colname)
-              x <- add_class(x, c("archchem_element", "archchem_ratio"))
+              x <- add_archchem_class(x, c("archchem_element", "archchem_ratio"))
               return(x)
             }
           )
@@ -100,7 +100,7 @@ colnames_to_constructors <- function(
             function(x) {
               x <- apply_bdl_strategy(x, colname, bdl, bdl_strategy)
               x <- as_numeric_info(x, colname)
-              x <- add_class(x, c("archchem_concentration_fraction"))
+              x <- add_archchem_class(x, c("archchem_concentration_fraction"))
               return(x)
             }
           )
@@ -118,7 +118,7 @@ colnames_to_constructors <- function(
               x <- apply_bdl_strategy(x, colname, bdl, bdl_strategy)
               x <- as_numeric_info(x, colname)
               x <- units::set_units(x, value = unit_from_col, mode = "standard")
-              x <- add_class(x, c("archchem_concentration_SI"))
+              x <- add_archchem_class(x, c("archchem_concentration_SI"))
               return(x)
             }
           )
@@ -143,8 +143,8 @@ colnames_to_constructors <- function(
   )
 }
 
-add_class <- function(x, class) {
-  class(x) <- c(class(x), class)
+add_archchem_class <- function(x, class) {
+  attr(x, "archchem_class") <- class
   return(x)
 }
 
