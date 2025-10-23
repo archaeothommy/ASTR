@@ -1,4 +1,3 @@
-
 check_columns_exist <- function(df, columns) {
   #
   checkmate::assert_data_frame(df)
@@ -11,7 +10,6 @@ check_columns_exist <- function(df, columns) {
 
   TRUE
 }
-
 
 
 filter_columns_with_id <- function(df, columns, id_column = "id") {

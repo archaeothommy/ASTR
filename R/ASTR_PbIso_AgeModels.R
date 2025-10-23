@@ -81,13 +81,11 @@
 #' pb_iso_age_model(df, model = "SK75")
 #' stacey_kramers_1975(df)
 #'
-
 pb_iso_age_model <- function(df,
                              ratio_206_204 = "206Pb/204Pb",
                              ratio_207_204 = "207Pb/204Pb",
                              ratio_208_204 = "208Pb/204Pb",
                              model = c("SK75", "CR75", "AJ84", "all")) {
-
   checkmate::assert_character(model)
 
   switch(model,
@@ -193,10 +191,10 @@ cumming_richards_1975 <- function(df,
     stats::optimize(
       function(s, a, b) {
         (a0 - a + 137.88 * vp *
-           ((exp(l238 * t0) * (1 - e1 * (t0 - 1 / l238))) -
-              (exp(l238 * s) * (1 - e1 * (s - 1 / l238)))))^2 +
+          ((exp(l238 * t0) * (1 - e1 * (t0 - 1 / l238))) -
+            (exp(l238 * s) * (1 - e1 * (s - 1 / l238)))))^2 +
           (b0 - b + vp * ((exp(l235 * t0) * (1 - e1 * (t0 - 1 / l235))) -
-                            (exp(l235 * s) * (1 - e1 * (s - 1 / l235)))))^2
+            (exp(l235 * s) * (1 - e1 * (s - 1 / l235)))))^2
       },
       a = x, b = y,
       interval = c(-10000 * 10^6, t0),

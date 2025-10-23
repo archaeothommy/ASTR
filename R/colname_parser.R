@@ -6,11 +6,11 @@
 # https://cran.r-project.org/web/packages/units/index.html
 # (so the udunits library)
 colnames_to_constructors <- function(
-    x,
-    context,
-    bdl, bdl_strategy,
-    guess_context_type, na
-  ) {
+  x,
+  context,
+  bdl, bdl_strategy,
+  guess_context_type, na
+) {
   purrr::imap(
     colnames(x),
     function(colname, idx) {
