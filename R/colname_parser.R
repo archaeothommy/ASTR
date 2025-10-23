@@ -26,8 +26,17 @@ colnames_to_constructors <- function(x, context) {
           )
           break
         }
+        # error columns
+        if (is_err(colname)) {
+          return(
+            function(x) {
+              x <- as.numeric(x)
+              x <- add_class(x, c("archchem_error"))
+            }
+          )
+        }
         # ratios
-        if (is_isotope_ratio_colname(colname)) {
+        if (is_isotope_ratio(colname)) {
           return(
             function(x) {
               x <- as.numeric(x)
@@ -53,7 +62,7 @@ colnames_to_constructors <- function(x, context) {
           )
           break
         }
-        if (is_elemental_ratio_colname(colname)) {
+        if (is_elemental_ratio(colname)) {
           return(
             function(x) {
               x <- as.numeric(x)
@@ -64,7 +73,7 @@ colnames_to_constructors <- function(x, context) {
           break
         }
         # concentrations
-        if (is_concentration_fraction_colname(colname)) {
+        if (is_concentration_fraction(colname)) {
           unit_from_col <- extract_unit_string(colname)
           # handle special cases
           # unit_from_col_modified <- dplyr::case_match(
@@ -81,7 +90,7 @@ colnames_to_constructors <- function(x, context) {
           )
           break
         }
-        if (is_concentration_other_colname(colname)) {
+        if (is_concentration_other(colname)) {
           unit_from_col <- extract_unit_string(colname)
           unit_from_col <- dplyr::case_match(
             unit_from_col,
@@ -117,19 +126,22 @@ add_class <- function(x, class) {
 
 #### regex validators ####
 
-is_isotope_ratio_colname <- function(colname) {
+is_err <- function(colname) {
+  grepl(err(), colname, perl = TRUE)
+}
+is_isotope_ratio <- function(colname) {
   grepl(isotope_ratio(), colname, perl = TRUE)
 }
 is_isotope_delta_epsilon <- function(colname) {
   grepl(isotope_delta_epsilon(), colname, perl = TRUE)
 }
-is_elemental_ratio_colname <- function(colname) {
+is_elemental_ratio <- function(colname) {
   grepl(elemental_ratio(), colname, perl = TRUE)
 }
-is_concentration_fraction_colname <- function(colname) {
+is_concentration_fraction <- function(colname) {
   grepl(concentrations_fraction(), colname, perl = TRUE)
 }
-is_concentration_other_colname <- function(colname) {
+is_concentration_other <- function(colname) {
   grepl(concentrations_other(), colname, perl = TRUE)
 }
 extract_unit_string <- function(colname) {
@@ -177,6 +189,21 @@ isotope_delta_epsilon <- function() {
     ")(", isotopes_list(), ")"
   )
 }
+
+# error states
+err <- function() {
+  paste0(c(
+    err2SD(), errSD(),
+    err2SDpercent(), errSDpercent(),
+    err2SE(), errSE()
+  ), collapse = "|")
+}
+err2SD <- function() "\\_err2SD"
+errSD <- function() "\\_errSD"
+err2SDpercent <- function() "\\_err2SD%"
+errSDpercent <- function() "\\_errSD%"
+err2SE <- function() "\\_err2SE"
+errSE <- function() "\\_errSE"
 
 # define regex pattern for element ratios:
 # any combination of two elements or oxides connected by + , - or / that may or
