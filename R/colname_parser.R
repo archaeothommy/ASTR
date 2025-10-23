@@ -118,7 +118,9 @@ colnames_to_constructors <- function(
         )
         if (drop_columns) {
           warning(m)
-          return(function(x) { NULL })
+          return(function(x) {
+            NULL
+          })
         } else {
           stop(m)
         }

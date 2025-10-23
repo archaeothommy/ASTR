@@ -78,7 +78,7 @@ get_analytical_columns.default <- function(x, ...) {
 #' @rdname archchem
 #' @export
 get_analytical_columns <- function(x) {
-  get_cols_without_archchem_class(x, "archchem_context")
+  get_cols_without_ac_class(x, "archchem_context")
 }
 
 #' @rdname archchem
@@ -94,10 +94,10 @@ get_contextual_columns.default <- function(x, ...) {
 #' @rdname archchem
 #' @export
 get_contextual_columns <- function(x) {
-  get_cols_with_archchem_class(x, c("archchem_id", "archchem_context"))
+  get_cols_with_ac_class(x, c("archchem_id", "archchem_context"))
 }
 
-get_cols_with_archchem_class <- function(x, classes) {
+get_cols_with_ac_class <- function(x, classes) {
   dplyr::select(x, tidyselect::where(
     function(y) {
       any(attr(y, "archchem_class") %in% classes)
@@ -105,7 +105,7 @@ get_cols_with_archchem_class <- function(x, classes) {
   ))
 }
 
-get_cols_without_archchem_class <- function(x, classes) {
+get_cols_without_ac_class <- function(x, classes) {
   dplyr::select(x, tidyselect::where(
     function(y) {
       !any(attr(y, "archchem_class") %in% classes)
