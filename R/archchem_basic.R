@@ -176,9 +176,26 @@ format.archchem <- function(x, ...) {
   out_str <- list()
   # compile information
   out_str$title <- "\033[1marchchem table\033[22m"
+  # analytical columns
+  x_analytical <- colnames(get_analytical_columns(x))
+  out_str$analytical_columns <- paste(
+    "Analytical columns:",
+    add_color(paste(x_analytical[-1], collapse = ", "), 32)
+  )
+  # contextual columns
+  x_context <- colnames(get_contextual_columns(x))
+  out_str$contextual_columns <- paste(
+    "Contextual columns:",
+    add_color(paste(x_context[-1], collapse = ", "), 35)
+  )
   # merge information
   return_value <- paste(out_str, collapse = "\n", sep = "")
   invisible(return_value)
+}
+
+# see colours: for(col in 29:47){ cat(paste0("\033[0;", col, "m", "test" ,"\033[0m","\n"))}
+add_color <- function(x, col) {
+  paste0("\033[0;", col, "m", x,"\033[0m")
 }
 
 #' @rdname archchem

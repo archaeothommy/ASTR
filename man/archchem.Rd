@@ -8,7 +8,9 @@
 \alias{print.archchem}
 \alias{remove_units}
 \alias{get_analytical_columns}
+\alias{get_analytical_columns.default}
 \alias{get_contextual_columns}
+\alias{get_contextual_columns.default}
 \title{\strong{archchem}}
 \usage{
 as_archchem(
@@ -46,6 +48,14 @@ read_archchem(
 remove_units(x, ...)
 
 get_analytical_columns(x)
+
+get_analytical_columns.default(x, ...)
+
+get_analytical_columns(x)
+
+get_contextual_columns(x)
+
+get_contextual_columns.default(x, ...)
 
 get_contextual_columns(x)
 }
