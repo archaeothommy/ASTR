@@ -32,7 +32,7 @@
 
 
 
-standard_sample_bracketing <- function(data, ID_std = "", header="", pos=0, mp=1000) { # update name and arguments. The ellipsis parameter is special in R, use with care!
+standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, CicleSize=1) { # update name and arguments. The ellipsis parameter is special in R, use with care!
 
   if (ID_std == ""){
     print("You need to assign the ID of the standard.")
@@ -66,6 +66,7 @@ standard_sample_bracketing <- function(data, ID_std = "", header="", pos=0, mp=1
         nsamples<-nsamples+1
         StdMean<-(FirstStd+SecondStd)/2#calculate mean of both standards
         SBB<-SampleMeasurement/StdMean #calculate SBB per sample measurement
+        print(paste("SBB: ", SBB))
         MeanSBBSamples<- MeanSBBSamples+SBB #add the new sbb value to further on calculate the average per sample
         SampleNames<-append(SampleNames, CurrentSample)
         SampleResults<-append(SampleResults, SBB)
@@ -93,6 +94,7 @@ standard_sample_bracketing <- function(data, ID_std = "", header="", pos=0, mp=1
 
         else{ #time to calculate the average SBB for the previous sample, and prepare everything for the new one
 
+          print(paste(MeanSBBSamples, counter))
           MeanSBBSamples<- MeanSBBSamples/counter #Calculate the mean
           SampleNames<- append(SampleNames,paste("Average", CurrentSample))
           SampleResults<-append(SampleResults, MeanSBBSamples)
@@ -100,8 +102,9 @@ standard_sample_bracketing <- function(data, ID_std = "", header="", pos=0, mp=1
           array<-SampleResults[(nsamples-counter):(nsamples-1)]
           SE<- 2*sd(array)
           SError<-append(SError, SE)
-
+          MeanSBBSamples<- 0
           CurrentSample<- df[i,1] #Define the new current sample
+          SampleMeasurement<-df[i,2]
           counter<-1
         }
     }
@@ -112,14 +115,14 @@ standard_sample_bracketing <- function(data, ID_std = "", header="", pos=0, mp=1
 
   ResultDF<-data.frame(
     description = SampleNames,
-    calculations = SampleResults,
+    SBB = SampleResults,
     SE = SError
   )
-  print(ResultDF)
+  #print(ResultDF)
 
 }
 
 file <- read.csv2("C:/Users/aacevedomejia/Documents/Andrea/Project/Programming/test3.csv")
-standard_sample_bracketing(file, "Std", "Isotope_data", 1, 1000)
+standard_sample_bracketing(file, "Isotope_data", "Std", 1, 1)
 
 
