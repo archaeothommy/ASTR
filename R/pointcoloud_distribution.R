@@ -8,10 +8,14 @@
 #' @param groupby Heading of a column with reference group names from reference data. Default "group".
 #'
 #' @returns
-#' List or 3
-#' \item{hull_inclustion} Logical value representing the inclustion of working data within the hull of reference data.
-#' \item{centroids} Locations of Centroids of each reference group.
-#' \item{distances} Distances of each samples point from centroids.
+#' A \code{list} of three elements:
+#'
+#' \item{hull_inclusion}{\code{logical}. A Boolean value indicating the **inclusion**
+#' of the working data (sample points) within the convex **hull** of the reference data.}
+#' \item{centroids}{\code{data.frame}. The coordinates (locations) of the **centroids** #' (mean values) for each defined reference group.}
+#' \item{distances}{\code{matrix}. A distance **matrix** where rows represent the working data samples
+#' and columns represent the reference **centroids**, containing the distance of each sample from each centroid.}
+#'
 #' @export
 #'
 #' @examples
@@ -40,7 +44,7 @@ pointcoloud_distribution <- function(wod,
   formula_srt <- paste0(".~`", groupby, "`")
   ref_centroids <- aggregate(as.formula(formula_srt), ref, mean)
   # Calculate distance of each point from centroides
-  distances <- cdist(wod[-1], ref_centroids[-1])
+  distances <- rdist::cdist(wod[-1], ref_centroids[-1])
   # Rename distance table rows and columns
   rownames(distances) <- wod[[samples]]
   colnames(distances) <- ref_centroids[[groupby]]
