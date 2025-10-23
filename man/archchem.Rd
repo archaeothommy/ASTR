@@ -44,17 +44,22 @@ read_archchem(
 remove_units(x, ...)
 }
 \arguments{
-\item{df}{a data.frame}
+\item{df}{a data.frame containing the input table}
 
-\item{id_column}{...}
+\item{id_column}{name of the ID column present in df (or in the file at path).
+Defaults to "ID"}
 
-\item{context}{...}
+\item{context}{Columns that provide contextual (non-measurement) information;
+may be column names, integer positions, or a logical inclusion vector.}
 
-\item{bdl}{...}
+\item{bdl}{Strings representing “below detection limit” values. By default,
+the following are recognized: "b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<".}
 
-\item{bdl_strategy}{...}
+\item{bdl_strategy}{Function used to replace BDL strings. Defaults to a
+function returning NA.}
 
-\item{guess_context_type}{...}
+\item{guess_context_type}{If TRUE, attempt to infer appropriate classes for
+context columns.}
 
 \item{na}{Character vector of strings to be interpret as missing values.}
 
@@ -69,5 +74,9 @@ types except \code{.xlsx} or \code{.xls}.}
 \item{x}{an object of class archchem}
 }
 \description{
-A data format for chemical analysis datasets in archaeology
+A function to create a data format for chemical analysis datasets
+in archaeology containing numerical elemental and isotopic data. Loads data
+from a file (.csv, .xls, .xlsx) or object (dataframe) in R. The data format
+will contain analytical data as well as corresponding contextual information
+and metadata (labelled as context).
 }
