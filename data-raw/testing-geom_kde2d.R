@@ -94,7 +94,10 @@ ggplot(iris,
 
 
 #-----------------------------------
- ad <- read_csv("data-raw/ArgentinaDatabase.csv")
+ad <- read_csv("data-raw/ArgentinaDatabase.csv") |>
+   select(`206Pb/204Pb`,
+          `208Pb/204Pb`,
+          `Mining site`)
 
 ggplot(ad,
        aes(x = `206Pb/204Pb`,
