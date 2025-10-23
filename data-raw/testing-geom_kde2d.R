@@ -104,5 +104,10 @@ ggplot(ad,
   theme_minimal()
 
 
-
+Error in `geom_kde2d()`:
+  ! Problem while converting geom to grob.
+ℹ Error occurred in the 1st layer.
+Caused by error in `data.frame()`:
+  ! arguments imply differing number of rows: 0, 1
+---
 
