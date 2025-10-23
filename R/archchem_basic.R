@@ -100,12 +100,14 @@ as_archchem <- function(
         dplyr::n() > 1 ~ paste0(.data[["ID"]], "_", as.character(dplyr::row_number())),
         .default = .data[["ID"]]
       )
-    )
+    ) %>%
+    dplyr::ungroup()
   # determine and apply column types
   constructors <- colnames_to_constructors(
     df, context, bdl, bdl_strategy, guess_context_type, na, drop_columns
   )
-  df <- purrr::map2(df, constructors, function(col, f) f(col))
+  df <- purrr::map2(df, constructors, function(col, f) f(col)) %>%
+    purrr::discard(is.null)
   # turn into tibble-derived object
   df <- tibble::new_tibble(df, nrow = nrow(df), class = "archchem")
   return(df)
