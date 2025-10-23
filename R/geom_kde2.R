@@ -10,7 +10,7 @@
 #' points), the geom will gracefully fall back to plotting the raw data points
 #' for that group, inheriting aesthetics from \code{\link[ggplot2]{geom_point}}.
 #'
-#' @author Thomas Rose, \email{thomas.rose@daad-alumni.de}
+#'
 #'
 #' @inheritParams ggplot2::layer
 #' @param quantiles Integer. The number of quantiles to display. For example,

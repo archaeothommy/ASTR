@@ -121,19 +121,21 @@ ggplot(ad,
   theme_minimal()
 
 ggplot(ad,
-       aes(x = `206Pb/204Pb`,
-           y = `208Pb/207Pb`,
+       aes(x = `207Pb/204Pb`,
+           y = `206Pb/207Pb`,
            fill = `Mining site`)) +
   geom_kde2d(size = 2) +
   theme_minimal()
 
 # etc
 ggplot(ad,
-       aes(x = `207Pb/204Pb`,
-           y = `208Pb/204Pb`,
+       aes(x = `208Pb/204Pb`,
+           y = `206Pb/204Pb`,
            fill = `Mining site`)) +
   geom_kde2d(size = 2) +
   theme_minimal()
+
+
 
 # Error in `geom_kde2d()`:
 #   ! Problem while converting geom to grob.

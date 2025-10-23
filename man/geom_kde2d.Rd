@@ -131,6 +131,3 @@ ggplot(df, aes(x, y, fill = group, colour = group)) +
 \seealso{
 \code{\link[ggplot2]{geom_density_2d}}, \code{\link[ggplot2]{geom_point}}, \code{\link[ks]{kde}}
 }
-\author{
-Thomas Rose, \email{thomas.rose@daad-alumni.de}
-}

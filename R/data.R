@@ -29,3 +29,16 @@
 #' @family chemical_reference_data
 #' @name isotopes
 "isotopes"
+
+#' ArgentinaDatabase
+#'
+#' Lead isotope data from ore deposits in Argentina prepared for TerraLID database.
+#'
+#' @format ## `ArgentinaDatabase`
+#'
+#' A dataframe with 112 rows and 49 columns
+#'
+#' @source <https://globalid.dmt-lb.de/>
+#' @name ArgentinaDatabase
+"ArgentinaDatabase"
+
