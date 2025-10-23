@@ -1,60 +1,83 @@
-#' Draw density plot based on quantiles
+#' Draw 2D Kernel Density Estimate Polygons by Quantiles
+#'
+#' @description
+#' This geom creates polygons based on a 2D kernel density estimate, which is
+#' calculated using the \code{\link[ks]{kde}} function. It serves as an
+#' alternative to \code{\link[ggplot2]{geom_density_2d}}, displaying the results
+#' as filled polygons corresponding to specified quantiles.
+#'
+#' If the density estimation fails for a group (e.g., due to too few unique
+#' points), the geom will gracefully fall back to plotting the raw data points
+#' for that group, inheriting aesthetics from \code{\link[ggplot2]{geom_point}}.
 #'
 #' @author Thomas Rose, \email{thomas.rose@daad-alumni.de}
 #'
-#' This geom offers an alternative geom to
-#' \code{\link[ggplot2]{geom_density_2d}}. The 2D kernel density estimate is
-#' calculated using \code{\link[ks]{kde}} and display the results as polygons of
-#' the given quantiles.
+#' @inheritParams ggplot2::layer
+#' @param quantiles Integer. The number of quantiles to display. For example,
+#'   \code{quantiles = 4} (the default) will draw quartiles.
+#' @param min_prob A numeric value in `[0, 1]`. Sets the lowest probability
+#'   quantile to be drawn. The default, \code{0.02}, helps avoid creating
+#'   polygons around single outlier points.
+#' @param ... Other arguments passed on to \code{\link[ggplot2]{layer}}. These are
+#'   often aesthetics used to set a fixed value, such as \code{colour = "red"} or
+#'   \code{alpha = 0.5}.
 #'
-#' @inheritParams ggplot2::layer()
-#' @param quantiles Number of quantiles to be displayed. The default are
-#'   quartiles, i.e. \code{quantiles = 4}.
-#' @param min_prob The smallest quantile to be displayed given in the range
-#'   \code{[0,1]}. The default \code{min_prob = 0.02} is a good estimate for
-#'   outlines without polygons around single points.
-#' @param ... Other arguments passed on to \code{\link[ggplot2]{layer}}. These
-#'   are often aesthetics, used to set an aesthetic to a fixed value.
+#' @section Aesthetics:
+#' \code{geom_kde2d()} understands the following aesthetics (required aesthetics are in bold):
+#' \itemize{
+#'   \item \strong{\code{x}}
+#'   \item \strong{\code{y}}
+#'   \item \strong{\code{group}}
+#'   \item \code{alpha}
+#'   \item \code{colour} (controls the polygon outline)
+#'   \item \code{fill} (controls the polygon fill)
+#'   \item \code{linetype}
+#'   \item \code{size} (controls the outline thickness)
+#'   \item \code{shape} (used for the fallback points)
+#' }
+#' Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 #'
-#' @section Aesthetics: \code{geom_kde2d()} understands the following aesthetics
-#'   (required aesthetics are in bold): \itemize{ \item \strong{\code{x}} \item
-#'   \strong{\code{y}} \item \strong\code{group}} \item \code{color} \item \code{fill}
-#'   \item \code{alpha} \item \code{size} \item \code{linetype} }. Learn more
-#'   about setting these aesthetics in \code{vignette("ggplot2-specs")}.
+#' @return A ggplot2 layer object.
+#'
+#' @seealso
+#' \code{\link[ggplot2]{geom_density_2d}}, \code{\link[ggplot2]{geom_point}}, \code{\link[ks]{kde}}
 #'
 #' @export
+#' @importFrom ggplot2 layer ggproto GeomPolygon GeomPoint aes draw_key_polygon
+#' @importFrom ks kde contourLevels
+#' @importFrom grDevices contourLines
 #'
 #' @examples
-#'
 #' library(ggplot2)
 #'
-#' ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, group = Species)) +
-#' geom_kde2d()
-#'
-#' # Use quantiles to adjust the outlines of the density estimates:
+#' # Basic usage with iris data
 #' ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +
-#'   geom_kde2d(quantiles = 2) # median
+#'   geom_kde2d()
 #'
+#' # Adjusting quantiles to show deciles
 #' ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +
-#'   geom_kde2d(quantiles = 10) # deciles
+#'   geom_kde2d(quantiles = 10, alpha = 0.5)
 #'
-#' # Use min_prob parameter to set the lowest quantile
+#' # Using min_prob to show only density regions above the median
 #' ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +
-#'   geom_kde2d(quantiles = 10, min_prob = 0.5) # deciles above the median
+#'   geom_kde2d(quantiles = 10, min_prob = 0.5)
 #'
-#' ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +
-#'   geom_kde2d(quantiles = 5, min_prob = 0.3) # 30% quantile and quintiles 40% and above
-#'
-#' # To create a kind of outline
+#' # Creating an outline effect
 #' ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
-#'   geom_kde2d(quantiles = 1, min_prob = 0)
+#'   geom_kde2d(quantiles = 1, min_prob = 0, fill = NA)
 #'
-#' # Density estimates are slightly different from geom_density_2d
-#' ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width)) +
-#'   geom_kde2d(aes(fill = Species)) +
-#'   geom_density_2d(aes(colour = Species)) +
-#'   geom_point()
-
+#' # Example of fallback behavior
+#' # Create a dataset where one group has too few points for density estimation
+#' set.seed(123)
+#' df <- data.frame(
+#'   x = c(rnorm(50), rnorm(50, 5), rnorm(2, 10)),
+#'   y = c(rnorm(50), rnorm(50, 5), rnorm(2, 10)),
+#'   group = rep(c("A", "B", "C"), c(50, 50, 2))
+#' )
+#'
+#' # A message will indicate that group "C" is plotted as points
+#' ggplot(df, aes(x, y, fill = group, colour = group)) +
+#'   geom_kde2d(alpha = 0.4)
 
 geom_kde2d <- function(mapping = NULL,
                        data = NULL,
@@ -95,6 +118,7 @@ GeomKDE2d <- ggplot2::ggproto(
                         colour = NULL,
                         fill = NULL,
                         size = NULL,
+                        linewidth = NULL,
                         alpha = NULL,
                         shape = NULL,
                         linetype = NULL) {
@@ -132,7 +156,7 @@ GeomKDE2d <- ggplot2::ggproto(
     }, error = function(e) {
       # --- KDE failed: fallback to points ---
       message("No density estimate possible for group '", data$group[1],
-              "' — plotting points instead.")
+              "' plotting points instead.")
       data.frame(x = data_kde$x,
                  y = data_kde$y,
                  group = 1,
@@ -178,7 +202,7 @@ GeomKDE2d <- ggplot2::ggproto(
         PANEL = common["PANEL"],
         colour = common["colour"],
         fill = common["fill"],
-        size = common["size"],
+        linewidth = common["linewidth"],
         linetype = common["linetype"],
         alpha = common["alpha"]
       )
@@ -194,11 +218,12 @@ GeomKDE2d <- ggplot2::ggproto(
 
   required_aes = c("x", "y", "group"),
 
-  default_aes = aes(
+  default_aes = ggplot2::aes(
     colour = NA,
     fill = "grey25",
     size = 0.5,
     linetype = 1,
+    linewidth = 1,
     alpha = 0.25
   ),
 

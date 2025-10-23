@@ -25,7 +25,9 @@ Imports:
     tibble,
     tidyselect,
     units,
-    robCompositions
+    robCompositions,
+    ggplot2,
+    ks
 Config/testthat/edition: 3
 Depends: 
     R (>= 3.5)
