@@ -30,7 +30,7 @@ colnames_to_constructors <- function(x, context) {
         if (is_err(colname)) {
           return(
             function(x) {
-              x <- as.numeric(x)
+              x <- as_numeric_info(x, colname)
               x <- add_class(x, c("archchem_error"))
             }
           )
@@ -39,7 +39,7 @@ colnames_to_constructors <- function(x, context) {
         if (is_isotope_ratio(colname)) {
           return(
             function(x) {
-              x <- as.numeric(x)
+              x <- as_numeric_info(x, colname)
               x <- add_class(x, c("archchem_isotope", "archchem_ratio"))
               return(x)
             }
@@ -55,7 +55,7 @@ colnames_to_constructors <- function(x, context) {
               # } else if (delta_epsilon == "e") {
               #   x / 100 # parts per 10000 -> percent
               # }
-              x <- as.numeric(x)
+              x <- as_numeric_info(x, colname)
               x <- add_class(x, c("archchem_element", "archchem_ratio"))
               return(x)
             }
@@ -65,7 +65,7 @@ colnames_to_constructors <- function(x, context) {
         if (is_elemental_ratio(colname)) {
           return(
             function(x) {
-              x <- as.numeric(x)
+              x <- as_numeric_info(x, colname)
               x <- add_class(x, c("archchem_element", "archchem_ratio"))
               return(x)
             }
@@ -83,7 +83,7 @@ colnames_to_constructors <- function(x, context) {
           # )
           return(
             function(x) {
-              x <- as.numeric(x)
+              x <- as_numeric_info(x, colname)
               x <- add_class(x, c("archchem_concentration_fraction"))
               return(x)
             }
@@ -99,7 +99,7 @@ colnames_to_constructors <- function(x, context) {
           )
           return(
             function(x) {
-              x <- as.numeric(x)
+              x <- as_numeric_info(x, colname)
               x <- units::set_units(x, value = unit_from_col, mode = "standard")
               x <- add_class(x, c("archchem_concentration_SI"))
               return(x)
@@ -122,6 +122,19 @@ colnames_to_constructors <- function(x, context) {
 add_class <- function(x, class) {
   class(x) <- c(class(x), class)
   return(x)
+}
+
+as_numeric_info <- function(x, colname) {
+  tryCatch(
+    as.numeric(x),
+    warning = function(w) {
+      message <- conditionMessage(w)
+      warning(paste0(
+        "Issue when transforming column \"", colname, "\" to numeric values: "
+        ), message
+      )
+    }
+  )
 }
 
 #### regex validators ####
