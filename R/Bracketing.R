@@ -66,7 +66,7 @@ standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, Cicl
         nsamples<-nsamples+1
         StdMean<-(FirstStd+SecondStd)/2#calculate mean of both standards
         SBB<-SampleMeasurement/StdMean #calculate SBB per sample measurement
-        print(paste("SBB: ", SBB))
+
         MeanSBBSamples<- MeanSBBSamples+SBB #add the new sbb value to further on calculate the average per sample
         SampleNames<-append(SampleNames, CurrentSample)
         SampleResults<-append(SampleResults, SBB)
@@ -94,7 +94,7 @@ standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, Cicl
 
         else{ #time to calculate the average SBB for the previous sample, and prepare everything for the new one
 
-          print(paste(MeanSBBSamples, counter))
+
           MeanSBBSamples<- MeanSBBSamples/counter #Calculate the mean
           SampleNames<- append(SampleNames,paste("Average", CurrentSample))
           SampleResults<-append(SampleResults, MeanSBBSamples)
@@ -118,7 +118,7 @@ standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, Cicl
     SBB = SampleResults,
     SE = SError
   )
-  #print(ResultDF)
+  print(ResultDF)
 
 }
 
