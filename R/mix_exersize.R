@@ -165,15 +165,83 @@ cbind( hull_inout, group_inout)
 
 # Function
 
-hull_inclustion <- function(wod, ref, groupby = "Place"){
+hull_inclustion <- function(wod, samples = "Samples",
+                            ref, groupby = "Place"){
+  #Get working data list
+  wod_points <- wod[grep("204", names(wod))]
+  # Finds hull for the ref Data
   ref_hull <- convhulln(ref[grep("204", names(ref))])
-  hull_inout <- inhulln(ref_hull,as.matrix(wod))
+  # Checks if working points are within the hull
+  hull_inout <- inhulln(ref_hull,as.matrix(wod_points))
+  # Identifes unique group names
   groups <- unique(ref[[groupby]])
+  # Finds out if the points are within the hull of each indificual group
   group_inout <- sapply(groups,
-                        \(i){t <- convhulln(ref[ref[[groupby]] == i, grep("204", names(ref))])
-                        inhulln(t, as.matrix(wod))
-                        })
-  output <- cbind( hull_inout, group_inout)
+                        \(i){t <- convhulln(ref[ref[[groupby]] == i,
+                                                grep("204", names(ref))]
+                                            )
+                        inhulln(t, as.matrix(wod_points))})
+  # Combines total and Individual in and out logic
+  output <- cbind(hull_inout, group_inout)
+  rownames(output) <- wod[[samples]]
+  formula_srt <- paste0(".~`", groupby,"`")
+  ref_centroids <- aggregate(as.formula(formula_srt), ref, mean)
+  distances <- cdist(wod[-1], ref_centroids[-1])
+  rownames(distances) <- wod[[samples]]
+  colnames(distances) <- ref_centroids[[groupby]]
+  output <- list("Hull Inclustion" = output,
+                 "centroids" = ref_centroids,
+                 "distances" = distances)
+  return(output)
+  # Returns Output.
   return(output)
 }
-out <- hull_inclustion(wod_points, ref, "Place")
+
+# hull_inclustion(ref[-1], ref, "Place")
+
+centroid_distance <- function(wod,
+         samples = "Samples",
+         ref,
+         groupby = "Place") {
+  formula_srt <- paste0(".~`", groupby,"`")
+  ref_centroids <- aggregate(as.formula(formula_srt), ref, mean)
+  distances <- cdist(wod[-1], ref_centroids[-1])
+  rownames(distances) <- wod[[samples]]
+  colnames(distances) <- ref_centroids[[groupby]]
+  output <- list("centroids" = ref_centroids,
+       "distances" = distances)
+  return(output)
+}
+# Hull Inclustion Test
+
+ref <- read_excel("data/REF Salzburg.xlsx")
+ref <- na.omit(ref)
+ref <- ref[c("ample ID", grep("204", names(ref), value = TRUE))]
+
+wod <- read_excel("data/WOD_Salzburg.xlsx")
+wod <- wod[c("Sample", grep("204", names(wod), value = TRUE))]
+
+hull_inclustion(wod, samples = "Sample", ref, "ample ID")
+test <- centroid_distance(wod, samples = "Sample", ref, "ample ID")
+ref_dist <- centroid_distance(ref, "ample ID", ref, "ample ID")
+test_cent <- centroid_distance(test$centroids, samples = "Sample", ref, "ample ID")
+
+rowSums(test$distances)
+
+plot(ref$`206Pb/204Pb`, ref$`207Pb/204Pb`, col = as.factor(ref$`ample ID`))
+points(wod$`206Pb/204Pb`, wod$`207Pb/204Pb`, pch = 3)
+points(test$centroids$`206Pb/204Pb`, test$centroids$`207Pb/204Pb`,cex = 2, pch = 16)
+source("R/isocron.R")
+isocron76()
+plot(ref$`206Pb/204Pb`, ref$`208Pb/204Pb`, col = as.factor(ref$`ample ID`))
+points(wod$`206Pb/204Pb`, wod$`208Pb/204Pb`, pch = 3)
+points(test$centroids$`206Pb/204Pb`, test$centroids$`208Pb/204Pb`, cex = 2, pch = 16)
+isocron86()
+
+library(Ternary)
+
+
+
+TernaryPlot(clab = "Agean", blab = "Spain 1", alab = "Spain 2")
+TernaryPoints(test_cent$distances, pch = 16, cex = 2)
+TernaryPoints(ref_dist, col = as.factor(rownames(ref_dist)))
