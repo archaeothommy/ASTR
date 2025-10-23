@@ -143,14 +143,20 @@ GeomKDE2d <- ggplot2::ggproto(
 
     plot_data <- tryCatch({
       kde <- ks::kde(data_kde, compute.cont = FALSE)
-
       levels <- ks::contourLevels(kde, prob = probs)
+
+      if(sum(levels) == 0) {
+        stop("Levels values are zero",
+             .call = FALSE)
+      }
+
       contours <- grDevices::contourLines(
         x = kde$eval.points[[1]],
         y = kde$eval.points[[2]],
         z = kde$estimate,
         levels = levels
       )
+
 
       plot_data <- lapply(seq_along(contours), function(i)
         data.frame(
@@ -160,14 +166,19 @@ GeomKDE2d <- ggplot2::ggproto(
         ))
 
       do.call("rbind", plot_data)
+
+
     }, error = function(e) {
+
+      # show the sepecific thing that stopped the kde
+      message(conditionMessage(e))
+
       # --- KDE failed: fallback to points ---
       message("No density estimate possible for group '", data$group[1],
               "' plotting points instead.")
-      data.frame(x = data_kde$x,
-                 y = data_kde$y,
-                 group = 1,
-                 type = "points")
+
+      data$type <- "points" # Add a 'type' column to signal the fallback
+      return(data)
 
     })
 
@@ -202,23 +213,23 @@ GeomKDE2d <- ggplot2::ggproto(
     } else {
       # Normal contour polygon
 
-    suppressWarnings(
-      data <- data.frame(
-        x = plot_data$x,
-        y = plot_data$y,
-        group = plot_data$group,
-        PANEL = common["PANEL"],
-        colour = common["colour"],
-        fill = common["fill"],
-        linewidth = common["linewidth"],
-        linetype = common["linetype"],
-        alpha = common["alpha"]
+      suppressWarnings(
+        data <- data.frame(
+          x = plot_data$x,
+          y = plot_data$y,
+          group = plot_data$group,
+          PANEL = common["PANEL"],
+          colour = common["colour"],
+          fill = common["fill"],
+          linewidth = common["linewidth"],
+          linetype = common["linetype"],
+          alpha = common["alpha"]
+        )
       )
-    )
 
-    GeomPolygon$draw_panel(data = data,
-                           panel_params = panel_params,
-                           coord = coord)
+      GeomPolygon$draw_panel(data = data,
+                             panel_params = panel_params,
+                             coord = coord)
 
     }
   },
