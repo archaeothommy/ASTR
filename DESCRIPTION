@@ -2,8 +2,26 @@ Package: ASTR
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 URL: https://example.com
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
+Authors@R: c(
+    person("Rose", "Thomas", comment = c(ORCID = "0000-0002-8186-3566"), role = c("aut", "cre"), email = "roseth@posteo.com"),
+    person("", "", comment = c(ORCID = ""), role = "aut", email = "<optional"),
+    person("", "", comment = c(ORCID = ""), role = "aut", email = "<optional"),
+    person("", "", comment = c(ORCID = ""), role = "aut", email = "<optional"),
+    person("", "", comment = c(ORCID = ""), role = "aut", email = "<optional"),
+    person("", "", comment = c(ORCID = ""), role = "aut", email = "<optional"),
+    person("", "", comment = c(ORCID = ""), role = "aut", email = "<optional"),
+    person("", "", comment = c(ORCID = ""), role = "aut", email = "<optional"),
+    person("", "", comment = c(ORCID = ""), role = "aut", email = "<optional"),
+    person("", "", comment = c(ORCID = ""), role = "aut", email = "<optional"),
+    person("", "", comment = c(ORCID = ""), role = "aut", email = "<optional"),
+    person("", "", comment = c(ORCID = ""), role = "aut", email = "<optional"),
+    person("", "", comment = c(ORCID = ""), role = "aut", email = "<optional"),
+    person("", "", comment = c(ORCID = ""), role = "aut", email = "<optional"),
+    person("", "", comment = c(ORCID = ""), role = "aut", email = "<optional"),
+    person("", "", comment = c(ORCID = ""), role = "aut", email = "<optional"),
+    person("", "", comment = c(ORCID = ""), role = "aut", email = "<optional"),
+    
+    )
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
 Encoding: UTF-8
