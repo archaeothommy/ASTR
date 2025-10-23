@@ -3,15 +3,25 @@
 #'
 #' @title \strong{archchem}
 #'
-#' @description A data format for chemical analysis datasets in archaeology
+#' @description A function to create a data format for chemical analysis datasets
+#' in archaeology containing numerical elemental and isotopic data. Loads data
+#' from a file (.csv, .xls, .xlsx) or object (dataframe) in R. The data format
+#' will contain analytical data as well as corresponding contextual information
+#' and metadata (labelled as context).
 #'
-#' @param df a data.frame
+#' @param df a data.frame containing the input table
+#' @param path  File path (including extension) to the file to read
 #' @param ... further arguments passed to or from other methods
-#' @param id_column ...
-#' @param context ...
-#' @param bdl ...
-#' @param bdl_strategy ...
-#' @param guess_context_type ...
+#' @param id_column name of the ID column present in df (or in the file at path).
+#' Defaults to "ID"
+#' @param context Columns that provide contextual (non-measurement) information;
+#' may be column names, integer positions, or a logical inclusion vector.
+#' @param bdl Strings representing “below detection limit” values. By default,
+#' the following are recognized: "b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<".
+#' @param bdl_strategy Function used to replace BDL strings. Defaults to a
+#' function returning NA.
+#' @param guess_context_type If TRUE, attempt to infer appropriate classes for
+#' context columns.
 #' @param na Character vector of strings to be interpret as missing values.
 #'
 #' @export
