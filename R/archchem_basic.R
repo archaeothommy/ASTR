@@ -28,19 +28,16 @@ as_archchem <- function(
   checkmate::assert_data_frame(df)
   checkmate::assert_names(colnames(df), must.include = id_column)
   # add ID column to context for the following operation
-  if (!inherits(context, "character")) {
-    context <- colnames(df)[context]
-  }
+  if (!inherits(context, "character")) { context <- colnames(df)[context] }
   context <- append(context, id_column)
   # determine and apply column types
-  df <- modify_columns(df, context, bdl, bdl_strategy) %>%
-    # turn into tibble-derived object
-    tibble::new_tibble(., nrow = nrow(.), class = "archchem")
+  constructors <- colnames_to_constructors(df, context, bdl, bdl_strategy)
+  df <- purrr::map2(df, constructors, function(col, f) f(col))
+  # turn into tibble-derived object
+  df <- tibble::new_tibble(df, nrow = nrow(df), class = "archchem")
   # create/move ID column
   df <- df %>%
-    dplyr::mutate(
-      ID = .data[[id_column]],
-    ) %>%
+    dplyr::mutate(ID = .data[[id_column]]) %>%
     dplyr::relocate("ID", .before = 1)
   return(df)
 }
@@ -59,13 +56,6 @@ get_cols_without_class <- function(x, classes) {
       !inherits(x, classes)
     }
   ))
-}
-
-modify_columns <- function(x, context = c(), bdl, bdl_strategy) {
-  # determine column type constructors from column names
-  constructors <- colnames_to_constructors(x, context, bdl, bdl_strategy)
-  # apply column type constructors
-  purrr::map2(x, constructors, function(col, f) f(col))
 }
 
 #' @param path path to the file that should be read
