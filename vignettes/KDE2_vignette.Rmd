@@ -56,16 +56,18 @@ Property (3) ensures the required normalization of the kernel density estimate g
 \tag{4}
 \]
 
-In other words, the kernel transforms the *"sharp"* (point) location of \( x_i \) into an interval centred (symmetrically or not) around \( x_i \).
-
-(PDF) Węglarczyk, S.2018. Kernel density estimation and its application. Available from: https://www.researchgate.net/publication/328785939_Kernel_density_estimation_and_its_application [accessed Oct 24 2025].
-
-(PDF) Kernel density estimation and its application. Available from: https://www.researchgate.net/publication/328785939_Kernel_density_estimation_and_its_application [accessed Oct 24 2025].
+In other words, the kernel transforms the *"sharp"* (point) location of \( x_i \) into an interval centred (symmetrically or not) around \( x_i \).(Węglarczyk, 2018)
 
 
 ###Further reading
+
+Pollard, A. M., Ma. Qian, A.-I. Bidegaray, Ruiliang Liu. 2023. The Use of Kernel Density Estimates on Chemical and Isotopic Data in Archaeology. In: A. Mark Pollard, Ruth Ann Armitage, Cheryl A. Makarewicz (Eds.), *Handbook of Archaeological Sciences*, Second Edition (pp.1227-1240). Wiley. https://doi.org/10.1002/9781119592112.ch61
+
 Simonoff, J.S. (1996). *Smoothing Methods in Statistics*. Springer-Verlag, New York.
 
+Węglarczyk, S. 2018. Kernel density estimation and its application. Available from: https://www.researchgate.net/publication/328785939_Kernel_density_estimation_and_its_application [accessed Oct 24 2025]. FINISH
+
+dUONG add
 
 # Examples
 The following examples showcase the different visualisation and density estimate calculations for the geom_kde2d function. 
