@@ -20,12 +20,14 @@ A \code{list} of three elements:
 
 \item{hull_inclusion}{\code{logical}. A Boolean value indicating the \strong{inclusion}
 of the working data (sample points) within the convex \strong{hull} of the reference data.}
-\item{centroids}{\code{data.frame}. The coordinates (locations) of the \strong{centroids} #' (mean values) for each defined reference group.}
+\item{centroids}{\code{data.frame}. The coordinates of the \strong{centroids}
+(mean values) for each defined reference group.}
 \item{distances}{\code{matrix}. A distance \strong{matrix} where rows represent the working data samples
 and columns represent the reference \strong{centroids}, containing the distance of each sample from each centroid.}
 }
 \description{
-This package compares isotope samples to reference data in 3D space to identify isotopic consistency and the possibility of mixing between sources.
+This package compares isotope samples to reference data in 3D space
+to identify isotopic consistency and the possibility of mixing between sources.
 }
 \examples{
 # Creaete Synthetic Data
