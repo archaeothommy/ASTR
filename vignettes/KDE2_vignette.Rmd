@@ -7,9 +7,20 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ASTR)
+```
+
 # Introduction
 
-This vignette introduces the "Kde2" function which generates a binary plot with kernel density estimation.
+This vignette introduces the `geom_kde2d` function which generates a binary plot with kernel density estimation.
 
 Kernel density estimation (KDE) is a non-parametric method to transform continuous data into a smoothed probability density function. According to Hsu (2024,Hsu et al. 2018) KDE has become popular in archeaological science publications mainly due to three advantages when analysing data:
 
@@ -61,7 +72,7 @@ ggplot(ad,
   geom_kde2d(quantiles = 1, min_prob = 0, fill = NA)
 
 ##   Creation of an outline effect around the density region solving clipping issues
-In some cases density regions can be clipped by the plot area. The addition of the coord_cartesian function from ggplot2 expands the plot area so the full density regions are shown without clipping.The limits are set for the axes using the xlim and ylim arguments. 
+In some cases density regions can be clipped by the plot area. The addition of the `coord_cartesia`n function from ggplot2 expands the plot area so the full density regions are shown without clipping.The limits are set for the axes using the xlim and ylim arguments. 
 
 ggplot(ad, 
   aes(x = `206Pb/204Pb`, 
@@ -70,13 +81,4 @@ ggplot(ad,
   geom_kde2d(quantiles = 1, min_prob = 0, fill = NA) + 
   coord_cartesian(xlim = c(4, 8.2), ylim = c(2, 4.5), clip = "off")
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
 
-```{r setup}
-library(ASTR)
-```
