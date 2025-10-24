@@ -75,7 +75,6 @@ get_analytical_columns <- function(x, ...) {
 get_analytical_columns.default <- function(x, ...) {
   stop("x is not an object of class archchem")
 }
-#' @rdname archchem
 #' @export
 get_analytical_columns <- function(x) {
   get_cols_without_ac_class(x, "archchem_context")
@@ -91,7 +90,6 @@ get_contextual_columns <- function(x, ...) {
 get_contextual_columns.default <- function(x, ...) {
   stop("x is not an object of class archchem")
 }
-#' @rdname archchem
 #' @export
 get_contextual_columns <- function(x) {
   get_cols_with_ac_class(x, c("archchem_id", "archchem_context"))

@@ -240,7 +240,7 @@ remove_units.default <- function(x, ...) {
 
 #' @export
 remove_units.archchem <- function(x, ...) {
-  without_units <- dplyr::mutate(
+  dplyr::mutate(
     x,
     dplyr::across(
       tidyselect::where(function(x) {
@@ -249,5 +249,4 @@ remove_units.archchem <- function(x, ...) {
       units::drop_units
     )
   )
-  tibble::as_tibble(without_units)
 }

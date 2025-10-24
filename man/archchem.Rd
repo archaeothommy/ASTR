@@ -53,13 +53,9 @@ get_analytical_columns(x)
 
 get_analytical_columns.default(x, ...)
 
-get_analytical_columns(x)
-
 get_contextual_columns(x)
 
 get_contextual_columns.default(x, ...)
-
-get_contextual_columns(x)
 }
 \arguments{
 \item{df}{a data.frame containing the input table}
