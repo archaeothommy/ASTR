@@ -3,6 +3,7 @@
 \name{archchem}
 \alias{archchem}
 \alias{as_archchem}
+\alias{validate}
 \alias{read_archchem}
 \alias{format.archchem}
 \alias{print.archchem}
@@ -25,8 +26,11 @@ as_archchem(
   na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.", "#DIV/0!", "#VALUE!",
     "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"),
   drop_columns = FALSE,
+  validate = TRUE,
   ...
 )
+
+validate(x, quiet = TRUE, ...)
 
 read_archchem(
   path,
@@ -40,7 +44,8 @@ read_archchem(
   bdl_strategy = function() {
      NA_character_
  },
-  drop_columns = FALSE
+  drop_columns = FALSE,
+  validate = TRUE
 )
 
 \method{format}{archchem}(x, ...)
@@ -79,15 +84,19 @@ context columns.}
 
 \item{drop_columns}{...}
 
+\item{validate}{...}
+
 \item{...}{further arguments passed to or from other methods}
+
+\item{x}{an object of class archchem}
+
+\item{quiet}{...}
 
 \item{path}{path to the file that should be read}
 
 \item{delim}{A character string with the separator for tabular data. Use
 \verb{\\t} for tab-separated data. Must be provided for all file
 types except \code{.xlsx} or \code{.xls}.}
-
-\item{x}{an object of class archchem}
 }
 \value{
 Returns a data structure \code{archchem}  which is a tibble derived-object

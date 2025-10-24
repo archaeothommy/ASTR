@@ -24,6 +24,7 @@
 #' context columns.
 #' @param na Character vector of strings to be interpret as missing values.
 #' @param drop_columns ...
+#' @param validate ...
 #'
 #' @return Returns a data structure `archchem`  which is a tibble derived-object
 #'
@@ -74,6 +75,7 @@ as_archchem <- function(
     "#DIV/0!", "#VALUE!", "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"
   ),
   drop_columns = FALSE,
+  validate = TRUE,
   ...
 ) {
   # input checks
@@ -90,8 +92,10 @@ as_archchem <- function(
     dplyr::relocate("ID", .before = 1)
   # handle ID duplicates
   if (length(unique(df$ID)) != nrow(df)) {
-    warning("Detected multiple data rows with the same ID. They will be renamed ",
-            "consecutively using the following convention: _1, _2, ... _n")
+    warning(
+      "Detected multiple data rows with the same ID. They will be renamed ",
+      "consecutively using the following convention: _1, _2, ... _n"
+    )
   }
   df <- df %>%
     dplyr::group_by(.data[["ID"]]) %>%
@@ -110,8 +114,60 @@ as_archchem <- function(
     purrr::discard(is.null)
   # turn into tibble-derived object
   df <- tibble::new_tibble(df, nrow = nrow(df), class = "archchem")
+  # post-reading validation
+  if (validate) {
+    validation_output <- validate(df, quiet = FALSE)
+    if (nrow(validation_output) > 0) {
+      warning(
+        "See the full list of validation output with: ",
+        "ASTR::validate(<your archchem object>)."
+      )
+    }
+  }
   return(df)
 }
+
+#' @rdname archchem
+#' @param quiet ...
+#' @export
+validate <- function(x, quiet = TRUE, ...) {
+  UseMethod("validate")
+}
+
+#' @export
+validate.default <- function(x, quiet = TRUE, ...) {
+  stop("x is not an object of class archchem")
+}
+
+#' @export
+validate.archchem <- function(x, quiet = TRUE, ...) {
+  # check for missingness in analytical columns
+  df_analytical <- get_analytical_columns(x)[-1]
+  missing_values <- purrr::map2_dfr(
+    df_analytical, colnames(df_analytical),
+    function(x, col) {
+      n_na <- sum(is.na(x))
+      if (n_na > 0) {
+        tibble::tibble(
+          column = col,
+          count = n_na,
+          warning = "missing values"
+        )
+      }
+    }
+  )
+  if (!quiet && nrow(missing_values) > 0) {
+    warning(
+      sum(missing_values$count),
+      " missing values across ",
+      nrow(missing_values),
+      " analytical columns"
+    )
+  }
+  all_warnings <- dplyr::bind_rows(missing_values)
+  return(all_warnings)
+}
+
 
 #' @param path path to the file that should be read
 #' @param delim A character string with the separator for tabular data. Use
@@ -131,7 +187,8 @@ read_archchem <- function(
   bdl_strategy = function() {
     NA_character_
   },
-  drop_columns = FALSE
+  drop_columns = FALSE,
+  validate = TRUE
 ) {
   ext <- strsplit(basename(path), split = "\\.")[[1]][-1] # extract file format
 
@@ -183,7 +240,8 @@ read_archchem <- function(
     id_column = id_column, context = context,
     bdl = bdl, bdl_strategy = bdl_strategy,
     guess_context_type = guess_context_type, na = na,
-    drop_columns = drop_columns
+    drop_columns = drop_columns,
+    validate = validate
   )
 }
 
