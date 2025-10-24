@@ -99,7 +99,7 @@ The following examples showcase the different visualisation and density estimate
 ## Basic biplot 
 
 ```{r, fig.width=7, fig.height=8}
-# load example Lead isotope data that is included with the package
+# load example lead isotope data that is included with the package
 data(ArgentinaDatabase)
 
 library(ggplot2)
@@ -124,43 +124,64 @@ the leading minor of order 1 is not positive. In those cases, the plotting falls
 ## Biplot with adjusted quantiles to show deciles
 The default function reverts to 4 quantiles. This examples illustrates the quantiles set to 10 to show deciles.It also sets the transparency to 0.5. 
 
-```{r}
+```{r, fig.width=7, fig.height=8}
 ggplot(ArgentinaDatabase, 
   aes(x = `206Pb/204Pb`, 
       y = `207Pb/204Pb`, 
       fill = `Mining site`)) + 
   geom_kde2d(quantiles = 10, 
-             alpha = 0.5)
+             alpha = 0.5) +
+  theme_minimal() +
+  # move the legend under the plot so the
+  # site names are fully legible
+  theme(legend.position="bottom", 
+        legend.direction="horizontal") +
+  guides(fill = guide_legend(nrow = 10, 
+               theme = theme(legend.byrow = TRUE)))
 ```
   
 ## Biplot with the minimum probability argument added to show only density regions above the median
 
-```{r}
+```{r, fig.width=7, fig.height=8}
 ggplot(ArgentinaDatabase, 
   aes(x = `206Pb/204Pb`, 
       y = `207Pb/204Pb`, 
       fill = `Mining site`)) + 
   geom_kde2d(quantiles = 10, 
-             min_prob = 0.5)
+             min_prob = 0.5)  +
+  theme_minimal() +
+  # move the legend under the plot so the
+  # site names are fully legible
+  theme(legend.position="bottom", 
+        legend.direction="horizontal") +
+  guides(fill = guide_legend(nrow = 10, 
+               theme = theme(legend.byrow = TRUE)))
 ```
   
 ## Creation of an outline effect around the density region
 For this effect the fill argument is set to NA
 
-```{r}
+```{r, fig.width=7, fig.height=8}
 ggplot(ArgentinaDatabase, 
   aes(x = `206Pb/204Pb`, 
       y = `207Pb/204Pb`, 
       colour = `Mining site`)) + 
   geom_kde2d(quantiles = 1, 
              min_prob = 0, 
-             fill = NA)
+             fill = NA) +
+  theme_minimal() +
+  # move the legend under the plot so the
+  # site names are fully legible
+  theme(legend.position="bottom", 
+        legend.direction="horizontal") +
+  guides(colour = guide_legend(nrow = 10, 
+                  theme = theme(legend.byrow = TRUE)))
 ```
 
 ##   Creation of an outline effect around the density region solving clipping issues
 In some cases density regions can be clipped by the plot area. The addition of the `coord_cartesia`n function from ggplot2 expands the plot area so the full density regions are shown without clipping.The limits are set for the axes using the xlim and ylim arguments. 
 
-```{r}
+```{r, fig.width=7, fig.height=8}
 ggplot(ArgentinaDatabase, 
   aes(x = `206Pb/204Pb`, 
       y = `207Pb/204Pb`, 
@@ -168,9 +189,16 @@ ggplot(ArgentinaDatabase,
   geom_kde2d(quantiles = 1,
              min_prob = 0, 
              fill = NA) + 
-  coord_cartesian(xlim = c(4, 8.2), 
-                  ylim = c(2, 4.5), 
-                  clip = "off")
+  coord_cartesian(xlim = c(17.8, 19), 
+                  ylim = c(15, 16), 
+                  clip = "off") +
+  theme_minimal() +
+  # move the legend under the plot so the
+  # site names are fully legible
+  theme(legend.position="bottom", 
+        legend.direction="horizontal") +
+  guides(colour = guide_legend(nrow = 10, 
+                  theme = theme(legend.byrow = TRUE)))
 ```
 
 
