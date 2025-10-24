@@ -19,10 +19,40 @@
 #' @export
 #'
 #' @examples
-pointcoloud_distribution <- function(wod,
+#
+# iso <- c("206Pb/204Pb","207Pb/204Pb","208Pb/204Pb")
+#
+# # Create Reference data
+# groups <- LETTERS[1:4]
+# rand_iso <- \(){c(runif(1, 18.3, 19), runif(1, 15.5, 15.9), runif(1, 37.5, 39))}
+# list_df <- lapply(groups, \(x){
+#   ls <- sapply(rand_iso(),  \(g){rnorm(20, g, runif(1, 0.05, 0.1))})
+#   colnames(ls) <- iso
+#   ls <- as.data.frame(ls)
+#   ls$groups <- x
+#   ls
+#   })
+# ref <- as.data.frame(do.call(rbind, list_df))
+#
+# # Create working data
+#
+# wod <- as.data.frame(sapply(rand_iso(),  \(g){rnorm(20, g, 0.1)}))
+# colnames(wod) <- iso
+# wod$samples <- letters[1:20]
+#
+# rm(list_df, iso, groups, rand_iso)
+#
+# plot(ref$`206Pb/204Pb`, ref$`207Pb/204Pb`, col = as.factor(ref$groups))
+# points(wod$`206Pb/204Pb`, wod$`207Pb/204Pb`, pch = 3)
+# pointcloud_distribution(wod, ref)
+
+
+
+####
+pointcloud_distribution <- function(wod,
                                      samples = "samples",
                                      ref,
-                                     groupby = "group") {
+                                     groupby = "groups") {
   # Get working data list
   wod_points <- wod[grep("204", names(wod))]
   # Finds hull for the ref Data
