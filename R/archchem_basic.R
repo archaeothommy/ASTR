@@ -192,7 +192,8 @@ read_archchem <- function(
     NA_character_
   },
   drop_columns = FALSE,
-  validate = TRUE
+  validate = TRUE,
+  ...
 ) {
   ext <- strsplit(basename(path), split = "\\.")[[1]][-1] # extract file format
 
