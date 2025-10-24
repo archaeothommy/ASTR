@@ -1,6 +1,7 @@
 #' Comparing Isotope Samples to Reference Data in 3D Space
 #'
-#' This package compares isotope samples to reference data in 3D space to identify isotopic consistency and the possibility of mixing between sources.
+#' This package compares isotope samples to reference data in 3D space
+#' to identify isotopic consistency and the possibility of mixing between sources.
 #'
 #' @param wod Working data, with 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb
 #' @param samples Heading of a column with Samples names from working data. Default "samples".
@@ -12,7 +13,8 @@
 #'
 #' \item{hull_inclusion}{\code{logical}. A Boolean value indicating the **inclusion**
 #' of the working data (sample points) within the convex **hull** of the reference data.}
-#' \item{centroids}{\code{data.frame}. The coordinates (locations) of the **centroids** #' (mean values) for each defined reference group.}
+#' \item{centroids}{\code{data.frame}. The coordinates of the **centroids**
+#' (mean values) for each defined reference group.}
 #' \item{distances}{\code{matrix}. A distance **matrix** where rows represent the working data samples
 #' and columns represent the reference **centroids**, containing the distance of each sample from each centroid.}
 #'
@@ -40,9 +42,9 @@
 #' # Run Pointcloud_distribution
 #' pointcloud_distribution(ref, "sample", ref, "groups")
 pointcloud_distribution <- function(wod,
-                                     samples = "samples",
-                                     ref,
-                                     groupby = "groups") {
+                                    samples = "samples",
+                                    ref,
+                                    groupby = "groups") {
   # Get iso names from Wod
   wod_names <- grep("204", names(wod), value = TRUE)
   # Get iso names for Ref
@@ -51,7 +53,7 @@ pointcloud_distribution <- function(wod,
   # Get working data list
   wod_points <- wod[wod_names]
   # Get Ref data list
-  ref <- ref[,c(groupby, ref_names)]
+  ref <- ref[, c(groupby, ref_names)]
   # Finds hull for the ref Data
   ref_hull <- geometry::convhulln(ref[ref_names])
   # Checks if working points are within the hull
@@ -84,8 +86,3 @@ pointcloud_distribution <- function(wod,
   # Returns Output.
   return(output)
 }
-
-
-
-
-
