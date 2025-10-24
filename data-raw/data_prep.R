@@ -91,3 +91,11 @@ usethis::use_data(
 # )
 #
 # usethis::use_data(isotopes, overwrite = T)
+
+#### archem data input table ####
+
+archchem_example_input <- readr::read_csv("data-raw/test_data_input_good.csv")
+
+usethis::use_data(archchem_example_input,
+  overwrite = TRUE
+)
