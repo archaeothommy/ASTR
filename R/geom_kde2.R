@@ -102,7 +102,10 @@ geom_kde2d <- function(mapping = NULL,
     position = "identity",
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(quantiles = quantiles, min_prob = min_prob, ...)
+    params = list(quantiles = quantiles,
+                  min_prob = min_prob,
+                  fallback_to_points = fallback_to_points,
+                  ...)
   )
 }
 
@@ -129,7 +132,8 @@ GeomKDE2d <- ggplot2::ggproto(
                         linewidth = NULL,
                         alpha = NULL,
                         shape = NULL,
-                        linetype = NULL) {
+                        linetype = NULL,
+                        fallback_to_points = TRUE) {
     probs <- seq(0, 1, 1 / quantiles)
     probs <- probs[probs >= min_prob]
     probs <- probs[-length(probs)]
@@ -158,7 +162,6 @@ GeomKDE2d <- ggplot2::ggproto(
         levels = levels
       )
 
-
       plot_data <- lapply(seq_along(contours), function(i)
         data.frame(
           x = contours[[i]][["x"]],
@@ -168,17 +171,26 @@ GeomKDE2d <- ggplot2::ggproto(
 
       do.call("rbind", plot_data)
 
-
     }, error = function(e) {
 
-      # show the sepecific thing that stopped the kde
+      # show the specific thing that stopped the kde
       message(conditionMessage(e))
+
+      # --- KDE failed and user has chosen not to plot points
+      if (isFALSE(fallback_to_points)) {
+        message(sprintf("Skipping group '%s': %s", data$group[1], conditionMessage(e)))
+        return(data.frame())  # empty data = draw nothing for this group
+      }
+
+      # --- KDE failed and user has chosen not to plot points
+      message(sprintf("Skipping group '%s': %s", data$group[1], conditionMessage(e)))
 
       # --- KDE failed: fallback to points ---
       message("No density estimate possible for group '", data$group[1],
               "' plotting points instead.")
 
       data$type <- "points" # Add a 'type' column to signal the fallback
+
       return(data)
 
     })
@@ -211,7 +223,10 @@ GeomKDE2d <- ggplot2::ggproto(
         panel_params = panel_params,
         coord = coord
       )
-    } else {
+
+    } else if (nrow(plot_data) > 0) { # Check if plot_data is not empty
+
+
       # Normal contour polygon
 
       suppressWarnings(
@@ -248,6 +263,6 @@ GeomKDE2d <- ggplot2::ggproto(
     alpha = 0.25
   ),
 
-  extra_params = c("na.rm", "quantiles", "min_prob", "colour", "fill", "size", "alpha", "shape", "linetype")
+  extra_params = c("na.rm", "quantiles", "min_prob", "colour", "fill", "size", "alpha", "shape", "linetype", "fallback_to_points")
 
 )
