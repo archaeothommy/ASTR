@@ -32,6 +32,8 @@ They can represent data in a multidimensional space and enable users to effectiv
 The following examples showcase the different visualisation and density estimate calculations for the geom_kde2d function. 
 
 ## Basic biplot 
+
+```{r}
 library(readr)
 ad <- read_csv("data-raw/ArgentinaDatabase.csv")
 View(ad)
@@ -41,6 +43,7 @@ ggplot(ad,
   y = `207Pb/204Pb`, 
   fill = `Mining site`)) + 
   geom_kde2d()
+```
   
 This example reads in the sample dataset and calculates the kernel density estimates in the function geom_kde2d(), colouring by the Mining site variable from the dataset. Warning messages appear for each group where the sample size is too small to calculate the estimates: No density estimate possible for group 'x' plotting points instead.
 the leading minor of order 1 is not positive. In those cases, the plotting falls back to plotting individual points from the original dataset.
@@ -48,37 +51,45 @@ the leading minor of order 1 is not positive. In those cases, the plotting falls
 ## Biplot with adjusted quantiles to show deciles
 The default function reverts to 4 quantiles. This examples illustrates the quantiles set to 10 to show deciles.It also sets the transparency to 0.5. 
 
+```{r}
 ggplot(ad, 
   aes(x = `206Pb/204Pb`, 
   y = `207Pb/204Pb`, 
   fill = `Mining site`)) + 
   geom_kde2d(quantiles = 10, alpha = 0.5)
+```
   
 ## Biplot with the minimum probability argument added to show only density regions above the median
 
+```{r}
 ggplot(ad, 
   aes(x = `206Pb/204Pb`, 
   y = `207Pb/204Pb`, 
   fill = `Mining site`)) + 
   geom_kde2d(quantiles = 10, min_prob = 0.5)
+```
   
 ## Creation of an outline effect around the density region
 For this effect the fill argument is set to NA
 
+```{r}
 ggplot(ad, 
   aes(x = `206Pb/204Pb`, 
   y = `207Pb/204Pb`, 
   colour = `Mining site`)) + 
   geom_kde2d(quantiles = 1, min_prob = 0, fill = NA)
+```
 
 ##   Creation of an outline effect around the density region solving clipping issues
 In some cases density regions can be clipped by the plot area. The addition of the `coord_cartesia`n function from ggplot2 expands the plot area so the full density regions are shown without clipping.The limits are set for the axes using the xlim and ylim arguments. 
 
+```{r}
 ggplot(ad, 
   aes(x = `206Pb/204Pb`, 
   y = `207Pb/204Pb`, 
   colour = `Mining site`)) + 
   geom_kde2d(quantiles = 1, min_prob = 0, fill = NA) + 
   coord_cartesian(xlim = c(4, 8.2), ylim = c(2, 4.5), clip = "off")
+```
 
 
