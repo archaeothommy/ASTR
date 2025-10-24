@@ -18,6 +18,10 @@
 #' @param min_prob A numeric value in `[0, 1]`. Sets the lowest probability
 #'   quantile to be drawn. The default, \code{0.02}, helps avoid creating
 #'   polygons around single outlier points.
+#' @param fallback_to_points Logical. To prevent points from being drawn for
+#'   groups that fail density estimation, set this to FALSE. For example, if you
+#'   want more control over the point aesthetics, independent of the KDE regions,
+#'   set this to FALSE and use geom_point to plot those points
 #' @param ... Other arguments passed on to \code{\link[ggplot2]{layer}}. These are
 #'   often aesthetics used to set a fixed value, such as \code{colour = "red"} or
 #'   \code{alpha = 0.5}.

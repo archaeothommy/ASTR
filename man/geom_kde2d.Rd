@@ -56,6 +56,11 @@ display. To include legend keys for all levels, even
 when no data exists, use \code{TRUE}.  If \code{NA}, all levels are shown in legend,
 but unobserved levels are omitted.}
 
+\item{fallback_to_points}{Logical. To prevent points from being drawn for
+groups that fail density estimation, set this to FALSE. For example, if you
+want more control over the point aesthetics, independent of the KDE regions,
+set this to FALSE and use geom_point to plot those points}
+
 \item{...}{Other arguments passed on to \code{\link[ggplot2]{layer}}. These are
 often aesthetics used to set a fixed value, such as \code{colour = "red"} or
 \code{alpha = 0.5}.}
