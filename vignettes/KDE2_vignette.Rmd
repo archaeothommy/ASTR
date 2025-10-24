@@ -24,17 +24,25 @@ This vignette introduces the `geom_kde2d` function which generates a two-dimensi
 
 Kernel density estimation (KDE) is a non-parametric method to transform continuous data into a smoothed probability density function. According to Hsu (2024,Hsu et al. 2018) KDE has become popular in archeaological science publications mainly due to three advantages when analysing data:
 
-They do not assume the normality of the data;
-They can produce smoother distributions than conventional histograms, whose appearance is significantly affected by the choices of bin width and the start/end points of bins; and
-They can represent data in a multidimensional space and enable users to effectively compare different datasets either graphically or mathematically (see De Ceuster et al. 2025 also for the advantages of the use of one-dimensional KDE’s).
-
+They do not assume the normality of the data; They can produce smoother distributions than conventional histograms, whose appearance is significantly affected by the choices of bin width and the start/end points of bins; and They can represent data in a multidimensional space and enable users to effectively compare different datasets either graphically or mathematically (see De Ceuster et al. 2025 also for the advantages of the use of one-dimensional KDE’s).
 
 # Function workflow
 
-# Examples
-The following examples showcase the different visualisation and density estimate calculations for the geom_kde2d function. 
+The geom_kde2 function calculates the 2D kernel density estimate using the `kde` function from the ks package (Duong 2007; 2025), while handling the contours manually (compute.cont = FALSE).
 
-## Basic biplot 
+It then calculates the actual density values (the contour levels) corresponding to the probability levels (probs) using the `ks::contourLevels` function.
+
+Using the base R function `grDevices::contourLines`, the contour line coordinates are generated, using the grid points (eval.points) and the density estimate (estimate) from the kde object, and the calculated levels. The contour coordinates are converted into a data frame as list items. The function extracts its coordinates (x, y) and assigns a unique group ID for each contour. Specific error messages are printed for failed density calculations.
+
+The original data are then returned with the added type column and are checked for fallback (the type column equals "points") to determine if the density estimates failed). A data frame for plotting points using the original x and y data from the fallback data is created, applying the determined aesthetics and these are drawn using the in-built GeomPoint `draw_panel`.
+
+Default aesthetic values are applied if unchanged by the user.
+
+# Examples
+
+The following examples showcase the different visualisation and density estimate calculations for the geom_kde2d function.
+
+## Basic biplot
 
 ```{r}
 # load example Lead isotope data that is included with the package
@@ -46,12 +54,12 @@ ggplot(ArgentinaDatabase,
   fill = `Mining site`)) + 
   geom_kde2d()
 ```
-  
-This example reads in the sample dataset and calculates the kernel density estimates in the function geom_kde2d(), colouring by the Mining site variable from the dataset. Warning messages appear for each group where the sample size is too small to calculate the estimates: No density estimate possible for group 'x' plotting points instead.
-the leading minor of order 1 is not positive. In those cases, the plotting falls back to plotting individual points from the original dataset.
+
+This example reads in the sample dataset and calculates the kernel density estimates in the function `geom_kde2d()`, colouring by the `Mining site` variable from the dataset. Warning messages appear for each group where the sample size is too small to calculate the estimates: `No density estimate possible for group 'x' plotting points instead. The leading minor of order 1 is not positive`. In those cases, the plotting falls back to plotting individual points from the original dataset.
 
 ## Biplot with adjusted quantiles to show deciles
-The default function reverts to 4 quantiles. This examples illustrates the quantiles set to 10 to show deciles.It also sets the transparency to 0.5. 
+
+The default function reverts to 4 quantiles. This examples illustrates the quantiles set to 10 to show deciles. It also sets the transparency to 0.5 (`alpha`).
 
 ```{r}
 ggplot(ArgentinaDatabase, 
@@ -60,7 +68,7 @@ ggplot(ArgentinaDatabase,
   fill = `Mining site`)) + 
   geom_kde2d(quantiles = 10, alpha = 0.5)
 ```
-  
+
 ## Biplot with the minimum probability argument added to show only density regions above the median
 
 ```{r}
@@ -70,9 +78,10 @@ ggplot(ArgentinaDatabase,
   fill = `Mining site`)) + 
   geom_kde2d(quantiles = 10, min_prob = 0.5)
 ```
-  
+
 ## Creation of an outline effect around the density region
-For this effect the fill argument is set to NA
+
+For this effect the fill argument is set to `NA`
 
 ```{r}
 ggplot(ArgentinaDatabase, 
@@ -82,8 +91,9 @@ ggplot(ArgentinaDatabase,
   geom_kde2d(quantiles = 1, min_prob = 0, fill = NA)
 ```
 
-##   Creation of an outline effect around the density region solving clipping issues
-In some cases density regions can be clipped by the plot area. The addition of the `coord_cartesia`n function from ggplot2 expands the plot area so the full density regions are shown without clipping.The limits are set for the axes using the xlim and ylim arguments. 
+## Creation of an outline effect around the density region solving clipping issues
+
+In some cases density regions can be clipped by the plot area. The addition of the `coord_cartesia`n function from `ggplot2` expands the plot area so the full density regions are shown without clipping.The limits are set for the axes using the `xlim` and `ylim` arguments.
 
 ```{r}
 ggplot(ArgentinaDatabase, 
@@ -93,5 +103,3 @@ ggplot(ArgentinaDatabase,
   geom_kde2d(quantiles = 1, min_prob = 0, fill = NA) + 
   coord_cartesian(xlim = c(4, 8.2), ylim = c(2, 4.5), clip = "off")
 ```
-
-
