@@ -19,10 +19,52 @@ Kernel density estimation (KDE) is a non-parametric method to transform continuo
 
 ## What is Kernel density estimation (KDE)?
 
+Kernel density estimation is a widely-used tool for visualising the distribution of data.
+
+Probability density function (pdf) shows how the whole 100% probability mass is distributed over the x-axis, i.e., over the values of an X random variable. Kernel estimation of probability density function produces a smooth empirical pdf based on individual locations of all sample data. Such pdf estimate seems to better represent the "true" pdf of a continuous variable (Węglarczyk 2018). 
+
+###Kernel density estimation calculation
+
+Let the series \( \{x_1, x_2, \ldots, x_n\} \) be an independent and identically distributed (i.i.d.) sample of \( n \) observations taken from a population \( X \) with an unknown probability distribution function \( f(x) \).
+
+The kernel estimate \( \hat{f}(x) \) of the original \( f(x) \) assigns each \( i \)-th sample data point \( x_i \) a function \( K(x_i, t) \), called a *kernel function*, in the following way [11]:
+
+\[
+\hat{f}(t) = \frac{1}{n} \sum_{i=1}^{n} K(x_i, t)
+\tag{1}
+\]
+
+The kernel function \( K(x, t) \) is nonnegative and bounded for all \( x \) and \( t \):
+
+\[
+0 \leq K(x, t) < \infty \quad \text{for all real } x, t
+\tag{2}
+\]
+
+and, for all real \( x \),
+
+\[
+\int_{-\infty}^{\infty} K(x, t) \, dt = 1.
+\tag{3}
+\]
+
+Property (3) ensures the required normalization of the kernel density estimate given in (1).
+
+\[
+\int_{-\infty}^{\infty} \hat{f}(t) \, dt 
+= \frac{1}{n} \sum_{i=1}^{n} \int_{-\infty}^{\infty} K(x_i, t) \, dt = 1.
+\tag{4}
+\]
+
+In other words, the kernel transforms the *"sharp"* (point) location of \( x_i \) into an interval centred (symmetrically or not) around \( x_i \).
+
+(PDF) Węglarczyk, S.2018. Kernel density estimation and its application. Available from: https://www.researchgate.net/publication/328785939_Kernel_density_estimation_and_its_application [accessed Oct 24 2025].
+
+(PDF) Kernel density estimation and its application. Available from: https://www.researchgate.net/publication/328785939_Kernel_density_estimation_and_its_application [accessed Oct 24 2025].
 
 
-
-
+###Further reading
+Simonoff, J.S. (1996). *Smoothing Methods in Statistics*. Springer-Verlag, New York.
 
 
 # Examples
