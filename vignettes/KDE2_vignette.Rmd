@@ -140,15 +140,24 @@ The following examples showcase the different visualisation and density estimate
 
 ## Basic biplot 
 
-```{r}
+```{r, fig.width=7, fig.height=8}
 # load example Lead isotope data that is included with the package
 data(ArgentinaDatabase)
 
+library(ggplot2)
+
 ggplot(ArgentinaDatabase, 
   aes(x = `206Pb/204Pb`, 
-  y = `207Pb/204Pb`, 
+      y = `207Pb/204Pb`, 
   fill = `Mining site`)) + 
-  geom_kde2d()
+  geom_kde2d() +
+  theme_minimal() +
+  # move the legend under the plot so the
+  # site names are fully legible
+  theme(legend.position="bottom", 
+        legend.direction="horizontal") +
+  guides(fill = guide_legend(nrow = 10, 
+               theme = theme(legend.byrow = TRUE)))
 ```
   
 This example reads in the sample dataset and calculates the kernel density estimates in the function geom_kde2d(), colouring by the Mining site variable from the dataset. Warning messages appear for each group where the sample size is too small to calculate the estimates: No density estimate possible for group 'x' plotting points instead.
@@ -160,9 +169,10 @@ The default function reverts to 4 quantiles. This examples illustrates the quant
 ```{r}
 ggplot(ArgentinaDatabase, 
   aes(x = `206Pb/204Pb`, 
-  y = `207Pb/204Pb`, 
-  fill = `Mining site`)) + 
-  geom_kde2d(quantiles = 10, alpha = 0.5)
+      y = `207Pb/204Pb`, 
+      fill = `Mining site`)) + 
+  geom_kde2d(quantiles = 10, 
+             alpha = 0.5)
 ```
   
 ## Biplot with the minimum probability argument added to show only density regions above the median
@@ -170,9 +180,10 @@ ggplot(ArgentinaDatabase,
 ```{r}
 ggplot(ArgentinaDatabase, 
   aes(x = `206Pb/204Pb`, 
-  y = `207Pb/204Pb`, 
-  fill = `Mining site`)) + 
-  geom_kde2d(quantiles = 10, min_prob = 0.5)
+      y = `207Pb/204Pb`, 
+      fill = `Mining site`)) + 
+  geom_kde2d(quantiles = 10, 
+             min_prob = 0.5)
 ```
   
 ## Creation of an outline effect around the density region
@@ -181,9 +192,11 @@ For this effect the fill argument is set to NA
 ```{r}
 ggplot(ArgentinaDatabase, 
   aes(x = `206Pb/204Pb`, 
-  y = `207Pb/204Pb`, 
-  colour = `Mining site`)) + 
-  geom_kde2d(quantiles = 1, min_prob = 0, fill = NA)
+      y = `207Pb/204Pb`, 
+      colour = `Mining site`)) + 
+  geom_kde2d(quantiles = 1, 
+             min_prob = 0, 
+             fill = NA)
 ```
 
 ##   Creation of an outline effect around the density region solving clipping issues
@@ -192,10 +205,14 @@ In some cases density regions can be clipped by the plot area. The addition of t
 ```{r}
 ggplot(ArgentinaDatabase, 
   aes(x = `206Pb/204Pb`, 
-  y = `207Pb/204Pb`, 
-  colour = `Mining site`)) + 
-  geom_kde2d(quantiles = 1, min_prob = 0, fill = NA) + 
-  coord_cartesian(xlim = c(4, 8.2), ylim = c(2, 4.5), clip = "off")
+      y = `207Pb/204Pb`, 
+      colour = `Mining site`)) + 
+  geom_kde2d(quantiles = 1,
+             min_prob = 0, 
+             fill = NA) + 
+  coord_cartesian(xlim = c(4, 8.2), 
+                  ylim = c(2, 4.5), 
+                  clip = "off")
 ```
 
 
