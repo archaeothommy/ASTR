@@ -7,7 +7,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-<<<<<<< HEAD
 # Introduction
 
 This vignette introduces the "Kde2" function which generates a binary plot with kernel density estimation.
@@ -71,8 +70,8 @@ ggplot(ad,
 #' ggplot(df, aes(x, y, fill = group, colour = group)) +
 #'   geom_kde2d(alpha = 0.4) +
 #'   theme_minimal()
-=======
->>>>>>> 5ce2a252a6e60daecb7a34b9ee9e8219c8fe5b0b
+
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
