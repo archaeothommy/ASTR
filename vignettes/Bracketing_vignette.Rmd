@@ -91,13 +91,13 @@ The function developed here outputs the **SSB Linear value**, which represents t
 The relationship between the **SSB Linear value** and **δ values** can be expressed as:
 
 $$
-\delta^{y/x} = (\text{SSB Linear} - 1) \times 1000
+\delta^{y/x} = (\text{SSB}_{\text{Linear}} - 1) \times 1000
 $$
 
 The SSB Linear is calculated as:
 
 $$
-\text{SSB Linear} =
+\text{SSB}_{\text{Linear}} =
 \frac{R_{\text{meas,sample}}}{
 \text{mean}(R_{\text{meas,std1}}, R_{\text{meas,std2}})}
 $$
