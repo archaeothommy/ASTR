@@ -109,7 +109,7 @@ $R_{\text{meas,std1}}$, $R_{\text{meas,std2}}$: measured isotope ratios of the s
 
 To obtain the **final corrected isotope ratio** (i.e., absolute value), the SSB Linear is multiplied by the true isotope ratio of the reference standard:
 
-$$ R_{\text{corr,sample}} = \text{SSB Linear} \times R_{\text{true,std}} $$
+$$ R_{\text{corr,sample}} = \text{SSB}_{\text{Linear}} \times R_{\text{true,std}} $$
 
 where $R_{\text{true,std}}$ is the true isotope ratio of the standard material (e.g., NIST SRM 981).
 
@@ -124,7 +124,7 @@ Std1 → Sample A1 → Std2 → Sample A2 → Std3 → Sample A3 → Std4
 Each sample replicate (Sample A1, Sample A2, Sample A3) is corrected using the average of the standards measured immediately before and after it. The final isotope ratio for the sample is then obtained as the mean of the three corrected values.
 
 $$
-\text{SSB Linear} = \frac{R_{meas,sample}}{\text{mean}(R_{meas,std1}, R_{meas,std2})}
+\text{SSB}_{\text{Linear}} = \frac{R_{meas,sample}}{\text{mean}(R_{meas,std1}, R_{meas,std2})}
 $$
 
 where $R_{meas,std1}$ and $R_{meas,std2}$ are the measured isotope ratios of the standards before and after the sample, respectively.
@@ -132,7 +132,7 @@ where $R_{meas,std1}$ and $R_{meas,std2}$ are the measured isotope ratios of the
 After all three measurements of the same sample are corrected, their average is taken to obtain the final corrected ratio:
 
 $$
-R_{corr,avg} = \text{mean}(\text{SSB Linear}_1, \text{SSB Linear}_2, \text{SSB Linear}_3)
+R_{corr,avg} = \text{mean}(\text{SSB}_{\text{Linear,1}}, \text{SSB}_{\text{Linear,2}}, \text{SSB}_{\text{Linear,3}})
 $$
 
 To obtain the **absolute corrected isotope ratio**, this normalized value is multiplied by the true isotope ratio of the reference standard:
@@ -143,6 +143,53 @@ R_{\text{corr,avg}} \times R_{\text{true,std}}
 $$
 
 where $R_{\text{true,std}}$ is the certified true isotope ratio of the reference standard (e.g., NIST SRM 981).
+
+------------------------------------------------------------------------
+
+Also, in some practical analytical runs, several samples are often measured between two standards rather than each sample being individually bracketed.
+
+For example, the measurement sequence may take the form:
+
+Std1 → Sample A → Sample B → Sample C → Std2 → Sample D → Sample E → Sample F → Std3 → …
+
+In this sequence, samples A–C are bracketed by **Std1** and **Std2**, and samples D–F are bracketed by **Std2** and **Std3**.
+
+To correct for possible instrument drift between the standards, a **linear interpolation (weighted SSB)** approach is used.
+
+This method assumes that the instrumental response drifts approximately linearly between two consecutive standards.
+
+For a given sample $S_{j,r}$ located between two consecutive standards $\mathrm{Std}_j$ (preceding) and $\mathrm{Std}_{j+1}$ (following), the interpolated standard ratio is expressed as:
+
+$$
+\widehat{R}_{\text{std},j}(w_{j,r})
+= (1 - w_{j,r})\,R_{\text{meas}}(\mathrm{Std}_j)
++ w_{j,r}\,R_{\text{meas}}(\mathrm{Std}_{j+1})
+$$
+
+where $w_{j,r}$ represents the **relative position** of the sample between the two standards (ranging from 0 to 1).
+
+\
+It serves as a weighting factor in the linear interpolation between the two measured standard ratios.
+
+The corresponding drift-corrected isotope ratio is calculated as:
+
+$$
+\text{SSB}_{\text{linear}}(S_{j,r}) =
+\frac{R_{\text{meas}}(S_{j,r})}
+{(1 - w_{j,r})\,R_{\text{meas}}(\mathrm{Std}_j)
++ w_{j,r}\,R_{\text{meas}}(\mathrm{Std}_{j+1})}
+$$
+
+Finally, the absolute corrected isotope ratio is obtained by scaling with the certified reference value:
+
+$$
+R_{\text{corr,sample}} =
+R_{\text{corr,avg}} \times R_{\text{true,std}}
+$$
+
+where $R_{\text{true,std}}$ is the true isotope ratio of the reference standard (e.g., NIST SRM 981).
+
+------------------------------------------------------------------------
 
 # Function Purpose
 
