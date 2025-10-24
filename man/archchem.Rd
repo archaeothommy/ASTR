@@ -27,14 +27,15 @@ read_archchem(
   path,
   id_column = "ID",
   context = c(),
-  delim = "\\t",
+  delim = ",",
   guess_context_type = TRUE,
   na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.", "#DIV/0!", "#VALUE!",
     "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"),
   bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
   bdl_strategy = function() {
      NA_character_
- }
+ },
+  ...
 )
 
 \method{format}{archchem}(x, ...)
@@ -63,13 +64,18 @@ context columns.}
 
 \item{na}{Character vector of strings to be interpret as missing values.}
 
-\item{...}{further arguments passed to or from other methods}
+\item{...}{Additional arguments passed to the respective import functions.
+See their documentation for details:
+\itemize{
+\item \code{\link[readxl:read_excel]{readxl::read_excel()}} for file formats \code{.xlsx} or \code{.xls}
+\item \code{\link[readr:read_delim]{readr::read_delim()}} for all other file formats.
+}}
 
 \item{path}{path to the file that should be read}
 
-\item{delim}{A character string with the separator for tabular data. Use
-\verb{\\t} for tab-separated data. Must be provided for all file
-types except \code{.xlsx} or \code{.xls}.}
+\item{delim}{A character string with the separator for tabular data. Must be
+provided for all file types except \code{.xlsx} or \code{.xls}. Default to \verb{,}. Use
+\verb{\\t} for tab-separated data.}
 
 \item{x}{an object of class archchem}
 }
