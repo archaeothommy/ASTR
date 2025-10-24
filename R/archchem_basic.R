@@ -92,8 +92,10 @@ as_archchem <- function(
     dplyr::relocate("ID", .before = 1)
   # handle ID duplicates
   if (length(unique(df$ID)) != nrow(df)) {
-    warning("Detected multiple data rows with the same ID. They will be renamed ",
-            "consecutively using the following convention: _1, _2, ... _n")
+    warning(
+      "Detected multiple data rows with the same ID. They will be renamed ",
+      "consecutively using the following convention: _1, _2, ... _n"
+    )
   }
   df <- df %>%
     dplyr::group_by(.data[["ID"]]) %>%
@@ -152,8 +154,9 @@ validate.archchem <- function(x, quiet = TRUE, ...) {
           warning = "missing values"
         )
       }
-    })
-  if (!quiet & nrow(missing_values) > 0) {
+    }
+  )
+  if (!quiet && nrow(missing_values) > 0) {
     warning(
       sum(missing_values$count),
       " missing values across ",
