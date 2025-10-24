@@ -2,7 +2,7 @@
 title: "Binary plot with kernel density estimation"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{"Binary plot with kernel density estimation"} 
+  %\VignetteIndexEntry{Binary plot with kernel density estimation} 
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
