@@ -65,8 +65,12 @@ and metadata (labelled as context).</p>
 <span>  guess_context_type <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  na <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"n/a"</span>, <span class="st">"NA"</span>, <span class="st">"N.A."</span>, <span class="st">"N/A"</span>, <span class="st">"na"</span>, <span class="st">"-"</span>, <span class="st">"n.d."</span>, <span class="st">"n.a."</span>, <span class="st">"#DIV/0!"</span>, <span class="st">"#VALUE!"</span>,</span>
 <span>    <span class="st">"#REF!"</span>, <span class="st">"#NAME?"</span>, <span class="st">"#NUM!"</span>, <span class="st">"#N/A"</span>, <span class="st">"#NULL!"</span><span class="op">)</span>,</span>
+<span>  drop_columns <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  validate <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">validate</span><span class="op">(</span><span class="va">x</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">read_archchem</span><span class="op">(</span></span>
 <span>  <span class="va">path</span>,</span>
@@ -79,7 +83,9 @@ and metadata (labelled as context).</p>
 <span>  bdl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"b.d."</span>, <span class="st">"bd"</span>, <span class="st">"b.d.l."</span>, <span class="st">"bdl"</span>, <span class="st">"&lt;LOD"</span>, <span class="st">"&lt;"</span><span class="op">)</span>,</span>
 <span>  bdl_strategy <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
 <span>     <span class="cn">NA_character_</span></span>
-<span> <span class="op">}</span></span>
+<span> <span class="op">}</span>,</span>
+<span>  drop_columns <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  validate <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'archchem'</span></span>
@@ -88,7 +94,15 @@ and metadata (labelled as context).</p>
 <span><span class="co"># S3 method for class 'archchem'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">remove_units</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remove_units</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">get_analytical_columns</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">get_analytical_columns.default</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">get_contextual_columns</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">get_contextual_columns.default</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -128,8 +142,24 @@ context columns.</p></dd>
 <dd><p>Character vector of strings to be interpret as missing values.</p></dd>
 
 
+<dt id="arg-drop-columns">drop_columns<a class="anchor" aria-label="anchor" href="#arg-drop-columns"></a></dt>
+<dd><p>...</p></dd>
+
+
+<dt id="arg-validate">validate<a class="anchor" aria-label="anchor" href="#arg-validate"></a></dt>
+<dd><p>...</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>further arguments passed to or from other methods</p></dd>
+
+
+<dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
+<dd><p>an object of class archchem</p></dd>
+
+
+<dt id="arg-quiet">quiet<a class="anchor" aria-label="anchor" href="#arg-quiet"></a></dt>
+<dd><p>...</p></dd>
 
 
 <dt id="arg-path">path<a class="anchor" aria-label="anchor" href="#arg-path"></a></dt>
@@ -140,10 +170,6 @@ context columns.</p></dd>
 <dd><p>A character string with the separator for tabular data. Use
 <code>\t</code> for tab-separated data. Must be provided for all file
 types except <code>.xlsx</code> or <code>.xls</code>.</p></dd>
-
-
-<dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>an object of class archchem</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -160,7 +186,7 @@ be adhered to. Analyses can contain as many analytical columns as necessary.</p>
 <p>The column that contains the unique samples identification is specified using
 the <code>ID</code> argument. If the dataset contains duplicate ids, the following warning
 will return:
-Detected multiple data rows with the same ‘ID’, which were renamed
+Detected multiple data rows with the same ‘ID’. They will be renamed
 consecutively using the following convention: <code>_1</code>,<code>_2</code>, ... <code>_n</code></p>
 <p>Metadata contained within the dataset must be specified using the <code>context</code>
 argument. If any column in the dataframe is not specified as context and not
