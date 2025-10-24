@@ -12,8 +12,8 @@
 #'
 #' @param data < Dataframe with analysis results from the machine>
 #' @param ID_std string, <ID of the standard for bracketing>. The default value is "".
-#' @param pos integer <position of the first line for bracketing>.
-#' @param mp integer <multiplier>.
+#' @param pos integer <position of the first line for bracketing, starting with the first standard measurement that opens the bracket>.
+#' @param CicleSize integer <number of samples per cicle>.
 
 #'
 #' @references
@@ -32,7 +32,7 @@
 
 
 
-standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, CicleSize=1) { # update name and arguments. The ellipsis parameter is special in R, use with care!
+standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, CicleSize=1, wf=0.5, ws=0.5) { # update name and arguments. The ellipsis parameter is special in R, use with care!
 
   if (ID_std == ""){
     print("You need to assign the ID of the standard.")
@@ -52,6 +52,7 @@ standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, Cicl
   CurrentSample<-""
   SampleNames<- c()
   SampleResults<-c()
+  WSampleResults<-c()
   counter<-0
   nsamples<-0
   i<-pos
@@ -63,16 +64,23 @@ standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, Cicl
     FirstStd<-df[icicle,2]
     SecondStd<-df[ecicle, 2]
     icicle<-icicle+1
-    StdMean<-(FirstStd+SecondStd)/2#calculate mean of both standards
+    WeightedStdMean<-((wf*FirstStd)+(ws*SecondStd))/(wf+ws)
+    StdMean<-(FirstStd+SecondStd)/(2)#calculate mean of both standards
 
     while(icicle<ecicle){
 
       CurrentSample<-df[icicle, 1]
       if((!is.na(CurrentSample)) & (CurrentSample!="")){
         SampleMeasurement<-df[icicle, 2]
+        #SBB<-format(signif(SampleMeasurement/StdMean, 4), nsmall=4)
         SBB<-SampleMeasurement/StdMean
         SampleNames<-append(SampleNames, CurrentSample)
         SampleResults<-append(SampleResults, SBB)
+        if(wf!=0.5 | (wf+ws)!=1.0){
+
+          WSBB<-format(signif(SampleMeasurement/WeightedStdMean, 4), nsmall=4)
+          WSampleResults<-append(WSampleResults,WSBB)
+        }
       }
       icicle<- icicle+1
     }
@@ -81,24 +89,20 @@ standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, Cicl
 
   }
     nr<- length(SampleNames)
-    #print(nr)
     ResultDF<-data.frame(
       description = SampleNames,
       LinearSBB = SampleResults
     )
 
     ResultDF<-ResultDF[order(ResultDF$description),,drop=FALSE]
-
     i=2
     counter=1
     CurrentSample<-ResultDF[1, 1]
     MeanSample=ResultDF[1,2]
     Average<-c()
     SError<-c()
-    #SError<-append(SError, "")
 
     while(i<=nr){
-
 
       if(is.na(ResultDF[i,1])|(CurrentSample==ResultDF[i,1])){
 
@@ -110,14 +114,11 @@ standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, Cicl
       }
       else{
 
-        MeanSample<-MeanSample/counter
+        MeanSample<-format(signif(MeanSample/counter, 4), nsmall=4)
         array<-SampleResults[(i-counter):(i-1)]
-        SE<- 2*sd(array)
+        SE<- format(signif(2*sd(array), 4), nsmall=4)
         SError<-append(SError, SE)
-        #print(array)
         Average<-append(Average, MeanSample)
-        #print(paste(i-counter-1, i-1))
-        #print(paste(CurrentSample,MeanSample, SE))
         CurrentSample<-ResultDF[i,1]
         MeanSample<-ResultDF[i,2]
         counter<-1
@@ -126,25 +127,32 @@ standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, Cicl
 
       i<-i+1
     }
-    MeanSample<-MeanSample/counter
+    MeanSample<-format(signif(MeanSample/counter, 4), nsmall=4)
     array<-SampleResults[(i-counter):(i-1)]
-    #print(array)
-    SE<- 2*sd(array)
+    SE<- format(signif(2*sd(array), 4), nsmall=4)
     SError<-append(SError, SE)
     Average<-append(Average, MeanSample)
 
 
-    a=nrow(SampleNames)
-    b=nrow(SampleResults)
-    c=nrow(Average)
-    d=nrow(SError)
-    #print(SError)
-    FinalDF<-data.frame(
+    if(wf!=0.5 | (wf+ws)!=1.0){
+
+        FinalDF<-data.frame(
         description = SampleNames,
-        LinearSBB = SampleResults,
+        Linear_SBB = format(signif(SampleResults, 4), nsmall=4),
+        Weighted_SBB=WSampleResults,
         Mean=Average,
         SE = SError
-    )
+      )
+
+    }
+    else{
+        FinalDF<-data.frame(
+        description = SampleNames,
+        SBB = format(signif(SampleResults, 4), nsmall=4),
+        Mean= Average,
+        SE = SError
+      )
+    }
     print(FinalDF)
 
 }
@@ -152,7 +160,7 @@ standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, Cicl
 
 
 #file <- read.csv2("C:/Users/aacevedomejia/Documents/Andrea/Project/Programming/FlowerDataProcessing-SBB-test-04.csv")
-#file <- read.csv2("C:/Users/aacevedomejia/Documents/Andrea/Project/Programming/test3.csv")
-standard_sample_bracketing(file, "Isotope_data", "Std", 1, 3)
+file <- read.csv2("C:/Users/aacevedomejia/Documents/Andrea/Project/Programming/test3.csv")
+standard_sample_bracketing(file, "Isotope_data", "Std", 1, 1, 0.5, 0.5)
 
 
