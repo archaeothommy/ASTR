@@ -7,6 +7,71 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+# Introduction
+
+This vignette introduces the "Kde2" function which generates a binary plot with kernel density estimation.
+
+Kernel density estimation (KDE) is a non-parametric method to transform continuous data into a smoothed probability density function. According to Hsu (2024) and Hsu et al. (2018) KDE has become popular in archaeological science publications mainly due to three advantages when analysing data:
+
+1. They do not assume the normality of the data;
+2. They can produce smoother distributions than conventional histograms, whose appearance is significantly affected by the choices of bin width and the start/end points of bins; and
+3. They can represent data in a multidimensional space and enable users to effectively compare different datasets either graphically or mathematically (see De Ceuster et al. 2025 also for the advantages of the use of one-dimensional KDE’s).
+
+## What is Kernel density estimation (KDE)?
+
+
+
+
+
+
+
+# Examples
+The following examples showcase the different visualisation and density estimate calculations for the geom_kde2d function. 
+
+## Basic biplot 
+library(readr)
+ad <- read_csv("data-raw/ArgentinaDatabase.csv")
+View(ad)
+
+ggplot(ad, 
+  aes(x = `206Pb/204Pb`, 
+  y = `207Pb/204Pb`, 
+  fill = `Mining site`)) + 
+  geom_kde2d()
+#'
+#' # Adjusting quantiles to show deciles
+#' ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +
+#'   geom_kde2d(quantiles = 10, alpha = 0.5)
+#'
+#' # Using min_prob to show only density regions above the median
+#' ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +
+#'   geom_kde2d(quantiles = 10, min_prob = 0.5)
+#'
+#' # Creating an outline effect
+#' ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+#'   geom_kde2d(quantiles = 1, min_prob = 0, fill = NA)
+#'
+#'  # Creating an outline effect, and using coord_cartesian to expand the
+#'  # plot area so the full KDE regions show without clipping
+#' ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+#'   geom_kde2d(quantiles = 1, min_prob = 0, fill = NA) +
+#'   coord_cartesian(xlim = c(4, 8.2), ylim = c(2, 4.5), clip = "off")
+#'
+#' # Example of fallback behavior
+#' # Create a dataset where one group has too few points for density estimation
+#' set.seed(123)
+#' df <- data.frame(
+#'   x = c(rnorm(50), rnorm(50, 5), rnorm(2, 10)),
+#'   y = c(rnorm(50), rnorm(50, 5), rnorm(2, 10)),
+#'   group = rep(c("A", "B", "C"), c(50, 50, 2))
+#' )
+#'
+#' # A message will indicate that group "C" is plotted as points
+#' ggplot(df, aes(x, y, fill = group, colour = group)) +
+#'   geom_kde2d(alpha = 0.4) +
+#'   theme_minimal()
+
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -48,9 +113,11 @@ The following examples showcase the different visualisation and density estimate
 # load example Lead isotope data that is included with the package
 data(ArgentinaDatabase)
 
+library(ggplot2)
+
 ggplot(ArgentinaDatabase, 
   aes(x = `206Pb/204Pb`, 
-  y = `207Pb/204Pb`, 
+      y = `207Pb/204Pb`, 
   fill = `Mining site`)) + 
   geom_kde2d()
 ```
@@ -64,9 +131,10 @@ The default function reverts to 4 quantiles. This examples illustrates the quant
 ```{r}
 ggplot(ArgentinaDatabase, 
   aes(x = `206Pb/204Pb`, 
-  y = `207Pb/204Pb`, 
-  fill = `Mining site`)) + 
-  geom_kde2d(quantiles = 10, alpha = 0.5)
+      y = `207Pb/204Pb`, 
+      fill = `Mining site`)) + 
+  geom_kde2d(quantiles = 10, 
+             alpha = 0.5)
 ```
 
 ## Biplot with the minimum probability argument added to show only density regions above the median
@@ -74,9 +142,10 @@ ggplot(ArgentinaDatabase,
 ```{r}
 ggplot(ArgentinaDatabase, 
   aes(x = `206Pb/204Pb`, 
-  y = `207Pb/204Pb`, 
-  fill = `Mining site`)) + 
-  geom_kde2d(quantiles = 10, min_prob = 0.5)
+      y = `207Pb/204Pb`, 
+      fill = `Mining site`)) + 
+  geom_kde2d(quantiles = 10, 
+             min_prob = 0.5)
 ```
 
 ## Creation of an outline effect around the density region
@@ -86,9 +155,11 @@ For this effect the fill argument is set to `NA`
 ```{r}
 ggplot(ArgentinaDatabase, 
   aes(x = `206Pb/204Pb`, 
-  y = `207Pb/204Pb`, 
-  colour = `Mining site`)) + 
-  geom_kde2d(quantiles = 1, min_prob = 0, fill = NA)
+      y = `207Pb/204Pb`, 
+      colour = `Mining site`)) + 
+  geom_kde2d(quantiles = 1, 
+             min_prob = 0, 
+             fill = NA)
 ```
 
 ## Creation of an outline effect around the density region solving clipping issues
@@ -98,8 +169,12 @@ In some cases density regions can be clipped by the plot area. The addition of t
 ```{r}
 ggplot(ArgentinaDatabase, 
   aes(x = `206Pb/204Pb`, 
-  y = `207Pb/204Pb`, 
-  colour = `Mining site`)) + 
-  geom_kde2d(quantiles = 1, min_prob = 0, fill = NA) + 
-  coord_cartesian(xlim = c(4, 8.2), ylim = c(2, 4.5), clip = "off")
+      y = `207Pb/204Pb`, 
+      colour = `Mining site`)) + 
+  geom_kde2d(quantiles = 1,
+             min_prob = 0, 
+             fill = NA) + 
+  coord_cartesian(xlim = c(4, 8.2), 
+                  ylim = c(2, 4.5), 
+                  clip = "off")
 ```
