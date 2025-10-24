@@ -52,77 +52,107 @@ standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, Cicl
   CurrentSample<-""
   SampleNames<- c()
   SampleResults<-c()
-  SError<-c()
   counter<-0
   nsamples<-0
-  i<-pos+1
+  i<-pos
 
   while (i<=nr){ #iterates over the whole dataframe, it starts with the cycles
 
-    if (df[i,1]==ID_std){ #if we are in a standard, we need to check if its the first or the second part of the bracketing
+    icicle<-i
+    ecicle<-i+CicleSize+1
+    FirstStd<-df[icicle,2]
+    SecondStd<-df[ecicle, 2]
+    icicle<-icicle+1
+    StdMean<-(FirstStd+SecondStd)/2#calculate mean of both standards
 
-      if(SecondStd==0) { #if true, we are closing the bracketing for the sample, so we need to calculate SBB
-        SecondStd<-df[i,2]
-        nsamples<-nsamples+1
-        StdMean<-(FirstStd+SecondStd)/2#calculate mean of both standards
-        SBB<-SampleMeasurement/StdMean #calculate SBB per sample measurement
+    while(icicle<ecicle){
 
-        MeanSBBSamples<- MeanSBBSamples+SBB #add the new sbb value to further on calculate the average per sample
+      CurrentSample<-df[icicle, 1]
+      if((!is.na(CurrentSample)) & (CurrentSample!="")){
+        SampleMeasurement<-df[icicle, 2]
+        SBB<-SampleMeasurement/StdMean
         SampleNames<-append(SampleNames, CurrentSample)
         SampleResults<-append(SampleResults, SBB)
-        SError<-append(SError, "")
-        FirstStd<-SecondStd #Define the second std as the first one to open the bracketing for the next sample
-        SecondStd<-0 #Define the second std as zero to define the bracket as open
       }
-
+      icicle<- icicle+1
     }
-    else{#it is a sample
+    i=icicle
 
-      if (counter==0){ #if it is the first time the sample appears on the sequence
-
-        SampleMeasurement<- df[i, 2] #define the sample measurement value
-        counter<- counter+1
-        CurrentSample<-df[i,1] #define the new current sample
-        MeanSBBSamples<-0
-
-      }
-      else
-        if (CurrentSample==df[i,1]){ #if the sample in the iteration is equal to the current sample, we only increase the counter
-          counter<-counter+1
-          SampleMeasurement<- df[i, 2]
-        }
-
-        else{ #time to calculate the average SBB for the previous sample, and prepare everything for the new one
-
-
-          MeanSBBSamples<- MeanSBBSamples/counter #Calculate the mean
-          SampleNames<- append(SampleNames,paste("Average", CurrentSample))
-          SampleResults<-append(SampleResults, MeanSBBSamples)
-          nsamples<- nsamples+1
-          array<-SampleResults[(nsamples-counter):(nsamples-1)]
-          SE<- 2*sd(array)
-          SError<-append(SError, SE)
-          MeanSBBSamples<- 0
-          CurrentSample<- df[i,1] #Define the new current sample
-          SampleMeasurement<-df[i,2]
-          counter<-1
-        }
-    }
-
-    i<- i+1 #increase in 1 the iterator so it continues with the next row
 
   }
+    nr<- length(SampleNames)
+    #print(nr)
+    ResultDF<-data.frame(
+      description = SampleNames,
+      LinearSBB = SampleResults
+    )
 
-  ResultDF<-data.frame(
-    description = SampleNames,
-    SBB = SampleResults,
-    SE = SError
-  )
-  print(ResultDF)
+    ResultDF<-ResultDF[order(ResultDF$description),,drop=FALSE]
+
+    i=2
+    counter=1
+    CurrentSample<-ResultDF[1, 1]
+    MeanSample=ResultDF[1,2]
+    Average<-c()
+    SError<-c()
+    #SError<-append(SError, "")
+
+    while(i<=nr){
+
+
+      if(is.na(ResultDF[i,1])|(CurrentSample==ResultDF[i,1])){
+
+        counter<-counter+1
+        MeanSample<-MeanSample+ResultDF[i,2]
+        SError<-append(SError, "")
+        Average<-append(Average, "")
+
+      }
+      else{
+
+        MeanSample<-MeanSample/counter
+        array<-SampleResults[(i-counter):(i-1)]
+        SE<- 2*sd(array)
+        SError<-append(SError, SE)
+        #print(array)
+        Average<-append(Average, MeanSample)
+        #print(paste(i-counter-1, i-1))
+        #print(paste(CurrentSample,MeanSample, SE))
+        CurrentSample<-ResultDF[i,1]
+        MeanSample<-ResultDF[i,2]
+        counter<-1
+
+      }
+
+      i<-i+1
+    }
+    MeanSample<-MeanSample/counter
+    array<-SampleResults[(i-counter):(i-1)]
+    #print(array)
+    SE<- 2*sd(array)
+    SError<-append(SError, SE)
+    Average<-append(Average, MeanSample)
+
+
+    a=nrow(SampleNames)
+    b=nrow(SampleResults)
+    c=nrow(Average)
+    d=nrow(SError)
+    #print(SError)
+    FinalDF<-data.frame(
+        description = SampleNames,
+        LinearSBB = SampleResults,
+        Mean=Average,
+        SE = SError
+    )
+    print(FinalDF)
 
 }
 
-file <- read.csv2("C:/Users/aacevedomejia/Documents/Andrea/Project/Programming/test3.csv")
-standard_sample_bracketing(file, "Isotope_data", "Std", 1, 1)
+
+
+#file <- read.csv2("C:/Users/aacevedomejia/Documents/Andrea/Project/Programming/FlowerDataProcessing-SBB-test-04.csv")
+#file <- read.csv2("C:/Users/aacevedomejia/Documents/Andrea/Project/Programming/test3.csv")
+standard_sample_bracketing(file, "Isotope_data", "Std", 1, 3)
 
 
