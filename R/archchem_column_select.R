@@ -1,9 +1,13 @@
 # functions to select sets of columns for archchem tables
 
+is_archchem_class <- function(x, classes) {
+  any(attr(x, "archchem_class") %in% classes)
+}
+
 get_cols_with_ac_class <- function(x, classes) {
   dplyr::select(x, tidyselect::where(
     function(y) {
-      any(attr(y, "archchem_class") %in% classes)
+      is_archchem_class(y, classes)
     }
   ))
 }
@@ -11,7 +15,7 @@ get_cols_with_ac_class <- function(x, classes) {
 get_cols_without_ac_class <- function(x, classes) {
   dplyr::select(x, tidyselect::where(
     function(y) {
-      !any(attr(y, "archchem_class") %in% classes)
+      !is_archchem_class(y, classes)
     }
   ))
 }

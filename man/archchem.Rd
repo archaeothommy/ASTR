@@ -15,6 +15,7 @@
 \alias{get_ratio_columns}
 \alias{get_concentration_columns}
 \alias{remove_units}
+\alias{unify_concentration_unit}
 \title{\strong{archchem}}
 \usage{
 as_archchem(
@@ -68,6 +69,8 @@ get_ratio_columns(x, ...)
 get_concentration_columns(x, ...)
 
 remove_units(x, ...)
+
+unify_concentration_unit(x, unit, ...)
 }
 \arguments{
 \item{df}{a data.frame containing the input table}
@@ -104,6 +107,8 @@ context columns.}
 \item{delim}{A character string with the separator for tabular data. Use
 \verb{\\t} for tab-separated data. Must be provided for all file
 types except \code{.xlsx} or \code{.xls}.}
+
+\item{unit}{...}
 }
 \value{
 Returns a data structure \code{archchem}  which is a tibble derived-object
