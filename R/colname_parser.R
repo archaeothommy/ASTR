@@ -147,7 +147,8 @@ as_numeric_info <- function(x, colname) {
         call. = FALSE
       )
       tryInvokeRestart("muffleWarning")
-    })
+    }
+  )
   return(y)
 }
 
