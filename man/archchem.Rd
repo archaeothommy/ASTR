@@ -75,70 +75,68 @@ unify_concentration_unit(x, unit, ...)
 \arguments{
 \item{df}{a data.frame containing the input table}
 
-\item{id_column}{name of the ID column present in df (or in the file at path).
-Defaults to "ID"}
+\item{id_column}{name of the ID column. Defaults to "ID"}
 
-\item{context}{Columns that provide contextual (non-measurement) information;
-may be column names, integer positions, or a logical inclusion vector.}
+\item{context}{columns that provide contextual (non-measurement) information;
+may be column names, integer positions, or a logical inclusion vector}
 
-\item{bdl}{Strings representing “below detection limit” values. By default,
-the following are recognized: "b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<".}
+\item{bdl}{strings representing “below detection limit” values. By default,
+the following are recognized: "b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"}
 
-\item{bdl_strategy}{Function used to replace BDL strings. Defaults to a
-function returning NA.}
+\item{bdl_strategy}{function used to replace BDL strings. Defaults to a static
+function returning NA}
 
-\item{guess_context_type}{If TRUE, attempt to infer appropriate classes for
-context columns.}
+\item{guess_context_type}{should appropriate data types for contextual columns
+be guessed automatically? Defaults to TRUE}
 
-\item{na}{Character vector of strings to be interpret as missing values.}
+\item{na}{character vector of strings to be interpret as missing values.
+By default, the following are recognized: "", "n/a", "NA", "N.A.", "N/A", "na",
+"-", "n.d.", "n.a.", "#DIV/0!", "#VALUE!", "#REF!", "#NAME?", "#NUM!", "#N/A",
+"#NULL!"}
 
-\item{drop_columns}{...}
+\item{drop_columns}{should columns that are neither marked as contextual in
+\code{context}, nor automatically identified as analytical from the column name,
+be dropped to proceed with the reading? Defaults to FALSE}
 
-\item{validate}{...}
+\item{validate}{should the post-reading input validation be run, which checks
+for additional properties of archchem tables. Defaults to TRUE}
 
 \item{...}{further arguments passed to or from other methods}
 
 \item{x}{an object of class archchem}
 
-\item{quiet}{...}
+\item{quiet}{should warnings be printed? Defaults to TRUE}
 
-\item{path}{path to the file that should be read}
+\item{path}{file path (including extension) to the file to read}
 
-\item{delim}{A character string with the separator for tabular data. Use
-\verb{\\t} for tab-separated data. Must be provided for all file
-types except \code{.xlsx} or \code{.xls}.}
+\item{delim}{a character string with the separator for tabular data. Use
+\verb{\\t} for tab-separated data. Must be provided for all file types except
+\code{.xlsx} or \code{.xls}}
 
-\item{unit}{...}
+\item{unit}{string with a unit definition that can be understood by
+\link[units]{set_units}, e.g. "\%", "kg", or "m/s^2"}
 }
 \value{
-Returns a data structure \code{archchem}  which is a tibble derived-object
-
-The function prints a short summary about the dataset, including a list of
-all context columns and analytical data columns.
+Returns a data structure \code{archchem} which is a tibble-derived object.
 }
 \description{
-A function to create a data format for chemical analysis datasets
-in archaeology containing numerical elemental and isotopic data. Loads data
-from a file (.csv, .xls, .xlsx) or object (dataframe) in R. The data format
-will contain analytical data as well as corresponding contextual information
-and metadata (labelled as context).
+A data format for chemical analysis datasets in archaeology,
+containing contextual information, numerical elemental, and isotopic data.
+\code{read_archchem} reads data from a file (.csv, .xls, .xlsx) into this
+format, \code{as_archchem} turns R data.frames to it.
 }
 \details{
 The data files can be fairly freeform, i.e. no specified elements,
 oxides, or isotopic ratios are required and no exact order of these needs to
 be adhered to. Analyses can contain as many analytical columns as necessary.
 
-The column that contains the unique samples identification is specified using
-the \code{ID} argument. If the dataset contains duplicate ids, the following warning
-will return:
-Detected multiple data rows with the same ‘ID’. They will be renamed
-consecutively using the following convention: \verb{_1},\verb{_2}, ... \verb{_n}
+The column that contains the unique samples identifier must be specified using
+the \code{ID} argument. If the dataset contains duplicate ids they will be renamed
+consecutively using the following convention: \verb{_1},\verb{_2}, ... \verb{_n}.
 
-Metadata contained within the dataset must be specified using the \code{context}
+Metadata contained within the dataset must be marked using the \code{context}
 argument. If any column in the dataframe is not specified as context and not
-recognised as an analytical column, this will result in the error:
-Column name \if{html}{\out{<colname>}} could not be parsed. Either analytical columns do not
-conform to ASTR conventions or contextual columns are not specified as such.
+recognised as an analytical column, this will result in an error.
 
 Below detection limit notation (i.e. ‘b.d.’, ‘bd’, ‘b.d.l.’, ‘bdl’, ‘<LOD’,
 or ‘<..’) for element and oxide concentrations is specified using the \code{bdl}
@@ -149,6 +147,6 @@ This is to facilitate the different handling needs of the detection limit for
 future statistical applications, as opposed to automatically assigning such
 values as ‘NA’.
 
-Missing values (NA) are allowed anywhere in the data file body, and those
-found in an analytical data column will be replaced by \code{NA} automatically.
+Missing values are allowed anywhere in the data file body, and will be replaced
+by \code{NA} automatically.
 }

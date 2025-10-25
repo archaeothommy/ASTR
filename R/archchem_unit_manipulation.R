@@ -17,7 +17,8 @@ remove_units.archchem <- function(x, ...) {
 }
 
 #' @rdname archchem
-#' @param unit ...
+#' @param unit string with a unit definition that can be understood by
+#' \link[units]{set_units}, e.g. "%", "kg", or "m/s^2"
 #' @export
 unify_concentration_unit <- function(x, unit, ...) {
   UseMethod("unify_concentration_unit")

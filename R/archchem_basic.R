@@ -3,49 +3,46 @@
 #'
 #' @title \strong{archchem}
 #'
-#' @description A function to create a data format for chemical analysis datasets
-#' in archaeology containing numerical elemental and isotopic data. Loads data
-#' from a file (.csv, .xls, .xlsx) or object (dataframe) in R. The data format
-#' will contain analytical data as well as corresponding contextual information
-#' and metadata (labelled as context).
+#' @description A data format for chemical analysis datasets in archaeology,
+#' containing contextual information, numerical elemental, and isotopic data.
+#' `read_archchem` reads data from a file (.csv, .xls, .xlsx) into this
+#' format, `as_archchem` turns R data.frames to it.
 #'
 #' @param df a data.frame containing the input table
-#' @param path  File path (including extension) to the file to read
+#' @param path file path (including extension) to the file to read
 #' @param ... further arguments passed to or from other methods
-#' @param id_column name of the ID column present in df (or in the file at path).
-#' Defaults to "ID"
-#' @param context Columns that provide contextual (non-measurement) information;
-#' may be column names, integer positions, or a logical inclusion vector.
-#' @param bdl Strings representing “below detection limit” values. By default,
-#' the following are recognized: "b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<".
-#' @param bdl_strategy Function used to replace BDL strings. Defaults to a
-#' function returning NA.
-#' @param guess_context_type If TRUE, attempt to infer appropriate classes for
-#' context columns.
-#' @param na Character vector of strings to be interpret as missing values.
-#' @param drop_columns ...
-#' @param validate ...
+#' @param id_column name of the ID column. Defaults to "ID"
+#' @param context columns that provide contextual (non-measurement) information;
+#' may be column names, integer positions, or a logical inclusion vector
+#' @param bdl strings representing “below detection limit” values. By default,
+#' the following are recognized: "b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"
+#' @param bdl_strategy function used to replace BDL strings. Defaults to a static
+#' function returning NA
+#' @param guess_context_type should appropriate data types for contextual columns
+#' be guessed automatically? Defaults to TRUE
+#' @param na character vector of strings to be interpret as missing values.
+#' By default, the following are recognized: "", "n/a", "NA", "N.A.", "N/A", "na",
+#' "-", "n.d.", "n.a.", "#DIV/0!", "#VALUE!", "#REF!", "#NAME?", "#NUM!", "#N/A",
+#' "#NULL!"
+#' @param drop_columns should columns that are neither marked as contextual in
+#' `context`, nor automatically identified as analytical from the column name,
+#' be dropped to proceed with the reading? Defaults to FALSE
+#' @param validate should the post-reading input validation be run, which checks
+#' for additional properties of archchem tables. Defaults to TRUE
 #'
-#' @return Returns a data structure `archchem`  which is a tibble derived-object
-#'
-#' The function prints a short summary about the dataset, including a list of
-#' all context columns and analytical data columns.
+#' @return Returns a data structure `archchem` which is a tibble-derived object.
 #'
 #' @details The data files can be fairly freeform, i.e. no specified elements,
 #' oxides, or isotopic ratios are required and no exact order of these needs to
 #' be adhered to. Analyses can contain as many analytical columns as necessary.
 #'
-#' The column that contains the unique samples identification is specified using
-#' the `ID` argument. If the dataset contains duplicate ids, the following warning
-#' will return:
-#' Detected multiple data rows with the same ‘ID’. They will be renamed
-#' consecutively using the following convention: `_1`,`_2`, ... `_n`
+#' The column that contains the unique samples identifier must be specified using
+#' the `ID` argument. If the dataset contains duplicate ids they will be renamed
+#' consecutively using the following convention: `_1`,`_2`, ... `_n`.
 #'
-#' Metadata contained within the dataset must be specified using the `context`
+#' Metadata contained within the dataset must be marked using the `context`
 #' argument. If any column in the dataframe is not specified as context and not
-#' recognised as an analytical column, this will result in the error:
-#' Column name <colname> could not be parsed. Either analytical columns do not
-#' conform to ASTR conventions or contextual columns are not specified as such.
+#' recognised as an analytical column, this will result in an error.
 #'
 #' Below detection limit notation (i.e. ‘b.d.’, ‘bd’, ‘b.d.l.’, ‘bdl’, ‘<LOD’,
 #' or ‘<..’) for element and oxide concentrations is specified using the `bdl`
@@ -56,8 +53,8 @@
 #' future statistical applications, as opposed to automatically assigning such
 #' values as ‘NA’.
 #'
-#' Missing values (NA) are allowed anywhere in the data file body, and those
-#' found in an analytical data column will be replaced by `NA` automatically.
+#' Missing values are allowed anywhere in the data file body, and will be replaced
+#' by `NA` automatically.
 #'
 #' @export
 as_archchem <- function(
@@ -128,7 +125,7 @@ as_archchem <- function(
 }
 
 #' @rdname archchem
-#' @param quiet ...
+#' @param quiet should warnings be printed? Defaults to TRUE
 #' @export
 validate <- function(x, quiet = TRUE, ...) {
   UseMethod("validate")
@@ -168,11 +165,9 @@ validate.archchem <- function(x, quiet = TRUE, ...) {
   return(all_warnings)
 }
 
-
-#' @param path path to the file that should be read
-#' @param delim A character string with the separator for tabular data. Use
-#'   `\t` for tab-separated data. Must be provided for all file
-#'   types except `.xlsx` or `.xls`.
+#' @param delim a character string with the separator for tabular data. Use
+#'   `\t` for tab-separated data. Must be provided for all file types except
+#'   `.xlsx` or `.xls`
 #' @rdname archchem
 #' @export
 read_archchem <- function(
