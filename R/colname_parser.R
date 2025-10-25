@@ -31,7 +31,7 @@ colnames_to_constructors <- function(
         if (idx %in% context || colname %in% context) {
           return(
             function(x) {
-              if (guess_context_type) {
+              if (guess_context_type && is.character(x)) {
                 x <- readr::parse_guess(x, na = na)
               }
               x <- add_archchem_class(x, "archchem_context")
@@ -135,15 +135,20 @@ add_archchem_class <- function(x, class) {
 }
 
 as_numeric_info <- function(x, colname) {
-  tryCatch(
-    as.numeric(x),
+  withCallingHandlers(
+    y <- as.numeric(x),
     warning = function(w) {
       message <- conditionMessage(w)
-      warning(paste0(
-        "Issue when transforming column \"", colname, "\" to numeric values: "
-      ), message)
-    }
-  )
+      warning(
+        paste0(
+          "Issue when transforming column \"", colname, "\" to numeric values: "
+        ),
+        message,
+        call. = FALSE
+      )
+      tryInvokeRestart("muffleWarning")
+    })
+  return(y)
 }
 
 # colname only an argument in case we want to implement more specific handling
