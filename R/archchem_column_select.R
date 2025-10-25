@@ -43,7 +43,7 @@ get_isotope_columns <- function(x, ...) {
 }
 #' @export
 get_isotope_columns.archchem <- function(x, ...) {
-  get_cols_with_ac_class(x, "archchem_isotope")
+  get_cols_with_ac_class(x, c("archchem_id", "archchem_isotope"))
 }
 
 #' @rdname archchem
@@ -53,7 +53,7 @@ get_element_columns <- function(x, ...) {
 }
 #' @export
 get_element_columns.archchem <- function(x, ...) {
-  get_cols_with_ac_class(x, "archchem_element")
+  get_cols_with_ac_class(x, c("archchem_id", "archchem_element"))
 }
 
 #' @rdname archchem
@@ -63,7 +63,7 @@ get_ratio_columns <- function(x, ...) {
 }
 #' @export
 get_ratio_columns.archchem <- function(x, ...) {
-  get_cols_with_ac_class(x, "archchem_ratio")
+  get_cols_with_ac_class(x, c("archchem_id", "archchem_ratio"))
 }
 
 #' @rdname archchem
@@ -73,5 +73,5 @@ get_concentration_columns <- function(x, ...) {
 }
 #' @export
 get_concentration_columns.archchem <- function(x, ...) {
-  get_cols_with_ac_class(x, "archchem_concentration")
+  get_cols_with_ac_class(x, c("archchem_id", "archchem_concentration"))
 }
