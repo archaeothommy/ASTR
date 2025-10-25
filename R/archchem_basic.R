@@ -290,12 +290,6 @@ print.archchem <- function(x, ...) {
 remove_units <- function(x, ...) {
   UseMethod("remove_units")
 }
-
-#' @export
-remove_units.default <- function(x, ...) {
-  stop("x is not an object of class archchem")
-}
-
 #' @export
 remove_units.archchem <- function(x, ...) {
   dplyr::mutate(
