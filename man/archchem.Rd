@@ -8,10 +8,12 @@
 \alias{format.archchem}
 \alias{print.archchem}
 \alias{remove_units}
-\alias{get_analytical_columns}
-\alias{get_analytical_columns.default}
 \alias{get_contextual_columns}
-\alias{get_contextual_columns.default}
+\alias{get_analytical_columns}
+\alias{get_isotope_columns}
+\alias{get_element_columns}
+\alias{get_ratio_columns}
+\alias{get_concentration_columns}
 \title{\strong{archchem}}
 \usage{
 as_archchem(
@@ -54,13 +56,17 @@ read_archchem(
 
 remove_units(x, ...)
 
-get_analytical_columns(x)
+get_contextual_columns(x, ...)
 
-get_analytical_columns.default(x, ...)
+get_analytical_columns(x, ...)
 
-get_contextual_columns(x)
+get_isotope_columns(x, ...)
 
-get_contextual_columns.default(x, ...)
+get_element_columns(x, ...)
+
+get_ratio_columns(x, ...)
+
+get_concentration_columns(x, ...)
 }
 \arguments{
 \item{df}{a data.frame containing the input table}
