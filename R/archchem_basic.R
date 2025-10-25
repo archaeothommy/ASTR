@@ -254,16 +254,20 @@ format.archchem <- function(x, ...) {
   out_str$title <- "\033[1marchchem table\033[22m"
   # analytical columns
   x_analytical <- colnames(get_analytical_columns(x))
-  out_str$analytical_columns <- paste(
-    "Analytical columns:",
-    add_color(paste(x_analytical[-1], collapse = ", "), 32)
-  )
+  if (length(x_analytical[-1]) > 0) {
+    out_str$analytical_columns <- paste(
+      "Analytical columns:",
+      paste(add_color(x_analytical[-1], 32), collapse = ", ")
+    )
+  }
   # contextual columns
   x_context <- colnames(get_contextual_columns(x))
-  out_str$contextual_columns <- paste(
-    "Contextual columns:",
-    add_color(paste(x_context[-1], collapse = ", "), 35)
-  )
+  if (length(x_context[-1]) > 0) {
+    out_str$contextual_columns <- paste(
+      "Contextual columns:",
+      paste(add_color(x_context[-1], 35), collapse = ", ")
+    )
+  }
   # merge information
   return_value <- paste(out_str, collapse = "\n", sep = "")
   invisible(return_value)
