@@ -60,9 +60,8 @@
 as_archchem <- function(
   df, id_column = "ID", context = c(),
   bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
-  bdl_strategy = function() {
-    NA_character_
-  }, # this only allows static functions, essentially: bdl_replace = "NA"
+  bdl_strategy = function() NA_character_,
+  # this only allows static functions, essentially: bdl_replace = "NA"
   # in case more sophisticated handling is desired:
   # bdl_strategy = function(x, colname) { bdl_lookup_table[colname] / sqrt(2) }
   # bdl_lookup_table = c("Fe_%" = 3)
@@ -179,9 +178,7 @@ read_archchem <- function(
     "#DIV/0!", "#VALUE!", "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"
   ),
   bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
-  bdl_strategy = function() {
-    NA_character_
-  },
+  bdl_strategy = function() NA_character_,
   drop_columns = FALSE,
   validate = TRUE
 ) {

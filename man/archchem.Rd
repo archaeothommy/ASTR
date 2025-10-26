@@ -23,9 +23,7 @@ as_archchem(
   id_column = "ID",
   context = c(),
   bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
-  bdl_strategy = function() {
-     NA_character_
- },
+  bdl_strategy = function() NA_character_,
   guess_context_type = TRUE,
   na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.", "#DIV/0!", "#VALUE!",
     "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"),
@@ -45,9 +43,7 @@ read_archchem(
   na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.", "#DIV/0!", "#VALUE!",
     "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"),
   bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
-  bdl_strategy = function() {
-     NA_character_
- },
+  bdl_strategy = function() NA_character_,
   drop_columns = FALSE,
   validate = TRUE
 )
