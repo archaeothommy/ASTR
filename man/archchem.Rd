@@ -194,6 +194,9 @@ conc$Sb_ppb <- units::set_units(arch$Sb_ppm, "ppb") \%>\%
 remove_units(arch)
 
 # applying tidyverse data manipulation on archchem tables
+arch \%>\%
+  dplyr::group_by(Site) \%>\%
+  dplyr::summarise(mean_Na2O = mean(`Na2O_wt\%`))
 conc_subset <- conc \%>\%
   dplyr::select(-`Sn_µg/ml`, -`Sb_ppm`) \%>\%
   dplyr::filter(`Na2O_wt\%` > units::set_units(1, "\%"))
