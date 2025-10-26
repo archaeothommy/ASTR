@@ -3,10 +3,29 @@
 #'
 #' @title \strong{archchem}
 #'
-#' @description A data format for chemical analysis datasets in archaeology,
-#' containing contextual information, numerical elemental, and isotopic data.
-#' `read_archchem` reads data from a file (.csv, .xls, .xlsx) into this
-#' format, `as_archchem` turns R data.frames to it.
+#' @description A tabular data format for chemical analysis datasets in
+#' archaeology, including contextual information, numerical elemental, and
+#' isotopic data. Columns are assigned units (using \link[units]{set_units}) and
+#' categories (in an attribute `archchem_class`) based on the column name.
+#' The following functions allow to create objects of class `archchem`, and to
+#' interact with them.
+#' \itemize{
+#'   \item **as_archchem**: Transforms an R `data.frame` to an object of class
+#'   `archchem`.
+#'   \item **read_archchem**: Reads data from a file (.csv, .xls, .xlsx) into
+#'   an object of class `archchem`.
+#'   \item **validate**: Performs additional validation on `archchem` and returns
+#'   a `data.frame` as a workable list of potential issues.
+#'   \item **get_..._columns**: Subsets `archchem` tables to columns of a certain
+#'   category (or `archchem_class`), e.g. only contextual data columns.
+#'   \item **remove_units**: Removes unit vector types from the analytical columns
+#'   in an `archchem` table and replaces them with simple numeric columns of type
+#'   `double`.
+#'   \item **unify_concentration_unit**: Unifies the unit of each concentration column,
+#'   e.g. to either % or ppm (or any SI unit) to avoid mixing units in derived analyses.
+#' }
+#' As `archchem` is derived from `tibble` it is directly compatible with the
+#' data manipulation tools in the tidyverse.
 #'
 #' @param df a data.frame containing the input table
 #' @param path file path (including extension) to the file to read
@@ -30,9 +49,9 @@
 #' @param validate should the post-reading input validation be run, which checks
 #' for additional properties of archchem tables. Defaults to TRUE
 #'
-#' @return Returns a data structure `archchem` which is a tibble-derived object.
+#' @return Returns an object of class `archchem`, which is a tibble-derived object.
 #'
-#' @details The data files can be fairly freeform, i.e. no specified elements,
+#' @details The input data files can be fairly freeform, i.e. no specified elements,
 #' oxides, or isotopic ratios are required and no exact order of these needs to
 #' be adhered to. Analyses can contain as many analytical columns as necessary.
 #'
@@ -123,47 +142,6 @@ as_archchem <- function(
   return(df)
 }
 
-#' @rdname archchem
-#' @param quiet should warnings be printed? Defaults to TRUE
-#' @export
-validate <- function(x, quiet = TRUE, ...) {
-  UseMethod("validate")
-}
-
-#' @export
-validate.default <- function(x, quiet = TRUE, ...) {
-  stop("x is not an object of class archchem")
-}
-
-#' @export
-validate.archchem <- function(x, quiet = TRUE, ...) {
-  # check for missingness in analytical columns
-  df_analytical <- get_analytical_columns(x)[-1]
-  missing_values <- purrr::map2_dfr(
-    df_analytical, colnames(df_analytical),
-    function(x, col) {
-      n_na <- sum(is.na(x))
-      if (n_na > 0) {
-        tibble::tibble(
-          column = col,
-          count = n_na,
-          warning = "missing values"
-        )
-      }
-    }
-  )
-  if (!quiet && nrow(missing_values) > 0) {
-    warning(
-      sum(missing_values$count),
-      " missing values across ",
-      nrow(missing_values),
-      " analytical columns"
-    )
-  }
-  all_warnings <- dplyr::bind_rows(missing_values)
-  return(all_warnings)
-}
-
 #' @param delim a character string with the separator for tabular data. Use
 #'   `\t` for tab-separated data. Must be provided for all file types except
 #'   `.xlsx` or `.xls`
@@ -235,6 +213,47 @@ read_archchem <- function(
     drop_columns = drop_columns,
     validate = validate
   )
+}
+
+#' @rdname archchem
+#' @param quiet should warnings be printed? Defaults to TRUE
+#' @export
+validate <- function(x, quiet = TRUE, ...) {
+  UseMethod("validate")
+}
+
+#' @export
+validate.default <- function(x, quiet = TRUE, ...) {
+  stop("x is not an object of class archchem")
+}
+
+#' @export
+validate.archchem <- function(x, quiet = TRUE, ...) {
+  # check for missingness in analytical columns
+  df_analytical <- get_analytical_columns(x)[-1]
+  missing_values <- purrr::map2_dfr(
+    df_analytical, colnames(df_analytical),
+    function(x, col) {
+      n_na <- sum(is.na(x))
+      if (n_na > 0) {
+        tibble::tibble(
+          column = col,
+          count = n_na,
+          warning = "missing values"
+        )
+      }
+    }
+  )
+  if (!quiet && nrow(missing_values) > 0) {
+    warning(
+      sum(missing_values$count),
+      " missing values across ",
+      nrow(missing_values),
+      " analytical columns"
+    )
+  }
+  all_warnings <- dplyr::bind_rows(missing_values)
+  return(all_warnings)
 }
 
 #' @param x an object of class archchem

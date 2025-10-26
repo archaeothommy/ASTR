@@ -4,8 +4,8 @@
 \name{archchem}
 \alias{archchem}
 \alias{as_archchem}
-\alias{validate}
 \alias{read_archchem}
+\alias{validate}
 \alias{format.archchem}
 \alias{print.archchem}
 \alias{get_contextual_columns}
@@ -32,8 +32,6 @@ as_archchem(
   ...
 )
 
-validate(x, quiet = TRUE, ...)
-
 read_archchem(
   path,
   id_column = "ID",
@@ -47,6 +45,8 @@ read_archchem(
   drop_columns = FALSE,
   validate = TRUE
 )
+
+validate(x, quiet = TRUE, ...)
 
 \method{format}{archchem}(x, ...)
 
@@ -99,30 +99,49 @@ for additional properties of archchem tables. Defaults to TRUE}
 
 \item{...}{further arguments passed to or from other methods}
 
-\item{x}{an object of class archchem}
-
-\item{quiet}{should warnings be printed? Defaults to TRUE}
-
 \item{path}{file path (including extension) to the file to read}
 
 \item{delim}{a character string with the separator for tabular data. Use
 \verb{\\t} for tab-separated data. Must be provided for all file types except
 \code{.xlsx} or \code{.xls}}
 
+\item{x}{an object of class archchem}
+
+\item{quiet}{should warnings be printed? Defaults to TRUE}
+
 \item{unit}{string with a unit definition that can be understood by
 \link[units]{set_units}, e.g. "\%", "kg", or "m/s^2"}
 }
 \value{
-Returns a data structure \code{archchem} which is a tibble-derived object.
+Returns an object of class \code{archchem}, which is a tibble-derived object.
 }
 \description{
-A data format for chemical analysis datasets in archaeology,
-containing contextual information, numerical elemental, and isotopic data.
-\code{read_archchem} reads data from a file (.csv, .xls, .xlsx) into this
-format, \code{as_archchem} turns R data.frames to it.
+A tabular data format for chemical analysis datasets in
+archaeology, including contextual information, numerical elemental, and
+isotopic data. Columns are assigned units (using \link[units]{set_units}) and
+categories (in an attribute \code{archchem_class}) based on the column name.
+The following functions allow to create objects of class \code{archchem}, and to
+interact with them.
+\itemize{
+\item \strong{as_archchem}: Transforms an R \code{data.frame} to an object of class
+\code{archchem}.
+\item \strong{read_archchem}: Reads data from a file (.csv, .xls, .xlsx) into
+an object of class \code{archchem}.
+\item \strong{validate}: Performs additional validation on \code{archchem} and returns
+a \code{data.frame} as a workable list of potential issues.
+\item \strong{get_..._columns}: Subsets \code{archchem} tables to columns of a certain
+category (or \code{archchem_class}), e.g. only contextual data columns.
+\item \strong{remove_units}: Removes unit vector types from the analytical columns
+in an \code{archchem} table and replaces them with simple numeric columns of type
+\code{double}.
+\item \strong{unify_concentration_unit}: Unifies the unit of each concentration column,
+e.g. to either \% or ppm (or any SI unit) to avoid mixing units in derived analyses.
+}
+As \code{archchem} is derived from \code{tibble} it is directly compatible with the
+data manipulation tools in the tidyverse.
 }
 \details{
-The data files can be fairly freeform, i.e. no specified elements,
+The input data files can be fairly freeform, i.e. no specified elements,
 oxides, or isotopic ratios are required and no exact order of these needs to
 be adhered to. Analyses can contain as many analytical columns as necessary.
 
