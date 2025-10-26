@@ -18,11 +18,11 @@ elements <- c(
 oxides <- c(
   # retrieved from https://www.wikidoc.org/index.php/Oxide,
   # sorted according to alphabet
-  "Ag2O", "AgO", "Al2O3", "AlO", "As2O3", "As2O5", "B2O3", "BaO", "BeO",
+  "Ag2O", "AgO", "Al2O3", "AlO", "As2O3", "As2O5", "Au2O3", "B2O3", "BaO", "BeO",
   "Bi2O3", "C2O", "CaO", "CdO", "CeO2", "Cl2O", "Cl2O7", "ClO2", "CO", "CO2",
   "CO3", "CoO", "Cr2O3", "CrO2", "CrO3", "Cu2O", "CuO", "Er2O3", "Fe2O3",
   "FeO", "Ga2O3", "Gd2O3", "GeO2", "H2O", "HfO2", "HgO", "Ho2O3", "In2O3",
-  "K2O", "La2O3", "Li2O", "Lu2O3", "MgO", "Mn2O7", "MnO2", "MoO3", "N2O3",
+  "K2O", "La2O3", "Li2O", "Lu2O3", "MgO", "Mn2O7", "MnO", "MnO2", "MoO3", "N2O3",
   "N2O4", "N2O5", "Na2O", "Ni2O3", "Ni2O5", "NiO", "NO", "NO2", "O4", "OF2",
   "OsO4", "P2O5", "P4O6", "PbO", "PbO2", "PdO", "Pm2O3", "PuO2", "Rb2O",
   "Re2O7", "ReO3", "Rh2O3", "RuO2", "RuO4", "Sb2O3", "Sb2O5", "Sc2O3", "SeO2",
@@ -91,3 +91,11 @@ usethis::use_data(
 # )
 #
 # usethis::use_data(isotopes, overwrite = T)
+
+#### archem data input table ####
+
+archchem_example_input <- readr::read_csv("data-raw/test_data_input_good.csv")
+
+usethis::use_data(archchem_example_input,
+  overwrite = TRUE
+)
