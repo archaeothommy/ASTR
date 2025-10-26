@@ -75,6 +75,43 @@
 #' Missing values are allowed anywhere in the data file body, and will be replaced
 #' by `NA` automatically.
 #'
+#' @examples
+#' library(magrittr)
+#'
+#' # reading an archchem table directly from a file
+#' test_file <- system.file("extdata", "test_data_input_good.csv", package = "ASTR")
+#' arch <- read_archchem(test_file, id_column = "Sample", context = 1:7)
+#'
+#' # turning a data.frame to an archchem table
+#' test_df <- readr::read_csv(test_file)
+#' arch <- as_archchem(test_df, id_column = "Sample", context = 1:7)
+#'
+#' # validating an archchem table
+#' validate(arch)
+#'
+#' # extracting subsets of columns
+#' conc <- get_concentration_columns(arch) # see also other get_..._columns functions
+#'
+#' # unit-aware arithmetics on archchem columns thanks to the units package
+#' conc$Sb_ppm + conc$Ag_ppb # works
+#' \dontrun{conc$Sb_ppm + conc$`Sn_µg/ml`} # fails with: cannot convert µg/ml into ppm
+#'
+#' # converting units
+#' conc$Sb_ppb <- units::set_units(arch$Sb_ppm, "ppb") %>%
+#'   magrittr::set_attr("archchem_class", "archchem_concentration")
+#'
+#' # removing all units from archchem tables
+#' remove_units(arch)
+#'
+#' # applying tidyverse data manipulation on archchem tables
+#' conc_subset <- conc %>%
+#'   dplyr::select(-`Sn_µg/ml`, -`Sb_ppm`) %>%
+#'   dplyr::filter(`Na2O_wt%` > units::set_units(1, "%"))
+#'
+#' # unify all concentration units
+#' unify_concentration_unit(conc_subset, "ppm")
+#' # note that the column names are inaccurate now
+#'
 #' @export
 as_archchem <- function(
   df, id_column = "ID", context = c(),
@@ -298,4 +335,40 @@ print.archchem <- function(x, ...) {
   x %>%
     `class<-`(c("tbl", "tbl_df", "data.frame")) %>%
     print()
+}
+
+#### adjustments to preserve archchem properties with different dplyr verbs ####
+# see ?dplyr_extending
+
+# carry over archchem_class column attribute
+preserve_archchem_attrs <- function(modified, original) {
+  purrr::map2(modified, original, function(new_col, old_col) {
+    arch_attr <- attr(old_col, "archchem_class")
+    if (!is.null(arch_attr)) attr(new_col, "archchem_class") <- arch_attr
+    new_col
+  }) %>%
+    magrittr::set_names(names(modified)) %>%
+    tibble::new_tibble(nrow = nrow(modified), class = class(original))
+}
+
+# row-slice method
+#' @exportS3Method dplyr::dplyr_row_slice
+dplyr_row_slice.archchem <- function(data, i, ...) {
+  sliced <- purrr::map(data, function(x) x[i])
+  sliced_tbl <- tibble::new_tibble(sliced, nrow = length(i), class = class(data))
+  preserve_archchem_attrs(sliced_tbl, data)
+}
+
+# column modification method
+#' @exportS3Method dplyr::dplyr_col_modify
+dplyr_col_modify.archchem <- function(data, cols) {
+  modified_list <- utils::modifyList(as.list(data), cols)
+  modified_tbl <- tibble::new_tibble(modified_list, nrow = nrow(data), class = class(data))
+  preserve_archchem_attrs(modified_tbl, data)
+}
+
+# final reconstruction
+#' @exportS3Method dplyr::dplyr_reconstruct
+dplyr_reconstruct.archchem <- function(data, template) {
+  tibble::new_tibble(data, nrow = nrow(data), class = class(template))
 }
