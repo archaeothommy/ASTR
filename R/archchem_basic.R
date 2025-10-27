@@ -23,7 +23,8 @@
 #' @param guess_context_type If TRUE, attempt to infer appropriate classes for
 #' context columns.
 #' @param na Character vector of strings to be interpret as missing values.
-#'
+#' @param drop_columns ...
+#' @param validate ...
 #'
 #' @return Returns a data structure `archchem`  which is a tibble derived-object
 #'
@@ -37,7 +38,7 @@
 #' The column that contains the unique samples identification is specified using
 #' the `ID` argument. If the dataset contains duplicate ids, the following warning
 #' will return:
-#' Detected multiple data rows with the same ‘ID’, which were renamed
+#' Detected multiple data rows with the same ‘ID’. They will be renamed
 #' consecutively using the following convention: `_1`,`_2`, ... `_n`
 #'
 #' Metadata contained within the dataset must be specified using the `context`
@@ -73,45 +74,100 @@ as_archchem <- function(
     "", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.",
     "#DIV/0!", "#VALUE!", "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"
   ),
+  drop_columns = FALSE,
+  validate = TRUE,
   ...
 ) {
   # input checks
   checkmate::assert_data_frame(df)
   checkmate::assert_names(colnames(df), must.include = id_column)
-  # add ID column to context for the following operation
+  # prepare context column list
   if (!inherits(context, "character")) {
     context <- colnames(df)[context]
   }
   context <- append(context, id_column)
-  # determine and apply column types
-  constructors <- colnames_to_constructors(
-    df, context, bdl, bdl_strategy, guess_context_type, na
-  )
-  df <- purrr::map2(df, constructors, function(col, f) f(col))
-  # turn into tibble-derived object
-  df <- tibble::new_tibble(df, nrow = nrow(df), class = "archchem")
-  # create/move ID column
+  # add ID column to context for the following operation
   df <- df %>%
     dplyr::mutate(ID = .data[[id_column]]) %>%
     dplyr::relocate("ID", .before = 1)
+  # handle ID duplicates
+  if (length(unique(df$ID)) != nrow(df)) {
+    warning(
+      "Detected multiple data rows with the same ID. They will be renamed ",
+      "consecutively using the following convention: _1, _2, ... _n"
+    )
+  }
+  df <- df %>%
+    dplyr::group_by(.data[["ID"]]) %>%
+    dplyr::mutate(
+      ID = dplyr::case_when(
+        dplyr::n() > 1 ~ paste0(.data[["ID"]], "_", as.character(dplyr::row_number())),
+        .default = .data[["ID"]]
+      )
+    ) %>%
+    dplyr::ungroup()
+  # determine and apply column types
+  constructors <- colnames_to_constructors(
+    df, context, bdl, bdl_strategy, guess_context_type, na, drop_columns
+  )
+  df <- purrr::map2(df, constructors, function(col, f) f(col)) %>%
+    purrr::discard(is.null)
+  # turn into tibble-derived object
+  df <- tibble::new_tibble(df, nrow = nrow(df), class = "archchem")
+  # post-reading validation
+  if (validate) {
+    validation_output <- validate(df, quiet = FALSE)
+    if (nrow(validation_output) > 0) {
+      warning(
+        "See the full list of validation output with: ",
+        "ASTR::validate(<your archchem object>)."
+      )
+    }
+  }
   return(df)
 }
 
-get_cols_with_class <- function(x, classes) {
-  dplyr::select(x, tidyselect::where(
-    function(x) {
-      inherits(x, classes)
-    }
-  ))
+#' @rdname archchem
+#' @param quiet ...
+#' @export
+validate <- function(x, quiet = TRUE, ...) {
+  UseMethod("validate")
 }
 
-get_cols_without_class <- function(x, classes) {
-  dplyr::select(x, tidyselect::where(
-    function(x) {
-      !inherits(x, classes)
-    }
-  ))
+#' @export
+validate.default <- function(x, quiet = TRUE, ...) {
+  stop("x is not an object of class archchem")
 }
+
+#' @export
+validate.archchem <- function(x, quiet = TRUE, ...) {
+  # check for missingness in analytical columns
+  df_analytical <- get_analytical_columns(x)[-1]
+  missing_values <- purrr::map2_dfr(
+    df_analytical, colnames(df_analytical),
+    function(x, col) {
+      n_na <- sum(is.na(x))
+      if (n_na > 0) {
+        tibble::tibble(
+          column = col,
+          count = n_na,
+          warning = "missing values"
+        )
+      }
+    }
+  )
+  if (!quiet && nrow(missing_values) > 0) {
+    warning(
+      sum(missing_values$count),
+      " missing values across ",
+      nrow(missing_values),
+      " analytical columns"
+    )
+  }
+  all_warnings <- dplyr::bind_rows(missing_values)
+  return(all_warnings)
+}
+
 
 #' @param path path to the file that should be read
 #' @param delim A character string with the separator for tabular data. Use
@@ -130,7 +186,9 @@ read_archchem <- function(
   bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
   bdl_strategy = function() {
     NA_character_
-  }
+  },
+  drop_columns = FALSE,
+  validate = TRUE
 ) {
   ext <- strsplit(basename(path), split = "\\.")[[1]][-1] # extract file format
 
@@ -181,7 +239,9 @@ read_archchem <- function(
     input_file,
     id_column = id_column, context = context,
     bdl = bdl, bdl_strategy = bdl_strategy,
-    guess_context_type = guess_context_type, na = na
+    guess_context_type = guess_context_type, na = na,
+    drop_columns = drop_columns,
+    validate = validate
   )
 }
 
@@ -192,9 +252,26 @@ format.archchem <- function(x, ...) {
   out_str <- list()
   # compile information
   out_str$title <- "\033[1marchchem table\033[22m"
+  # analytical columns
+  x_analytical <- colnames(get_analytical_columns(x))
+  out_str$analytical_columns <- paste(
+    "Analytical columns:",
+    add_color(paste(x_analytical[-1], collapse = ", "), 32)
+  )
+  # contextual columns
+  x_context <- colnames(get_contextual_columns(x))
+  out_str$contextual_columns <- paste(
+    "Contextual columns:",
+    add_color(paste(x_context[-1], collapse = ", "), 35)
+  )
   # merge information
   return_value <- paste(out_str, collapse = "\n", sep = "")
   invisible(return_value)
+}
+
+# see colours: for(col in 29:47){ cat(paste0("\033[0;", col, "m", "test" ,"\033[0m","\n"))}
+add_color <- function(x, col) {
+  paste0("\033[0;", col, "m", x, "\033[0m")
 }
 
 #' @rdname archchem
@@ -221,7 +298,7 @@ remove_units.default <- function(x, ...) {
 
 #' @export
 remove_units.archchem <- function(x, ...) {
-  without_units <- dplyr::mutate(
+  dplyr::mutate(
     x,
     dplyr::across(
       tidyselect::where(function(x) {
@@ -230,5 +307,4 @@ remove_units.archchem <- function(x, ...) {
       units::drop_units
     )
   )
-  tibble::as_tibble(without_units)
 }
