@@ -7,6 +7,9 @@
 #' @param time Vecotr of start, end periods of isocrons, and intervals in million years; Default c(0, 3700, 200)
 #' @param color Vector of line and lable colors for highlights and regular lines; Default c('grey30', 'grey70')
 #' @return
+#'
+#' @importFrom PbIso modelcurve isochron76yint isochron76slope
+#' @importFrom graphics lines par abline text
 #' lines and ablines for existing plot
 #' @export
 plot_isocron76 <- function(mu1 = 10,
@@ -67,6 +70,8 @@ plot_isocron76 <- function(mu1 = 10,
 
 #' @rdname plot_isocron76
 #' @param kap Kapa Value; Default 4
+#' @importFrom stats lm coef
+#' @importFrom graphics lines par abline text
 #' @export
 plot_isocron86 <- function(mu1 = 10,
                            kap = 4,
