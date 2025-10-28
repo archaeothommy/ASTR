@@ -18,14 +18,18 @@ Suggests:
 Imports:
     checkmate,
     dplyr,
+    geometry,
     magrittr,
     purrr,
+    rdist,
     readr,
     rlang,
+    stats,
     tibble,
     tidyselect,
-    units, 
-    rootSolve
+    units,
+    rootSolve,
+    PbIso
 Config/testthat/edition: 3
 Depends: 
     R (>= 3.5)

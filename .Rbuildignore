@@ -10,3 +10,7 @@
 ^data-raw$
 ^\.lintr$
 ^LICENSE\.md$
+^R/lever_rule_ternary\.R$
+^R/mix_exersize\.R$
+^data/.*\.xlsx$
+^data/.*\.csv$
