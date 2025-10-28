@@ -1,6 +1,6 @@
 #' Comparing Isotope Samples to Reference Data in 3D Space
 #'
-#' This function compares isotope samples to reference data in 3D space
+#' This package compares isotope samples to reference data in 3D space
 #' to identify isotopic consistency and the possibility of mixing between sources.
 #'
 #' @param wod Working data, with 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb
