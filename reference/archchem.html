@@ -76,7 +76,7 @@ and metadata (labelled as context).</p>
 <span>  <span class="va">path</span>,</span>
 <span>  id_column <span class="op">=</span> <span class="st">"ID"</span>,</span>
 <span>  context <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  delim <span class="op">=</span> <span class="st">"\t"</span>,</span>
+<span>  delim <span class="op">=</span> <span class="st">","</span>,</span>
 <span>  guess_context_type <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  na <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"n/a"</span>, <span class="st">"NA"</span>, <span class="st">"N.A."</span>, <span class="st">"N/A"</span>, <span class="st">"na"</span>, <span class="st">"-"</span>, <span class="st">"n.d."</span>, <span class="st">"n.a."</span>, <span class="st">"#DIV/0!"</span>, <span class="st">"#VALUE!"</span>,</span>
 <span>    <span class="st">"#REF!"</span>, <span class="st">"#NAME?"</span>, <span class="st">"#NUM!"</span>, <span class="st">"#N/A"</span>, <span class="st">"#NULL!"</span><span class="op">)</span>,</span>
@@ -85,7 +85,8 @@ and metadata (labelled as context).</p>
 <span>     <span class="cn">NA_character_</span></span>
 <span> <span class="op">}</span>,</span>
 <span>  drop_columns <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  validate <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  validate <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'archchem'</span></span>
@@ -151,7 +152,10 @@ context columns.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>further arguments passed to or from other methods</p></dd>
+<dd><p>Additional arguments passed to the respective import functions.
+See their documentation for details:</p><ul><li><p><code><a href="https://readxl.tidyverse.org/reference/read_excel.html" class="external-link">readxl::read_excel()</a></code> for file formats <code>.xlsx</code> or <code>.xls</code></p></li>
+<li><p><code><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">readr::read_delim()</a></code> for all other file formats.</p></li>
+</ul></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
@@ -167,9 +171,9 @@ context columns.</p></dd>
 
 
 <dt id="arg-delim">delim<a class="anchor" aria-label="anchor" href="#arg-delim"></a></dt>
-<dd><p>A character string with the separator for tabular data. Use
-<code>\t</code> for tab-separated data. Must be provided for all file
-types except <code>.xlsx</code> or <code>.xls</code>.</p></dd>
+<dd><p>A character string with the separator for tabular data. Must be
+provided for all file types except <code>.xlsx</code> or <code>.xls</code>. Default to <code>,</code>. Use
+<code>\t</code> for tab-separated data.</p></dd>
 
 </dl></div>
     <div class="section level2">
