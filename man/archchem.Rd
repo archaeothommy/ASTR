@@ -36,14 +36,15 @@ read_archchem(
   path,
   id_column = "ID",
   context = c(),
-  delim = "\\t",
+  delim = ",",
   guess_context_type = TRUE,
   na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.", "#DIV/0!", "#VALUE!",
     "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"),
   bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
   bdl_strategy = function() NA_character_,
   drop_columns = FALSE,
-  validate = TRUE
+  validate = TRUE,
+  ...
 )
 
 validate(x, quiet = TRUE, ...)
@@ -97,7 +98,12 @@ be dropped to proceed with the reading? Defaults to FALSE}
 \item{validate}{should the post-reading input validation be run, which checks
 for additional properties of archchem tables. Defaults to TRUE}
 
-\item{...}{further arguments passed to or from other methods}
+\item{...}{Additional arguments passed to the respective import functions.
+See their documentation for details:
+\itemize{
+\item \code{\link[readxl:read_excel]{readxl::read_excel()}} for file formats \code{.xlsx} or \code{.xls}
+\item \code{\link[readr:read_delim]{readr::read_delim()}} for all other file formats.
+}}
 
 \item{path}{file path (including extension) to the file to read}
 
@@ -111,6 +117,9 @@ for additional properties of archchem tables. Defaults to TRUE}
 
 \item{unit}{string with a unit definition that can be understood by
 \link[units]{set_units}, e.g. "\%", "kg", or "m/s^2"}
+\item{delim}{A character string with the separator for tabular data. Must be
+provided for all file types except \code{.xlsx} or \code{.xls}. Default to \verb{,}. Use
+\verb{\\t} for tab-separated data.}
 }
 \value{
 Returns an object of class \code{archchem}, which is a tibble-derived object.

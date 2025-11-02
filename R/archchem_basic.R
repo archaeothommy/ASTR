@@ -182,14 +182,61 @@ as_archchem <- function(
   return(df)
 }
 
-#' @param delim a character string with the separator for tabular data. Use
-#'   `\t` for tab-separated data. Must be provided for all file types except
-#'   `.xlsx` or `.xls`
+#' @rdname archchem
+#' @param quiet ...
+#' @export
+validate <- function(x, quiet = TRUE, ...) {
+  UseMethod("validate")
+}
+
+#' @export
+validate.default <- function(x, quiet = TRUE, ...) {
+  stop("x is not an object of class archchem")
+}
+
+#' @export
+validate.archchem <- function(x, quiet = TRUE, ...) {
+  # check for missingness in analytical columns
+  df_analytical <- get_analytical_columns(x)[-1]
+  missing_values <- purrr::map2_dfr(
+    df_analytical, colnames(df_analytical),
+    function(x, col) {
+      n_na <- sum(is.na(x))
+      if (n_na > 0) {
+        tibble::tibble(
+          column = col,
+          count = n_na,
+          warning = "missing values"
+        )
+      }
+    }
+  )
+  if (!quiet && nrow(missing_values) > 0) {
+    warning(
+      sum(missing_values$count),
+      " missing values across ",
+      nrow(missing_values),
+      " analytical columns"
+    )
+  }
+  all_warnings <- dplyr::bind_rows(missing_values)
+  return(all_warnings)
+}
+
+
+#' @param path path to the file that should be read
+#' @param delim A character string with the separator for tabular data. Must be
+#'   provided for all file types except `.xlsx` or `.xls`. Default to `,`. Use
+#'   `\t` for tab-separated data.
+#' @param ... Additional arguments passed to the respective import functions.
+#'   See their documentation for details:
+#'   * [readxl::read_excel()] for file formats `.xlsx` or `.xls`
+#'   * [readr::read_delim()] for all other file formats.
 #' @rdname archchem
 #' @export
 read_archchem <- function(
   path, id_column = "ID", context = c(),
-  delim = "\t",
+  delim = ",",
   guess_context_type = TRUE,
   na = c(
     "", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.",
@@ -198,13 +245,15 @@ read_archchem <- function(
   bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
   bdl_strategy = function() NA_character_,
   drop_columns = FALSE,
-  validate = TRUE
+  validate = TRUE,
+  ...
 ) {
   ext <- strsplit(basename(path), split = "\\.")[[1]][-1] # extract file format
 
-  if (!(ext %in% c("xlsx", "xls", "csv")) && missing(delim)) {
-    stop("Missing argument: delim")
-  }
+  # missing throws error despite delim having a (default) value
+  #if (!(ext %in% c("xlsx", "xls")) && missing(delim)) {
+  #  stop("Missing argument: delim")
+  #}
 
   if (ext %in% c("xlsx", "xls") && !requireNamespace("readxl")) {
     stop("Import of Excel files requires the package `readxl`. Please install it or choose another file format.")
@@ -212,26 +261,20 @@ read_archchem <- function(
 
   # read input as character columns only
   input_file <- switch(ext,
-    csv = {
-      readr::read_csv(
-        path,
-        col_types = readr::cols(.default = readr::col_character()),
-        na = na,
-        name_repair = "unique_quiet"
-      )
-    },
     xlsx = {
       readxl::read_xlsx(
         path,
         col_types = "text",
-        na = na
+        na = na,
+        ...
       )
     },
     xls = {
       readxl::read_xls(
         path,
         col_types = "character",
-        na = na
+        na = na,
+        ...
       )
     },
     readr::read_delim(
@@ -239,7 +282,9 @@ read_archchem <- function(
       delim = delim,
       col_types = readr::cols(.default = readr::col_character()),
       na = na,
-      name_repair = "unique_quiet"
+      name_repair = "unique_quiet",
+      trim_ws = TRUE,
+      ...
     )
   ) %>%
     # remove columns without a header
