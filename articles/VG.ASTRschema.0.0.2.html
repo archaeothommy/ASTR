@@ -33,7 +33,8 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/VG.ASTRschema.0.0.2.html">ASTR schema</a></li>
+<li><a class="dropdown-item" href="../articles/VG.ASTR.Conventions.explained.html">Data conventions explained</a></li>
+    <li><a class="dropdown-item" href="../articles/VG.ASTRschema.0.0.2.html">ASTR schema</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -108,13 +109,12 @@ of using <em>%</em>. For <em>‘per mille’</em>, use the symbol
 <code>d18O</code>.</p></li>
 <li><p>If you have columns with Pb isotope model calculations in your
 dataset prior to importing data, ensure the names do
-<strong>not</strong> contain a dash (‘-’) or underscore (’_’) and
+<strong>not</strong> contain a dash (‘-’) or underscore (‘_’) and
 specify these columns as context in the <code>read_archem</code>
 function. The function <code>&lt;pb_iso_age_model()&gt;</code> can
 calculate model ages, µ (<sup>238</sup>U/<sup>204</sup>Pb), and κ
-(<sup>232</sup>Th/<sup>238</sup>U) values using the Stacey &amp; Kramers
-(1975), Cumming &amp; Richards (1975), and Albarède &amp; Juteau (1984)
-systems within ASTR.</p></li>
+(<sup>232</sup>Th/<sup>238</sup>U) values using the <span class="citation">Stacey &amp; Kramers (<a href="#ref-stacey1975">1975</a>)</span>, <span class="citation">Cumming
+&amp; Richards (<a href="#ref-cumming1975">1975</a>)</span>, and <span class="citation">Albarede &amp; Juteau (<a href="#ref-albarede1984">1984</a>)</span> systems within ASTR.</p></li>
 <li><p>The following notations will be automatically identified and
 replaced with <code>NA</code>: <em>‘NA’</em>, <em>‘N.A.’</em>,
 <em>‘N/A’</em>, <em>‘na’</em>, <em>‘n/a’</em>, <em>‘-’</em>, and
@@ -126,7 +126,10 @@ replaced with <code>NA</code>: <em>‘NA’</em>, <em>‘N.A.’</em>,
 <code>_err2SD</code>, <code>_errSD</code>, <code>_err2SD%</code>,
 <code>_errSD%</code>, <code>_errSE</code>, <code>_err2SE</code> without
 indicating the unit. The unit will be inferred from the corresponding
-composition column.</p></li>
+composition column. SD, 2SD, SE, and 2SE can be expressed in absolute or
+relative values. We strongly recommend that the uncertainty is included
+in the datatable, and properly noted following the conventions
+described.  </p></li>
 </ul>
 <table class="table">
 <colgroup>
@@ -176,6 +179,26 @@ composition column.</p></li>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section level3">
+<h3 class="unnumbered" id="bibliography">Bibliography<a class="anchor" aria-label="anchor" href="#bibliography"></a>
+</h3>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
+<div id="ref-albarede1984" class="csl-entry">
+Albarede, F., &amp; Juteau, M. (1984). Unscrambling the lead model ages.
+<em>Geochimica Et Cosmochimica Acta</em>, <em>48</em>(1), 207–212. <a href="https://doi.org/10.1016/0016-7037(84)90364-8" class="external-link">https://doi.org/10.1016/0016-7037(84)90364-8</a>
+</div>
+<div id="ref-cumming1975" class="csl-entry">
+Cumming, G. L., &amp; Richards, J. R. (1975). Ore lead isotope ratios in
+a continuously changing earth. <em>Earth and Planetary Science
+Letters</em>, <em>28</em>(2), 155–171. <a href="https://doi.org/10.1016/0012-821X(75)90223-X" class="external-link">https://doi.org/10.1016/0012-821X(75)90223-X</a>
+</div>
+<div id="ref-stacey1975" class="csl-entry">
+Stacey, J. S., &amp; Kramers, J. D. (1975). Approximation of terrestrial
+lead isotope evolution by a two-stage model. <em>Earth and Planetary
+Science Letters</em>, <em>26</em>(2), 207–221. <a href="https://doi.org/10.1016/0012-821X(75)90088-6" class="external-link">https://doi.org/10.1016/0012-821X(75)90088-6</a>
+</div>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
