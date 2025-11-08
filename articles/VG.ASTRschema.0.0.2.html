@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>ASTR schema • ASTR</title>
+<title>ASTR schema: Naming conventions • ASTR</title>
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="ASTR schema">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="ASTR schema: Naming conventions">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -34,7 +34,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/VG.ASTR.Conventions.explained.html">Data conventions explained</a></li>
-    <li><a class="dropdown-item" href="../articles/VG.ASTRschema.0.0.2.html">ASTR schema</a></li>
+    <li><a class="dropdown-item" href="../articles/VG.ASTRschema.0.0.2.html">ASTR schema: Naming conventions</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -56,7 +56,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>ASTR schema</h1>
+      <h1>ASTR schema: Naming conventions</h1>
             
       
 
@@ -68,11 +68,8 @@
 <p>ASTR follows the following naming and data conventions, which are
 described in detail in this vignette.</p>
 <div class="section level2">
-<h2 id="naming-conventions">Naming conventions<a class="anchor" aria-label="anchor" href="#naming-conventions"></a>
+<h2 id="data-preparation">Data preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
 </h2>
-<div class="section level3">
-<h3 id="data-preparation">Data preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
-</h3>
 <ul>
 <li>All variable names are case sensitive.</li>
 <li>Decimals can only be read when indicated by a decimal point (0.5),
@@ -81,13 +78,13 @@ as opposed to decimal commas (0,5).</li>
 the sample/variable names.</li>
 </ul>
 </div>
-<div class="section level3">
-<h3 id="analytical-data-columns-naming">Analytical Data columns naming<a class="anchor" aria-label="anchor" href="#analytical-data-columns-naming"></a>
-</h3>
-<ul>
-<li><p>All columns that contain element and oxide compositions and
+<div class="section level2">
+<h2 id="analytical-data-columns-naming">Analytical Data columns naming<a class="anchor" aria-label="anchor" href="#analytical-data-columns-naming"></a>
+</h2>
+<p>All columns that contain element and oxide compositions and
 analytical errors, isotopic values, or ratios derived therefrom should
-be named using the following conventions.</p></li>
+be named using the following conventions.</p>
+<ul>
 <li><p>Only Latin characters can be supported in the column names,
 (i.e. δ and ε will not be identified).</p></li>
 <li><p>The names of oxides and trace elements are self-explanatory
@@ -100,23 +97,24 @@ Loss on ignition, where known, should be expressed as
 units</em>, as well as <em>ppm</em>, <em>ppb</em>, <em>ppt</em>,
 <em>%</em>, <em>wt%</em>, <em>at%</em>, <em>w/w%</em>, <em>‰</em>,
 <em>counts</em>, and <em>cps</em>, noted as such.</p></li>
-<li><p>Where known, please specify <em>wt%</em> and <em>at%</em> instead
-of using <em>%</em>. For <em>‘per mille’</em>, use the symbol
+<li><p>Where known, specify <em>wt%</em> and <em>at%</em> instead of
+using <em>%</em>. For <em>‘per mille’</em>, use the symbol
 <em>‰</em>.</p></li>
-<li><p>For isotopic ratios, please use simple forms such as
+<li><p>For isotopic ratios, use simple forms such as
 <code>206Pb/204Pb</code>, <code>87Sr/86Sr</code>,
 <code>147Sm/144Nd</code>, <code>eNd</code> or
 <code>d18O</code>.</p></li>
 <li><p>If you have columns with Pb isotope model calculations in your
 dataset prior to importing data, ensure the names do
 <strong>not</strong> contain a dash (‘-’) or underscore (‘_’) and
-specify these columns as context in the <code>read_archem</code>
-function. The function <code>&lt;pb_iso_age_model()&gt;</code> can
-calculate model ages, µ (<sup>238</sup>U/<sup>204</sup>Pb), and κ
+specify these columns as context in the <code>read_archem()</code>
+function. The function <code><a href="../reference/age_models.html">pb_iso_age_model()</a></code> can calculate
+model ages, µ (<sup>238</sup>U/<sup>204</sup>Pb), and κ
 (<sup>232</sup>Th/<sup>238</sup>U) values using the <span class="citation">Stacey &amp; Kramers (<a href="#ref-stacey1975">1975</a>)</span>, <span class="citation">Cumming
 &amp; Richards (<a href="#ref-cumming1975">1975</a>)</span>, and <span class="citation">Albarede &amp; Juteau (<a href="#ref-albarede1984">1984</a>)</span> systems within ASTR.</p></li>
 <li><p>The following notations will be automatically identified and
-replaced with <code>NA</code>: <em>‘NA’</em>, <em>‘N.A.’</em>,
+replaced with <code>NA</code>, unless you explicitly define other values
+in <code>read_archem()</code>: <em>‘NA’</em>, <em>‘N.A.’</em>,
 <em>‘N/A’</em>, <em>‘na’</em>, <em>‘n/a’</em>, <em>‘-’</em>, and
 <em>‘n.d.’</em>. Values containing common excel error messages
 (<em>#DIV/0!</em>, <em>#VALUE!</em>, <em>#REF!</em>, <em>#NAME?</em>,
@@ -128,8 +126,8 @@ replaced with <code>NA</code>: <em>‘NA’</em>, <em>‘N.A.’</em>,
 indicating the unit. The unit will be inferred from the corresponding
 composition column. SD, 2SD, SE, and 2SE can be expressed in absolute or
 relative values. We strongly recommend that the uncertainty is included
-in the datatable, and properly noted following the conventions
-described.  </p></li>
+in the data table, and properly noted following the conventions
+described.</p></li>
 </ul>
 <table class="table">
 <colgroup>
@@ -180,9 +178,9 @@ described.  </p></li>
 </tbody>
 </table>
 </div>
-<div class="section level3">
-<h3 class="unnumbered" id="bibliography">Bibliography<a class="anchor" aria-label="anchor" href="#bibliography"></a>
-</h3>
+<div class="section level2 unnumbered">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
 <div id="ref-albarede1984" class="csl-entry">
 Albarede, F., &amp; Juteau, M. (1984). Unscrambling the lead model ages.
@@ -200,7 +198,6 @@ Science Letters</em>, <em>26</em>(2), 207–221. <a href="https://doi.org/10.101
 </div>
 </div>
 </div>
-</div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
@@ -208,7 +205,7 @@ Science Letters</em>, <em>26</em>(2), 207–221. <a href="https://doi.org/10.101
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by First Last.</p>
+  <p>Developed by Rose Thomas, Acevedo Mejia Andrea, Artioli Gilberto, Becerra María Florencia, Benfer Adam Kevin, Bellemère Lisa, Birch Thomas Edward, Desai Karan, d’Imporzano Paolo, Eshel Tzilla, Gentile Valerio, Klein Sabine, Klesner Catherine, Murphy Kathryn, Marwick Ben, Merkel Stephen, Pelizzari Marco Daniele, Rodler Alexandra, Sabatini Benjamin, Schmid Clemens, van der Meulen-van der Veen Berber, Wang Chen, Westner Katrin Julia.</p>
 </div>
 
 <div class="pkgdown-footer-right">
