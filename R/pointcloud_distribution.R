@@ -11,12 +11,32 @@
 #' @returns
 #' A \code{list} of three elements:
 #'
-#' \item{hull_inclusion}{\code{logical}. A Boolean value indicating the **inclusion**
+#' \item{in_hull}{\code{logical}. A Boolean value indicating the **inclusion**
 #' of the working data (sample points) within the convex **hull** of the reference data.}
 #' \item{centroids}{\code{data.frame}. The coordinates of the **centroids**
 #' (mean values) for each defined reference group.}
 #' \item{distances}{\code{matrix}. A distance **matrix** where rows represent the working data samples
 #' and columns represent the reference **centroids**, containing the distance of each sample from each centroid.}
+#'
+#' @details
+#'
+#' Calculates the **Convex Hull** for the complete set of reference points and
+#' all specified **subgroups**.
+#' It determines the inclusion or exclusion of sample **Isotope values**
+#' within these hulls.
+#'
+#' The function also calculates:
+#' - The **centroid** of each reference subgroup as **mean value** of points within each vertex group.
+#' - The **distance** from each sample point to every subgroup centroid.
+#'
+#' #### Interpretation
+#' Inclusion within a hull suggests the sample is part of the **mixing group**
+#' (main hull) or is
+#' highly likely to be the specific **end member** (subgroup hull). The distance
+#' calculation provides a measure of proximity to these end member centers.
+#'
+#' @import geometry
+#' @import rdist
 #'
 #' @export
 #'
@@ -81,7 +101,7 @@ pointcloud_distribution <- function(df,
   colnames(distances) <- ref_centroids[[groupby]]
   # Creat an output list.
   output <- list(
-    "hull_inclustion" = hull_inclustion,
+    "in_hull" = hull_inclustion,
     "centroids" = ref_centroids,
     "distances" = distances
   )

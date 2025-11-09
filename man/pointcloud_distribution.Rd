@@ -18,7 +18,7 @@ pointcloud_distribution(df, samples = "samples", ref, groupby = "groups")
 \value{
 A \code{list} of three elements:
 
-\item{hull_inclusion}{\code{logical}. A Boolean value indicating the \strong{inclusion}
+\item{in_hull}{\code{logical}. A Boolean value indicating the \strong{inclusion}
 of the working data (sample points) within the convex \strong{hull} of the reference data.}
 \item{centroids}{\code{data.frame}. The coordinates of the \strong{centroids}
 (mean values) for each defined reference group.}
@@ -28,6 +28,27 @@ and columns represent the reference \strong{centroids}, containing the distance 
 \description{
 This package compares isotope samples to reference data in 3D space
 to identify isotopic consistency and the possibility of mixing between sources.
+}
+\details{
+Calculates the \strong{Convex Hull} for the complete set of reference points and
+all specified \strong{subgroups}.
+It determines the inclusion or exclusion of sample \strong{Isotope values}
+within these hulls.
+
+The function also calculates:
+\itemize{
+\item The \strong{centroid} of each reference subgroup as \strong{mean value} of points within each vertex group.
+}
+\itemize{
+\item The \strong{distance} from each sample point to every subgroup centroid.
+}
+\subsection{Interpretation}{
+
+Inclusion within a hull suggests the sample is part of the \strong{mixing group}
+(main hull) or is
+highly likely to be the specific \strong{end member} (subgroup hull). The distance
+calculation provides a measure of proximity to these end member centers.
+}
 }
 \examples{
 # Creaete Synthetic Data
