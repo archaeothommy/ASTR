@@ -41,10 +41,13 @@ Suggests:
 Imports:
     checkmate,
     dplyr,
+    geometry,
     magrittr,
     purrr,
+    rdist,
     readr,
     rlang,
+    stats,
     tibble,
     tidyselect,
     units, 
