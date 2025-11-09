@@ -3,7 +3,7 @@
 #' This package compares isotope samples to reference data in 3D space
 #' to identify isotopic consistency and the possibility of mixing between sources.
 #'
-#' @param wod Working data, with 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb
+#' @param df Working data, with 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb
 #' @param samples Heading of a column with Samples names from working data. Default "samples".
 #' @param ref Reference data with 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb
 #' @param groupby Heading of a column with reference group names from reference data. Default "group".
@@ -35,47 +35,49 @@
 #' })
 #' ref <- as.data.frame(do.call(rbind, list_df))
 #' ## Create working data
-#' wod <- as.data.frame(sapply(rand_iso(),  \(g){rnorm(20, g, 0.1)}))
-#' colnames(wod) <- iso
-#' wod$samples <- letters[1:20]
+#' df <- as.data.frame(sapply(rand_iso(),  \(g){rnorm(20, g, 0.1)}))
+#' colnames(df) <- iso
+#' df$samples <- letters[1:20]
 #' rm(list_df, iso, groups, rand_iso)
 #' # Run Pointcloud_distribution
 #' pointcloud_distribution(ref, "sample", ref, "groups")
-pointcloud_distribution <- function(wod,
+#' # cleanup
+#' rm(df, ref)
+pointcloud_distribution <- function(df,
                                     samples = "samples",
                                     ref,
                                     groupby = "groups") {
-  # Get iso names from Wod
-  wod_names <- grep("204", names(wod), value = TRUE)
+  # Get iso names from df
+  df_names <- grep("204", names(df), value = TRUE)
   # Get iso names for Ref
   ref_names <- grep("204", names(ref), value = TRUE)
 
   # Get working data list
-  wod_points <- wod[wod_names]
+  df_points <- df[df_names]
   # Get Ref data list
   ref <- ref[, c(groupby, ref_names)]
   # Finds hull for the ref Data
   ref_hull <- geometry::convhulln(ref[ref_names])
   # Checks if working points are within the hull
-  hull_inout <- geometry::inhulln(ref_hull, as.matrix(wod_points))
+  hull_inout <- geometry::inhulln(ref_hull, as.matrix(df_points))
   # Identifes unique group names
   groups <- unique(ref[[groupby]])
   # Finds out if the points are within the hull of each indificual group
   group_inout <- sapply(groups, \(i) {
     t <- geometry::convhulln(ref[ref[[groupby]] == i, ref_names])
-    geometry::inhulln(t, as.matrix(wod_points))
+    geometry::inhulln(t, as.matrix(df_points))
   })
   # Combines total and individual in and out logic
   hull_inclustion <- cbind(hull_inout, group_inout)
   # Renames rows of hull_inclustions
-  rownames(hull_inclustion) <- wod[[samples]]
+  rownames(hull_inclustion) <- df[[samples]]
   # Calculate centroides
   formula_srt <- paste0(".~`", groupby, "`")
   ref_centroids <- aggregate(as.formula(formula_srt), ref, mean)
   # Calculate distance of each point from centroides
-  distances <- rdist::cdist(wod[wod_names], ref_centroids[grep("204", names(ref_centroids))]) # Correct this.
+  distances <- rdist::cdist(df[df_names], ref_centroids[grep("204", names(ref_centroids))]) # Correct this.
   # Rename distance table rows and columns
-  rownames(distances) <- wod[[samples]]
+  rownames(distances) <- df[[samples]]
   colnames(distances) <- ref_centroids[[groupby]]
   # Creat an output list.
   output <- list(

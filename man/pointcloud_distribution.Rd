@@ -4,10 +4,10 @@
 \alias{pointcloud_distribution}
 \title{Comparing Isotope Samples to Reference Data in 3D Space}
 \usage{
-pointcloud_distribution(wod, samples = "samples", ref, groupby = "groups")
+pointcloud_distribution(df, samples = "samples", ref, groupby = "groups")
 }
 \arguments{
-\item{wod}{Working data, with 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb}
+\item{df}{Working data, with 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb}
 
 \item{samples}{Heading of a column with Samples names from working data. Default "samples".}
 
@@ -44,10 +44,12 @@ list_df <- lapply(groups, \(x){
 })
 ref <- as.data.frame(do.call(rbind, list_df))
 ## Create working data
-wod <- as.data.frame(sapply(rand_iso(),  \(g){rnorm(20, g, 0.1)}))
-colnames(wod) <- iso
-wod$samples <- letters[1:20]
+df <- as.data.frame(sapply(rand_iso(),  \(g){rnorm(20, g, 0.1)}))
+colnames(df) <- iso
+df$samples <- letters[1:20]
 rm(list_df, iso, groups, rand_iso)
 # Run Pointcloud_distribution
 pointcloud_distribution(ref, "sample", ref, "groups")
+# cleanup
+rm(df, ref)
 }
