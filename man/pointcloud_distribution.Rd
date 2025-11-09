@@ -4,16 +4,25 @@
 \alias{pointcloud_distribution}
 \title{Comparing Isotope Samples to Reference Data in 3D Space}
 \usage{
-pointcloud_distribution(df, samples = "samples", ref, groupby = "groups")
+pointcloud_distribution(
+  df,
+  ref,
+  isotope_sample = c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb"),
+  isotope_ref = isotope_sample,
+  id_sample = "ID",
+  id_ref = id_sample
+)
 }
 \arguments{
-\item{df}{Working data, with 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb}
+\item{df}{Working data, with 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb and ID}
 
-\item{samples}{Heading of a column with Samples names from working data. Default "samples".}
+\item{ref}{Reference data with 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb and Group}
 
-\item{ref}{Reference data with 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb}
+\item{isotope_sample, isotope_ref}{3  Isotpe snf Sample ID ot Refrence Group,
+names. Default c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb", "ID").}
 
-\item{groupby}{Heading of a column with reference group names from reference data. Default "group".}
+\item{id_sample, id_ref}{colum name with the sample ID and Identifyier for
+reference groups. Default "ID".}
 }
 \value{
 A \code{list} of three elements:
@@ -22,7 +31,7 @@ A \code{list} of three elements:
 of the working data (sample points) within the convex \strong{hull} of the reference data.}
 \item{centroids}{\code{data.frame}. The coordinates of the \strong{centroids}
 (mean values) for each defined reference group.}
-\item{distances}{\code{matrix}. A distance \strong{matrix} where rows represent the working data samples
+\item{distances}{\code{matrix}. A distance \strong{matrix} where rows represent the samples
 and columns represent the reference \strong{centroids}, containing the distance of each sample from each centroid.}
 }
 \description{
@@ -38,8 +47,6 @@ within these hulls.
 The function also calculates:
 \itemize{
 \item The \strong{centroid} of each reference subgroup as \strong{mean value} of points within each vertex group.
-}
-\itemize{
 \item The \strong{distance} from each sample point to every subgroup centroid.
 }
 \subsection{Interpretation}{
@@ -52,6 +59,7 @@ calculation provides a measure of proximity to these end member centers.
 }
 \examples{
 # Creaete Synthetic Data
+set.seed(24021999)
 iso <- c("206Pb/204Pb","207Pb/204Pb","208Pb/204Pb")
 ## Create Synthetic Reference data
 groups <- LETTERS[1:4]
@@ -60,17 +68,18 @@ list_df <- lapply(groups, \(x){
   ls <- sapply(rand_iso(),  \(g){stats::rnorm(20, g, stats::runif(1, 0.05, 0.1))})
   colnames(ls) <- iso
   ls <- as.data.frame(ls)
-  ls$groups <- x
+  ls$ID <- x
   ls
 })
 ref <- as.data.frame(do.call(rbind, list_df))
 ## Create working data
 df <- as.data.frame(sapply(rand_iso(),  \(g){rnorm(20, g, 0.1)}))
 colnames(df) <- iso
-df$samples <- letters[1:20]
+df$ID <- letters[1:20]
 rm(list_df, iso, groups, rand_iso)
 # Run Pointcloud_distribution
-pointcloud_distribution(ref, "sample", ref, "groups")
+pointcloud_distribution(df, ref, isotope_sample = c("206Pb/204Pb",
+"207Pb/204Pb", "208Pb/204Pb"), id_sample = "ID")
 # cleanup
 rm(df, ref)
 }
