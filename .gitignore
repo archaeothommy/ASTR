@@ -4,14 +4,3 @@
 .Ruserdata
 docs
 inst/doc
-R/lever_rule_ternary.R
-data/damhus.csv
-data/database-2025_lia.xlsx
-data/mixing_modles_reference_data.xlsx
-data/mixing_modles_test_data.xlsx
-data/REF Salzburg.xlsx
-data/WOD_Salzburg.xlsx
-R/2stagemodle.R
-R/isocron.R
-R/mix_exersize.R
-Rplots.pdf
