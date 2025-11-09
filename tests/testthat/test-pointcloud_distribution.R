@@ -1,5 +1,5 @@
 # Creaete Synthetic Data
-set.seed(24021999)
+set.seed(22041999)
 iso <- c("206Pb/204Pb","207Pb/204Pb","208Pb/204Pb")
 ## Create Synthetic Reference data
 groups <- LETTERS[1:4]
@@ -20,6 +20,7 @@ rm(list_df, iso, groups, rand_iso)
 
 test_that("pointcloud_distribution", {
   expect_type(pointcloud_distribution(df, ref), "list")
+  suppressMessages({expect_message(pointcloud_distribution(df, ref))})
   expect_error(pointcloud_distribution(df))
   expect_error(pointcloud_distribution(df, ref, isotope_sample = "204"))
   expect_error(pointcloud_distribution(df, ref, id_sample = "id"))
