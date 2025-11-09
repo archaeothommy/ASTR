@@ -68,17 +68,18 @@
 #' rm(df, ref)
 pointcloud_distribution <- function(df,
                                     ref,
-                                    isotope_sample = c("206Pb/204Pb", "207Pb/204Pb",
-                                                    "208Pb/204Pb"),
+                                    isotope_sample = c("206Pb/204Pb",
+                                                       "207Pb/204Pb",
+                                                       "208Pb/204Pb"),
                                     isotope_ref = isotope_sample,
                                     id_sample = "ID",
                                     id_ref = id_sample) {
   # Checks For Iso Col Names
-  if(length(isotope_sample) != 3){
+  if (length(isotope_sample) != 3) {
     stop("isotope_sample does not have exactly 3 values.")
   }
   # Checks for Sample ID cols
-  if(!(id_sample %in% names(df) & id_ref %in% names(ref))){
+  if (!(id_sample %in% names(df) && id_ref %in% names(ref))) {
     stop("Sample ID or reference group colums absent.")
   }
 
@@ -91,7 +92,7 @@ pointcloud_distribution <- function(df,
   # Checks if working points are within the hull
   hull_inout <- geometry::inhulln(ref_hull, as.matrix(df_points))
   # Check if any points are in Hull or throw message
-  if (!(TRUE %in% hull_inout)){
+  if (!(TRUE %in% hull_inout)) {
     message("No samples points located within reference hull")
   }
   # Identifes unique group names
