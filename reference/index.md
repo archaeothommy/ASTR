@@ -36,3 +36,6 @@
 
 - [`oxides`](https://archaeothommy.github.io/ASTR/reference/oxides.md) :
   Oxides
+
+- [`pointcloud_distribution()`](https://archaeothommy.github.io/ASTR/reference/pointcloud_distribution.md)
+  : Comparing Isotope Samples to Reference Data in 3D Space
