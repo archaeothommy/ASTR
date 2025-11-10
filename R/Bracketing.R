@@ -11,16 +11,18 @@
 #'
 #'
 #' @param data < Dataframe with analysis results from the machine>
+#' @param header string, <header of the column that contains the numeric results>
 #' @param ID_std string, <ID of the standard for bracketing>. The default value is "".
 #' @param pos integer <position of the first line for bracketing, starting with the first standard measurement that opens the bracket>.
-#' @param CicleSize integer <number of samples per cicle>.
-
+#' @param CicleSize integer <number of samples per cycle>.
+#' @param wf float <Weight assigned to the first standard from the bracketing>
+#' @param ws float <Weight assigned to the second standard from the bracketing>
 #'
 #' @references
 #' Mason, Thomas F.D., Dominik J. Weiss, Matthew Horstwood, Randall R. Parrish, Sara S. Russell, Eta Mullaneb and Barry J. Colesa. 2004. High-precision Cu and Zn isotope analysis by plasma source mass spectrometry. Journal of Analytical Atomic Spectrometry, 19, 209-217. DOI	https://doi.org/10.1039/B306958C
 #'
 #' @returns
-#' A data frame
+#' A data frame with the SSB values plus Standard Error (SE)
 #'
 #' @export
 #'
@@ -28,13 +30,13 @@
 #' <write here any example code. These are small simple examples on how to use
 #' the function or to highlight specific features>
 
-
+library(tidyr)
 
 
 
 standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, CicleSize=1, wf=0.5, ws=0.5) { # update name and arguments. The ellipsis parameter is special in R, use with care!
 
-  if (ID_std == ""){
+  if (ID_std == ""){ #first check there are not empty values in header nor ID_std
     print("You need to assign the ID of the standard.")
     stop ()
   }
@@ -44,8 +46,9 @@ standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, Cicl
         stop (NA)
       }
 
-  df <- data[c("ID", header)]
-  nr <- nrow(df)
+  df <- data[c("ID", header)] #make a dataframe with the ID of the samples and the measurements
+  nr <- nrow(df) #count number of rows in the dataframe
+
   FirstStd<-df[pos,2]
   SecondStd<-0
   MeanSBBSamples<-0
@@ -63,8 +66,8 @@ standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, Cicl
     ecicle<-i+CicleSize+1
     FirstStd<-df[icicle,2]
     SecondStd<-df[ecicle, 2]
-    icicle<-icicle+1
-    WeightedStdMean<-((wf*FirstStd)+(ws*SecondStd))/(wf+ws)
+    icicle<-icicle+1 #move the index to the first sample
+    WeightedStdMean<-((wf*FirstStd)+(ws*SecondStd))/(wf+ws) #calculate weighted mean
     StdMean<-(FirstStd+SecondStd)/(2)#calculate mean of both standards
 
     while(icicle<ecicle){
@@ -72,7 +75,6 @@ standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, Cicl
       CurrentSample<-df[icicle, 1]
       if((!is.na(CurrentSample)) & (CurrentSample!="")){
         SampleMeasurement<-df[icicle, 2]
-        #SBB<-format(signif(SampleMeasurement/StdMean, 4), nsmall=4)
         SBB<-SampleMeasurement/StdMean
         SampleNames<-append(SampleNames, CurrentSample)
         SampleResults<-append(SampleResults, SBB)
@@ -85,16 +87,15 @@ standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, Cicl
       icicle<- icicle+1
     }
     i=icicle
-
-
   }
+
     nr<- length(SampleNames)
     ResultDF<-data.frame(
       description = SampleNames,
       LinearSBB = SampleResults
     )
 
-    ResultDF<-ResultDF[order(ResultDF$description),,drop=FALSE]
+    ResultDF<-ResultDF[order(ResultDF$description),,drop=FALSE] #order results by the sample name
     i=2
     counter=1
     CurrentSample<-ResultDF[1, 1]
@@ -102,7 +103,7 @@ standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, Cicl
     Average<-c()
     SError<-c()
 
-    while(i<=nr){
+    while(i<=nr){ #iterates over the results dataframe to calculate averages and standard error
 
       if(is.na(ResultDF[i,1])|(CurrentSample==ResultDF[i,1])){
 
@@ -139,7 +140,7 @@ standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, Cicl
         FinalDF<-data.frame(
         description = SampleNames,
         Linear_SBB = format(signif(SampleResults, 4), nsmall=4),
-        Weighted_SBB=WSampleResults,
+        Weighted_SBB=WSampleResults, #add weighted values to the array
         Mean=Average,
         SE = SError
       )
@@ -153,14 +154,16 @@ standard_sample_bracketing <- function(data, header="", ID_std = "", pos=0, Cicl
         SE = SError
       )
     }
-    print(FinalDF)
+    return(FinalDF)
 
 }
 
 
 
+
 #file <- read.csv2("C:/Users/aacevedomejia/Documents/Andrea/Project/Programming/FlowerDataProcessing-SBB-test-04.csv")
-file <- read.csv2("C:/Users/aacevedomejia/Documents/Andrea/Project/Programming/test3.csv")
-standard_sample_bracketing(file, "Isotope_data", "Std", 1, 1, 0.5, 0.5)
+#file <- read.csv2("C:/Users/aacevedomejia/Documents/Andrea/Project/Programming/test3.csv")
+
+#standard_sample_bracketing(file, "Isotope_data", "Std", 1, 1, 0.5, 0.5)
 
 
