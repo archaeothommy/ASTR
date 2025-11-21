@@ -14,7 +14,6 @@
 #'
 #' @export
 classify_copper_group_bray <- function(df, threshold = 0.1) {
-  
   # Build a temporary classification table
   temp <- data.frame(
     ID = df$ID,
@@ -38,12 +37,9 @@ classify_copper_group_bray <- function(df, threshold = 0.1) {
       TRUE ~ NA_character_
     )
   )
-  
   # Merge back into the original dataframe without altering it
   df <- dplyr::left_join(df, temp, by = "ID")
-  
   # Clean column name to publication-specific name
   names(df)[names(df) == "group"] <- "copper_group_bray"
-  
   return(df)
 }
