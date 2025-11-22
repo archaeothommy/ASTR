@@ -10,3 +10,5 @@
 ^data-raw$
 ^\.lintr$
 ^LICENSE\.md$
+^doc$
+^Meta$
