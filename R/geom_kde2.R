@@ -33,7 +33,8 @@
 #' * `colour` (controls the polygon outline)
 #' * `fill` (controls the polygon fill)
 #' * `linetype`
-#' * `size` (controls the outline thickness)
+#' * `linewidth` (controls the outline thickness)
+#' * `size` (controls the point size)
 #' * `shape` (used for the fallback points)
 #'
 #' Learn more about setting these aesthetics in `vignette("ggplot2-specs")`.
@@ -174,21 +175,15 @@ GeomKDE2d <- ggplot2::ggproto(
 
     }, error = function(e) {
 
-      # show the specific thing that stopped the kde
-      message(conditionMessage(e))
-
       # --- KDE failed and user has chosen not to plot points
       if (isFALSE(fallback_to_points)) {
         message(sprintf("Skipping group '%s': %s", data$group[1], conditionMessage(e)))
         return(data.frame())  # empty data = draw nothing for this group
       }
 
-      # --- KDE failed and user has chosen not to plot points
-      message(sprintf("Skipping group '%s': %s", data$group[1], conditionMessage(e)))
-
       # --- KDE failed: fallback to points ---
       message("No density estimate possible for group '", data$group[1],
-              "' plotting points instead.")
+              "', plotting points instead: ", conditionMessage(e))
 
       data$type <- "points" # Add a 'type' column to signal the fallback
 
@@ -264,6 +259,6 @@ GeomKDE2d <- ggplot2::ggproto(
     alpha = 0.25
   ),
 
-  extra_params = c("na.rm", "quantiles", "min_prob", "colour", "fill", "size", "alpha", "shape", "linetype", "fallback_to_points")
+  extra_params = c("na.rm", "quantiles", "min_prob", "colour", "fill", "size", "alpha", "shape", "linetype", "linewidth", "fallback_to_points")
 
 )
