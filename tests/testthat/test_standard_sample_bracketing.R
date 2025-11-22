@@ -12,7 +12,7 @@ library(tidyverse)
 
 # subset just the sequences of samples to apply SSB
 subset_to_bracket <-
-  test_input |>
+  test_input %>%
   slice(13:45, 68:104)
 
 test_that("standard sample bracketing works as expected", {
