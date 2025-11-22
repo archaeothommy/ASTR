@@ -84,12 +84,13 @@ for that group, inheriting aesthetics from \code{\link[ggplot2:geom_point]{ggplo
 \itemize{
 \item \strong{\code{x}}
 \item \strong{\code{y}}
-\item \strong{\code{group}}
+\item \code{group}
 \item \code{alpha}
 \item \code{colour} (controls the polygon outline)
 \item \code{fill} (controls the polygon fill)
 \item \code{linetype}
-\item \code{size} (controls the outline thickness)
+\item \code{linewidth} (controls the outline thickness)
+\item \code{size} (controls the point size)
 \item \code{shape} (used for the fallback points)
 }
 
@@ -115,8 +116,8 @@ ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, fill = Species)) +
 ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
   geom_kde2d(quantiles = 1, min_prob = 0, fill = NA)
 
- # Creating an outline effect, and using coord_cartesian to expand the
- # plot area so the full KDE regions show without clipping
+# Creating an outline effect, and using coord_cartesian to expand the
+# plot area so the full KDE regions show without clipping
 ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
   geom_kde2d(quantiles = 1, min_prob = 0, fill = NA) +
   coord_cartesian(xlim = c(4, 8.2), ylim = c(2, 4.5), clip = "off")
