@@ -8,5 +8,6 @@
 
 library(testthat)
 library(ASTR)
+library(tibble)
 
 test_check("ASTR")
