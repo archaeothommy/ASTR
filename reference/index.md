@@ -2,6 +2,9 @@
 
 ## All functions
 
+- [`ArgentinaDatabase`](https://archaeothommy.github.io/ASTR/reference/ArgentinaDatabase.md)
+  : ArgentinaDatabase
+
 - [`pb_iso_age_model()`](https://archaeothommy.github.io/ASTR/reference/age_models.md)
   [`stacey_kramers_1975()`](https://archaeothommy.github.io/ASTR/reference/age_models.md)
   [`cumming_richards_1975()`](https://archaeothommy.github.io/ASTR/reference/age_models.md)
@@ -30,6 +33,9 @@
 
 - [`elements`](https://archaeothommy.github.io/ASTR/reference/elements.md)
   : Elements
+
+- [`geom_kde2d()`](https://archaeothommy.github.io/ASTR/reference/geom_kde2d.md)
+  : Draw 2D Kernel Density Estimate Polygons by Quantiles
 
 - [`isotopes`](https://archaeothommy.github.io/ASTR/reference/isotopes.md)
   : Isotopes

@@ -3,6 +3,7 @@
 <url><loc>https://archaeothommy.github.io/ASTR/LICENSE-text.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/LICENSE.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/articles/ASTR.html</loc></url>
+<url><loc>https://archaeothommy.github.io/ASTR/articles/KDE2_vignette.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/articles/VG.ASTR.Conventions.explained.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/articles/VG.ASTRschema.0.0.2.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/articles/index.html</loc></url>
@@ -10,10 +11,12 @@
 <url><loc>https://archaeothommy.github.io/ASTR/index.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/news/index.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/ASTR-package.html</loc></url>
+<url><loc>https://archaeothommy.github.io/ASTR/reference/ArgentinaDatabase.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/age_models.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/archchem.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/archchem_example_input.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/elements.html</loc></url>
+<url><loc>https://archaeothommy.github.io/ASTR/reference/geom_kde2d.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/index.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/isotopes.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/oxides.html</loc></url>

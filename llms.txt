@@ -16,6 +16,9 @@ You can install the development version of ASTR from
 
 ## All functions
 
+- [`ArgentinaDatabase`](https://archaeothommy.github.io/ASTR/reference/ArgentinaDatabase.md)
+  : ArgentinaDatabase
+
 - [`pb_iso_age_model()`](https://archaeothommy.github.io/ASTR/reference/age_models.md)
   [`stacey_kramers_1975()`](https://archaeothommy.github.io/ASTR/reference/age_models.md)
   [`cumming_richards_1975()`](https://archaeothommy.github.io/ASTR/reference/age_models.md)
@@ -45,6 +48,9 @@ You can install the development version of ASTR from
 - [`elements`](https://archaeothommy.github.io/ASTR/reference/elements.md)
   : Elements
 
+- [`geom_kde2d()`](https://archaeothommy.github.io/ASTR/reference/geom_kde2d.md)
+  : Draw 2D Kernel Density Estimate Polygons by Quantiles
+
 - [`isotopes`](https://archaeothommy.github.io/ASTR/reference/isotopes.md)
   : Isotopes
 
@@ -56,6 +62,8 @@ You can install the development version of ASTR from
 ### All vignettes
 
 - [ASTR](https://archaeothommy.github.io/ASTR/articles/ASTR.md):
+- [Binary plot with kernel density
+  estimation](https://archaeothommy.github.io/ASTR/articles/KDE2_vignette.md):
 - [Data conventions
   explained](https://archaeothommy.github.io/ASTR/articles/VG.ASTR.Conventions.explained.md):
 - [ASTR schema: Naming
