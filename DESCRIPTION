@@ -50,6 +50,10 @@ Imports:
     stats,
     tibble,
     tidyselect,
+    units,
+    robCompositions,
+    ggplot2,
+    ks,
     units, 
     rootSolve
 Config/testthat/edition: 3
