@@ -14,72 +14,78 @@ pointcloud_distribution(
 )
 }
 \arguments{
-\item{df}{Working data, with 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb and ID}
+\item{df}{Data frame with sample data, including isotope ratios and ID
+columns.}
 
-\item{ref}{Reference data with 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb and Group}
+\item{ref}{Data frame with reference data, including isotope ratios and group
+column.}
 
-\item{isotope_sample, isotope_ref}{3  Isotpe snf Sample ID ot Refrence Group,
-names. Default c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb", "ID").}
+\item{isotope_sample, isotope_ref}{Character vectors with column names of
+isotope ratios. Default to \code{c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")}.}
 
-\item{id_sample, id_ref}{colum name with the sample ID and Identifyier for
-reference groups. Default "ID".}
+\item{id_sample, id_ref}{String with the column name of the sample IDs and
+identifier for the reference groups. Default \code{ID}.}
 }
 \value{
 A \code{list} of three elements:
-
-\item{in_hull}{\code{logical}. A Boolean value indicating the \strong{inclusion}
-of the working data (sample points) within the convex \strong{hull} of the reference data.}
-\item{centroids}{\code{data.frame}. The coordinates of the \strong{centroids}
-(mean values) for each defined reference group.}
-\item{distances}{\code{matrix}. A distance \strong{matrix} where rows represent the samples
-and columns represent the reference \strong{centroids}, containing the distance of each sample from each centroid.}
+\itemize{
+\item in_hull: \code{logical}. Boolean value indicating the \strong{inclusion} of sample
+data within the convex \strong{hull} of the reference data.
+\item centroids: \code{data.frame}. The coordinates of the \strong{centroids} (mean values)
+for each defined reference group.
+\item distances: \code{matrix}. A distance \strong{matrix} where rows represent the samples
+and columns represent the reference \strong{centroids}, containing the distance
+of each sample from each centroid.
+}
 }
 \description{
-This package compares isotope samples to reference data in 3D space
-to identify isotopic consistency and the possibility of mixing between sources.
+This package compares isotope samples to reference data in 3D space to
+identify isotopic consistency and the possibility of mixing between sources.
 }
 \details{
-Calculates the \strong{Convex Hull} for the complete set of reference points and
-all specified \strong{subgroups}.
-It determines the inclusion or exclusion of sample \strong{Isotope values}
-within these hulls.
+Calculates the \strong{convex hull} for the complete set of reference
+points and all specified \strong{subgroups}. It determines the inclusion or
+exclusion of sample \strong{isotope values} within these hulls.
 
 The function also calculates:
 \itemize{
-\item The \strong{centroid} of each reference subgroup as \strong{mean value} of points within each vertex group.
-\item The \strong{distance} from each sample point to every subgroup centroid.
+\item The \strong{centroid} of each reference subgroup as \strong{mean value} of points
+within each vertex group.
+\item The \strong{distance} from each sample point to every subgroup's centroid.
 }
-\subsection{Interpretation}{
 
-Inclusion within a hull suggests the sample is part of the \strong{mixing group}
-(main hull) or is
-highly likely to be the specific \strong{end member} (subgroup hull). The distance
-calculation provides a measure of proximity to these end member centers.
-}
+Interpretation: Inclusion within a hull suggests the sample is part of
+the \strong{mixing group} (main hull) or is highly likely to be the specific \strong{end
+member} (subgroup hull). The distance calculation provides a measure of
+proximity to these end member centers.
 }
 \examples{
-# Creaete Synthetic Data
+# Create synthetic data
 set.seed(24021999)
 iso <- c("206Pb/204Pb","207Pb/204Pb","208Pb/204Pb")
-## Create Synthetic Reference data
+
+# Create synthetic reference data
 groups <- LETTERS[1:4]
-rand_iso <- \(){c(runif(1, 18.3, 19), runif(1, 15.5, 15.9), runif(1, 37.5, 39))}
-list_df <- lapply(groups, \(x){
-  ls <- sapply(rand_iso(),  \(g){stats::rnorm(20, g, stats::runif(1, 0.05, 0.1))})
+rand_iso <- function(){c(runif(1, 18.3, 19), runif(1, 15.5, 15.9), runif(1, 37.5, 39))}
+list_df <- lapply(groups, function(x){
+  ls <- sapply(rand_iso(),  function(g){stats::rnorm(20, g, stats::runif(1, 0.05, 0.1))})
   colnames(ls) <- iso
   ls <- as.data.frame(ls)
   ls$ID <- x
   ls
 })
 ref <- as.data.frame(do.call(rbind, list_df))
-## Create working data
-df <- as.data.frame(sapply(rand_iso(),  \(g){rnorm(20, g, 0.1)}))
+
+## Create sample data
+df <- as.data.frame(sapply(rand_iso(),  function(g){rnorm(20, g, 0.1)}))
 colnames(df) <- iso
 df$ID <- letters[1:20]
 rm(list_df, iso, groups, rand_iso)
-# Run Pointcloud_distribution
+
+# Run pointcloud_distribution
 pointcloud_distribution(df, ref, isotope_sample = c("206Pb/204Pb",
 "207Pb/204Pb", "208Pb/204Pb"), id_sample = "ID")
+
 # cleanup
 rm(df, ref)
 }

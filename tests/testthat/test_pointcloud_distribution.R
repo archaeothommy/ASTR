@@ -1,13 +1,14 @@
-# Creaete Synthetic Data
+# Create Synthetic Data
 set.seed(22041999)
 iso <- c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")
-## Create Synthetic Reference data
+
+# Create Synthetic Reference data
 groups <- LETTERS[1:4]
-rand_iso <- \() {
+rand_iso <- function() {
   c(runif(1, 18.3, 19), runif(1, 15.5, 15.9), runif(1, 37.5, 39))
 }
-list_df <- lapply(groups, \(x) {
-  ls <- sapply(rand_iso(), \(g) {
+list_df <- lapply(groups, function(x) {
+  ls <- sapply(rand_iso(), function(g) {
     stats::rnorm(20, g, stats::runif(1, 0.05, 0.1))
   })
   colnames(ls) <- iso
@@ -16,8 +17,9 @@ list_df <- lapply(groups, \(x) {
   ls
 })
 ref <- as.data.frame(do.call(rbind, list_df))
-## Create working data
-df <- as.data.frame(sapply(rand_iso(), \(g) {
+
+# Create working data
+df <- as.data.frame(sapply(rand_iso(), function(g) {
   rnorm(20, g, 0.1)
 }))
 colnames(df) <- iso
