@@ -81,13 +81,11 @@
 #' pb_iso_age_model(df, model = "SK75")
 #' stacey_kramers_1975(df)
 #'
-
 pb_iso_age_model <- function(df,
                              ratio_206_204 = "206Pb/204Pb",
                              ratio_207_204 = "207Pb/204Pb",
                              ratio_208_204 = "208Pb/204Pb",
                              model = c("SK75", "CR75", "AJ84", "all")) {
-
   checkmate::assert_character(model)
 
   switch(model,
@@ -157,7 +155,7 @@ stacey_kramers_1975 <- function(df,
   mu <- (df[[ratio_206_204]] - a0) / (exp(l238 * t0) - exp(l238 * model_age))
   kappa <- (df[[ratio_208_204]] - c0) / (mu * (exp(l232 * t0) - exp(l232 * model_age)))
 
-  result <- data.frame("model_age_SK75" = model_age * 10^-6, "mu_SK75" = mu, "kappa_SK75" = kappa) |>
+  result <- data.frame("model_age_SK75" = model_age * 10^-6, "mu_SK75" = mu, "kappa_SK75" = kappa) %>%
     round(3)
 
   result <- cbind(df, result)
@@ -213,7 +211,7 @@ cumming_richards_1975 <- function(df,
   mu <- 137.88 * vp * (1 - e1 * model_age)
   kappa <- wp * (1 - e2 * model_age) / mu
 
-  result <- data.frame("model_age_CR75" = model_age * 10^-6, "mu_CR75" = mu, "kappa_CR75" = kappa) |>
+  result <- data.frame("model_age_CR75" = model_age * 10^-6, "mu_CR75" = mu, "kappa_CR75" = kappa) %>%
     round(3)
 
   result <- cbind(df, result)
@@ -270,7 +268,7 @@ albarede_juteau_1984 <- function(df,
 
   kappa <- (df[[ratio_208_204]] - zstar0) / (exp(l232 * t0) - exp(l232 * roots[1, ])) / roots[2, ]
 
-  result <- data.frame("model_age_AJ84" = roots[1, ] * 10^-6, "mu_AJ84" = roots[2, ], "kappa_AJ84" = kappa) |>
+  result <- data.frame("model_age_AJ84" = roots[1, ] * 10^-6, "mu_AJ84" = roots[2, ], "kappa_AJ84" = kappa) %>%
     round(3)
 
   result <- cbind(df, result)

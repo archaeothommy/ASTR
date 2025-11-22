@@ -1,4 +1,3 @@
-#' @export
 check_columns_exist <- function(df, columns) {
   #
   checkmate::assert_data_frame(df)
@@ -11,7 +10,6 @@ check_columns_exist <- function(df, columns) {
 
   TRUE
 }
-
 
 #' @export
 filter_columns_with_id <- function(df, columns, id_column_name = "id", all = FALSE) {
@@ -32,15 +30,13 @@ filter_columns_with_id <- function(df, columns, id_column_name = "id", all = FAL
   df_filtered
 }
 
-#' TODO: improve when specific  archem classes are defined
-#' TODO: evaluate if worth replacing the generic R code columns[!sapply(df[columns], is.numeric)]
-#' with columns <- df %>%
-#'   select(all_of(columns)) %>%
-#'   select(where(~ !is.numeric(.))) %>%
-#'   names()
-#'
-#'
-#' @export
+# TODO: improve when specific  archem classes are defined
+# TODO: evaluate if worth replacing the generic R code columns[!sapply(df[columns], is.numeric)]
+# with columns <- df %>%
+#   select(all_of(columns)) %>%
+#   select(where(~ !is.numeric(.))) %>%
+#   names()
+
 check_numeric_columns <- function(df, columns) {
   non_numeric <- columns[!sapply(df[columns], is.numeric)]
 
@@ -51,14 +47,14 @@ check_numeric_columns <- function(df, columns) {
   TRUE
 }
 
-#' TODO: improve when specific  archem classes are defined, atm it's just a wrapper
-#' TODO: add tests when it does something meaningful
-#' TODO: evaluate if worth replacing the generic R code columns[!sapply(df[columns], is.numeric)]
-#' with df %>% select(where(~ !is.numeric(.))) %>% names()
-#'
-#'
-#' function is supposed to strip any metadata that may influence the ML algorithms (PCA, k-means,...)
-#' @export
+# TODO: improve when specific  archem classes are defined, atm it's just a wrapper
+# TODO: add tests when it does something meaningful
+# TODO: evaluate if worth replacing the generic R code columns[!sapply(df[columns], is.numeric)]
+# with df %>% select(where(~ !is.numeric(.))) %>% names()
+#
+#
+# function is supposed to strip any metadata that may influence the ML algorithms (PCA, k-means,...)
+
 return_numeric_columns <- function(df, columns, all = FALSE) {
   if (all) {
     columns <- names(df)[sapply(df, is.numeric)]
