@@ -47,8 +47,15 @@ Imports:
     rlang,
     tibble,
     tidyselect,
+<<<<<<< HEAD
+    units,
+    robCompositions,
+    ggplot2,
+    ks
+=======
     units, 
     rootSolve
+>>>>>>> main
 Config/testthat/edition: 3
 Depends: 
     R (>= 3.5)
