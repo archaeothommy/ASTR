@@ -68,8 +68,8 @@
 #' ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
 #'   geom_kde2d(quantiles = 1, min_prob = 0, fill = NA)
 #'
-#'  # Creating an outline effect, and using coord_cartesian to expand the
-#'  # plot area so the full KDE regions show without clipping
+#' # Creating an outline effect, and using coord_cartesian to expand the
+#' # plot area so the full KDE regions show without clipping
 #' ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
 #'   geom_kde2d(quantiles = 1, min_prob = 0, fill = NA) +
 #'   coord_cartesian(xlim = c(4, 8.2), ylim = c(2, 4.5), clip = "off")
@@ -87,7 +87,6 @@
 #' ggplot(df, aes(x, y, fill = group, colour = group)) +
 #'   geom_kde2d(alpha = 0.4) +
 #'   theme_minimal()
-
 geom_kde2d <- function(mapping = NULL,
                        data = NULL,
                        inherit.aes = TRUE,
@@ -104,17 +103,18 @@ geom_kde2d <- function(mapping = NULL,
     position = "identity",
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(quantiles = quantiles,
-                  min_prob = min_prob,
-                  fallback_to_points = fallback_to_points,
-                  ...)
+    params = list(
+      quantiles = quantiles,
+      min_prob = min_prob,
+      fallback_to_points = fallback_to_points,
+      ...
+    )
   )
 }
 
 GeomKDE2d <- ggplot2::ggproto(
   "GeomKDE2d",
   ggplot2:::Geom,
-
   handle_na = function(self, data, params) {
     data
   },
@@ -148,58 +148,61 @@ GeomKDE2d <- ggplot2::ggproto(
 
     common <- subset(data, select = -c(x, y))[1, ]
 
-    plot_data <- tryCatch({
-      kde <- ks::kde(data_kde, compute.cont = FALSE)
-      levels <- ks::contourLevels(kde, prob = probs)
+    plot_data <- tryCatch(
+      {
+        kde <- ks::kde(data_kde, compute.cont = FALSE)
+        levels <- ks::contourLevels(kde, prob = probs)
 
-      if(sum(levels) == 0) {
-        stop("Levels values are zero",
-             .call = FALSE)
+        if (sum(levels) == 0) {
+          stop("Levels values are zero",
+            .call = FALSE
+          )
+        }
+
+        contours <- grDevices::contourLines(
+          x = kde$eval.points[[1]],
+          y = kde$eval.points[[2]],
+          z = kde$estimate,
+          levels = levels
+        )
+
+        plot_data <- lapply(seq_along(contours), function(i) {
+          data.frame(
+            x = contours[[i]][["x"]],
+            y = contours[[i]][["y"]],
+            group = rep_len(i, length(contours[[i]][["x"]]))
+          )
+        })
+
+        do.call("rbind", plot_data)
+      },
+      error = function(e) {
+        # --- KDE failed and user has chosen not to plot points
+        if (isFALSE(fallback_to_points)) {
+          message(sprintf("Skipping group '%s': %s", data$group[1], conditionMessage(e)))
+          return(data.frame()) # empty data = draw nothing for this group
+        }
+
+        # --- KDE failed: fallback to points ---
+        message(
+          "No density estimate possible for group '", data$group[1],
+          "', plotting points instead: ", conditionMessage(e)
+        )
+
+        data$type <- "points" # Add a 'type' column to signal the fallback
+
+        return(data)
       }
-
-      contours <- grDevices::contourLines(
-        x = kde$eval.points[[1]],
-        y = kde$eval.points[[2]],
-        z = kde$estimate,
-        levels = levels
-      )
-
-      plot_data <- lapply(seq_along(contours), function(i)
-        data.frame(
-          x = contours[[i]][["x"]],
-          y = contours[[i]][["y"]],
-          group = rep_len(i, length(contours[[i]][["x"]]))
-        ))
-
-      do.call("rbind", plot_data)
-
-    }, error = function(e) {
-
-      # --- KDE failed and user has chosen not to plot points
-      if (isFALSE(fallback_to_points)) {
-        message(sprintf("Skipping group '%s': %s", data$group[1], conditionMessage(e)))
-        return(data.frame())  # empty data = draw nothing for this group
-      }
-
-      # --- KDE failed: fallback to points ---
-      message("No density estimate possible for group '", data$group[1],
-              "', plotting points instead: ", conditionMessage(e))
-
-      data$type <- "points" # Add a 'type' column to signal the fallback
-
-      return(data)
-
-    })
+    )
 
     # Detect fallback (points)
     if (!is.null(plot_data$type) && unique(plot_data$type) == "points") {
-
       # prefer user-specified constants, then mapped, then defaults
-      col_val  <- colour  %||% common$colour %||% common$fill %||% "black"
-      fill_val <- fill    %||% common$fill   %||% common$colour %||% col_val
-      size_val <- (size   %||% common$size   %||% 1.5) * 2
-      alpha_val<- alpha   %||% common$alpha  %||% 1
-      shape_val<- shape   %||% common$shape  %||% 21
+      col_val <- colour %||% common$colour %||% common$fill %||% "black"
+      fill_val <- fill %||% common$fill %||% common$colour %||% col_val
+      size_val <- (size %||% common$size %||% 1.5) * 2
+      alpha_val <- alpha %||% common$alpha %||% 1
+      shape_val <- shape %||% common$shape %||% 21
 
       point_data <- data.frame(
         x = plot_data$x,
@@ -219,7 +222,6 @@ GeomKDE2d <- ggplot2::ggproto(
         panel_params = panel_params,
         coord = coord
       )
-
     } else if (nrow(plot_data) > 0) { # Check if plot_data is not empty
 
 
@@ -239,17 +241,15 @@ GeomKDE2d <- ggplot2::ggproto(
         )
       )
 
-      GeomPolygon$draw_panel(data = data,
-                             panel_params = panel_params,
-                             coord = coord)
-
+      GeomPolygon$draw_panel(
+        data = data,
+        panel_params = panel_params,
+        coord = coord
+      )
     }
   },
-
   draw_key = ggplot2:::draw_key_polygon,
-
   required_aes = c("x", "y", "group"),
-
   default_aes = ggplot2::aes(
     colour = NA,
     fill = "grey25",
@@ -258,7 +258,8 @@ GeomKDE2d <- ggplot2::ggproto(
     linewidth = 1,
     alpha = 0.25
   ),
-
-  extra_params = c("na.rm", "quantiles", "min_prob", "colour", "fill", "size", "alpha", "shape", "linetype", "linewidth", "fallback_to_points")
-
+  extra_params = c(
+    "na.rm", "quantiles", "min_prob", "fallback_to_points",
+    "colour", "fill", "size", "alpha", "shape", "linetype", "linewidth"
+  )
 )
