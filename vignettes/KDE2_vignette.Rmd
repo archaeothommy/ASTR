@@ -141,7 +141,9 @@ This vignette introduces the `geom_kde2d` function which generates a two-dimensi
 
 Kernel density estimation (KDE) is a non-parametric method to transform continuous data into a smoothed probability density function. According to Hsu (2024,Hsu et al. 2018) KDE has become popular in archeaological science publications mainly due to three advantages when analysing data:
 
-They do not assume the normality of the data; They can produce smoother distributions than conventional histograms, whose appearance is significantly affected by the choices of bin width and the start/end points of bins; and They can represent data in a multidimensional space and enable users to effectively compare different datasets either graphically or mathematically (see De Ceuster et al. 2025 also for the advantages of the use of one-dimensional KDE’s).
+* They do not assume the normality of the data
+* They can produce smoother distributions than conventional histograms, whose appearance is significantly affected by the choices of bin width and the start/end points of bins
+* They can represent data in a multidimensional space and enable users to effectively compare different datasets either graphically or mathematically (see De Ceuster et al. 2025 also for the advantages of the use of one-dimensional KDE’s).
 
 # Function workflow
 
