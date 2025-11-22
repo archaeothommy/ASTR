@@ -2,49 +2,46 @@
 #'
 #' @description
 #' This geom creates polygons based on a 2D kernel density estimate, which is
-#' calculated using the \code{\link[ks]{kde}} function. It serves as an
-#' alternative to \code{\link[ggplot2]{geom_density_2d}}, displaying the results
+#' calculated using the [ks::kde()] function. It serves as an
+#' alternative to [ggplot2::geom_density_2d()], displaying the results
 #' as filled polygons corresponding to specified quantiles.
 #'
 #' If the density estimation fails for a group (e.g., due to too few unique
 #' points), the geom will gracefully fall back to plotting the raw data points
-#' for that group, inheriting aesthetics from \code{\link[ggplot2]{geom_point}}.
-#'
-#'
+#' for that group, inheriting aesthetics from [ggplot2::geom_point()].
 #'
 #' @inheritParams ggplot2::layer
 #' @param quantiles Integer. The number of quantiles to display. For example,
-#'   \code{quantiles = 4} (the default) will draw quartiles.
+#'   `quantiles = 4` (the default) will draw quartiles.
 #' @param min_prob A numeric value in `[0, 1]`. Sets the lowest probability
-#'   quantile to be drawn. The default, \code{0.02}, helps avoid creating
+#'   quantile to be drawn. The default, `0.02`, helps avoid creating
 #'   polygons around single outlier points.
 #' @param fallback_to_points Logical. To prevent points from being drawn for
 #'   groups that fail density estimation, set this to FALSE. For example, if you
 #'   want more control over the point aesthetics, independent of the KDE regions,
 #'   set this to FALSE and use geom_point to plot those points
-#' @param ... Other arguments passed on to \code{\link[ggplot2]{layer}}. These are
-#'   often aesthetics used to set a fixed value, such as \code{colour = "red"} or
-#'   \code{alpha = 0.5}.
+#' @param ... Other arguments passed on to [ggplot2::layer()]. These are
+#'   often aesthetics used to set a fixed value, such as `colour = "red"` or
+#'   `alpha = 0.5`.
 #'
 #' @section Aesthetics:
-#' \code{geom_kde2d()} understands the following aesthetics (required aesthetics are in bold):
-#' \itemize{
-#'   \item \strong{\code{x}}
-#'   \item \strong{\code{y}}
-#'   \item \strong{\code{group}}
-#'   \item \code{alpha}
-#'   \item \code{colour} (controls the polygon outline)
-#'   \item \code{fill} (controls the polygon fill)
-#'   \item \code{linetype}
-#'   \item \code{size} (controls the outline thickness)
-#'   \item \code{shape} (used for the fallback points)
-#' }
-#' Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
+#' `geom_kde2d()` understands the following aesthetics (required aesthetics are in bold):
+#' * **`x`**
+#' * **`y`**
+#' * `group`
+#' * `alpha`
+#' * `colour` (controls the polygon outline)
+#' * `fill` (controls the polygon fill)
+#' * `linetype`
+#' * `size` (controls the outline thickness)
+#' * `shape` (used for the fallback points)
+#'
+#' Learn more about setting these aesthetics in `vignette("ggplot2-specs")`.
 #'
 #' @return A ggplot2 layer object.
 #'
 #' @seealso
-#' \code{\link[ggplot2]{geom_density_2d}}, \code{\link[ggplot2]{geom_point}}, \code{\link[ks]{kde}}
+#' [ggplot2::geom_density_2d()], [ggplot2::geom_point()], [ks::kde()]
 #'
 #' @export
 #' @importFrom ggplot2 layer ggproto GeomPolygon GeomPoint aes draw_key_polygon

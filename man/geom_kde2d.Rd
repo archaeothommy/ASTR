@@ -61,7 +61,7 @@ groups that fail density estimation, set this to FALSE. For example, if you
 want more control over the point aesthetics, independent of the KDE regions,
 set this to FALSE and use geom_point to plot those points}
 
-\item{...}{Other arguments passed on to \code{\link[ggplot2]{layer}}. These are
+\item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{ggplot2::layer()}}. These are
 often aesthetics used to set a fixed value, such as \code{colour = "red"} or
 \code{alpha = 0.5}.}
 }
@@ -70,13 +70,13 @@ A ggplot2 layer object.
 }
 \description{
 This geom creates polygons based on a 2D kernel density estimate, which is
-calculated using the \code{\link[ks]{kde}} function. It serves as an
-alternative to \code{\link[ggplot2]{geom_density_2d}}, displaying the results
+calculated using the \code{\link[ks:kde]{ks::kde()}} function. It serves as an
+alternative to \code{\link[ggplot2:geom_density_2d]{ggplot2::geom_density_2d()}}, displaying the results
 as filled polygons corresponding to specified quantiles.
 
 If the density estimation fails for a group (e.g., due to too few unique
 points), the geom will gracefully fall back to plotting the raw data points
-for that group, inheriting aesthetics from \code{\link[ggplot2]{geom_point}}.
+for that group, inheriting aesthetics from \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}.
 }
 \section{Aesthetics}{
 
@@ -92,6 +92,7 @@ for that group, inheriting aesthetics from \code{\link[ggplot2]{geom_point}}.
 \item \code{size} (controls the outline thickness)
 \item \code{shape} (used for the fallback points)
 }
+
 Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 }
 
@@ -135,5 +136,5 @@ ggplot(df, aes(x, y, fill = group, colour = group)) +
   theme_minimal()
 }
 \seealso{
-\code{\link[ggplot2]{geom_density_2d}}, \code{\link[ggplot2]{geom_point}}, \code{\link[ks]{kde}}
+\code{\link[ggplot2:geom_density_2d]{ggplot2::geom_density_2d()}}, \code{\link[ggplot2:geom_point]{ggplot2::geom_point()}}, \code{\link[ks:kde]{ks::kde()}}
 }
