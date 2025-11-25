@@ -1,8 +1,9 @@
 #' Copper classification according to Bray et al. (2015)
 #'
-#' @description Classification of copper artefacts according to Bray et al. (2015) into
-#' one of 16 trace element compositional groups based on As, Sb, Ag, or
-#' Ni being below or above 0.1 wt%.
+#' @description Classification of copper artefacts according to Bray et al.
+#'   (2015) into one of 16 trace element compositional groups based on As, Sb,
+#'   Ag, or Ni being below or above 0.1 wt%. Concentrations must be given in
+#'   wt%.
 #'
 #' @references Bray, P., Cuénod, A., Gosden, C., Hommel, P., Liu, P. and
 #'   Pollard, A. M. (2015), Form and flow: the ‘karmic cycle’ of copper. Journal
@@ -10,13 +11,15 @@
 #'   <https://doi.org/10.1016/j.jas.2014.12.013>.
 #'
 #' @param df data frame with the data to be classified.
-#' @param elements Named character vector with the column names of the As, Sb, Ag, and Ni concentrations.
+#' @param elements Named character vector with the column names of the As, Sb,
+#'   Ag, and Ni concentrations.
 #' @param threshold Numeric. Values > threshold are interpreted as "present".
 #'   Default is 0.1 (as suggested in Bray et al., 2015).
 #'
 #' @return The original data frame with the added column `copper_group_bray`.
 #'
 #' @examples
+#' # create dataset
 #' sample_df <- data.frame(
 #'   ID = 1:3,
 #'   As = c(0.2, 0.01, 0.15),
@@ -24,32 +27,36 @@
 #'   Ag = c(0.00, 0.00, 0.12),
 #'   Ni = c(0.00, 0.05, 0.20)
 #' )
-#'
+#' # classify copper groups
 #' copper_group_bray(sample_df)
+#'
+#' # classification with group number as output
 #' copper_group_bray(sample_df, group_as_number = TRUE)
 #'
 #' @export
 copper_group_bray <- function(
     df,
     elements = c(As = "As", Sb = "Sb", Ag = "Ag", Ni = "Ni"),
-    threshold = 0.1,
-    group_as_number = FALSE
-) {
+    group_as_number = FALSE) {
+  # to implement: check and conversion of concentrations into wt%
+
+  threshold <- 0.1 # wt%, set in Bray et al. (2015)
 
   # Build temporary classification table (df stays unchanged)
-  temp <- data.frame(
+  flags <- data.frame(
     ID = df$ID,
-    As_flag = df[[ elements["As"] ]] > threshold,
-    Sb_flag = df[[ elements["Sb"] ]] > threshold,
-    Ag_flag = df[[ elements["Ag"] ]] > threshold,
-    Ni_flag = df[[ elements["Ni"] ]] > threshold
+    As_flag = df[[elements["As"]]] > threshold,
+    Sb_flag = df[[elements["Sb"]]] > threshold,
+    Ag_flag = df[[elements["Ag"]]] > threshold,
+    Ni_flag = df[[elements["Ni"]]] > threshold
   )
 
   # Convert flags into a pattern string
-  temp$pattern <- apply(
-    temp[, c("As_flag", "Sb_flag", "Ag_flag", "Ni_flag")],
+  flags$pattern <- apply(
+    flags[, c("As_flag", "Sb_flag", "Ag_flag", "Ni_flag")],
     1,
-    function(x) paste(x, collapse = "")
+    paste0,
+    collapse = ""
   )
 
   # Lookup table (16 Bray groups)
@@ -95,7 +102,7 @@ copper_group_bray <- function(
   )
 
   # Merge classification back into df using ID
-  out <- merge(temp[, c("ID", "pattern")], lookup, by = "pattern", all.x = TRUE)
+  out <- merge(flags[, c("ID", "pattern")], lookup, by = "pattern", all.x = TRUE)
 
   # Add correct output column
   if (group_as_number) {
@@ -105,6 +112,4 @@ copper_group_bray <- function(
   }
 
   return(df)
-
 }
-
