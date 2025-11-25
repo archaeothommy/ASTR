@@ -13,7 +13,7 @@ test_that("copper_group_bray classification works", {
   expect_true("copper_group_bray" %in% names(result))
 
   # Expected group names
-  expected <- c("As", "Sb", "Ag", "Ni")
+  expected <- c("As", "Sb", "As+Ag", "Ni")
   expect_equal(result$copper_group_bray, expected)
 })
 
