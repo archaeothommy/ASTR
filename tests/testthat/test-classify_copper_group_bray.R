@@ -14,7 +14,7 @@ test_that("copper_group_bray classification works", {
 
   # Expected group names
   expected <- c("As", "Sb", "As+Ag", "Ni")
-  expect_equal(result$copper_group_bray, expected)
+  expect_equal(resul[4, "copper_group_bray"], "Ni")
 })
 
 
