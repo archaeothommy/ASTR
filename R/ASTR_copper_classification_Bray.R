@@ -16,33 +16,95 @@
 #'
 #' @return The original data frame with the added column `copper_group_bray`.
 #'
+#' @examples
+#' sample_df <- data.frame(
+#'   ID = 1:3,
+#'   As = c(0.2, 0.01, 0.15),
+#'   Sb = c(0.00, 0.2, 0.11),
+#'   Ag = c(0.00, 0.00, 0.12),
+#'   Ni = c(0.00, 0.05, 0.20)
+#' )
+#'
+#' copper_group_bray(sample_df)
+#' copper_group_bray(sample_df, group_as_number = TRUE)
+#'
 #' @export
-copper_group_bray <- function(df, elements = c(As = "As", Sb = "Sb", Ag = "Ag", Ni = "Ni"), threshold = 0.1) {
-  # Build a temporary classification table
+copper_group_bray <- function(
+    df,
+    elements = c(As = "As", Sb = "Sb", Ag = "Ag", Ni = "Ni"),
+    threshold = 0.1,
+    group_as_number = FALSE
+) {
+
+  # Build temporary classification table (df stays unchanged)
   temp <- data.frame(
     ID = df$ID,
-    copper_group_bray = dplyr::case_when(
-      df$As <= threshold & df$Sb <= threshold & df$Ag <= threshold & df$Ni <= threshold ~ "None",
-      df$As > threshold & df$Sb <= threshold & df$Ag <= threshold & df$Ni <= threshold ~ "As",
-      df$As <= threshold & df$Sb > threshold & df$Ag <= threshold & df$Ni <= threshold ~ "Sb",
-      df$As <= threshold & df$Sb <= threshold & df$Ag > threshold & df$Ni <= threshold ~ "Ag",
-      df$As <= threshold & df$Sb <= threshold & df$Ag <= threshold & df$Ni > threshold ~ "Ni",
-      df$As > threshold & df$Sb > threshold & df$Ag <= threshold & df$Ni <= threshold ~ "As+Sb",
-      df$As > threshold & df$Sb <= threshold & df$Ag > threshold & df$Ni <= threshold ~ "As+Ag",
-      df$As > threshold & df$Sb <= threshold & df$Ag <= threshold & df$Ni > threshold ~ "As+Ni",
-      df$As <= threshold & df$Sb > threshold & df$Ag > threshold & df$Ni <= threshold ~ "Sb+Ag",
-      df$As <= threshold & df$Sb > threshold & df$Ag <= threshold & df$Ni > threshold ~ "Sb+Ni",
-      df$As <= threshold & df$Sb <= threshold & df$Ag > threshold & df$Ni > threshold ~ "Ag+Ni",
-      df$As > threshold & df$Sb > threshold & df$Ag > threshold & df$Ni <= threshold ~ "As+Sb+Ag",
-      df$As > threshold & df$Sb > threshold & df$Ag <= threshold & df$Ni > threshold ~ "As+Sb+Ni",
-      df$As > threshold & df$Sb <= threshold & df$Ag > threshold & df$Ni > threshold ~ "As+Ag+Ni",
-      df$As <= threshold & df$Sb > threshold & df$Ag > threshold & df$Ni > threshold ~ "Sb+Ag+Ni",
-      df$As > threshold & df$Sb > threshold & df$Ag > threshold & df$Ni > threshold ~ "As+Sb+Ag+Ni",
-      TRUE ~ NA_character_
-    )
+    As_flag = df[[ elements["As"] ]] > threshold,
+    Sb_flag = df[[ elements["Sb"] ]] > threshold,
+    Ag_flag = df[[ elements["Ag"] ]] > threshold,
+    Ni_flag = df[[ elements["Ni"] ]] > threshold
   )
-  # Merge back into the original dataframe without altering it
-  df <- dplyr::left_join(df, temp, by = "ID")
+
+  # Convert flags into a pattern string
+  temp$pattern <- apply(
+    temp[, c("As_flag", "Sb_flag", "Ag_flag", "Ni_flag")],
+    1,
+    function(x) paste(x, collapse = "")
+  )
+
+  # Lookup table (16 Bray groups)
+  lookup <- data.frame(
+    pattern = c(
+      "FALSEFALSEFALSEFALSE",
+      "TRUEFALSEFALSEFALSE",
+      "FALSETRUEFALSEFALSE",
+      "FALSEFALSETRUEFALSE",
+      "FALSEFALSEFALSETRUE",
+      "TRUETRUEFALSEFALSE",
+      "TRUEFALSETRUEFALSE",
+      "TRUEFALSEFALSETRUE",
+      "FALSETRUETRUEFALSE",
+      "FALSETRUEFALSETRUE",
+      "FALSEFALSETRUETRUE",
+      "TRUETRUETRUEFALSE",
+      "TRUETRUEFALSETRUE",
+      "TRUEFALSETRUETRUE",
+      "FALSETRUETRUETRUE",
+      "TRUETRUETRUETRUE"
+    ),
+    group_number = 1:16,
+    group_name = c(
+      "Cu",
+      "As",
+      "Sb",
+      "Ag",
+      "Ni",
+      "As+Sb",
+      "As+Ag",
+      "As+Ni",
+      "Sb+Ag",
+      "Sb+Ni",
+      "Ag+Ni",
+      "As+Sb+Ag",
+      "As+Sb+Ni",
+      "As+Ag+Ni",
+      "Sb+Ag+Ni",
+      "As+Sb+Ag+Ni"
+    ),
+    stringsAsFactors = FALSE
+  )
+
+  # Merge classification back into df using ID
+  out <- merge(temp[, c("ID", "pattern")], lookup, by = "pattern", all.x = TRUE)
+
+  # Add correct output column
+  if (group_as_number) {
+    df$copper_group_bray <- out$group_number
+  } else {
+    df$copper_group_bray <- out$group_name
+  }
 
   return(df)
+
 }
+
