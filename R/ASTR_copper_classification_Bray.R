@@ -32,13 +32,14 @@
 copper_group_bray <- function(
   df,
   elements = c(As = "As", Sb = "Sb", Ag = "Ag", Ni = "Ni"),
+  id_sample = "ID",
   threshold = 0.1,
   group_as_number = FALSE
 ) {
 
   # Build temporary classification table (df stays unchanged)
   temp <- data.frame(
-    ID = df$ID,
+    ID_sample = df[[id_sample]],
     As_flag = df[[elements["As"]]] > threshold,
     Sb_flag = df[[elements["Sb"]]] > threshold,
     Ag_flag = df[[elements["Ag"]]] > threshold,
@@ -49,7 +50,8 @@ copper_group_bray <- function(
   temp$pattern <- apply(
     temp[, c("As_flag", "Sb_flag", "Ag_flag", "Ni_flag")],
     1,
-    function(x) paste(x, collapse = "")
+    paste,
+    collapse = ""
   )
 
   # Lookup table (16 Bray groups)
@@ -95,13 +97,17 @@ copper_group_bray <- function(
   )
 
   # Join with lookup table, preserving row order
-  out <- dplyr::left_join(temp, lookup, by = "pattern")
+  out <- merge(temp[, c("ID_sample", "pattern")], lookup, by = "pattern", all.x = TRUE, sort = FALSE)
 
   # Add correct output column
   if (group_as_number) {
-    df$copper_group_bray <- out$group_number
+    df$copper_group_bray <- out$group_number[
+      match(df[[id_sample]], out$ID_sample)
+    ]
   } else {
-    df$copper_group_bray <- out$group_name
+    df$copper_group_bray <- out$group_name[
+      match(df[[id_sample]], out$ID_sample)
+    ]
   }
 
   return(df)
