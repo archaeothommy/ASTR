@@ -1,23 +1,51 @@
-test_that("classify_copper_group_bray works", {
+test_that("copper_group_bray basic classification works", {
   df <- data.frame(
     ID = 1:4,
-    As = c(0.12, 0.05, 0.15, 0.20),
-    Sb = c(0.00, 0.12, 0.05, 0.01),
-    Ag = c(0.00, 0.00, 0.20, 0.05),
-    Ni = c(0.00, 0.00, 0.00, 0.15)
+    As = c(0.2, 0.01, 0.15, 0.00),
+    Sb = c(0.00, 0.2, 0.00, 0.00),
+    Ag = c(0.00, 0.00, 0.12, 0.00),
+    Ni = c(0.00, 0.00, 0.00, 0.20)
   )
-  result <- classify_copper_group_bray(df)
-  expect_true(is.data.frame(result))
-  expect_equal(nrow(result), 4)
-  expect_true("copper_group_bray" %in% colnames(result))
-  expect_true(is.character(result$copper_group_bray))
-  valid_groups <- c(
-    "As", "Sb", "Ag", "Ni",
-    "As+Sb", "As+Ag", "As+Ni",
-    "Sb+Ag", "Sb+Ni", "Ag+Ni",
-    "As+Sb+Ag", "As+Sb+Ni", "As+Ag+Ni",
-    "Sb+Ag+Ni", "As+Sb+Ag+Ni",
-    "None"
+
+  result <- copper_group_bray(df)
+
+  # Check column exists
+  expect_true("copper_group_bray" %in% names(result))
+
+  # Expected group names
+  expected <- c("As", "Sb", "As+Ag", "Ni")
+  expect_equal(result$copper_group_bray, expected)
+})
+
+
+test_that("copper_group_bray returns numeric groups when requested", {
+  df <- data.frame(
+    ID = 1,
+    As = 0.3,
+    Sb = 0.2,
+    Ag = 0.0,
+    Ni = 0.0
   )
-  expect_true(all(result$copper_group_bray %in% valid_groups))
+
+  result_num <- copper_group_bray(df, group_as_number = TRUE)
+
+  # "As+Sb" is group 6 in the lookup table
+  expect_equal(result_num$copper_group_bray, 6)
+})
+
+
+test_that("copper_group_bray handles custom element names", {
+  df <- data.frame(
+    ID = 1,
+    Arsenic = 0.2,
+    Antimony = 0.0,
+    Silver = 0.0,
+    Nickel = 0.0
+  )
+
+  custom_elements <- c(As = "Arsenic", Sb = "Antimony", Ag = "Silver", Ni = "Nickel")
+
+  result <- copper_group_bray(df, elements = custom_elements)
+
+  expect_equal(result$copper_group_bray, "As")
 })
