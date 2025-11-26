@@ -30,19 +30,19 @@
 #'
 #' @export
 copper_group_bray <- function(
-    df,
-    elements = c(As = "As", Sb = "Sb", Ag = "Ag", Ni = "Ni"),
-    threshold = 0.1,
-    group_as_number = FALSE
+  df,
+  elements = c(As = "As", Sb = "Sb", Ag = "Ag", Ni = "Ni"),
+  threshold = 0.1,
+  group_as_number = FALSE
 ) {
 
   # Build temporary classification table (df stays unchanged)
   temp <- data.frame(
     ID = df$ID,
-    As_flag = df[[ elements["As"] ]] > threshold,
-    Sb_flag = df[[ elements["Sb"] ]] > threshold,
-    Ag_flag = df[[ elements["Ag"] ]] > threshold,
-    Ni_flag = df[[ elements["Ni"] ]] > threshold
+    As_flag = df[[elements["As"]]] > threshold,
+    Sb_flag = df[[elements["Sb"]]] > threshold,
+    Ag_flag = df[[elements["Ag"]]] > threshold,
+    Ni_flag = df[[elements["Ni"]]] > threshold
   )
 
   # Convert flags into a pattern string
@@ -105,6 +105,4 @@ copper_group_bray <- function(
   }
 
   return(df)
-
 }
-
