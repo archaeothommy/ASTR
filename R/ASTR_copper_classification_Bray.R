@@ -94,8 +94,8 @@ copper_group_bray <- function(
     stringsAsFactors = FALSE
   )
 
-  # Merge classification back into df using ID
-  out <- merge(temp[, c("ID", "pattern")], lookup, by = "pattern", all.x = TRUE)
+  # Join with lookup table, preserving row order
+  out <- dplyr::left_join(temp, lookup, by = "pattern")
 
   # Add correct output column
   if (group_as_number) {
