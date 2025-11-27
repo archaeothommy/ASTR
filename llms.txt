@@ -45,6 +45,9 @@ You can install the development version of ASTR from
 - [`archchem_example_input`](https://archaeothommy.github.io/ASTR/reference/archchem_example_input.md)
   : archchem_example_input
 
+- [`copper_group_bray()`](https://archaeothommy.github.io/ASTR/reference/copper_group_bray.md)
+  : Copper classification according to Bray et al. (2015)
+
 - [`elements`](https://archaeothommy.github.io/ASTR/reference/elements.md)
   : Elements
 
