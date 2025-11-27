@@ -11,10 +11,13 @@
 #'   <https://doi.org/10.1016/j.jas.2014.12.013>.
 #'
 #' @param df data frame with the data to be classified.
-#' @param elements Named character vector with the column names of the As, Sb,
+#' @param elements named character vector with the column names of the As, Sb,
 #'   Ag, and Ni concentrations.
-#' @param threshold Numeric. Values > threshold are interpreted as "present".
-#'   Default is 0.1 (as suggested in Bray et al., 2015).
+#' @param id_sample name of the column in `df` with the identifiers of each row.
+#'   Default to `ID`.
+#' @param group_as_number logical. If `FALSE`, the default, copper groups are
+#'   reported as their label. Otherwise, copper groups are reported by their
+#'   number.
 #'
 #' @return The original data frame with the added column `copper_group_bray`.
 #'
@@ -37,14 +40,16 @@
 copper_group_bray <- function(
     df,
     elements = c(As = "As", Sb = "Sb", Ag = "Ag", Ni = "Ni"),
+    id_sample = "ID",
     group_as_number = FALSE) {
-  # to implement: check and conversion of concentrations into wt%
+
+  # to do: check and convert concentrations to wt%
 
   threshold <- 0.1 # wt%, set in Bray et al. (2015)
 
   # Build temporary classification table (df stays unchanged)
   flags <- data.frame(
-    ID = df$ID,
+    ID_sample = df[[id_sample]],
     As_flag = df[[elements["As"]]] > threshold,
     Sb_flag = df[[elements["Sb"]]] > threshold,
     Ag_flag = df[[elements["Ag"]]] > threshold,
@@ -101,14 +106,14 @@ copper_group_bray <- function(
     stringsAsFactors = FALSE
   )
 
-  # Merge classification back into df using ID
-  out <- merge(flags[, c("ID", "pattern")], lookup, by = "pattern", all.x = TRUE)
+  # Join with lookup table, preserving row order
+  out <- merge(flags[, c("ID_sample", "pattern")], lookup, by = "pattern", all.x = TRUE, sort = TRUE)
 
   # Add correct output column
-  if (group_as_number) {
-    df$copper_group_bray <- out$group_number
+  if (!group_as_number) {
+    df$copper_group_bray <- out$group_name[match(df[[id_sample]], out$ID_sample)]
   } else {
-    df$copper_group_bray <- out$group_name
+    df$copper_group_bray <- out$group_number[match(df[[id_sample]], out$ID_sample)]
   }
 
   return(df)

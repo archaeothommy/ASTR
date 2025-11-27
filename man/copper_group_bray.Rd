@@ -7,24 +7,47 @@
 copper_group_bray(
   df,
   elements = c(As = "As", Sb = "Sb", Ag = "Ag", Ni = "Ni"),
-  threshold = 0.1
+  id_sample = "ID",
+  group_as_number = FALSE
 )
 }
 \arguments{
 \item{df}{data frame with the data to be classified.}
 
-\item{elements}{Named character vector with the column names of the As, Sb, Ag, and Ni concentrations.}
+\item{elements}{named character vector with the column names of the As, Sb,
+Ag, and Ni concentrations.}
 
-\item{threshold}{Numeric. Values > threshold are interpreted as "present".
-Default is 0.1 (as suggested in Bray et al., 2015).}
+\item{id_sample}{name of the column in \code{df} with the identifiers of each row.
+Default to \code{ID}.}
+
+\item{group_as_number}{logical. If \code{FALSE}, the default, copper groups are
+reported as their label. Otherwise, copper groups are reported by their
+number.}
 }
 \value{
 The original data frame with the added column \code{copper_group_bray}.
 }
 \description{
-Classification of copper artefacts according to Bray et al. (2015) into
-one of 16 trace element compositional groups based on As, Sb, Ag, or
-Ni being below or above 0.1 wt\%.
+Classification of copper artefacts according to Bray et al.
+(2015) into one of 16 trace element compositional groups based on As, Sb,
+Ag, or Ni being below or above 0.1 wt\%. Concentrations must be given in
+wt\%.
+}
+\examples{
+# create dataset
+sample_df <- data.frame(
+  ID = 1:3,
+  As = c(0.2, 0.01, 0.15),
+  Sb = c(0.00, 0.2, 0.11),
+  Ag = c(0.00, 0.00, 0.12),
+  Ni = c(0.00, 0.05, 0.20)
+)
+# classify copper groups
+copper_group_bray(sample_df)
+
+# classification with group number as output
+copper_group_bray(sample_df, group_as_number = TRUE)
+
 }
 \references{
 Bray, P., Cuénod, A., Gosden, C., Hommel, P., Liu, P. and
