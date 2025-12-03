@@ -3,5 +3,6 @@ linters: linters_with_defaults(
    commented_code_linter = NULL,
    absolute_path_linter(lax = TRUE),
    return_linter = NULL,
-   object_name_linter = NULL
+   object_name_linter = NULL,
+   pipe_consistency_linter(pipe = "%>%")
   )
