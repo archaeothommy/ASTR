@@ -2,18 +2,12 @@
 #'
 #' @description Classification of copper alloy artefacts according to Bayley &
 #'   Butcher (2004) based on Zn, Sn, and Pb concentrations in wt%. Concentrations
-#'   must be given in wt%.Classification uses specific thresholds and ratios to
+#'   must be given in wt%. Classification uses specific thresholds and ratios to
 #'   define alloy types.
 #'
 #' @references Bayley, J., & Butcher, S. (2004). Roman brooches in Britain: a
 #'   technological and typological study based on the Richborough Collection.
 #'   London: Society of Antiquaries of London.
-#'
-#'   As cited in: Pollard, A. M., Bray, P., Gosden, C., Wilson, A., & Hamerow, H.
-#'   (2015). Characterising copper-based metals in Britain in the first
-#'   millennium AD: a preliminary quantification of metal flow and recycling.
-#'   Antiquity, 89(345), 697-713.
-#'   <https://doi.org/10.15184/aqy.2015.20>
 #'
 #' @param df data frame with the data to be classified.
 #' @param elements named character vector with column names of Zn, Sn, and Pb
@@ -37,16 +31,15 @@
 copper_alloy_bb <- function(
   df,
   elements = c(Sn = "Sn", Zn = "Zn", Pb = "Pb"),
-  id_sample = "ID"
-) {
+  id_sample = "ID") {
+
+  # to do: check and convert concentrations to wt%
 
   Sn <- df[[elements["Sn"]]]
   Zn <- df[[elements["Zn"]]]
   Pb <- df[[elements["Pb"]]]
 
-  n <- nrow(df)
-  result <- character(n)
-
+  result <- character(nrow(df))
 
   # Base alloy classes
 
