@@ -13,8 +13,8 @@ test_that("Bayley & Butcher copper alloy classification", {
     c(
       "Copper",                # ID 1: Copper (Zn<3, Sn<3)
       "Copper/brass",          # ID 2: Copper/brass (3≤Zn<8, Sn<3)
-      "Bronze",                # ID 3: Bronze (Sn≥3, Zn<3*Sn)
-      "Bronze/gunmetal",       # ID 4: Bronze/gunmetal (Sn≥3, 0.33<Zn/Sn<0.67)
+      "Bronze/gunmetal",                # ID 3: Bronze (Sn≥3, Zn<3*Sn)
+      "Gunmetal",       # ID 4: Bronze/gunmetal (Sn≥3, 0.33<Zn/Sn<0.67)
       "Gunmetal",              # ID 5: Gunmetal (Sn≥3, 0.67<Zn/Sn<2.5)
       "Brass/gunmetal",        # ID 6: Brass/gunmetal (Zn>2.5*Sn, Zn≤4*Sn)
       "Leaded Copper",         # ID 7: Leaded Copper (Copper + Pb>8)
