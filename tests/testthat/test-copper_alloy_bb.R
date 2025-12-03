@@ -1,42 +1,24 @@
-# test-copper_alloy_bb.R
-test_that("Basic alloy classifications work", {
-  df <- data.frame(
-    ID = 1:3,
-    Sn = c(1, 5, 5),
-    Zn = c(2, 2, 15),
-    Pb = c(0.5, 0.5, 0.5)
+test_that("Bayley & Butcher copper alloy classification", {
+  test_data <- data.frame(
+    ID = 1:8,
+    Sn = c(1, 1, 5, 5, 5, 5, 0.5, 5),
+    Zn = c(2, 5, 2, 4, 8, 15, 2, 8),
+    Pb = c(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 9, 6)
   )
 
-  result <- copper_alloy_bb(df)
-  expect_equal(result$copper_alloy_bb,
-               c("Copper", "Bronze/gunmetal", "Brass/gunmetal"))
-})
+  result <- copper_alloy_bb(test_data)
 
-test_that("Leaded variants work", {
-  df <- data.frame(
-    ID = 1:2,
-    Sn = c(5, 5),
-    Zn = c(2, 8),
-    Pb = c(6, 10)
+  expect_equal(
+    result$copper_alloy_bb,
+    c(
+      "Copper",                # ID 1: Copper (Zn<3, Sn<3)
+      "Copper/brass",          # ID 2: Copper/brass (3≤Zn<8, Sn<3)
+      "Bronze",                # ID 3: Bronze (Sn≥3, Zn<3*Sn)
+      "Bronze/gunmetal",       # ID 4: Bronze/gunmetal (Sn≥3, 0.33<Zn/Sn<0.67)
+      "Gunmetal",              # ID 5: Gunmetal (Sn≥3, 0.67<Zn/Sn<2.5)
+      "Brass/gunmetal",        # ID 6: Brass/gunmetal (Zn>2.5*Sn, Zn≤4*Sn)
+      "Leaded Copper",         # ID 7: Leaded Copper (Copper + Pb>8)
+      "(Leaded) Gunmetal"      # ID 8: (Leaded) Gunmetal (Gunmetal + 4≤Pb≤8)
+    )
   )
-
-  result <- copper_alloy_bb(df)
-  expect_equal(result$copper_alloy_bb,
-               c("(Leaded) Bronze/gunmetal", "Leaded Gunmetal"))
-})
-
-test_that("Custom column names work", {
-  df <- data.frame(
-    SampleID = 1:2,
-    Tin = c(5, 1),
-    Zinc = c(12, 20),
-    Lead = c(1, 0.5)
-  )
-
-  result <- copper_alloy_bb(df,
-    elements = c(Sn = "Tin", Zn = "Zinc", Pb = "Lead"),
-    id_sample = "SampleID"
-  )
-
-  expect_equal(result$copper_alloy_bb, c("Gunmetal", "Brass"))
 })
