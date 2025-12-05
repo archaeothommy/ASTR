@@ -31,6 +31,12 @@
 - [`archchem_example_input`](https://archaeothommy.github.io/ASTR/reference/archchem_example_input.md)
   : archchem_example_input
 
+- [`copper_alloy_bb()`](https://archaeothommy.github.io/ASTR/reference/copper_alloy_bb.md)
+  : Copper alloy classification according to Bayley & Butcher (2004)
+
+- [`copper_alloy_pollard()`](https://archaeothommy.github.io/ASTR/reference/copper_alloy_pollard.md)
+  : Copper alloy classification according to Pollard et al. (2015).
+
 - [`copper_group_bray()`](https://archaeothommy.github.io/ASTR/reference/copper_group_bray.md)
   : Copper classification according to Bray et al. (2015)
 
