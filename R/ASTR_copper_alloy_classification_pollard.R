@@ -1,18 +1,20 @@
 #' Copper alloy classification according to Pollard et al. (2015).
 #'
-#' @description Classification of copper alloy artefacts following the new system
+#' @description Classification of copper alloy artefacts following the system
 #'   proposed in Pollard et al. (2015) based Sn, Zn, and Pb concentrations in wt%.
 #'
-#' @references Pollard, A. M., Bray, P., Gosden, C., Wilson, A., & Hamerow, H.
+#' @references Pollard, A. M., Bray, P., Gosden, C., Wilson, A., and Hamerow, H.
 #'   (2015). Characterising copper-based metals in Britain in the first
 #'   millennium AD: a preliminary quantification of metal flow and recycling.
-#'   Antiquity, 89(345), 697-713.
+#'   Antiquity 89(345), pp. 697-713. <https://doi.org/10.15184/aqy.2015.20>
 #'
 #' @param df data frame with the data to be classified.
 #' @param elements named character vector with column names of Sn, Zn, and Pb.
 #' @param id_sample name of the column in `df` with the identifiers of each row.
 #'   Default to `ID`.
-#' @param threshold numeric threshold for element presence. Default is 1%.
+#' @param group_as_symbol logical. If `FALSE`, the default, copper groups are
+#'   reported as their label. Otherwise, copper groups are reported by their
+#'   symbol.
 #'
 #' @return The original data frame with the added column `copper_alloy_Pollard`.
 #'
@@ -30,9 +32,11 @@ copper_alloy_pollard <- function(
     df,
     elements = c(Sn = "Sn", Zn = "Zn", Pb = "Pb"),
     id_sample = "ID",
-    threshold = 1) {
+    group_as_symbol = FALSE) {
 
   # to do: check and convert concentrations to wt%
+
+  threshold <- 1 # wt%, set in Pollard et al. (2015)
 
   # Build temporary classification table
   flags <- data.frame(
@@ -72,6 +76,7 @@ copper_alloy_pollard <- function(
       "Gunmetal",
       "Leaded gunmetal"
     ),
+    alloy_symbol = c("C", "LC", "B", "LB", "BR", "LBR", "G", "LG"),
     stringsAsFactors = FALSE
   )
 
@@ -83,9 +88,15 @@ copper_alloy_pollard <- function(
 
   # Ensure "Unclassified" for any missing matches
   out$alloy_name[is.na(out$alloy_name)] <- "Unclassified"
+  out$alloy_symbol[is.na(out$alloy_symbol)] <- "Unclassified"
 
   # Add correct output column
-  df$copper_alloy_pollard <- out$alloy_name[match(df[[id_sample]], out$ID_sample)]
+  if (!group_as_symbol) {
+    df$copper_alloy_pollard <- out$alloy_name[match(df[[id_sample]], out$ID_sample)]
+  } else {
+    df$copper_alloy_pollard <- out$alloy_symbol[match(df[[id_sample]], out$ID_sample)]
+  }
+
 
   return(df)
 }
