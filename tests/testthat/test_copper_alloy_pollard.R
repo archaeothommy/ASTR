@@ -11,14 +11,14 @@ test_that("copper_alloy_pollard: basic classification", {
   expect_equal(
     result$copper_alloy_pollard,
     c(
-      "Copper",           # All < 1%
-      "Leaded copper",    # Pb ≥ 1%
-      "Bronze",           # Sn ≥ 1%
-      "Leaded bronze",    # Sn, Pb ≥ 1%
-      "Brass",            # Zn ≥ 1%
-      "Gunmetal",         # Zn, Sn ≥ 1%
-      "Leaded bronze",    # Sn, Pb ≥ 1% (same as ID 4)
-      "Leaded gunmetal"   # All ≥ 1%
+      "Copper",         # All < 1%
+      "Leaded copper",  # Pb ≥ 1%
+      "Bronze",         # Sn ≥ 1%
+      "Leaded bronze",  # Sn, Pb ≥ 1%
+      "Brass",          # Zn ≥ 1%
+      "Gunmetal",       # Zn, Sn ≥ 1%
+      "Leaded bronze",  # Sn, Pb ≥ 1% (same as ID 4)
+      "Leaded gunmetal" # All ≥ 1%
     )
   )
 })
@@ -29,7 +29,7 @@ test_that("copper_alloy_pollard: function arguments", {
     Tin = 8,
     Lead = 3,
     Zinc = 0.5
-    )
+  )
 
   # "As+Sb" is group 6 in the lookup table
   expect_equal(
