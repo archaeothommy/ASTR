@@ -4,14 +4,14 @@
 \name{ASTR-package}
 \alias{ASTR}
 \alias{ASTR-package}
-\title{ASTR: What the Package Does (One Line, Title Case)}
+\title{ASTR: Archaeometric Standards and Tools in R}
 \description{
-What the package does (one paragraph).
+ASTR defines and implements a community reporting standard for archaeometric datasets. It also provides easy-to-use functions for common plots, statistical analyses, data processing and transformation workflows in archaeometry.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://example.com}
+  \item \url{https://archaeothommy.github.io/ASTR/index.html}
 }
 
 }
