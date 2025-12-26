@@ -79,7 +79,7 @@ We recommend reading the following resources to get familiar with the package:
 
 ## Code of Conduct
 
-...
+Please note that the ASTR project is released with a [Contributor Code of Conduct](https://archaeothommy.github.io/ASTR/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.  
 
 ## Acknowledgements and funding
 
