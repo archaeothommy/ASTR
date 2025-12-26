@@ -77,9 +77,9 @@ We recommend reading the following resources to get familiar with the package:
 
 * Community reporting standard: [Conventions](vignettes/VG.ASTRschema.0.0.2.Rmd) and their  [explanation](vignettes/VG.ASTR.Conventions.explained.Rmd)
 
-## Code of Conduct
+## Contributing and Code of Conduct
 
-Please note that the ASTR project is released with a [Contributor Code of Conduct](https://archaeothommy.github.io/ASTR/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.  
+Please read our [contributor guide](https://archaeothommy.github.io/ASTR/CONTRIBUTING.html) to learn how you can contribute to ASTR. The ASTR project is released with a [Contributor Code of Conduct](https://archaeothommy.github.io/ASTR/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.  
 
 ## Acknowledgements and funding
 
