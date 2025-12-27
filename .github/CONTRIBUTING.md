@@ -1,6 +1,6 @@
 # Contributing to ASTR
 
-This outlines how to propose a change to ASTR.  
+This guide outlines how to propose a change to ASTR.  
 
 ## Fixing typos
 
@@ -42,10 +42,8 @@ If you’ve found a bug, please file an issue that illustrates the bug with a mi
 
 ## Code of Conduct
 
-Please note that ASTR is released with a
-[Contributor Code of Conduct](CODE_OF_CONDUCT.md). By contributing to this
-project you agree to abide by its terms.
-
+Please note that ASTR is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By contributing to this project you agree to abide by its terms.
 
 ## Acknowledgement
+
 This contributor guide was is adopted from the [contributor guide of readr](https://github.com/tidyverse/readr/blob/main/.github/CONTRIBUTING.md).

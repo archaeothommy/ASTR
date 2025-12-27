@@ -32,40 +32,44 @@ structure and naming of datasets](vignettes/VG.ASTRschema.0.0.2.Rmd) to
 make them interoperable and allow automated handling of the data. Based
 on these conventions, ASTR
 
-- Recognises and classifies isotope and chemical data, their units, and
+- Recognises and seamlessly isotopic and chemical data, their units, and
   analytical precision,
 - Handles unit conversion on the fly, including non-SI units such as
-  *ppm*, *at%*, and *cps* (counts per second).
+  *ppm*, *at%*, and *cps* (counts per second) and between oxides and
+  elements
 
-### Tool collection
+### Tools
 
-The functions do not expect datasets according to the community
-reporting standard but their default values for their input follow
-whereever possible its conventions. The collection provides easy-to-use
-functions for a wide range of tasks such as
+The collection provides easy-to-use functions for a wide range of tasks
+such as
 
-- Standard plots as [ggplot2](https://ggplot2.tidyverse.org/) geoms
+- [ggplot2](https://ggplot2.tidyverse.org/) geoms for standard plots
   (e.g., spidergrams, KDE)
 - Material classification (e.g., copper types)
-- Data transformation and processing (e.g., calculation of
-  $\delta$-values from standard-sample-bracketing measurements)
-- Data conversion (e.g., calculation of Lead isotope age model
+- Data transformation and processing (e.g., calculation of δ-values from
+  standard-sample-bracketing measurements)
+- Data conversion (e.g., calculation of lead isotope age model
   parameters)
-- Statistics (e.g, Distribution of data in a pointcloud of reference
+- Statistics (e.g. distribution of data in a pointcloud of reference
   data)
-- Normalisation of data to standard compositions (e.g., chondrite)
+- Normalisation of data to standard compositions (e.g., chondritic
+  composition)
 - Unit conversion (e.g., at% to wt% and vice versa)
 
 See the full list on the [package
 website](https://archaeothommy.github.io/ASTR/index.html).
 
+Functions do not expect datasets according to the community reporting
+standard but default values for their input follow its conventions,
+making them particularly easy to use.
+
 <!--
 ### Example
 &#10;include here a small example for inputting a example data set and plotting it such as 
 &#10;library(ASTR)
-df <- import()
-&#10;library(ggplot2)
-ggplot(df) + 
+library(ggplot2)
+&#10;df <- import()
+&#10;ggplot(df) + 
  geom_spidergram()
 -->
 
@@ -81,24 +85,30 @@ You can install the development version of ASTR from
 
 ## Getting started
 
-We recommend reading the following resources to get familiar with the
+We recommend reading the following resources to become familiar with the
 package:
 
 - Community reporting standard:
   [Conventions](vignettes/VG.ASTRschema.0.0.2.Rmd) and their
   [explanation](vignettes/VG.ASTR.Conventions.explained.Rmd)
 
-## Code of Conduct
+## Contributing and Code of Conduct
 
-…
+Please read our [contributor
+guide](https://archaeothommy.github.io/ASTR/CONTRIBUTING.html) to learn
+how to contribute to ASTR. The ASTR project is released with a
+[Contributor Code of
+Conduct](https://archaeothommy.github.io/ASTR/CODE_OF_CONDUCT.html). By
+contributing to this project, you agree to abide by its terms.
 
 ## Acknowledgements and funding
 
-Development was initiated with the workshop *Towards an Archaeological
-Science Toolbox in R “ASTR”* at the [Lorentz Center]() in Leiden (The
-Netherlands). In addition to the in-kind funding of the Lorentz Center,
-the workshop received funding from the Stichting Nederlands Museum voor
-Anthropologie en Praehistorie (Foundation for Anthropology and
-Prehistory in the Netherlands). The workshop and further development of
-ASTR received funding from the Deutsche Forschungsgemeinschaft (DFG,
-German Research Foundation) – project 571205551.
+ASTR was initiated in the workshop *Towards an Archaeological Science
+Toolbox in R “ASTR”* at the [Lorentz
+Center](https://www.lorentzcenter.nl/) in Leiden (The Netherlands). In
+addition to the in-kind funding of the Lorentz Center, the workshop
+received funding from the Stichting Nederlands Museum voor Anthropologie
+en Praehistorie (Foundation for Anthropology and Prehistory in the
+Netherlands). The workshop and further development of ASTR received
+funding from the Deutsche Forschungsgemeinschaft (DFG, German Research
+Foundation) – project 571205551.
