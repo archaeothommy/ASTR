@@ -11,18 +11,22 @@
 #'   bias drift between the two standard measurements taken immediately before
 #'   and after the sample measurement.
 #'
-#' @param df data frame including at least a column with the with analysis
-#'   results from the machine
-#' @param values String with the name of the column with the numeric results.
-#'   Default is ´value´.
+#' @param df data frame including at least a column with the analysis results
+#'   from the machine and a column with the labels for the standard
+#'   measurements.
+#' @param values String with the name of the column in `df` with the numeric
+#'   results. Default is ´values´.
+#' @param id_col String with the name of the column in `df`with the identifiers
+#'   of each row.
 #' @param id_std String identifying the standard used for bracketing. Default is
 #'   "Std".
 #' @param pos Integer giving the line of the first standard measurement that
-#'   opens the bracket.
+#'   opens the first bracket.
 #' @param cycle_size integer giving the number of samples per bracket.
-#' @param weight_opening,weight_closing Numeric value giving the weight assigned
-#'   to the opening and closing standard of a bracket, respectively. The default
-#'   `0.5` gives the mean of both standards.
+#' @param weight_std A vector of length 2 with numeric value giving the weight
+#'   assigned to the opening and closing standard of a bracket, respectively.
+#'   The sum of both weights must be one. The default `0.5` gives the mean of
+#'   both standards.
 #'
 #' @references Mason, T. F.D., Weiss, D. J., Horstwood, M., Parrish, R. R.,
 #'   Russell, S. S., Mullaneb, E., and Colesa, B. J. (2004) High-precision Cu
@@ -39,126 +43,132 @@
 #' the function or to highlight specific features>
 
 standard_sample_bracketing <- function(df,
-                                       values = "",
+                                       values = "values",
+                                       id_col = "ID",
                                        id_std = "Std",
-                                       pos = 0,
+                                       pos = 1,
                                        cycle_size = 1,
-                                       weight_opening = 0.5,
-                                       weight_closing = 0.5) {
+                                       weight_std = c(0.5, 0.5)) {
 
   # Check there are no empty values in header nor id_std
   if (id_std == "") {
     stop("You need to assign the ID of the standard.")
   }
 
-  if (values == "" && !(values %in% colnames(df))) {
-    stop("The column name for the measured values is not included in the provided data frae.")
+  if (!(values %in% colnames(df))) {
+    stop("The column name for the measured values is not included in the provided data frame.")
   }
 
-  df <- df[c("ID", values)] # make a dataframe with the ID of the samples and the measurements
-  nr <- nrow(df) #count number of rows in the dataframe
+  # Check of weight values
 
-  FirstStd <- df[pos, 2]
-  SecondStd <- 0
-  MeanSBBSamples <- 0
-  CurrentSample <- ""
-  SampleNames <- c()
-  SampleResults <- c()
-  WSampleResults <- c()
-  counter <- 0
-  nsamples <- 0
-  i <- pos
+  checkmate::assert_vector(weight_std, strict = TRUE, len = 2, any.missing = FALSE)
 
-  while (i <= nr) {
-    #iterates over the whole dataframe, it starts with the cycles
+  if (sum(weight_std) != 1) {
+    stop("The sum of the weights must be 1.")
+  }
 
-    icicle <- i
-    ecicle <- i + cycle_size + 1
-    FirstStd <- df[icicle, 2]
-    SecondStd <- df[ecicle, 2]
-    icicle <- icicle + 1 #move the index to the first sample
-    WeightedStdMean <- ((weight_opening * FirstStd) +
-                          (weight_closing * SecondStd)) / (weight_opening + weight_closing) #calculate weighted mean
-    StdMean <- (FirstStd + SecondStd) / (2) #calculate mean of both standards
+  # prepare variables
+  df <- df[c(id_col, values)] # make a dataframe with the ID of the samples and the measurements
+  nr <- nrow(df) # count number of rows in the dataframe
 
-    while (icicle < ecicle) {
-      CurrentSample <- df[icicle, 1]
-      if ((!is.na(CurrentSample)) && (CurrentSample != "")) {
-        SampleMeasurement <- df[icicle, 2]
-        SBB <- SampleMeasurement / StdMean
-        SampleNames <- append(SampleNames, CurrentSample)
-        SampleResults <- append(SampleResults, SBB)
-        if (weight_opening != 0.5 ||
-              (weight_opening + weight_closing) != 1.0) {
-          WSBB <- format(signif(SampleMeasurement / WeightedStdMean, 4),
-                         nsmall = 4)
-          WSampleResults <- append(WSampleResults, WSBB)
+  sample_names <- sample_results <- sample_results_weighted <- c()
+
+  # SSB calculation
+
+  while (pos <= nr) {
+    #iterates over the whole data frame, it starts with the cycles
+
+    cycle_start <- pos
+    cycle_end <- pos + cycle_size + 1
+    std_opening <- df[cycle_start, 2]
+    std_closing <- df[cycle_end, 2]
+    cycle_start <- cycle_start + 1 # move the index to the first sample
+    std_mean_weighted <- ((weight_std[1] * std_opening) +
+                            (weight_std[2] * std_closing)) #calculate weighted mean
+    std_mean <- (std_opening + std_closing) / 2 #calculate mean of both standards
+
+    while (cycle_start < cycle_end) {
+      sample_current <- df[cycle_start, 1]
+
+      if ((!is.na(sample_current)) && (sample_current != "")) {
+        sample_measurement <- df[cycle_start, 2]
+        ssb <- sample_measurement / std_mean
+        sample_names <- append(sample_names, sample_current)
+        sample_results <- append(sample_results, ssb)
+
+        if (weight_std[1] != 0.5 ||
+              (weight_std[1] + weight_std[2]) != 1.0) {
+          ssb_weighted <- format(signif(sample_measurement / std_mean_weighted, 4),
+                                 nsmall = 4)
+          sample_results_weighted <- append(sample_results_weighted, ssb_weighted)
         }
       }
-      icicle <- icicle + 1
+      cycle_start <- cycle_start + 1
     }
-    i <- icicle
+    pos <- cycle_start
   }
 
-  nr <- length(SampleNames)
-  ResultDF <- data.frame(description = SampleNames, LinearSBB = SampleResults)
+  # for some reason, they are a list rather a vector, so turning them into vector
+  sample_names <- unlist(sample_names)
+  sample_results <- unlist(sample_results)
 
-  ResultDF <- ResultDF[order(ResultDF$description), , drop = FALSE] #order results by the sample name
-  i <- 2
+  # Combine calculated values into data frame and order them by sample name
+  results <- data.frame(description = sample_names, Linear_SSB = sample_results)
+  results <- results[order(results$description), , drop = FALSE]
+
+  # Calculate errors and averages for each sample
+  nr <- length(sample_names)
+  pos <- 2
   counter <- 1
-  CurrentSample <- ResultDF[1, 1]
-  MeanSample <- ResultDF[1, 2]
-  Average <- c()
-  SError <- c()
+  sample_current <- results[1, 1]
+  sample_mean <- results[1, 2]
+  average <- se_error <- c()
 
-  while (i <= nr) {
+  while (pos <= nr) {
     #iterates over the results dataframe to calculate averages and standard error
 
-    if (is.na(ResultDF[i, 1]) || (CurrentSample == ResultDF[i, 1])) {
+    if (is.na(results[pos, 1]) || (sample_current == results[pos, 1])) {
       counter <- counter + 1
-      MeanSample <- MeanSample + ResultDF[i, 2]
-      SError <- append(SError, "")
-      Average <- append(Average, "")
+      sample_mean <- sample_mean + results[pos, 2]
+      se_error <- append(se_error, "")
+      average <- append(average, "")
 
     } else {
-      MeanSample <- format(signif(MeanSample / counter, 4), nsmall = 4)
-      array <- SampleResults[(i - counter):(i - 1)]
-      SE <- format(signif(2 * sd(array), 4), nsmall = 4)
-      SError <- append(SError, SE)
-      Average <- append(Average, MeanSample)
-      CurrentSample <- ResultDF[i, 1]
-      MeanSample <- ResultDF[i, 2]
+      sample_mean <- format(signif(sample_mean / counter, 4), nsmall = 4)
+      array <- sample_results[(pos - counter):(pos - 1)]
+      se <- format(signif(2 * sd(array), 4), nsmall = 4)
+      se_error <- append(se_error, se)
+      average <- append(average, sample_mean)
+      sample_current <- results[pos, 1]
+      sample_mean <- results[pos, 2]
       counter <- 1
-
     }
-
-    i <- i + 1
+    pos <- pos + 1
   }
-  MeanSample <- format(signif(MeanSample / counter, 4), nsmall = 4)
-  array <- SampleResults[(i - counter):(i - 1)]
-  SE <- format(signif(2 * sd(array), 4), nsmall = 4)
-  SError <- append(SError, SE)
-  Average <- append(Average, MeanSample)
 
+  sample_mean <- format(signif(sample_mean / counter, 4), nsmall = 4)
+  array <- sample_results[(pos - counter):(pos - 1)]
+  se <- format(signif(2 * sd(array), 4), nsmall = 4)
+  se_error <- append(se_error, se)
+  average <- append(average, sample_mean)
 
-  if (weight_opening != 0.5 || (weight_opening + weight_closing) != 1.0) {
-    FinalDF <- data.frame(
-      description = SampleNames,
-      Linear_SBB = format(signif(SampleResults, 4), nsmall = 4),
-      Weighted_SBB = WSampleResults,
+  if (weight_std[1] != 0.5 || (weight_std[1] + weight_std[2]) != 1.0) {
+    output <- data.frame(
+      description = sample_names,
+      Linear_SSB = format(signif(sample_results, 4), nsmall = 4),
+      Weighted_SSB = sample_results_weighted,
       #add weighted values to the array
-      Mean = Average,
-      SE = SError
+      Mean = average,
+      SE = se_error
     )
 
   } else {
-    FinalDF <- data.frame(
-      description = SampleNames,
-      SBB = format(signif(SampleResults, 4), nsmall = 4),
-      Mean = Average,
-      SE = SError
+    output <- data.frame(
+      description = sample_names,
+      SSB = format(signif(sample_results, 4), nsmall = 4),
+      Mean = average,
+      SE = se_error
     )
   }
-  return(FinalDF)
-
+  return(output)
 }

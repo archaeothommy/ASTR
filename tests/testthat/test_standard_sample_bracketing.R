@@ -8,7 +8,7 @@ test_input <- readxl::read_excel(
   skip = 2
 )
 
-library(tidyverse)
+library(dplyr)
 
 # subset just the sequences of samples to apply SSB
 subset_to_bracket <-
@@ -18,6 +18,9 @@ subset_to_bracket <-
 test_that("standard sample bracketing works as expected", {
   expect_snapshot({
     # turn to data.frame to render the entire table
-    standard_sample_bracketing(subset_to_bracket)
+    standard_sample_bracketing(subset_to_bracket,
+                               values = "Cu65/63 corr 68/66",
+                               id_col = "Sample Name...1",
+                               id_std = "Cu/Zn in house 25ppb")
   })
 })
