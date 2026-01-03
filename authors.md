@@ -64,14 +64,14 @@
 Thomas R, Andrea A, Gilberto A, María Florencia B, Adam Kevin B, Lisa B,
 Thomas Edward B, Karan D, Paolo d, Tzilla E, Valerio G, Sabine K,
 Catherine K, Kathryn M, Ben M, Stephen M, Marco Daniele P, Alexandra R,
-Benjamin S, Clemens S, Berber v, Chen W, Katrin Julia W (2025). *ASTR:
+Benjamin S, Clemens S, Berber v, Chen W, Katrin Julia W (2026). *ASTR:
 What the Package Does (One Line, Title Case)*. R package version
 0.0.0.9000, <https://example.com>.
 
     @Manual{,
       title = {ASTR: What the Package Does (One Line, Title Case)},
       author = {Rose Thomas and Acevedo Mejia Andrea and Artioli Gilberto and Becerra {María Florencia} and Benfer {Adam Kevin} and Bellemère Lisa and Birch {Thomas Edward} and Desai Karan and d'Imporzano Paolo and Eshel Tzilla and Gentile Valerio and Klein Sabine and Klesner Catherine and Murphy Kathryn and Marwick Ben and Merkel Stephen and Pelizzari {Marco Daniele} and Rodler Alexandra and Sabatini Benjamin and Schmid Clemens and van der Meulen-van der Veen Berber and Wang Chen and Westner {Katrin Julia}},
-      year = {2025},
+      year = {2026},
       note = {R package version 0.0.0.9000},
       url = {https://example.com},
     }
