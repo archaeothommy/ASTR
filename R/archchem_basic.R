@@ -182,48 +182,6 @@ as_archchem <- function(
   return(df)
 }
 
-#' @rdname archchem
-#' @param quiet ...
-#' @export
-validate <- function(x, quiet = TRUE, ...) {
-  UseMethod("validate")
-}
-
-#' @export
-validate.default <- function(x, quiet = TRUE, ...) {
-  stop("x is not an object of class archchem")
-}
-
-#' @export
-validate.archchem <- function(x, quiet = TRUE, ...) {
-  # check for missingness in analytical columns
-  df_analytical <- get_analytical_columns(x)[-1]
-  missing_values <- purrr::map2_dfr(
-    df_analytical, colnames(df_analytical),
-    function(x, col) {
-      n_na <- sum(is.na(x))
-      if (n_na > 0) {
-        tibble::tibble(
-          column = col,
-          count = n_na,
-          warning = "missing values"
-        )
-      }
-    }
-  )
-  if (!quiet && nrow(missing_values) > 0) {
-    warning(
-      sum(missing_values$count),
-      " missing values across ",
-      nrow(missing_values),
-      " analytical columns"
-    )
-  }
-  all_warnings <- dplyr::bind_rows(missing_values)
-  return(all_warnings)
-}
-
-
 #' @param path path to the file that should be read
 #' @param delim A character string with the separator for tabular data. Must be
 #'   provided for all file types except `.xlsx` or `.xls`. Default to `,`. Use
@@ -272,7 +230,7 @@ read_archchem <- function(
     xls = {
       readxl::read_xls(
         path,
-        col_types = "character",
+        col_types = "text",
         na = na,
         ...
       )
