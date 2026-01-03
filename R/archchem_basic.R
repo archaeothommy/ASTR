@@ -214,7 +214,18 @@ read_archchem <- function(
   #}
 
   if (ext %in% c("xlsx", "xls") && !requireNamespace("readxl")) {
-    stop("Import of Excel files requires the package `readxl`. Please install it or choose another file format.")
+
+    if (!is_interactive()) {
+      stop("Import of Excel files requires the package `readxl`. Please install it or choose another file format.")
+    }
+
+    answer <- readline("Package `readxl` required to import Excel files. Do you want to install it now? [Y/n]: ")
+
+    if (answer %in% c("Yes", "Y", "yes", "y", "YES")) {
+      install.packages("readxl")
+    } else {
+      stop("Please import your data in another file format or install 'readxl' manually.")
+    }
   }
 
   # read input as character columns only
