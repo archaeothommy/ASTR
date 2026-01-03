@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# ASTR
+# ASTR <a href="https://archaeothommy.github.io/ASTR/"><img src="man/figures/logo.png" align="right" height="138" alt="ASTR website" /></a>
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/archaeothommy/ASTR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/archaeothommy/ASTR/actions/workflows/R-CMD-check.yaml)
