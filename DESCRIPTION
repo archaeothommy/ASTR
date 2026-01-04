@@ -1,7 +1,7 @@
 Package: ASTR
-Title: What the Package Does (One Line, Title Case)
+Title: Archaeometric Standards and Tools in R
 Version: 0.0.0.9000
-URL: https://example.com
+URL: https://archaeothommy.github.io/ASTR/index.html
 Authors@R: c(
     person("Rose", "Thomas", comment = c(ORCID = "0000-0002-8186-3566"), role = c("cre", "aut"), email = "roseth@posteo.com"),
     person("Acevedo Mejia", "Andrea", comment = c(ORCID = "0009-0002-7441-1737"), role = "aut"),
@@ -27,7 +27,9 @@ Authors@R: c(
     person("Wang", "Chen", comment = c(ORCID = "0009-0007-1851-2388"), role = "aut"),
     person("Westner", "Katrin Julia", comment = c(ORCID = "0000-0001-5529-1165"), role = "aut")
     )
-Description: What the package does (one paragraph).
+Description: ASTR defines and implements a community reporting standard for archaeometric datasets. 
+    It also provides easy-to-use functions for common plots, statistical analyses, data processing 
+    and transformation workflows in archaeometry. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

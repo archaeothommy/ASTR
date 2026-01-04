@@ -1,9 +1,12 @@
 url: https://archaeothommy.github.io/ASTR/
 
 home:
-  title: 'ASTR: Archaeological Science Toolbox in R'
+  title: 'ASTR: Archaeometric Standards and Tools in R'
   description: |
-    coming soon
+    ASTR defines and implements a community reporting standard for archaeometric
+    datasets. It also provides easy-to-use functions for common plots,
+    statistical analyses, data processing, and data  transformation workflows
+    in archaeometry.
 
 template:
   bootstrap: 5
