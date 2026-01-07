@@ -27,4 +27,3 @@ usethis::use_data(
   internal = TRUE,
   overwrite = TRUE
 )
-
