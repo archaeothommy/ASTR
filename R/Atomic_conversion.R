@@ -1,124 +1,83 @@
-#' Convert between weight percent and atomic percent
+#' Atomic conversion functions
 #'
-#' @description
-#' Simple conversion between weight percent (wt%) and atomic percent (at%)
-#' using atomic weights. They perform direct stoichiometric
-#' transformations without normalization or thresholds.
+#' Convert between weight percent (wt%) and atomic percent (wt%) compositions using built-in atomic weights.
 #'
-#' @section Limitations:
-#' \itemize{
-#'   \item Assumes all input values are in wt% or at%.
-#'   \item Does not handle units or unit conversions.
-#'   \item No automatic detection of composition columns.
-#'   \item Conversion factors must be provided.
-#' }
+#' @param df Data frame with compositional data.
+#' @param elements Element column names to convert.
+#' @param normalize Normalize converted values to 100%?
 #'
-#' @param df
-#' A data frame containing composition values.
+#' @return Data frame with converted columns added (_at suffix for atomic percent).
 #'
-#' @param conversion_table
-#' A data frame with columns: `Element`, `AtomicWeight`.
-#'
-#' @param elements
-#' Character vector of element names to convert. These must exist
-#' as columns in `df` (for `wt_to_at`) or as `*_at` columns (for `at_to_wt`).
-#'
-#' @return
-#' A modified version of `df` with converted columns added.
-#' Atomic percent columns have "_at" suffix, weight percent columns
-#' have no suffix.
-#'
-#' @examples
-#' conv <- data.frame(
-#'   Element = c("Si", "O"),
-#'   AtomicWeight = c(28.085, 15.999)
-#' )
-#'
-#' df_wt <- data.frame(Si = 46.75, O = 48.0)
-#' wt_to_at(df_wt, conv, elements = c("Si", "O"))
-#'
-#' df_at <- data.frame(Si_at = 33.3, O_at = 66.7)
-#' at_to_wt(df_at, conv, elements = c("Si", "O"))
-#'
+#' @keywords internal
 #' @name atomic_conversion
 NULL
 
-
 #' @rdname atomic_conversion
-#' @export
-wt_to_at <- function(df, conversion_table, elements) {
+#' @keywords internal
+wt_to_at <- function(df, elements, normalize = FALSE) {
+
+  conv <- atomic_conversion
+  rownames(conv) <- conv$Element
+
+  elements <- intersect(elements, rownames(conv))
+  if (!length(elements)) return(df)
+
+  x <- as.matrix(df[elements])
+  storage.mode(x) <- "double"
+
+  aw <- conv[elements, "AtomicWeight"]
+  moles <- sweep(x, 2, aw, "/")
+
+  total <- rowSums(moles, na.rm = TRUE)
+  total[total == 0] <- NA_real_
+  at_percent <- sweep(moles, 1, total, "/") * 100
+
+  colnames(at_percent) <- paste0(elements, "_at")
+
+  if (normalize) {
+    at_percent <- .normalize_rows(at_percent)
+  }
+
   out <- df
-
-  # Validate inputs
-  missing_elements <- setdiff(elements, names(df))
-  if (length(missing_elements) > 0) {
-    stop("Missing element columns in df: ",
-         paste(missing_elements, collapse = ", "), call. = FALSE)
-  }
-
-  # Get atomic weights
-  aw <- sapply(elements, function(el) {
-    wt <- conversion_table$AtomicWeight[conversion_table$Element == el]
-    if (length(wt) == 0) {
-      stop("No atomic weight for element: ", el, call. = FALSE)
-    }
-    wt[1]
-  })
-
-  # Calculate moles = wt% / atomic weight
-  moles <- matrix(NA_real_, nrow = nrow(df), ncol = length(elements))
-  for (i in seq_along(elements)) {
-    moles[, i] <- df[[elements[i]]] / aw[i]
-  }
-
-  # Calculate total moles (handle all-NA rows)
-  total_moles <- rowSums(moles, na.rm = TRUE)
-  total_moles[total_moles == 0] <- NA_real_
-
-  # Calculate atomic percent = (moles / total moles) * 100
-  for (i in seq_along(elements)) {
-    out[[paste0(elements[i], "_at")]] <- (moles[, i] / total_moles) * 100
+  for (nm in colnames(at_percent)) {
+    out[[nm]] <- at_percent[, nm]
   }
 
   out
 }
 
-
 #' @rdname atomic_conversion
-#' @export
-at_to_wt <- function(df, conversion_table, elements) {
-  out <- df
+#' @keywords internal
+at_to_wt <- function(df, elements, normalize = FALSE) {
 
-  # Find atomic percent columns
+  conv <- atomic_conversion
+  rownames(conv) <- conv$Element
+
   at_cols <- paste0(elements, "_at")
   missing <- setdiff(at_cols, names(df))
   if (length(missing) > 0) {
-    stop("Missing atomic percent columns: ", paste(missing, collapse = ", "),
-         call. = FALSE)
+    stop("Missing atomic percent columns: ", paste(missing, collapse = ", "))
   }
 
-  # Get atomic weights
-  aw <- sapply(elements, function(el) {
-    wt <- conversion_table$AtomicWeight[conversion_table$Element == el]
-    if (length(wt) == 0) {
-      stop("No atomic weight for element: ", el, call. = FALSE)
-    }
-    wt[1]
-  })
+  x <- as.matrix(df[at_cols])
+  storage.mode(x) <- "double"
 
-  # Calculate weight = at% * atomic weight
-  weight <- matrix(NA_real_, nrow = nrow(df), ncol = length(elements))
-  for (i in seq_along(elements)) {
-    weight[, i] <- df[[at_cols[i]]] * aw[i]
+  aw <- conv[elements, "AtomicWeight"]
+  weight <- sweep(x, 2, aw, "*")
+
+  total <- rowSums(weight, na.rm = TRUE)
+  total[total == 0] <- NA_real_
+  wt_percent <- sweep(weight, 1, total, "/") * 100
+
+  colnames(wt_percent) <- elements
+
+  if (normalize) {
+    wt_percent <- .normalize_rows(wt_percent)
   }
 
-  # Calculate total weight (handle all-NA rows)
-  total_weight <- rowSums(weight, na.rm = TRUE)
-  total_weight[total_weight == 0] <- NA_real_
-
-  # Calculate weight percent = (weight / total weight) * 100
-  for (i in seq_along(elements)) {
-    out[[elements[i]]] <- (weight[, i] / total_weight) * 100
+  out <- df
+  for (nm in elements) {
+    out[[nm]] <- wt_percent[, nm]
   }
 
   out
