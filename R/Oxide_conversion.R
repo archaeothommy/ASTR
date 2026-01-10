@@ -116,7 +116,6 @@ element_to_oxide <- function(
     x[x <= thr] <- NA_real_
   }
 
-  # Convert elements to oxides
   factors <- conv[elements, "element_to_oxide"]
   oxides <- sweep(x, 2, factors, "*")
   colnames(oxides) <- conv[elements, "Oxide"]

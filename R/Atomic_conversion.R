@@ -4,7 +4,7 @@
 #'
 #' @param df Data frame with compositional data.
 #' @param elements Element column names to convert.
-#' @param normalize Normalize converted values to 100%?
+#' @param normalize Normalize converted values to 100%
 #'
 #' @return Data frame with converted columns added (_at suffix for atomic percent).
 #'

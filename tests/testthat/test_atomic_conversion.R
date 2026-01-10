@@ -1,4 +1,6 @@
 # tests/testthat/test-atomic_conversion.R
+
+#element wt% to Atomic wt%
 test_that("wt_to_at converts correctly", {
   df <- data.frame(Si = 46.75, O = 53.25)
   result <- wt_to_at(df, elements = c("Si", "O"))
@@ -6,6 +8,7 @@ test_that("wt_to_at converts correctly", {
   expect_true("O_at" %in% names(result))
 })
 
+#Atomic wt% to element wt%
 test_that("at_to_wt converts back", {
   df <- data.frame(Si_at = 33.33, O_at = 66.67)
   result <- at_to_wt(df, elements = c("Si", "O"))

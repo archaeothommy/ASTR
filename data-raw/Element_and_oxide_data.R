@@ -11,7 +11,6 @@ oxide_conversion <- unique(
     "oxide_to_elements"
   )]
 )
-
 names(oxide_conversion)[names(oxide_conversion) == "oxide_to_elements"] <- "oxide_to_element"
 
 atomic_conversion <- unique(
