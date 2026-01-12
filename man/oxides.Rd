@@ -16,6 +16,7 @@ sorted according to alphabet
 }
 \seealso{
 Other chemical_reference_data: 
+\code{\link{conversion_oxides}},
 \code{\link{elements}},
 \code{\link{isotopes}}
 }
