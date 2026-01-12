@@ -77,11 +77,17 @@ isotopes <- c(
   "232Th", "231Pa", "234U", "235U", "238U"
 )
 
+conversion_oxides <- read.csv(
+  file = "data-raw/oxide_conversion.csv",
+  stringsAsFactors = FALSE
+)
+
 usethis::use_data(
   elements,
   oxides,
   special_oxide_states,
   isotopes,
+  conversion_oxides,
   overwrite = TRUE, internal = TRUE
 )
 

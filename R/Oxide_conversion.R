@@ -4,7 +4,7 @@ utils::globalVariables("oxide_conversion")
 #'
 #' Convert between element and oxide weight percent (wt%) compositions using
 #' built-in conversion factors. Handles duplicate oxides by summation.
-#' Includes options for oxide preference, normalization, and element filtering.
+#' Includes options for oxide preference, normalisation, and element filtering.
 #'
 #' @param df Data frame with compositional data.
 #' @param elements Character vector of element column names to convert.
@@ -12,7 +12,7 @@ utils::globalVariables("oxide_conversion")
 #' @param oxide_preference Either "reducing", "oxidizing", "interactive",
 #'        or a named vector mapping elements to specific oxides (e.g., c(Fe = "FeO")).
 #' @param which_elements Filter elements: "all", "major" (>1 wt%), or "minor" (>0.1 wt%).
-#' @param normalize Logical; normalize converted values to 100%? Default FALSE.
+#' @param normalise Logical; normalise converted values to 100%? Default FALSE.
 #'
 #' @return Data frame with converted columns added. Original columns preserved.
 #'
@@ -21,7 +21,7 @@ utils::globalVariables("oxide_conversion")
 #' - Uses built-in conversion factors from `oxide_conversion` dataset
 #' - Multiple oxides for same element (e.g., FeO/Fe2O3) are handled via `oxide_preference`
 #' - Duplicate outputs (e.g., Fe from FeO and Fe2O3) are summed automatically
-#' - Includes optional normalization to 100%
+#' - Includes optional normalisation to 100%
 #' - Can filter major/minor elements based on thresholds
 #'
 #' For `oxide_to_element()`:
@@ -40,7 +40,7 @@ element_to_oxide <- function(
   elements,
   oxide_preference = NULL,
   which_elements = c("all", "major", "minor"),
-  normalize = FALSE
+  normalise = FALSE
 ) {
 
   # Validate inputs
@@ -69,7 +69,7 @@ element_to_oxide <- function(
         pref <- c(Fe = "Fe2O3", Mn = "MnO2", Cr = "CrO3")
       } else if (oxide_preference == "interactive") {
         # Interactive selection for each element
-        conv <- .interactive_oxide_select(conv, elements)
+        conv <- interactive_oxide_select(conv, elements)
         pref <- NULL
       } else {
         stop("oxide_preference must be 'reducing', 'oxidizing', 'interactive', ",
@@ -121,11 +121,11 @@ element_to_oxide <- function(
   colnames(oxides) <- conv[elements, "Oxide"]
 
   # Sum duplicate oxides (if multiple elements map to same oxide)
-  oxides <- .sum_duplicates(oxides)
+  oxides <- sum_duplicates(oxides)
 
-  # Normalize if requested
-  if (normalize) {
-    oxides <- .normalize_rows(oxides)
+  # Normalise if requested
+  if (normalise) {
+    oxides <- normalise_rows(oxides)
   }
 
   # Add oxide columns to output
@@ -139,7 +139,7 @@ element_to_oxide <- function(
 
 #' @rdname oxide_conversion
 #' @export
-oxide_to_element <- function(df, oxides, normalize = FALSE) {
+oxide_to_element <- function(df, oxides, normalise = FALSE) {
 
   # Validate inputs
   if (!is.data.frame(df)) {
@@ -182,11 +182,11 @@ oxide_to_element <- function(df, oxides, normalize = FALSE) {
   colnames(elements) <- conv[oxides, "Element"]
 
   # Sum duplicate elements (e.g., Fe from FeO + Fe2O3)
-  elements <- .sum_duplicates(elements)
+  elements <- sum_duplicates(elements)
 
-  # Normalize if requested
-  if (normalize) {
-    elements <- .normalize_rows(elements)
+  # Normalise if requested
+  if (normalise) {
+    elements <- normalise_rows(elements)
   }
 
   # Add element columns to output
@@ -199,7 +199,8 @@ oxide_to_element <- function(df, oxides, normalize = FALSE) {
 }
 
 # Helper function for interactive oxide selection
-.interactive_oxide_select <- function(conv, elements) {
+#' @keywords internal
+interactive_oxide_select <- function(conv, elements) {
   cat("Interactive oxide selection:\n")
   for (el in elements) {
     ox <- conv$Oxide[conv$Element == el]
@@ -221,8 +222,9 @@ oxide_to_element <- function(df, oxides, normalize = FALSE) {
   return(conv)
 }
 
-# Sum duplicate columns (e.g., Fe from FeO and Fe2O3)
-.sum_duplicates <- function(mat) {
+#' Sum duplicate columns (e.g., Fe from FeO and Fe2O3)
+#' @keywords internal
+sum_duplicates <- function(mat) {
   if (ncol(mat) == 0) return(mat)
 
   unique_names <- unique(colnames(mat))
@@ -245,13 +247,14 @@ oxide_to_element <- function(df, oxides, normalize = FALSE) {
   return(res)
 }
 
-# Normalize rows to 100%
-.normalize_rows <- function(mat) {
+#' Normalise rows to 100%
+#' @keywords internal
+normalise_rows <- function(mat) {
   if (ncol(mat) == 0) return(mat)
 
   row_sums <- rowSums(mat, na.rm = TRUE)
   row_sums[row_sums == 0] <- NA_real_
 
-  # Normalize and return as percentages
+  # Normalise and return as percentages
   sweep(mat, 1, row_sums, "/") * 100
 }
