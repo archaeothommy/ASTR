@@ -1,10 +1,12 @@
 #' Conversion between wt% and at%
 #'
 #' Convert chemical compositions between weight percent (wt%) and atomic percent
-#' (at%).
+#' (at%). The column names of the elements to be converted must be equivalent to
+#' their chemical symbols.
 #'
 #' @param df Data frame with compositional data.
-#' @param elements named character vector with the column names of the elements.
+#' @param elements character vector with the chemical symbols of the elements
+#'   that should be converted.
 #' @param normalise If `TRUE`, will normalise converted concentration to 100%.
 #'   Default to `FALSE`.
 #' @param drop If `FALSE` keeps columns with unconverted values. Default to
