@@ -88,7 +88,7 @@ usethis::use_data(
   special_oxide_states,
   isotopes,
   conversion_oxides,
-  overwrite = TRUE, internal = TRUE
+  overwrite = TRUE, internal = FALSE
 )
 
 # units <- c(
