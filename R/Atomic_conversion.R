@@ -1,57 +1,62 @@
-#' Atomic conversion functions
+#' Conversion between wt% and at%
 #'
-#' Convert between weight percent (wt%) and atomic percent (wt%) compositions using built-in atomic weights.
+#' Convert chemical compositions between weight percent (wt%) and atomic percent
+#' (at%).
 #'
 #' @param df Data frame with compositional data.
-#' @param elements Element column names to convert.
-#' @param normalize Normalize converted values to 100%
+#' @param elements named character vector with the column names of the elements.
+#' @param normalise If `TRUE`, will normalise converted concentration to 100%.
+#'   Default to `FALSE`.
+#' @param drop If `FALSE` keeps columns with unconverted values. Default to
+#'   `TRUE`.
 #'
-#' @return Data frame with converted columns added (_at suffix for atomic percent).
+#' @return Data frame with the converted concentrations. If `drop = FALSE`, a
+#'   suffix is added to the column names with the converted values:
+#'   * `_at%` for conversions to atomic percent
+#'   * `_wt%` for conversions to weight percent.
 #'
-#' @keywords internal
+#' @export
 #' @name atomic_conversion
-NULL
+#'
+#' @examples
+#' # example code
+#'
 
-#' @rdname atomic_conversion
-#' @keywords internal
-wt_to_at <- function(df, elements, normalize = FALSE) {
+wt_to_at <- function(df, elements, normalise = FALSE, drop = TRUE) {
 
-  conv <- atomic_conversion
-  rownames(conv) <- conv$Element
+  elements <- intersect(elements, unique(conversion_oxides$Element))
 
-  elements <- intersect(elements, rownames(conv))
   if (!length(elements)) return(df)
 
   x <- as.matrix(df[elements])
   storage.mode(x) <- "double"
 
-  aw <- conv[elements, "AtomicWeight"]
+  aw <- conversion_oxides[conversion_oxides$Element %in% elements, "AtomicWeight"]
+
   moles <- sweep(x, 2, aw, "/")
 
   total <- rowSums(moles, na.rm = TRUE)
   total[total == 0] <- NA_real_
   at_percent <- sweep(moles, 1, total, "/") * 100
 
-  colnames(at_percent) <- paste0(elements, "_at")
-
-  if (normalize) {
-    at_percent <- .normalize_rows(at_percent)
+  if (normalise) {
+    at_percent <- normalise_rows(at_percent)
   }
 
-  out <- df
-  for (nm in colnames(at_percent)) {
-    out[[nm]] <- at_percent[, nm]
+  if (drop) {
+    at_percent <- as.data.frame(at_percent)
+    df[elements] <- at_percent[elements]
+  } else {
+    colnames(at_percent) <- paste0(elements, "_at")
+    df <- cbind(df, at_percent)
   }
 
-  out
+  df
 }
 
 #' @rdname atomic_conversion
-#' @keywords internal
-at_to_wt <- function(df, elements, normalize = FALSE) {
-
-  conv <- atomic_conversion
-  rownames(conv) <- conv$Element
+#' @export
+at_to_wt <- function(df, elements, normalise = FALSE, drop = TRUE) {
 
   at_cols <- paste0(elements, "_at")
   missing <- setdiff(at_cols, names(df))
@@ -62,7 +67,7 @@ at_to_wt <- function(df, elements, normalize = FALSE) {
   x <- as.matrix(df[at_cols])
   storage.mode(x) <- "double"
 
-  aw <- conv[elements, "AtomicWeight"]
+  aw <- conversion_oxides[elements, "AtomicWeight"]
   weight <- sweep(x, 2, aw, "*")
 
   total <- rowSums(weight, na.rm = TRUE)
@@ -71,8 +76,8 @@ at_to_wt <- function(df, elements, normalize = FALSE) {
 
   colnames(wt_percent) <- elements
 
-  if (normalize) {
-    wt_percent <- .normalize_rows(wt_percent)
+  if (normalise) {
+    wt_percent <- normalise_rows(wt_percent)
   }
 
   out <- df
