@@ -2,75 +2,75 @@
 
 ## Authors
 
-- **Rose Thomas**. Maintainer, author.
+- **Thomas Rose**. Maintainer, author.
   [](https://orcid.org/0000-0002-8186-3566)
 
-- **Acevedo Mejia Andrea**. Author.
+- **Andrea Acevedo Mejia**. Author.
   [](https://orcid.org/0009-0002-7441-1737)
 
-- **Artioli Gilberto**. Author.
+- **Gilberto Artioli**. Author.
   [](https://orcid.org/0000-0002-8693-7392)
 
-- **Becerra María Florencia**. Author.
+- **María Florencia Becerra**. Author.
   [](https://orcid.org/0000-0001-6302-7452)
 
-- **Benfer Adam Kevin**. Author.
+- **Adam Kevin Benfer**. Author.
   [](https://orcid.org/0009-0004-1253-1068)
 
-- **Bellemère Lisa**. Author.
+- **Lisa Bellemère**. Author.
 
-- **Birch Thomas Edward**. Author.
+- **Thomas Edward Birch**. Author.
   [](https://orcid.org/0000-0002-4568-9767)
 
-- **Desai Karan**. Author. [](https://orcid.org/0009-0008-8224-8435)
+- **Karan Desai**. Author. [](https://orcid.org/0009-0008-8224-8435)
 
-- **d'Imporzano Paolo**. Author.
+- **Paolo d'Imporzano**. Author.
 
-- **Eshel Tzilla**. Author. [](https://orcid.org/0000-0003-0976-0877)
+- **Tzilla Eshel**. Author. [](https://orcid.org/0000-0003-0976-0877)
 
-- **Gentile Valerio**. Author. [](https://orcid.org/0000-0003-4402-2730)
+- **Valerio Gentile**. Author. [](https://orcid.org/0000-0003-4402-2730)
 
-- **Klein Sabine**. Author. [](https://orcid.org/0000-0002-3939-4428)
+- **Sabine Klein**. Author. [](https://orcid.org/0000-0002-3939-4428)
 
-- **Klesner Catherine**. Author.
+- **Catherine Klesner**. Author.
   [](https://orcid.org/0000-0002-2264-9383)
 
-- **Murphy Kathryn**. Author. [](https://orcid.org/0000-0002-5906-7299)
+- **Kathryn Murphy**. Author. [](https://orcid.org/0000-0002-5906-7299)
 
-- **Marwick Ben**. Author. [](https://orcid.org/0000-0001-7879-4531)
+- **Ben Marwick**. Author. [](https://orcid.org/0000-0001-7879-4531)
 
-- **Merkel Stephen**. Author. [](https://orcid.org/0000-0001-8730-6923)
+- **Stephen Merkel**. Author. [](https://orcid.org/0000-0001-8730-6923)
 
-- **Pelizzari Marco Daniele**. Author.
+- **Marco Daniele Pelizzari**. Author.
 
-- **Rodler Alexandra**. Author.
+- **Alexandra Rodler**. Author.
   [](https://orcid.org/0000-0002-4087-7160)
 
-- **Sabatini Benjamin**. Author.
+- **Benjamin Sabatini**. Author.
   [](https://orcid.org/0000-0002-4199-0253)
 
-- **Schmid Clemens**. Author. [](https://orcid.org/0000-0003-3448-5715)
+- **Clemens Schmid**. Author. [](https://orcid.org/0000-0003-3448-5715)
 
-- **van der Meulen-van der Veen Berber**. Author.
+- **Berber van der Meulen-van der Veen**. Author.
   [](https://orcid.org/0000-0001-5297-0269)
 
-- **Wang Chen**. Author. [](https://orcid.org/0009-0007-1851-2388)
+- **Chen Wang**. Author. [](https://orcid.org/0009-0007-1851-2388)
 
-- **Westner Katrin Julia**. Author.
+- **Katrin Julia Westner**. Author.
   [](https://orcid.org/0000-0001-5529-1165)
 
 ## Citation
 
-Thomas R, Andrea A, Gilberto A, María Florencia B, Adam Kevin B, Lisa B,
-Thomas Edward B, Karan D, Paolo d, Tzilla E, Valerio G, Sabine K,
-Catherine K, Kathryn M, Ben M, Stephen M, Marco Daniele P, Alexandra R,
-Benjamin S, Clemens S, Berber v, Chen W, Katrin Julia W (2026). *ASTR:
-What the Package Does (One Line, Title Case)*. R package version
-0.0.0.9000, <https://example.com>.
+Rose T, Acevedo Mejia A, Artioli G, Becerra M, Benfer A, Bellemère L,
+Birch T, Desai K, d'Imporzano P, Eshel T, Gentile V, Klein S, Klesner C,
+Murphy K, Marwick B, Merkel S, Pelizzari M, Rodler A, Sabatini B, Schmid
+C, van der Meulen-van der Veen B, Wang C, Westner K (2026). *ASTR: What
+the Package Does (One Line, Title Case)*. R package version 0.0.0.9000,
+<https://example.com>.
 
     @Manual{,
       title = {ASTR: What the Package Does (One Line, Title Case)},
-      author = {Rose Thomas and Acevedo Mejia Andrea and Artioli Gilberto and Becerra {María Florencia} and Benfer {Adam Kevin} and Bellemère Lisa and Birch {Thomas Edward} and Desai Karan and d'Imporzano Paolo and Eshel Tzilla and Gentile Valerio and Klein Sabine and Klesner Catherine and Murphy Kathryn and Marwick Ben and Merkel Stephen and Pelizzari {Marco Daniele} and Rodler Alexandra and Sabatini Benjamin and Schmid Clemens and van der Meulen-van der Veen Berber and Wang Chen and Westner {Katrin Julia}},
+      author = {Thomas Rose and Andrea {Acevedo Mejia} and Gilberto Artioli and María Florencia Becerra and Adam Kevin Benfer and Lisa Bellemère and Thomas Edward Birch and Karan Desai and Paolo d'Imporzano and Tzilla Eshel and Valerio Gentile and Sabine Klein and Catherine Klesner and Kathryn Murphy and Ben Marwick and Stephen Merkel and Marco Daniele Pelizzari and Alexandra Rodler and Benjamin Sabatini and Clemens Schmid and Berber {van der Meulen-van der Veen} and Chen Wang and Katrin Julia Westner},
       year = {2026},
       note = {R package version 0.0.0.9000},
       url = {https://example.com},
