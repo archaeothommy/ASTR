@@ -122,7 +122,7 @@ standard_sample_bracketing <- function(df,
   counter <- 1
   sample_current <- results[1, 1]
   sample_mean <- results[1, 2]
-  average <- se_error <- c()
+  average <- sd_dev <- c()
 
   while (pos <= nr) {
     #iterates over the results dataframe to calculate averages and standard error
@@ -130,14 +130,14 @@ standard_sample_bracketing <- function(df,
     if (is.na(results[pos, 1]) || (sample_current == results[pos, 1])) {
       counter <- counter + 1
       sample_mean <- sample_mean + results[pos, 2]
-      se_error <- append(se_error, "")
+      sd_dev <- append(sd_dev, "")
       average <- append(average, "")
 
     } else {
       sample_mean <- format(signif(sample_mean / counter, 4), nsmall = 4)
       array <- sample_results[(pos - counter):(pos - 1)]
-      se <- format(signif(2 * sd(array), 4), nsmall = 4)
-      se_error <- append(se_error, se)
+      sdev <- format(signif(2 * sd(array), 4), nsmall = 4)
+      sd_dev <- append(sd_dev, sdev)
       average <- append(average, sample_mean)
       sample_current <- results[pos, 1]
       sample_mean <- results[pos, 2]
@@ -148,8 +148,8 @@ standard_sample_bracketing <- function(df,
 
   sample_mean <- format(signif(sample_mean / counter, 4), nsmall = 4)
   array <- sample_results[(pos - counter):(pos - 1)]
-  se <- format(signif(2 * sd(array), 4), nsmall = 4)
-  se_error <- append(se_error, se)
+  sdev <- format(signif(2 * sd(array), 4), nsmall = 4)
+  sd_dev <- append(sd_dev, sdev)
   average <- append(average, sample_mean)
 
   if (weight_std[1] != 0.5 || (weight_std[1] + weight_std[2]) != 1.0) {
@@ -159,7 +159,7 @@ standard_sample_bracketing <- function(df,
       Weighted_SSB = sample_results_weighted,
       #add weighted values to the array
       Mean = average,
-      SE = se_error
+      SDeviation = sd_dev
     )
 
   } else {
@@ -167,8 +167,9 @@ standard_sample_bracketing <- function(df,
       description = sample_names,
       SSB = format(signif(sample_results, 4), nsmall = 4),
       Mean = average,
-      SE = se_error
+      SDeviation = sd_dev
     )
   }
   return(output)
 }
+
