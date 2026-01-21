@@ -1,9 +1,9 @@
-# tests/testthat/test-atomic_conversion.R
+# tests/testthat/test_atomic_conversion.R
 
 #element wt% to Atomic wt%
 test_that("wt_to_at converts correctly", {
-  df <- data.frame(Si = 46.75, O = 53.25)
-  result <- wt_to_at(df, elements = c("Si", "O"))
+  df <- data.frame(Si = 46.74, O = 53.26)
+  result <- wt_to_at(df, elements = c("Si", "O"), drop = FALSE)
   expect_true("Si_at" %in% names(result))
   expect_true("O_at" %in% names(result))
 })
@@ -17,9 +17,9 @@ test_that("at_to_wt converts back", {
 })
 
 test_that("atomic conversions are reversible", {
-  df <- data.frame(Si = 46.75, O = 53.25)
-  at <- wt_to_at(df, elements = c("Si", "O"))
-  wt <- at_to_wt(at, elements = c("Si", "O"))
+  df <- data.frame(Si = 46.74, O = 53.26)
+  at <- wt_to_at(df, elements = c("Si", "O"), drop = FALSE)
+  wt <- at_to_wt(at, elements = c("Si", "O"), drop = FALSE)
   expect_equal(wt$Si, df$Si, tolerance = 0.1)
   expect_equal(wt$O, df$O, tolerance = 0.1)
 })

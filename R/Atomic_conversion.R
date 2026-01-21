@@ -14,28 +14,51 @@
 #'
 #' @return Data frame with the converted concentrations. If `drop = FALSE`, a
 #'   suffix is added to the column names with the converted values:
-#'   * `_at%` for conversions to atomic percent
-#'   * `_wt%` for conversions to weight percent.
+#'   * `_at` for conversions to atomic percent
+#'   * `_wt` for conversions to weight percent.
 #'
 #' @export
 #' @name atomic_conversion
 #'
 #' @examples
-#' # example code
+#' # Convert weight percent to atomic percent
+#' df <- data.frame(Si = 46.74, O = 53.26)  # SiO2 composition
+#' wt_to_at(df, elements = c("Si", "O"))
 #'
-
 wt_to_at <- function(df, elements, normalise = FALSE, drop = TRUE) {
 
-  elements <- intersect(elements, unique(conversion_oxides$Element))
+  # Validate inputs
+  if (!is.data.frame(df)) {
+    stop("df must be a data frame")
+  }
 
-  if (!length(elements)) return(df)
+  # Check if all requested elements are in df
+  missing_from_df <- setdiff(elements, names(df))
+  if (length(missing_from_df) > 0) {
+    stop("The following elements are not present in df: ",
+         paste(missing_from_df, collapse = ", "))
+  }
 
-  x <- as.matrix(df[elements])
-  storage.mode(x) <- "double"
+  # Check if all elements are valid chemical elements
+  valid_elements <- unique(conversion_oxides$Element)
+  invalid_elements <- setdiff(elements, valid_elements)
+  if (length(invalid_elements) > 0) {
+    stop("The following are not valid chemical elements: ",
+         paste(invalid_elements, collapse = ", "))
+  }
 
-  aw <- conversion_oxides[conversion_oxides$Element %in% elements, "AtomicWeight"]
+  moles <- list()
 
-  moles <- sweep(x, 2, aw, "/")
+  aw <- conversion_oxides$AtomicWeight[
+    match(elements, conversion_oxides$Element)
+  ]
+
+  for (i in seq_along(elements)) {
+    el <- elements[i]
+    moles[[el]] <- df[[el]] / aw[i]
+  }
+
+  moles <- as.data.frame(moles)
 
   total <- rowSums(moles, na.rm = TRUE)
   total[total == 0] <- NA_real_
@@ -46,31 +69,56 @@ wt_to_at <- function(df, elements, normalise = FALSE, drop = TRUE) {
   }
 
   if (drop) {
-    at_percent <- as.data.frame(at_percent)
-    df[elements] <- at_percent[elements]
+    # Replace original columns with atomic percent
+    df[elements] <- at_percent
   } else {
+    # Add new columns with suffix
     colnames(at_percent) <- paste0(elements, "_at")
     df <- cbind(df, at_percent)
   }
 
-  df
+  return(df)
 }
 
 #' @rdname atomic_conversion
 #' @export
 at_to_wt <- function(df, elements, normalise = FALSE, drop = TRUE) {
 
-  at_cols <- paste0(elements, "_at")
-  missing <- setdiff(at_cols, names(df))
-  if (length(missing) > 0) {
-    stop("Missing atomic percent columns: ", paste(missing, collapse = ", "))
+  # Validate inputs
+  if (!is.data.frame(df)) {
+    stop("df must be a data frame")
   }
 
-  x <- as.matrix(df[at_cols])
-  storage.mode(x) <- "double"
+  # Check if all elements are valid chemical elements
+  valid_elements <- unique(conversion_oxides$Element)
+  invalid_elements <- setdiff(elements, valid_elements)
+  if (length(invalid_elements) > 0) {
+    stop("The following are not valid chemical elements: ",
+         paste(invalid_elements, collapse = ", "))
+  }
 
-  aw <- conversion_oxides[elements, "AtomicWeight"]
-  weight <- sweep(x, 2, aw, "*")
+  at_cols <- paste0(elements, "_at")
+
+  # Check if all atomic percent columns are in df
+  missing_from_df <- setdiff(at_cols, names(df))
+  if (length(missing_from_df) > 0) {
+    stop("The following atomic percent columns are not present in df: ",
+         paste(missing_from_df, collapse = ", "))
+  }
+
+  weight <- list()
+
+  aw <- conversion_oxides$AtomicWeight[
+    match(elements, conversion_oxides$Element)
+  ]
+
+  for (i in seq_along(elements)) {
+    el <- elements[i]
+    at_col <- paste0(el, "_at")
+    weight[[el]] <- df[[at_col]] * aw[i]
+  }
+
+  weight <- as.data.frame(weight)
 
   total <- rowSums(weight, na.rm = TRUE)
   total[total == 0] <- NA_real_
@@ -82,10 +130,26 @@ at_to_wt <- function(df, elements, normalise = FALSE, drop = TRUE) {
     wt_percent <- normalise_rows(wt_percent)
   }
 
-  out <- df
-  for (nm in elements) {
-    out[[nm]] <- wt_percent[, nm]
+  if (drop) {
+    # Replace atomic percent columns with weight percent
+    # First remove the _at columns
+    df <- df[, !names(df) %in% at_cols, drop = FALSE]
+    # Add weight percent columns
+    df[elements] <- wt_percent
+  } else {
+    # Add new columns with weight percent
+    df[elements] <- wt_percent
   }
 
-  out
+  return(df)
+}
+
+# Helper function (should be defined elsewhere or here)
+normalise_rows <- function(mat) {
+  if (ncol(mat) == 0) return(mat)
+
+  row_sums <- rowSums(mat, na.rm = TRUE)
+  row_sums[row_sums == 0] <- NA_real_
+
+  sweep(mat, 1, row_sums, "/") * 100
 }
