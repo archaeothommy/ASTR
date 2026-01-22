@@ -22,11 +22,11 @@
 #'   "Std".
 #' @param pos Integer giving the line of the first standard measurement that
 #'   opens the first bracket.
-#' @param cycle_size integer giving the number of samples per bracket.
 #' @param weight_std A vector of length 2 with numeric value giving the weight
 #'   assigned to the opening and closing standard of a bracket, respectively.
 #'   The sum of both weights must be one. The default `0.5` gives the mean of
 #'   both standards.
+#' @param sd_input integer that gives the number the standard deviation will be multiplied for.
 #'
 #' @references Mason, T. F.D., Weiss, D. J., Horstwood, M., Parrish, R. R.,
 #'   Russell, S. S., Mullaneb, E., and Colesa, B. J. (2004) High-precision Cu
@@ -47,8 +47,8 @@ standard_sample_bracketing <- function(df,
                                        id_col = "ID",
                                        id_std = "Std",
                                        pos = 1,
-                                       cycle_size = 1,
-                                       weight_std = c(0.5, 0.5)) {
+                                       weight_std = c(0.5, 0.5),
+                                       sd_input=1) {
 
   # Check there are no empty values in header nor id_std
   if (id_std == "") {
@@ -75,19 +75,21 @@ standard_sample_bracketing <- function(df,
 
   # SSB calculation
 
-  while (pos <= nr) {
+  while (pos+1 <= nr) {
     #iterates over the whole data frame, it starts with the cycles
+    std_opening <- df[pos, 2]
+    std_opening
+    cycle_end<- cycle_start <- pos + 1# move the index to the first sample
 
-    cycle_start <- pos
-    cycle_end <- pos + cycle_size + 1
-    std_opening <- df[cycle_start, 2]
+    while(df[cycle_end, 1]!=id_std) #Find the second (closing) standard bracket from the cycle
+      cycle_end<-cycle_end+1
+
     std_closing <- df[cycle_end, 2]
-    cycle_start <- cycle_start + 1 # move the index to the first sample
     std_mean_weighted <- ((weight_std[1] * std_opening) +
                             (weight_std[2] * std_closing)) #calculate weighted mean
     std_mean <- (std_opening + std_closing) / 2 #calculate mean of both standards
 
-    while (cycle_start < cycle_end) {
+    while (cycle_start < cycle_end) { #run the samples within the cycle
       sample_current <- df[cycle_start, 1]
 
       if ((!is.na(sample_current)) && (sample_current != "")) {
@@ -124,6 +126,7 @@ standard_sample_bracketing <- function(df,
   sample_mean <- results[1, 2]
   average <- sd_dev <- c()
 
+
   while (pos <= nr) {
     #iterates over the results dataframe to calculate averages and standard error
 
@@ -136,7 +139,7 @@ standard_sample_bracketing <- function(df,
     } else {
       sample_mean <- format(signif(sample_mean / counter, 4), nsmall = 4)
       array <- sample_results[(pos - counter):(pos - 1)]
-      sdev <- format(signif(2 * sd(array), 4), nsmall = 4)
+      sdev <- format(signif(sd_input * sd(array), 4), nsmall = 4)
       sd_dev <- append(sd_dev, sdev)
       average <- append(average, sample_mean)
       sample_current <- results[pos, 1]
@@ -148,7 +151,7 @@ standard_sample_bracketing <- function(df,
 
   sample_mean <- format(signif(sample_mean / counter, 4), nsmall = 4)
   array <- sample_results[(pos - counter):(pos - 1)]
-  sdev <- format(signif(2 * sd(array), 4), nsmall = 4)
+  sdev <- format(signif(sd_input * sd(array), 4), nsmall = 4)
   sd_dev <- append(sd_dev, sdev)
   average <- append(average, sample_mean)
 
@@ -159,17 +162,30 @@ standard_sample_bracketing <- function(df,
       Weighted_SSB = sample_results_weighted,
       #add weighted values to the array
       Mean = average,
-      SDeviation = sd_dev
+      SD = sd_dev
     )
+
 
   } else {
     output <- data.frame(
       description = sample_names,
       SSB = format(signif(sample_results, 4), nsmall = 4),
       Mean = average,
-      SDeviation = sd_dev
+      SD = sd_dev
     )
+
+
   }
+  colnames(output)[5] <- paste0(sd_input, "SD")
   return(output)
 }
+
+ID<- c("std", "11","std", "11", "std", "22", "std", "33", "std")
+Isotope_data<- c(1.0, 1.5, 1.0, 1.6, 1.0, 2, 1.0, 1.7, 1.0)
+#df<- data.frame(ID, Isotope_data)
+vector<- c(0.4, 0.6)
+
+df<- read.csv("C:/Users/aacevedomejia/Documents/Andrea/Project/Programming/test3.csv", sep=";", dec=",")
+df[1]
+standard_sample_bracketing(df,"Isotope_data","ID" ,"Std", 1, vector, 1)
 
