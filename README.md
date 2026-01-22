@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ASTR
+# ASTR <a href="https://archaeothommy.github.io/ASTR/"><img src="man/figures/logo.png" align="right" height="138" alt="ASTR website" /></a>
 
 <!-- badges: start -->
 
