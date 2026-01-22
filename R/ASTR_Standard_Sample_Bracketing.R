@@ -180,12 +180,3 @@ standard_sample_bracketing <- function(df,
   return(output)
 }
 
-ID<- c("std", "11","std", "11", "std", "22", "std", "33", "std")
-Isotope_data<- c(1.0, 1.5, 1.0, 1.6, 1.0, 2, 1.0, 1.7, 1.0)
-#df<- data.frame(ID, Isotope_data)
-vector<- c(0.4, 0.6)
-
-df<- read.csv("C:/Users/aacevedomejia/Documents/Andrea/Project/Programming/test3.csv", sep=";", dec=",")
-df[1]
-standard_sample_bracketing(df,"Isotope_data","ID" ,"Std", 1, vector, 1)
-
