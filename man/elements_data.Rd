@@ -3,13 +3,12 @@
 \docType{data}
 \name{elements_data}
 \alias{elements_data}
-\alias{elements}
 \title{Elements}
 \format{
 a vector
 }
 \usage{
-elements
+elements_data
 }
 \description{
 List of elements, sorted according to alphabet
@@ -18,7 +17,8 @@ List of elements, sorted according to alphabet
 Other chemical_reference_data: 
 \code{\link{conversion_oxides}},
 \code{\link{isotopes_data}},
-\code{\link{oxides_data}}
+\code{\link{oxides_data}},
+\code{\link{special_oxide_states}}
 }
 \concept{chemical_reference_data}
 \keyword{datasets}

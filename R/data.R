@@ -6,7 +6,7 @@
 #'
 #' @family chemical_reference_data
 #' @name elements_data
-"elements"
+"elements_data"
 
 #' Oxides
 #'
@@ -16,7 +16,17 @@
 #'
 #' @family chemical_reference_data
 #' @name oxides_data
-"oxides"
+"oxides_data"
+
+#' Special oxide states
+#'
+#' List of values that are treated like oxides, but are no chemical oxides.
+#'
+#' @format a vector
+#'
+#' @family chemical_reference_data
+#' @name special_oxide_states
+"special_oxide_states"
 
 #' Isotopes
 #'
@@ -27,7 +37,7 @@
 #'
 #' @family chemical_reference_data
 #' @name isotopes_data
-"isotopes"
+"isotopes_data"
 
 #' Conversion factors from oxides to elements
 #'

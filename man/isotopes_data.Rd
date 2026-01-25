@@ -3,13 +3,12 @@
 \docType{data}
 \name{isotopes_data}
 \alias{isotopes_data}
-\alias{isotopes}
 \title{Isotopes}
 \format{
 a vector
 }
 \usage{
-isotopes
+isotopes_data
 }
 \description{
 List of naturally occurring isotopes, retrieved from https://www.ciaaw.org/isotopic-abundances.htm,
@@ -19,7 +18,8 @@ sorted according to chemical element and isotope number
 Other chemical_reference_data: 
 \code{\link{conversion_oxides}},
 \code{\link{elements_data}},
-\code{\link{oxides_data}}
+\code{\link{oxides_data}},
+\code{\link{special_oxide_states}}
 }
 \concept{chemical_reference_data}
 \keyword{datasets}

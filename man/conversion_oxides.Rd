@@ -24,9 +24,10 @@ Conversion factors from oxides to elements
 }
 \seealso{
 Other chemical_reference_data: 
-\code{\link{elements}},
-\code{\link{isotopes}},
-\code{\link{oxides}}
+\code{\link{elements_data}},
+\code{\link{isotopes_data}},
+\code{\link{oxides_data}},
+\code{\link{special_oxide_states}}
 }
 \concept{chemical_reference_data}
 \keyword{datasets}
