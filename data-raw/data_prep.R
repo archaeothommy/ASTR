@@ -2,35 +2,14 @@
 
 #### chemical reference data ####
 
-elements <- c(
-  # sorted according to alphabet
-  "Ac", "Ag", "Al", "Am", "Ar", "As", "At", "Au", "B", "Ba", "Be", "Bh", "Bi",
-  "Bk", "Br", "C", "Ca", "Cd", "Ce", "Cf", "Cl", "Cm", "Co", "Cr", "Cs", "Cu",
-  "Ds", "Db", "Dy", "Er", "Es", "Eu", "F", "Fe", "Fm", "Fr", "Ga", "Gd", "Ge",
-  "H", "He", "Hf", "Hg", "Ho", "Hs", "I", "In", "Ir", "K", "Kr", "La", "Li",
-  "Lr", "Lu", "Md", "Mg", "Mn", "Mo", "Mt", "N", "Na", "Nb", "Nd", "Ne", "Ni",
-  "No", "Np", "O", "Os", "P", "Pa", "Pb", "Pd", "Pm", "Po", "Pr", "Pt", "Pu",
-  "Ra", "Rb", "Re", "Rf", "Rg", "Rh", "Rn", "Ru", "S", "Sb", "Sc", "Se", "Sg",
-  "Si", "Sm", "Sn", "Sr", "Ta", "Tb", "Tc", "Te", "Th", "Ti", "Tl", "Tm", "U",
-  "V", "W", "Xe", "Y", "Yb", "Zn", "Zr"
+conversion_oxides <- read.csv(
+  file = "data-raw/oxide_conversion.csv",
+  stringsAsFactors = FALSE
 )
 
-oxides <- c(
-  # retrieved from https://www.wikidoc.org/index.php/Oxide,
-  # sorted according to alphabet
-  "Ag2O", "AgO", "Al2O3", "AlO", "As2O3", "As2O5", "B2O3", "BaO", "BeO",
-  "Bi2O3", "C2O", "CaO", "CdO", "CeO2", "Cl2O", "Cl2O7", "ClO2", "CO", "CO2",
-  "CO3", "CoO", "Cr2O3", "CrO2", "CrO3", "Cs2O", "Cu2O", "CuO", "Er2O3", "Eu2O3", "Fe2O3",
-  "FeO", "Ga2O3", "Gd2O3", "GeO2", "H2O", "HfO2", "HgO", "Ho2O3", "In2O3",
-  "K2O", "La2O3", "Li2O", "Lu2O3", "MgO", "Mn2O7", "MnO2", "MoO3", "N2O3",
-  "N2O4", "N2O5", "Na2O", "Nd2O3", "Ni2O3", "Ni2O5", "NiO", "NO", "NO2", "O4", "OF2",
-  "OsO4", "P2O5", "P4O6", "PbO", "PbO2", "PdO", "Pm2O3", "Pr2O3", "Pr6O11", "PuO2", "Rb2O",
-  "Re2O7", "ReO3", "Rh2O3", "RuO2", "RuO4", "Sb2O3", "Sb2O5", "Sc2O3", "SeO2",
-  "SeO3", "SiO2", "Sm2O3", "SnO", "SnO2", "SO", "SO2", "SO3", "SrO", "Ta2O5",
-  "Tb2O3", "TeO2", "TeO3", "ThO2", "Ti2O3", "TiO", "TiO2", "Tl2O", "Tl2O3",
-  "Tm2O3", "UO2", "UO3", "V2O3", "V2O5", "VO", "VO2", "W2O3", "WO2", "WO3",
-  "XeO3", "XeO4", "Y2O3", "Yb2O3", "ZnO", "ZrO2"
-)
+elements <- unique(conversion_oxides$Element)
+
+oxides <- unique(conversion_oxides$Oxide)
 
 special_oxide_states <- c(
   "LOI", # loss of ignition
@@ -75,11 +54,6 @@ isotopes <- c(
   "197Au", "196Hg", "198Hg", "199Hg", "200Hg", "201Hg", "202Hg", "204Hg",
   "203Tl", "205Tl", "204Pb", "206Pb", "207Pb", "208Pb", "209Bi", "230Th",
   "232Th", "231Pa", "234U", "235U", "238U"
-)
-
-conversion_oxides <- read.csv(
-  file = "data-raw/oxide_conversion.csv",
-  stringsAsFactors = FALSE
 )
 
 usethis::use_data(
