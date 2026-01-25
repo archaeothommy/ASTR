@@ -215,7 +215,7 @@ read_archchem <- function(
 
   if (ext %in% c("xlsx", "xls") && !requireNamespace("readxl")) {
 
-    if (!is_interactive()) {
+    if (!rlang::is_interactive()) {
       stop("Import of Excel files requires the package `readxl`. Please install it or choose another file format.")
     }
 
