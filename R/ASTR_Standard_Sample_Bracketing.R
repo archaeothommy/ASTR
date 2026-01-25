@@ -22,6 +22,10 @@
 #'   "Std".
 #' @param pos Integer giving the line of the first standard measurement that
 #'   opens the first bracket.
+#' @param notation String that describes the calculation the user wants to be performed:
+#' ratio calculates the ratio between the sample and the standard mean
+#' delta1000 calculates the delta value of the sample per mille.
+#' delta10000 calculates the delta value of the sample per ten thousand.
 #' @param weight_std A vector of length 2 with numeric value giving the weight
 #'   assigned to the opening and closing standard of a bracket, respectively.
 #'   The sum of both weights must be one. The default `0.5` gives the mean of
@@ -47,8 +51,10 @@ standard_sample_bracketing <- function(df,
                                        id_col = "ID",
                                        id_std = "Std",
                                        pos = 1,
-                                       weight_std = c(0.5, 0.5),
-                                       sd_input=1) {
+                                       notation="ratio",
+                                       sd_input=1,
+                                       weight_std = c(0.5, 0.5)
+                                       ) {
 
   # Check there are no empty values in header nor id_std
   if (id_std == "") {
@@ -71,7 +77,7 @@ standard_sample_bracketing <- function(df,
   df <- df[c(id_col, values)] # make a dataframe with the ID of the samples and the measurements
   nr <- nrow(df) # count number of rows in the dataframe
 
-  sample_names <- sample_results <- sample_results_weighted <- c()
+  sample_names <- sample_results <- c()
 
   # SSB calculation
 
@@ -87,23 +93,25 @@ standard_sample_bracketing <- function(df,
     std_closing <- df[cycle_end, 2]
     std_mean_weighted <- ((weight_std[1] * std_opening) +
                             (weight_std[2] * std_closing)) #calculate weighted mean
-    std_mean <- (std_opening + std_closing) / 2 #calculate mean of both standards
 
     while (cycle_start < cycle_end) { #run the samples within the cycle
       sample_current <- df[cycle_start, 1]
 
       if ((!is.na(sample_current)) && (sample_current != "")) {
         sample_measurement <- df[cycle_start, 2]
-        ssb <- sample_measurement / std_mean
+        ssb <- sample_measurement / std_mean_weighted
+
+        if (grepl("delta", notation)){
+          ssb<- ssb-1
+          if (notation=="delta1000")
+            ssb<- ssb*1000
+          else
+            ssb<- ssb*10000
+        }
+
         sample_names <- append(sample_names, sample_current)
         sample_results <- append(sample_results, ssb)
 
-        if (weight_std[1] != 0.5 ||
-              (weight_std[1] + weight_std[2]) != 1.0) {
-          ssb_weighted <- format(signif(sample_measurement / std_mean_weighted, 4),
-                                 nsmall = 4)
-          sample_results_weighted <- append(sample_results_weighted, ssb_weighted)
-        }
       }
       cycle_start <- cycle_start + 1
     }
@@ -115,7 +123,7 @@ standard_sample_bracketing <- function(df,
   sample_results <- unlist(sample_results)
 
   # Combine calculated values into data frame and order them by sample name
-  results <- data.frame(description = sample_names, Linear_SSB = sample_results)
+  results <- data.frame(description = sample_names, SSB = sample_results)
   results <- results[order(results$description), , drop = FALSE]
 
   # Calculate errors and averages for each sample
@@ -155,28 +163,16 @@ standard_sample_bracketing <- function(df,
   sd_dev <- append(sd_dev, sdev)
   average <- append(average, sample_mean)
 
-  if (weight_std[1] != 0.5 || (weight_std[1] + weight_std[2]) != 1.0) {
-    output <- data.frame(
-      description = sample_names,
-      Linear_SSB = format(signif(sample_results, 4), nsmall = 4),
-      Weighted_SSB = sample_results_weighted,
-      #add weighted values to the array
-      Mean = average,
-      SD = sd_dev
-    )
 
-
-  } else {
-    output <- data.frame(
-      description = sample_names,
-      SSB = format(signif(sample_results, 4), nsmall = 4),
-      Mean = average,
-      SD = sd_dev
-    )
-
-
-  }
-  colnames(output)[5] <- paste0(sd_input, "SD")
+  output <- data.frame(
+    description = sample_names,
+    SSB = format(signif(sample_results, 4), nsmall = 4),
+    #add weighted values to the array
+    Mean = average,
+    SD = sd_dev
+  )
+  colnames(output)[2] <- notation
+  colnames(output)[4] <- paste0(sd_input, "SD")
   return(output)
 }
 
