@@ -5,18 +5,17 @@
 #' @format a vector
 #'
 #' @family chemical_reference_data
-#' @name elements
+#' @name elements_data
 "elements"
 
 #' Oxides
 #'
-#' List of oxides, retrieved from https://www.wikidoc.org/index.php/Oxide,
-#' sorted according to alphabet
+#' List of oxides, sorted according to alphabet.
 #'
 #' @format a vector
 #'
 #' @family chemical_reference_data
-#' @name oxides
+#' @name oxides_data
 "oxides"
 
 #' Isotopes
@@ -27,7 +26,7 @@
 #' @format a vector
 #'
 #' @family chemical_reference_data
-#' @name isotopes
+#' @name isotopes_data
 "isotopes"
 
 #' Conversion factors from oxides to elements

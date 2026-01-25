@@ -7,9 +7,9 @@ conversion_oxides <- read.csv(
   stringsAsFactors = FALSE
 )
 
-elements <- unique(conversion_oxides$Element)
+elements_data <- unique(conversion_oxides$Element)
 
-oxides <- unique(conversion_oxides$Oxide)
+oxides_data <- unique(conversion_oxides$Oxide)
 
 special_oxide_states <- c(
   "LOI", # loss of ignition
@@ -17,7 +17,7 @@ special_oxide_states <- c(
   "Fe2O3tot"
 )
 
-isotopes <- c(
+isotopes_data <- c(
   # all naturally occurring isotopes, retrieved from https://www.ciaaw.org/isotopic-abundances.htm
   # sorted according to chemical element and isotope number
   "1H", "2H", "3He", "4He", "6Li", "7Li", "9Be", "10B", "11B", "12C", "13C",
@@ -57,10 +57,10 @@ isotopes <- c(
 )
 
 usethis::use_data(
-  elements,
-  oxides,
+  elements_data,
+  oxides_data,
   special_oxide_states,
-  isotopes,
+  isotopes_data,
   conversion_oxides,
   overwrite = TRUE, internal = FALSE
 )
