@@ -1,7 +1,9 @@
 #' Conversion between wt% and at%
 #'
 #' Convert chemical compositions between weight percent (wt%) and atomic percent
-#' (at%). The column names of the elements to be converted must be equivalent to
+#' (at%).
+#'
+#' The column names of the elements to be converted must be equivalent to
 #' their chemical symbols. Results are always normalized to 100%.
 #'
 #' @param df Data frame with compositional data.
@@ -13,7 +15,7 @@
 #'   * `_at` for conversions to atomic percent
 #'   * `_wt` for conversions to weight percent.
 #'
-#' @return Data frame with the converted concentrations (normalized to 100%).
+#' @return Data frame with the converted concentrations normalized to 100%.
 #'
 #' @export
 #' @name atomic_conversion
@@ -44,7 +46,7 @@ wt_to_at <- function(df, elements, drop = TRUE) {
 
   atomic_weight <- conversion_oxides$AtomicWeight[match(elements, conversion_oxides$Element)]
 
-  moles <- t(t(as.matrix(df[elements])) / atomic_weight)
+  moles <- t(t(df[elements]) / atomic_weight)
 
   total <- rowSums(moles, na.rm = TRUE)
   total[total == 0] <- NA_real_
@@ -85,7 +87,7 @@ at_to_wt <- function(df, elements, drop = TRUE) {
 
   atomic_weight <- conversion_oxides$AtomicWeight[match(elements, conversion_oxides$Element)]
 
-  weight <- t(t(as.matrix(df[elements])) * atomic_weight)
+  weight <- t(t(df[elements]) * atomic_weight)
 
   total <- rowSums(weight, na.rm = TRUE)
   total[total == 0] <- NA_real_
