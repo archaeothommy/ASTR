@@ -4,12 +4,13 @@
 
 conversion_oxides <- read.csv(
   file = "data-raw/oxide_conversion.csv",
+  na.strings = "",
   stringsAsFactors = FALSE
 )
 
 elements_data <- unique(conversion_oxides$Element)
 
-oxides_data <- unique(conversion_oxides$Oxide)
+oxides_data <- na.omit(unique(conversion_oxides$Oxide))
 
 special_oxide_states <- c(
   "LOI", # loss of ignition
