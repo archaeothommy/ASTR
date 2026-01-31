@@ -48,8 +48,16 @@ test_that("functions throw correct errors where intended", {
   expect_error(wt_to_at(data.frame(Si = 46.74), elements = c("Si", "O")),
                regexp = "The following elements are not present*"
                )
-  expect_error(at_to_wt(data.frame(Xx = 10), elements = "Xx"),
+  expect_error(wt_to_at(data.frame(Xx = 10), elements = "Xx"),
                regexp = "The following are not valid*"
                )
+  expect_error(wt_to_at("test", elements = "Si"))
+
+  expect_error(at_to_wt(data.frame(Si = 46.74), elements = c("Si", "O")),
+               regexp = "The following elements are not present*"
+  )
+  expect_error(at_to_wt(data.frame(Xx = 10), elements = "Xx"),
+               regexp = "The following are not valid*"
+  )
   expect_error(wt_to_at("test", elements = "Si"))
 })
