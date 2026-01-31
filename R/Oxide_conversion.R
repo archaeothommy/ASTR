@@ -1,106 +1,136 @@
-utils::globalVariables("oxide_conversion")
-
 #' Oxide conversion functions
 #'
 #' Convert between element and oxide weight percent (wt%) compositions using
-#' built-in conversion factors. Handles duplicate oxides by summation.
-#' Includes options for oxide preference, normalisation, and element filtering.
+#' pre-compiled conversion factors.
 #'
 #' @param df Data frame with compositional data.
-#' @param elements Character vector of element column names to convert.
-#' @param oxides Character vector of oxide column names to convert.
-#' @param oxide_preference Either "reducing", "oxidizing", "interactive",
-#'        or a named vector mapping elements to specific oxides (e.g., c(Fe = "FeO")).
-#' @param which_elements Filter elements: "all", "major" (>1 wt%), or "minor" (>0.1 wt%).
-#' @param normalise Logical; normalise converted values to 100%? Default FALSE.
+#' @param elements character vector with the chemical symbols of the elements
+#'   that should be converted.
+#' @param oxides character vector with the chemical symbols of the oxides that
+#'   should be converted.
+#' @param oxide_preference String that controls which oxide should be used if an
+#'   element forms more than one oxide. Allowed values are: `reducing`,
+#'   `oxidizing`, `ask`, or a named vector mapping the specific oxide to its
+#'   element. See details for further information.
+#' @param which_concentrations Character string that determines which elements or
+#'   oxides are converted based on their concentrations. Allowed values are
+#'   `all` (no restriction), `major` (only concentrations >= 1 wt%), or "minor"
+#'   (only concentrations >= 0.1 wt%).
+#' @param normalise If `TRUE`, converted concentrations will be normalised to
+#'   100%. Default to `FALSE`.
+#' @param drop If `TRUE`, the default, columns with unconverted values are
+#'   dropped. If false, columns with unconverted values are kept.
 #'
-#' @return Data frame with converted columns added. Original columns preserved.
+#' @return The original data frame with the converted concentrations
 #'
-#' @details
-#' For `element_to_oxide()`:
-#' - Uses built-in conversion factors from `oxide_conversion` dataset
-#' - Multiple oxides for same element (e.g., FeO/Fe2O3) are handled via `oxide_preference`
-#' - Duplicate outputs (e.g., Fe from FeO and Fe2O3) are summed automatically
-#' - Includes optional normalisation to 100%
-#' - Can filter major/minor elements based on thresholds
+#' @details If the dataset includes already an element and its respective oxide,
+#'   the function leaves the column of the respective oxide or element
+#'   unaffected.
 #'
-#' For `oxide_to_element()`:
-#' - Converts oxide percentages back to elemental percentages
-#' - Multiple oxides of same element (e.g., FeO + Fe2O3) sum to single element column
-#' - Preserves original oxide columns
+#'   In `oxide_to_element()`, conversions from different oxides to the same
+#'   element (e.g., Fe_2_O3 and FeO to Fe) result in one column for the element
+#'   with the sum of all converted values of the respective element.
 #'
-#' @keywords internal
-#' @name oxide_conversion
-NULL
-
-#' @rdname oxide_conversion
+#'   In `element_to_oxide()`, the parameter `oxide_preference` controls the
+#'   behaviour of the function if the element forms more than one oxide:
+#'   * `reducing`: Use the oxide with the highest oxide number of the element
+#'   (e.g., `Fe2O3`)
+#'   * `oxidising`: Use the oxide with the lowest oxide number of the element
+#'   (e.g., `FeO`)
+#'   * `ask`: The user is asked for each element which oxide should be used.
+#'   * named vector: A named vector mapping the oxides to be used to the
+#'   elements (e.g., `c(Fe = "FeO")`)
+#'
+#'   Conversion factors are pre-compiled for a wide range of oxides.
+#'   consequently, conversion is restricted to the oxides on this list. If you
+#'   encounter an oxide that is currently not included, please reach out to the
+#'   package maintainers or create a pull request to add it.
+#'
 #' @export
+#' @name oxide_conversion
+#'
+#' @examples
+#' # example code
+#'
+
 element_to_oxide <- function(
-  df,
-  elements,
-  oxide_preference = NULL,
-  which_elements = c("all", "major", "minor"),
-  normalise = FALSE
+    df,
+    elements,
+    oxide_preference,
+    which_concentrations = c("all", "major", "minor"),
+    normalise = FALSE,
+    drop = TRUE
 ) {
 
   # Validate inputs
-  if (!is.data.frame(df)) {
-    stop("df must be a data frame")
-  }
+  checkmate::assert_data_frame(df)
+  checkmate::assert_character(oxide_preference,
+                              any.missing = FALSE,
+                              all.missing = FALSE
+                              )
+  checkmate::assert_character(which_concentrations,
+                              any.missing = FALSE,
+                              all.missing = FALSE,
+                              pattern = "all|major|minor"
+                              )
 
-  missing <- setdiff(elements, names(df))
-  if (length(missing) > 0) {
+  # Check if all requested elements are in df
+  missing_from_df <- setdiff(elements, names(df))
+  if (length(missing_from_df) > 0) {
     stop("The following elements are not present in df: ",
-         paste(missing, collapse = ", "))
+         paste(missing_from_df, collapse = ", "))
   }
 
-  which_elements <- match.arg(which_elements)
-  conv <- oxide_conversion
+  # remove all entries without oxides or conversion factors from reference table
+  conversion_oxides <- na.omit(conversion_oxides)
 
   # Handle oxide preference
-  if (!is.null(oxide_preference)) {
-    if (length(oxide_preference) == 1 && is.character(oxide_preference)) {
+  switch (oxide_preference,
+    oxidising = {
+      pref <- # implement according to documentation
+        c(Fe = "Fe2O3", Mn = "MnO2", Cr = "CrO3")
 
-      if (oxide_preference == "reducing") {
-        # Typical reducing environment oxides
-        pref <- c(Fe = "FeO", Mn = "MnO", Cr = "Cr2O3")
-      } else if (oxide_preference == "oxidizing") {
-        # Typical oxidizing environment oxides
-        pref <- c(Fe = "Fe2O3", Mn = "MnO2", Cr = "CrO3")
-      } else if (oxide_preference == "interactive") {
-        # Interactive selection for each element
-        conv <- interactive_oxide_select(conv, elements)
-        pref <- NULL
-      } else {
-        stop("oxide_preference must be 'reducing', 'oxidizing', 'interactive', ",
-             "or a named vector of element-oxide pairs")
-      }
+    },
+    reducing = {
+      pref <- # implement according to documentation
+        c(Fe = "FeO", Mn = "MnO", Cr = "Cr2O3")
 
-    } else if (is.character(oxide_preference) && !is.null(names(oxide_preference))) {
-      # Custom named vector provided
+    },
+    ask = {
+      conversion_oxides <- interactive_oxide_select(conversion_oxides, elements)
+      pref <- NULL
+    },
+    {
+
+      # check if names are valid elements and oxides are valid oxides and matching to the element
+
+
+      # checks pass
       pref <- oxide_preference
-    } else {
-      stop("oxide_preference must be a named character vector or one of: ",
-           "'reducing', 'oxidizing', 'interactive'")
-    }
 
-    # Apply oxide preference filter
+      # checks not passed: error for each type of fail (elements not valid, oxides not valid)
+      stop("'oxide preference' assumed to be a named vector",
+           "")
+
+    }
+  )
+
+  # Apply oxide preference filter
     if (!is.null(pref)) {
       for (el in names(pref)) {
-        conv <- conv[!(conv$Element == el & conv$Oxide != pref[[el]]), ]
+        conversion_oxides <- conversion_oxides[!(conversion_oxides$Element == el & conversion_oxides$Oxide != pref[[el]]), ]
       }
     }
-  }
 
   # Filter conversion table for requested elements
-  conv <- conv[conv$Element %in% elements, ]
+  conversion_oxides <- conversion_oxides[conversion_oxides$Element %in% elements, ]
 
   # Remove any remaining duplicates (keep first occurrence)
-  conv <- conv[!duplicated(conv$Element), ]
-  rownames(conv) <- conv$Element
+  conversion_oxides <- conversion_oxides[!duplicated(conversion_oxides$Element), ]
+  rownames(conversion_oxides) <- conversion_oxides$Element
 
   # Intersect with available elements
-  elements <- intersect(elements, rownames(conv))
+  elements <- intersect(elements, rownames(conversion_oxides))
   if (!length(elements)) {
     warning("No valid elements found for conversion")
     return(df)
@@ -110,15 +140,21 @@ element_to_oxide <- function(
   x <- as.matrix(df[elements])
   storage.mode(x) <- "double"
 
-  # Apply major/minor filter
-  if (which_elements != "all") {
-    thr <- if (which_elements == "major") 1.0 else 0.1
-    x[x <= thr] <- NA_real_
-  }
+  # Apply major/minor filter --> How do you handle if major and minor elements change between samples?
+  switch (which_concentrations,
+    all = {},  # leave empty / do nothing (not sure if this works)
+    major = {},
+    minor = {}
+  )
 
-  factors <- conv[elements, "element_to_oxide"]
+  # if (which_elements != "all") {
+  #   thr <- if (which_elements == "major") 1.0 else 0.1
+  #   x[x <= thr] <- NA_real_
+  # }
+
+  factors <- conversion_oxides[elements, "element_to_oxide"]
   oxides <- sweep(x, 2, factors, "*")
-  colnames(oxides) <- conv[elements, "Oxide"]
+  colnames(oxides) <- conversion_oxides[elements, "Oxide"]
 
   # Sum duplicate oxides (if multiple elements map to same oxide)
   oxides <- sum_duplicates(oxides)
@@ -129,9 +165,10 @@ element_to_oxide <- function(
   }
 
   # Add oxide columns to output
-  out <- df
-  for (nm in colnames(oxides)) {
-    out[[nm]] <- oxides[, nm]
+  df <- cbind(df, oxides)
+
+  if (drop) {
+    df[elements] <- NULL
   }
 
   return(out)
@@ -139,7 +176,7 @@ element_to_oxide <- function(
 
 #' @rdname oxide_conversion
 #' @export
-oxide_to_element <- function(df, oxides, normalise = FALSE) {
+oxide_to_element <- function(df, oxides, normalise = FALSE, drop = TRUE) {
 
   # Validate inputs
   if (!is.data.frame(df)) {
@@ -198,8 +235,16 @@ oxide_to_element <- function(df, oxides, normalise = FALSE) {
   return(out)
 }
 
-# Helper function for interactive oxide selection
+#' Interactive oxide selection
+#'
+#' Provies a selection
+#'
 #' @keywords internal
+#'
+
+# I think this can be simplified.
+# There is no need input other than the list of elements
+# All other information can be retrieved from the internal data object with the conversion factors
 interactive_oxide_select <- function(conv, elements) {
   cat("Interactive oxide selection:\n")
   for (el in elements) {
@@ -207,7 +252,7 @@ interactive_oxide_select <- function(conv, elements) {
     if (length(ox) <= 1) next
 
     cat("\nElement:", el, "\n")
-    cat("Available oxides:", paste(ox, collapse = ", "), "\n")
+    cat("Available oxides:", paste0(ox, collapse = ", "), "\n")
 
     repeat {
       choice <- readline(paste("Choose oxide for", el, ": "))
@@ -222,25 +267,31 @@ interactive_oxide_select <- function(conv, elements) {
   return(conv)
 }
 
-#' Sum duplicate columns (e.g., Fe from FeO and Fe2O3)
+#' Sum columns with same column name
 #' @keywords internal
-sum_duplicates <- function(mat) {
-  if (ncol(mat) == 0) return(mat)
 
-  unique_names <- unique(colnames(mat))
-  if (length(unique_names) == ncol(mat)) {
-    return(mat)  # No duplicates
+# This function looks like this could be achieved easier.
+# To get list of duplicated column names, think about using something like: values[duplicated(names(values))]
+# Remember that R is vector based, meaning that you can do component-wise addition like with any other vector.
+# You might need to transform them first though because R always assumes column vectors.
+sum_duplicates <- function(values) {
+
+  if (ncol(values) == 0) return(values)
+
+  unique_names <- unique(colnames(values))
+  if (length(unique_names) == ncol(values)) {
+    return(values)  # No duplicates
   }
 
-  res <- matrix(0, nrow(mat), length(unique_names))
+  res <- matrix(0, nrow(values), length(unique_names))
   colnames(res) <- unique_names
 
   for (nm in unique_names) {
-    idx <- which(colnames(mat) == nm)
+    idx <- which(colnames(values) == nm)
     if (length(idx) == 1) {
-      res[, nm] <- mat[, idx]
+      res[, nm] <- values[, idx]
     } else {
-      res[, nm] <- rowSums(mat[, idx, drop = FALSE], na.rm = TRUE)
+      res[, nm] <- rowSums(values[, idx, drop = FALSE], na.rm = TRUE)
     }
   }
 
@@ -248,13 +299,19 @@ sum_duplicates <- function(mat) {
 }
 
 #' Normalise rows to 100%
+#'
+#' Normalises values in a vector to 100%
+#'
 #' @keywords internal
-normalise_rows <- function(mat) {
-  if (ncol(mat) == 0) return(mat)
+normalise_rows <- function(values) {
 
-  row_sums <- rowSums(mat, na.rm = TRUE)
+  checkmate::assert_numeric(values)
+
+  if (ncol(values) == 0) return(values)
+
+  row_sums <- rowSums(values, na.rm = TRUE)
   row_sums[row_sums == 0] <- NA_real_
 
   # Normalise and return as percentages
-  sweep(mat, 1, row_sums, "/") * 100
+  values / row_sums * 100
 }
