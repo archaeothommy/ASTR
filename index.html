@@ -5,15 +5,21 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>ASTR: Archaeological Science Toolbox in R • ASTR</title>
+<title>ASTR: Archaeometric Standards and Tools in R • ASTR</title>
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="ASTR: Archaeological Science Toolbox in R">
-<meta name="description" content="coming soon
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="ASTR: Archaeometric Standards and Tools in R">
+<meta name="description" content="ASTR defines and implements a community reporting standard for archaeometric
+datasets. It also provides easy-to-use functions for common plots,
+statistical analyses, data processing, and data  transformation workflows
+in archaeometry.
 ">
-<meta property="og:description" content="coming soon
+<meta property="og:description" content="ASTR defines and implements a community reporting standard for archaeometric
+datasets. It also provides easy-to-use functions for common plots,
+statistical analyses, data processing, and data  transformation workflows
+in archaeometry.
 ">
 </head>
 <body>
@@ -56,19 +62,78 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="astr">ASTR<a class="anchor" aria-label="anchor" href="#astr"></a>
+<div class="page-header"><h1 id="astr-archaemetric-standards-and-tools-in-r">ASTR (Archaemetric Standards and Tools in R)<a class="anchor" aria-label="anchor" href="#astr-archaemetric-standards-and-tools-in-r"></a>
 </h1></div>
 <!-- badges: start -->
 
 <!-- badges: end -->
-<p>The goal of ASTR is to …</p>
+<p>ASTR defines and implements a community reporting standard for archaeometric datasets. It also provides easy-to-use functions for common plots, statistical analyses, data processing, and data transformation workflows in archaeometry.</p>
+<div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
+<p>ASTR aims to increase reproducibility of data processing by facilitating the use of scripting languages in archeometry in the narrower sense, i.e., the material scientific investigation of usually inorganic archaeological materials.</p>
+<div class="section level3">
+<h3 id="community-reporting-standard">Community reporting standard<a class="anchor" aria-label="anchor" href="#community-reporting-standard"></a>
+</h3>
+<p>The community reporting standard defines a <a href="vignettes/VG.ASTRschema.0.0.2.Rmd">set of conventions on the structure and naming of datasets</a> to make them interoperable and allow automated handling of the data. Based on these conventions, ASTR</p>
+<ul>
+<li>Recognises and seamlessly isotopic and chemical data, their units, and analytical precision,</li>
+<li>Handles unit conversion on the fly, including non-SI units such as <em>ppm</em>, <em>at%</em>, and <em>cps</em> (counts per second) and between oxides and elements</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="tools">Tools<a class="anchor" aria-label="anchor" href="#tools"></a>
+</h3>
+<p>The collection provides easy-to-use functions for a wide range of tasks such as</p>
+<ul>
+<li>
+<a href="https://ggplot2.tidyverse.org/" class="external-link">ggplot2</a> geoms for standard plots (e.g., spidergrams, KDE)</li>
+<li>Material classification (e.g., copper types)</li>
+<li>Data transformation and processing (e.g., calculation of δ-values from standard-sample-bracketing measurements)</li>
+<li>Data conversion (e.g., calculation of lead isotope age model parameters)</li>
+<li>Statistics (e.g. distribution of data in a pointcloud of reference data)</li>
+<li>Normalisation of data to standard compositions (e.g., chondritic composition)</li>
+<li>Unit conversion (e.g., at% to wt% and vice versa)</li>
+</ul>
+<p>See the full list on the <a href="https://archaeothommy.github.io/ASTR/index.html">package website</a>.</p>
+<p>Functions do not expect datasets according to the community reporting standard but default values for their input follow its conventions, making them particularly easy to use.</p>
+<!--
+### Example
+&#10;include here a small example for inputting a example data set and plotting it such as
+&#10;library(ASTR)
+library(ggplot2)
+&#10;df <- import()
+&#10;ggplot(df) +
+ geom_spidergram()
+-->
+</div>
+</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>You can install the development version of ASTR from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
-<span><span class="co">#pak::pak("archaeothommy/ASTR")</span></span></code></pre></div>
+<code class="sourceCode R"><span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pak"</span><span class="op">)</span></span>
+<span> <span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"archaeothommy/ASTR"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h2>
+<p>We recommend reading the following resources to become familiar with the package:</p>
+<ul>
+<li>Community reporting standard: <a href="vignettes/VG.ASTRschema.0.0.2.Rmd">Conventions</a> and their <a href="vignettes/VG.ASTR.Conventions.explained.Rmd">explanation</a>
+</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="contributing-and-code-of-conduct">Contributing and Code of Conduct<a class="anchor" aria-label="anchor" href="#contributing-and-code-of-conduct"></a>
+</h2>
+<p>Please read our <a href="https://archaeothommy.github.io/ASTR/CONTRIBUTING.html">contributor guide</a> to learn how to contribute to ASTR. The ASTR project is released with a <a href="https://archaeothommy.github.io/ASTR/CODE_OF_CONDUCT.html">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
+</div>
+<div class="section level2">
+<h2 id="acknowledgements-and-funding">Acknowledgements and funding<a class="anchor" aria-label="anchor" href="#acknowledgements-and-funding"></a>
+</h2>
+<p>ASTR was initiated in the workshop <em>Towards an Archaeological Science Toolbox in R “ASTR”</em> at the <a href="https://www.lorentzcenter.nl/" class="external-link">Lorentz Center</a> in Leiden (The Netherlands). In addition to the in-kind funding of the Lorentz Center, the workshop received funding from the Stichting Nederlands Museum voor Anthropologie en Praehistorie (Foundation for Anthropology and Prehistory in the Netherlands). The workshop and further development of ASTR received funding from the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) – project 571205551.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="license">
@@ -79,6 +144,12 @@
 </ul>
 </div>
 
+<div class="community">
+<h2 data-toc-skip>Community</h2>
+<ul class="list-unstyled">
+<li><a href="CONTRIBUTING.html">Contributing guide</a></li>
+</ul>
+</div>
 
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
@@ -120,6 +191,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/archaeothommy/ASTR/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/archaeothommy/ASTR/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://CRAN.R-project.org/package=ASTR" class="external-link"><img src="https://www.r-pkg.org/badges/version/ASTR" alt="CRAN status"></a></li>
 <li><a href="https://codecov.io/gh/archaeothommy/ASTR" class="external-link"><img src="https://codecov.io/gh/archaeothommy/ASTR/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>

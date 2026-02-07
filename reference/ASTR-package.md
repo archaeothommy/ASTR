@@ -1,12 +1,15 @@
-# ASTR: What the Package Does (One Line, Title Case)
+# ASTR: Archaeometric Standards and Tools in R
 
-What the package does (one paragraph).
+ASTR defines and implements a community reporting standard for
+archaeometric datasets. It also provides easy-to-use functions for
+common plots, statistical analyses, data processing and transformation
+workflows in archaeometry.
 
 ## See also
 
 Useful links:
 
-- <https://example.com>
+- <https://archaeothommy.github.io/ASTR/index.html>
 
 ## Author
 
