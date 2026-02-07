@@ -4,9 +4,9 @@
 \alias{normalise_rows}
 \title{Normalise rows to 100\%}
 \usage{
-normalise_rows(mat)
+normalise_rows(values)
 }
 \description{
-Normalise rows to 100\%
+Normalises values in a vector to 100\%
 }
 \keyword{internal}

@@ -9,50 +9,73 @@
 element_to_oxide(
   df,
   elements,
-  oxide_preference = NULL,
-  which_elements = c("all", "major", "minor"),
-  normalise = FALSE
+  oxide_preference,
+  which_concentrations = c("all", "major", "minor"),
+  normalise = FALSE,
+  drop = TRUE
 )
 
-oxide_to_element(df, oxides, normalise = FALSE)
+oxide_to_element(df, oxides, normalise = FALSE, drop = TRUE)
 }
 \arguments{
 \item{df}{Data frame with compositional data.}
 
-\item{elements}{Character vector of element column names to convert.}
+\item{elements}{character vector with the chemical symbols of the elements
+that should be converted.}
 
-\item{oxide_preference}{Either "reducing", "oxidizing", "interactive",
-or a named vector mapping elements to specific oxides (e.g., c(Fe = "FeO")).}
+\item{oxide_preference}{String that controls which oxide should be used if an
+element forms more than one oxide. Allowed values are: \code{reducing},
+\code{oxidizing}, \code{ask}, or a named vector mapping the specific oxide to its
+element. See details for further information.}
 
-\item{which_elements}{Filter elements: "all", "major" (>1 wt\%), or "minor" (>0.1 wt\%).}
+\item{which_concentrations}{Character string that determines which elements or
+oxides are converted based on their concentrations. Allowed values are
+\code{all} (no restriction), \code{major} (only concentrations >= 1 wt\%), or "minor"
+(only concentrations >= 0.1 wt\%).}
 
-\item{normalise}{Logical; normalise converted values to 100\%? Default FALSE.}
+\item{normalise}{If \code{TRUE}, converted concentrations will be normalised to
+100\%. Default to \code{FALSE}.}
 
-\item{oxides}{Character vector of oxide column names to convert.}
+\item{drop}{If \code{TRUE}, the default, columns with unconverted values are
+dropped. If false, columns with unconverted values are kept.}
+
+\item{oxides}{character vector with the chemical symbols of the oxides that
+should be converted.}
 }
 \value{
-Data frame with converted columns added. Original columns preserved.
+The original data frame with the converted concentrations
 }
 \description{
 Convert between element and oxide weight percent (wt\%) compositions using
-built-in conversion factors. Handles duplicate oxides by summation.
-Includes options for oxide preference, normalisation, and element filtering.
+pre-compiled conversion factors.
 }
 \details{
-For \code{element_to_oxide()}:
+If the dataset includes already an element and its respective oxide,
+the function leaves the column of the respective oxide or element
+unaffected.
+
+In \code{oxide_to_element()}, conversions from different oxides to the same
+element (e.g., Fe_2_O3 and FeO to Fe) result in one column for the element
+with the sum of all converted values of the respective element.
+
+In \code{element_to_oxide()}, the parameter \code{oxide_preference} controls the
+behaviour of the function if the element forms more than one oxide:
 \itemize{
-\item Uses built-in conversion factors from \code{oxide_conversion} dataset
-\item Multiple oxides for same element (e.g., FeO/Fe2O3) are handled via \code{oxide_preference}
-\item Duplicate outputs (e.g., Fe from FeO and Fe2O3) are summed automatically
-\item Includes optional normalisation to 100\%
-\item Can filter major/minor elements based on thresholds
+\item \code{reducing}: Use the oxide with the highest oxide number of the element
+(e.g., \code{Fe2O3})
+\item \code{oxidising}: Use the oxide with the lowest oxide number of the element
+(e.g., \code{FeO})
+\item \code{ask}: The user is asked for each element which oxide should be used.
+\item named vector: A named vector mapping the oxides to be used to the
+elements (e.g., \code{c(Fe = "FeO")})
 }
 
-For \code{oxide_to_element()}:
-\itemize{
-\item Converts oxide percentages back to elemental percentages
-\item Multiple oxides of same element (e.g., FeO + Fe2O3) sum to single element column
-\item Preserves original oxide columns
+Conversion factors are pre-compiled for a wide range of oxides.
+consequently, conversion is restricted to the oxides on this list. If you
+encounter an oxide that is currently not included, please reach out to the
+package maintainers or create a pull request to add it.
 }
+\examples{
+# example code
+
 }
-\keyword{internal}

@@ -2,11 +2,12 @@
 % Please edit documentation in R/Oxide_conversion.R
 \name{sum_duplicates}
 \alias{sum_duplicates}
-\title{Sum duplicate columns (e.g., Fe from FeO and Fe2O3)}
+\title{Sum columns with same column name}
 \usage{
-sum_duplicates(mat)
+sum_duplicates(values)
 }
 \description{
-Sum duplicate columns (e.g., Fe from FeO and Fe2O3)
+The function recognises and includes column names that in fact have the same
+name but were made unique by R functions.
 }
 \keyword{internal}

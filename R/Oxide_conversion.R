@@ -21,7 +21,7 @@
 #' @param drop If `TRUE`, the default, columns with unconverted values are
 #'   dropped. If false, columns with unconverted values are kept.
 #'
-#' @return The original data frame with the converted concentrations
+#' @returns The original data frame with the converted concentrations
 #'
 #' @details If the dataset includes already an element and its respective oxide,
 #'   the function leaves the column of the respective oxide or element
@@ -52,56 +52,57 @@
 #' @examples
 #' # example code
 #'
-
 element_to_oxide <- function(
-    df,
-    elements,
-    oxide_preference,
-    which_concentrations = c("all", "major", "minor"),
-    normalise = FALSE,
-    drop = TRUE
+  df,
+  elements,
+  oxide_preference,
+  which_concentrations = c("all", "major", "minor"),
+  normalise = FALSE,
+  drop = TRUE
 ) {
-
   # Validate inputs
   checkmate::assert_data_frame(df)
+  checkmate::assert_character(elements,
+    any.missing = FALSE,
+    all.missing = FALSE,
+    pattern = paste0(elements_data, collapse = "|")
+  )
   checkmate::assert_character(oxide_preference,
-                              any.missing = FALSE,
-                              all.missing = FALSE
-                              )
+    any.missing = FALSE,
+    all.missing = FALSE
+  )
   checkmate::assert_character(which_concentrations,
-                              any.missing = FALSE,
-                              all.missing = FALSE,
-                              pattern = "all|major|minor"
-                              )
+    any.missing = FALSE,
+    all.missing = FALSE,
+    pattern = "all|major|minor"
+  )
 
   # Check if all requested elements are in df
   missing_from_df <- setdiff(elements, names(df))
   if (length(missing_from_df) > 0) {
-    stop("The following elements are not present in df: ",
-         paste(missing_from_df, collapse = ", "))
+    stop(
+      "The following elements are not present in df: ",
+      paste(missing_from_df, collapse = ", ")
+    )
   }
 
   # remove all entries without oxides or conversion factors from reference table
-  conversion_oxides <- na.omit(conversion_oxides)
+  conversion_table <- na.omit(conversion_oxides)
 
   # Handle oxide preference
-  switch (oxide_preference,
+  switch(oxide_preference,
     oxidising = {
       pref <- # implement according to documentation
         c(Fe = "Fe2O3", Mn = "MnO2", Cr = "CrO3")
-
     },
     reducing = {
       pref <- # implement according to documentation
         c(Fe = "FeO", Mn = "MnO", Cr = "Cr2O3")
-
     },
     ask = {
-      conversion_oxides <- interactive_oxide_select(conversion_oxides, elements)
-      pref <- NULL
+      pref <- interactive_oxide_select(elements)
     },
     {
-
       # check if names are valid elements and oxides are valid oxides and matching to the element
 
 
@@ -109,40 +110,34 @@ element_to_oxide <- function(
       pref <- oxide_preference
 
       # checks not passed: error for each type of fail (elements not valid, oxides not valid)
-      stop("'oxide preference' assumed to be a named vector",
-           "")
-
+      stop(
+        "'oxide preference' assumed to be a named vector",
+        ""
+      )
     }
   )
 
   # Apply oxide preference filter
-    if (!is.null(pref)) {
-      for (el in names(pref)) {
-        conversion_oxides <- conversion_oxides[!(conversion_oxides$Element == el & conversion_oxides$Oxide != pref[[el]]), ]
-      }
+  if (!is.null(pref)) {
+    for (el in names(pref)) {
+      conversion_table <- conversion_table[!(conversion_table$Element == el & conversion_table$Oxide != pref[[el]]), ]
     }
+  }
 
   # Filter conversion table for requested elements
-  conversion_oxides <- conversion_oxides[conversion_oxides$Element %in% elements, ]
+  conversion_table <- conversion_table[conversion_table$Element %in% elements, ]
 
   # Remove any remaining duplicates (keep first occurrence)
-  conversion_oxides <- conversion_oxides[!duplicated(conversion_oxides$Element), ]
-  rownames(conversion_oxides) <- conversion_oxides$Element
-
-  # Intersect with available elements
-  elements <- intersect(elements, rownames(conversion_oxides))
-  if (!length(elements)) {
-    warning("No valid elements found for conversion")
-    return(df)
-  }
+  conversion_table <- conversion_table[!duplicated(conversion_table$Element), ]
+  rownames(conversion_table) <- conversion_table$Element
 
   # Extract and convert element values
   x <- as.matrix(df[elements])
   storage.mode(x) <- "double"
 
   # Apply major/minor filter --> How do you handle if major and minor elements change between samples?
-  switch (which_concentrations,
-    all = {},  # leave empty / do nothing (not sure if this works)
+  switch(which_concentrations,
+    all = {}, # leave empty / do nothing (not sure if this works)
     major = {},
     minor = {}
   )
@@ -152,12 +147,9 @@ element_to_oxide <- function(
   #   x[x <= thr] <- NA_real_
   # }
 
-  factors <- conversion_oxides[elements, "element_to_oxide"]
+  factors <- conversion_table[elements, "element_to_oxide"]
   oxides <- sweep(x, 2, factors, "*")
-  colnames(oxides) <- conversion_oxides[elements, "Oxide"]
-
-  # Sum duplicate oxides (if multiple elements map to same oxide)
-  oxides <- sum_duplicates(oxides)
+  colnames(oxides) <- conversion_table[elements, "Oxide"]
 
   # Normalise if requested
   if (normalise) {
@@ -177,7 +169,6 @@ element_to_oxide <- function(
 #' @rdname oxide_conversion
 #' @export
 oxide_to_element <- function(df, oxides, normalise = FALSE, drop = TRUE) {
-
   # Validate inputs
   if (!is.data.frame(df)) {
     stop("df must be a data frame")
@@ -185,11 +176,13 @@ oxide_to_element <- function(df, oxides, normalise = FALSE, drop = TRUE) {
 
   missing <- setdiff(oxides, names(df))
   if (length(missing) > 0) {
-    stop("The following oxides are not present in df: ",
-         paste(missing, collapse = ", "))
+    stop(
+      "The following oxides are not present in df: ",
+      paste(missing, collapse = ", ")
+    )
   }
 
-  conv <- oxide_conversion
+  conv <- conversion_oxides
 
   # Filter for requested oxides
   conv <- conv[conv$Oxide %in% oxides, ]
@@ -237,65 +230,69 @@ oxide_to_element <- function(df, oxides, normalise = FALSE, drop = TRUE) {
 
 #' Interactive oxide selection
 #'
-#' Provies a selection
+#' Provides a selection
+#'
+#' @returns named vector with all oxides for the supplied list of elements
 #'
 #' @keywords internal
 #'
+interactive_oxide_select <- function(elements) {
+  message("Starting interactive selection of oxides")
 
-# I think this can be simplified.
-# There is no need input other than the list of elements
-# All other information can be retrieved from the internal data object with the conversion factors
-interactive_oxide_select <- function(conv, elements) {
-  cat("Interactive oxide selection:\n")
+  names(oxides) <- oxides <- elements
+
   for (el in elements) {
-    ox <- conv$Oxide[conv$Element == el]
-    if (length(ox) <= 1) next
+    ox <- conversion_oxides$Oxide[conversion_oxides$Element == el]
 
-    cat("\nElement:", el, "\n")
-    cat("Available oxides:", paste0(ox, collapse = ", "), "\n")
+    if (length(ox) > 1) {
+      choice <- readline(
+        paste0("Choose oxide for ", el, " [available: ", paste0(ox, collapse = ", "), "]: ")
+      )
 
-    repeat {
-      choice <- readline(paste("Choose oxide for", el, ": "))
-      if (choice %in% ox) break
-      cat("Invalid choice. Please select from:", paste(ox, collapse = ", "), "\n")
+      repeat {
+        if (choice %in% ox) break
+        choice <- readline(
+          paste0("Invalid input. Please choose from the available oxides [", paste0(ox, collapse = ", "), "]: ")
+        )
+      }
+    } else {
+      choice <- ox
     }
 
-    conv <- conv[!(conv$Element == el & conv$Oxide != choice), ]
+    oxides[el] <- choice
   }
 
-  cat("\nSelection complete.\n")
-  return(conv)
+  message("Selection complete")
+  return(oxides)
 }
 
 #' Sum columns with same column name
+#'
+#' The function recognises and includes column names that in fact have the same
+#' name but were made unique by R functions.
+#'
 #' @keywords internal
-
-# This function looks like this could be achieved easier.
-# To get list of duplicated column names, think about using something like: values[duplicated(names(values))]
-# Remember that R is vector based, meaning that you can do component-wise addition like with any other vector.
-# You might need to transform them first though because R always assumes column vectors.
 sum_duplicates <- function(values) {
-
-  if (ncol(values) == 0) return(values)
-
-  unique_names <- unique(colnames(values))
-  if (length(unique_names) == ncol(values)) {
-    return(values)  # No duplicates
+  if (ncol(values) == 0) {
+    return(values)
   }
 
-  res <- matrix(0, nrow(values), length(unique_names))
-  colnames(res) <- unique_names
+  # get duplicated column names, even if they were made unique by R
+  col_names <- sub("\\.+[[:digit:]]+", "", colnames(values))
+  col_names <- unique(col_names[duplicated(col_names)])
 
-  for (nm in unique_names) {
-    idx <- which(colnames(values) == nm)
-    if (length(idx) == 1) {
-      res[, nm] <- values[, idx]
-    } else {
-      res[, nm] <- rowSums(values[, idx, drop = FALSE], na.rm = TRUE)
-    }
+  if (length(col_names) == 0) {
+    return(values)
+  } # No duplicates
+
+  for (i in col_names) {
+    values <- values %>%
+      rowwise() %>%
+      mutate({{ i }} := sum(c_across(tidyselect::starts_with(i))), .keep = "unused") %>%
+      ungroup()
   }
 
-  return(res)
+  return(values)
 }
 
 #' Normalise rows to 100%
@@ -304,10 +301,11 @@ sum_duplicates <- function(values) {
 #'
 #' @keywords internal
 normalise_rows <- function(values) {
-
   checkmate::assert_numeric(values)
 
-  if (ncol(values) == 0) return(values)
+  if (ncol(values) == 0) {
+    return(values)
+  }
 
   row_sums <- rowSums(values, na.rm = TRUE)
   row_sums[row_sums == 0] <- NA_real_

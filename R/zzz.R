@@ -5,6 +5,6 @@
 globalVariables(".")
 
 #' @importFrom magrittr "%>%"
-#' @importFrom rlang .data
+#' @importFrom rlang .data :=
 #'
 NULL
