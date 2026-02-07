@@ -6,18 +6,15 @@
 \alias{at_to_wt}
 \title{Conversion between wt\% and at\%}
 \usage{
-wt_to_at(df, elements, normalise = FALSE, drop = TRUE)
+wt_to_at(df, elements, drop = TRUE)
 
-at_to_wt(df, elements, normalise = FALSE, drop = TRUE)
+at_to_wt(df, elements, drop = TRUE)
 }
 \arguments{
 \item{df}{Data frame with compositional data.}
 
 \item{elements}{character vector with the chemical symbols of the elements
 that should be converted.}
-
-\item{normalise}{If \code{TRUE}, will normalise converted concentrations to 100\%.
-Default to \code{FALSE}.}
 
 \item{drop}{If \code{TRUE}, the default, columns with unconverted values are
 dropped. If false, columns with unconverted values are kept and a suffix
@@ -28,16 +25,24 @@ added to the column names of the converted values.
 }}
 }
 \value{
-Data frame with the converted concentrations.
+The original data frame with the converted concentrations normalised
+to 100\%.
 }
 \description{
 Convert chemical compositions between weight percent (wt\%) and atomic percent
-(at\%). The column names of the elements to be converted must be equivalent to
-their chemical symbols.
+(at\%).
+}
+\details{
+The column names of the elements to be converted must be equivalent to their
+chemical symbols. Results are always normalised to 100\%.
 }
 \examples{
-# Convert weight percent to atomic percent
+# Convert weight percent to atomic percent and to weight percent
 df <- data.frame(Si = 46.74, O = 53.26)  # SiO2 composition
-wt_to_at(df, elements = c("Si", "O"))
+at <- wt_to_at(df, elements = c("Si", "O"))
+at_to_wt(at, elements = c("Si", "O"))
+
+# preserve columns with unconverted values
+wt_to_at(df, elements = c("Si", "O"), drop = FALSE)
 
 }
