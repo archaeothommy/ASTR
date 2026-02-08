@@ -77,6 +77,8 @@ element_to_oxide <- function(
     pattern = "all|major|minor"
   )
 
+  which_concentrations <- match.arg(which_concentrations)
+
   # Check if all requested elements are in df
   missing_from_df <- setdiff(elements, names(df))
   if (length(missing_from_df) > 0) {
