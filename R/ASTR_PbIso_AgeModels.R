@@ -46,20 +46,20 @@
 #' @export
 #'
 #' @references Albarède, F. and Juteau, M. (1984) Unscrambling the lead model
-#' ages. Geochimica et Cosmochimica Acta 48(1), pp. 207–212.
+#' ages. Geochimica et Cosmochimica Acta 48(1), pp. 207-212.
 #' <https://dx.doi.org/10.1016/0016-7037(84)90364-8>.
 #'
 #' Albarède, F., Desaulty, A.-M. and Blichert-Toft, J. (2012) A geological
 #' perspective on the use of Pb isotopes in Archaeometry. Archaeometry 54, pp.
-#' 853–867. <https://doi.org/10.1111/j.1475-4754.2011.00653.x>.
+#' 853-867. <https://doi.org/10.1111/j.1475-4754.2011.00653.x>.
 #'
 #' Cumming, G.L. and Richards, J.R. (1975) Ore lead isotope ratios in a
 #' continuously changing earth. Earth and Planetary Science Letters 28(2), pp.
-#' 155–171. <https://dx.doi.org/10.1016/0012-821X(75)90223-X>.
+#' 155-171. <https://dx.doi.org/10.1016/0012-821X(75)90223-X>.
 #'
 #' Stacey, J.S. and Kramers, J.D. (1975) Approximation of terrestrial lead
 #' isotope evolution by a two-stage model. Earth and Planetary Science Letters
-#' 26(2), pp. 207–221. <https://dx.doi.org/10.1016/0012-821X(75)90088-6<.
+#' 26(2), pp. 207-221. <https://dx.doi.org/10.1016/0012-821X(75)90088-6<.
 #'
 #' @name age_models
 #' @aliases stacey_kramers_1975

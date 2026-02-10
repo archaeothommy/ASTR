@@ -1,8 +1,8 @@
 ---
-title: "Bracketing"
+title: "Standard-Sample-Bracketing"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ASTR_Bracketing} # must match file name!
+  %\VignetteIndexEntry{Standard-Sample-Bracketing} # must match file name!
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -244,12 +244,12 @@ data <- data.frame(
 )
 
 # Run the function
-result <- standard_sample_bracketing(
-  data = data,
-  ID_std = "Std",
-  header = "Isotope_data",
+result <- ASTR::standard_sample_bracketing(
+  df = data, 
+  id_std = "Std",
+  values = "Isotope_data",
   pos = 1,
-  mp = 1000
+  notation = "delta"
 )
 
 # Print results

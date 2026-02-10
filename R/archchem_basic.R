@@ -222,7 +222,7 @@ read_archchem <- function(
     answer <- readline("Package `readxl` required to import Excel files. Do you want to install it now? [Y/n]: ")
 
     if (tolower(answer) %in% c("yes", "y")) {
-      install.packages("readxl")
+      utils::install.packages("readxl")
     } else {
       stop("Please import your data in another file format or install 'readxl' manually.")
     }

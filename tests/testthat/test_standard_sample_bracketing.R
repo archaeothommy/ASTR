@@ -2,7 +2,7 @@
 
 test_input <- readxl::read_excel(
   system.file("extdata",
-              "bracketing/ULB_Cu_20190903-test 2.xlsx",
+              "test_data_bracketing.xlsx",
               package = "ASTR"),
   sheet = "03092019",
   skip = 2

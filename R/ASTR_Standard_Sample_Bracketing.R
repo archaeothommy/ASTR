@@ -43,8 +43,16 @@
 #' @export
 #'
 #' @examples
-#' <write here any example code. These are small simple examples on how to use
-#' the function or to highlight specific features>
+#' data <- data.frame(
+#'   ID = c("Std", "Sample_A", "Std", "Sample_A", "Std", "Sample_A", "Std"),
+#'   values = c(16.928, 18.641, 16.932, 18.643, 16.935, 18.642, 16.938)
+#' )
+#'
+#' result <- ASTR::standard_sample_bracketing(
+#'  df = data,
+#'  pos = 1,
+#'  notation = "delta"
+#')
 
 standard_sample_bracketing <- function(
   df,
@@ -152,7 +160,7 @@ standard_sample_bracketing <- function(
     } else {
       sample_mean <- format(signif(sample_mean / counter, 4), nsmall = 4)
       array <- sample_results[(pos - counter):(pos - 1)]
-      sdev <- format(signif(sd_input * sd(array), 4), nsmall = 4)
+      sdev <- format(signif(sd_input * stats::sd(array), 4), nsmall = 4)
       sd_dev <- append(sd_dev, sdev)
       average <- append(average, sample_mean)
       sample_current <- results[pos, 1]
