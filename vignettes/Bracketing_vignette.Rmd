@@ -245,7 +245,7 @@ data <- data.frame(
 
 # Run the function
 result <- ASTR::standard_sample_bracketing(
-  df = data, 
+  df = data,
   id_std = "Std",
   values = "Isotope_data",
   pos = 1,
