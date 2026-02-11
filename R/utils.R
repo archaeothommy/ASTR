@@ -11,15 +11,18 @@ check_columns_exist <- function(df, columns) {
   TRUE
 }
 
-
-filter_columns_with_id <- function(df, columns, id_column = "id") {
+#' @export
+filter_columns_with_id <- function(df, columns, id_column_name = "id", all = FALSE) {
   # all data is supposed to have an id column
-  required_cols <- c(id_column, columns)
-
+  if (all){
+    required_cols <- c(id_column_name, columns)
+  } else {
+    required_cols = colnames(df)
+  }
   check_columns_exist(df, required_cols)
 
-  if (length(unique(df[[id_column]])) != length(df[[id_column]])) {
-    stop(paste("Column ", id_column, " is not unique and therefore cannot be used as id"))
+  if (length(unique(df[[id_column_name]])) != length(df[[id_column_name]])) {
+    stop(paste("Column ", id_column_name, " is not unique and therefore cannot be used as id"))
   }
 
   df_filtered <- df[, required_cols]
