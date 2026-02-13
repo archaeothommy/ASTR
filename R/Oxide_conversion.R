@@ -10,12 +10,12 @@
 #'   should be converted.
 #' @param oxide_preference String that controls which oxide should be used if an
 #'   element forms more than one oxide. Allowed values are: `reducing`,
-#'   `oxidizing`, `ask`, or a named vector mapping the specific oxide to its
+#'   `oxidising`, `ask`, or a named vector mapping the specific oxide to its
 #'   element. See details for further information.
 #' @param which_concentrations Character string that determines which elements or
 #'   oxides are converted based on their concentrations. Allowed values are
 #'   `all` (no restriction), `major` (only concentrations >= 1 wt%), or "minor"
-#'   (only concentrations >= 0.1 wt%).
+#'   (between 0.1 and 1 wt%).
 #' @param normalise If `TRUE`, converted concentrations will be normalised to
 #'   100%. Default to `FALSE`.
 #' @param drop If `TRUE`, the default, columns with unconverted values are
@@ -33,9 +33,9 @@
 #'
 #'   In `element_to_oxide()`, the parameter `oxide_preference` controls the
 #'   behaviour of the function if the element forms more than one oxide:
-#'   * `reducing`: Use the oxide with the highest oxide number of the element
+#'   * `oxidising`: Use the oxide with the highest oxidation state of the element
 #'   (e.g., `Fe2O3`)
-#'   * `oxidising`: Use the oxide with the lowest oxide number of the element
+#'   * `reducing`: Use the oxide with the lowest oxidation state of the element
 #'   (e.g., `FeO`)
 #'   * `ask`: The user is asked for each element which oxide should be used.
 #'   * named vector: A named vector mapping the oxides to be used to the
@@ -50,7 +50,20 @@
 #' @name oxide_conversion
 #'
 #' @examples
-#' # example code
+#' # Example data frame with element weight percents
+#' df <- data.frame(Si = 45, Fe = 10, Cr = 2)
+#'
+#' # Convert elements to oxides using oxidising preference
+#' element_to_oxide(df, elements = c("Si", "Fe", "Cr"), oxide_preference = "oxidising")
+#'
+#' # Convert elements to oxides using reducing preference
+#' element_to_oxide(df, elements = c("Si", "Fe", "Cr"), oxide_preference = "reducing")
+#'
+#' # Manually specify which oxide to use for each element
+#' element_to_oxide(df, elements = c("Fe", "Cr"), oxide_preference = c(Fe = "FeO", Cr = "Cr2O3"))
+#'
+#' # Preserve original element columns
+#' element_to_oxide(df, elements = c("Si", "Fe", "Cr"), oxide_preference = "oxidising", drop = FALSE)
 #'
 element_to_oxide <- function(
   df,
@@ -64,8 +77,7 @@ element_to_oxide <- function(
   checkmate::assert_data_frame(df)
   checkmate::assert_character(elements,
     any.missing = FALSE,
-    all.missing = FALSE,
-    pattern = paste0(elements_data, collapse = "|")
+    all.missing = FALSE
   )
   checkmate::assert_character(oxide_preference,
     any.missing = FALSE,
@@ -73,8 +85,7 @@ element_to_oxide <- function(
   )
   checkmate::assert_character(which_concentrations,
     any.missing = FALSE,
-    all.missing = FALSE,
-    pattern = "all|major|minor"
+    all.missing = FALSE
   )
 
   which_concentrations <- match.arg(which_concentrations)
@@ -92,32 +103,74 @@ element_to_oxide <- function(
   conversion_table <- na.omit(conversion_oxides)
 
   # Handle oxide preference
-  switch(oxide_preference,
-    oxidising = {
-      pref <- # implement according to documentation
-        c(Fe = "Fe2O3", Mn = "MnO2", Cr = "CrO3")
-    },
-    reducing = {
-      pref <- # implement according to documentation
-        c(Fe = "FeO", Mn = "MnO", Cr = "Cr2O3")
-    },
-    ask = {
-      pref <- interactive_oxide_select(elements)
-    },
-    {
-      # check if names are valid elements and oxides are valid oxides and matching to the element
+  if (is.character(oxide_preference) && length(oxide_preference) == 1) {
+    # Single string preference
+    switch(oxide_preference,
+      oxidising = {
+        ct <- conversion_table[conversion_table$Element %in% elements, ]
+        pref <- sapply(elements, function(el) {
+          sub <- ct[ct$Element == el, ]
+          if (nrow(sub) == 0) return(NA)
+          if (nrow(sub) == 1) {
+            return(sub$Oxide[1])
+          } else {
+            return(sub$Oxide[which.max(sub$OxidationState)])
+          }
+        })
+        names(pref) <- elements
+        pref <- pref[!is.na(pref)]
+      },
 
-
-      # checks pass
-      pref <- oxide_preference
-
-      # checks not passed: error for each type of fail (elements not valid, oxides not valid)
-      stop(
-        "'oxide preference' assumed to be a named vector",
-        ""
-      )
+      reducing = {
+        ct <- conversion_table[conversion_table$Element %in% elements, ]
+        pref <- sapply(elements, function(el) {
+          sub <- ct[ct$Element == el, ]
+          if (nrow(sub) == 0) return(NA)
+          if (nrow(sub) == 1) {
+            return(sub$Oxide[1])
+          } else {
+            return(sub$Oxide[which.min(sub$OxidationState)])
+          }
+        })
+        names(pref) <- elements
+        pref <- pref[!is.na(pref)]
+      },
+      ask = {
+        pref <- interactive_oxide_select(elements)
+      },
+      {
+        stop("oxide_preference must be 'oxidising', 'reducing', 'ask', or a named vector")
+      }
+    )
+  } else if (is.vector(oxide_preference) && !is.null(names(oxide_preference))) {
+    # Named vector preference
+    # check names are valid elements
+    invalid_elements <- setdiff(names(oxide_preference), conversion_oxides$Element)
+    if (length(invalid_elements) > 0) {
+      stop("Invalid element names in 'oxide_preference': ",
+           paste(invalid_elements, collapse = ", "))
     }
-  )
+
+    # check values are valid oxides
+    invalid_oxides <- setdiff(oxide_preference, conversion_oxides$Oxide)
+    if (length(invalid_oxides) > 0) {
+      stop("Invalid oxide names in 'oxide_preference': ",
+           paste(invalid_oxides, collapse = ", "))
+    }
+
+    # check that the element actually produces the specified oxide
+    for (el in names(oxide_preference)) {
+      ox <- conversion_oxides$Oxide[conversion_oxides$Element == el]
+      if (!(oxide_preference[el] %in% ox)) {
+        stop(sprintf("Element %s does not produce oxide %s", el, oxide_preference[el]))
+      }
+    }
+
+    # checks pass
+    pref <- oxide_preference
+  } else {
+    stop("oxide_preference must be a character string or a named vector")
+  }
 
   # Apply oxide preference filter
   if (!is.null(pref)) {
@@ -137,19 +190,26 @@ element_to_oxide <- function(
   x <- as.matrix(df[elements])
   storage.mode(x) <- "double"
 
-  # Apply major/minor filter --> How do you handle if major and minor elements change between samples?
+  # Apply major/minor filter
   switch(which_concentrations,
-    all = {}, # leave empty / do nothing (not sure if this works)
-    major = {},
-    minor = {}
+    all = {
+      # do nothing, convert all
+    },
+    major = {
+      # Only convert elements >= 1 wt%
+      x[x < 1] <- 0
+    },
+    minor = {
+      # Only convert elements (0.1 - 1 wt%)
+      x[x < 0.1 | x >= 1] <- 0
+    }
   )
 
-  # if (which_elements != "all") {
-  #   thr <- if (which_elements == "major") 1.0 else 0.1
-  #   x[x <= thr] <- NA_real_
-  # }
+  if (!all(elements %in% conversion_table$Element)) {
+    stop("Not all requested elements have matching oxides in conversion table")
+  }
 
-  factors <- conversion_table[elements, "element_to_oxide"]
+  factors <- conversion_table[elements, "ElementToOxide"]
   oxides <- sweep(x, 2, factors, "*")
   colnames(oxides) <- conversion_table[elements, "Oxide"]
 
@@ -165,7 +225,7 @@ element_to_oxide <- function(
     df[elements] <- NULL
   }
 
-  return(out)
+  return(df)
 }
 
 #' @rdname oxide_conversion
@@ -209,7 +269,7 @@ oxide_to_element <- function(df, oxides, normalise = FALSE, drop = TRUE) {
   storage.mode(x) <- "double"
 
   # Convert oxides to elements
-  factors <- conv[oxides, "oxide_to_element"]
+  factors <- conv[oxides, "OxideToElement"]
   elements <- sweep(x, 2, factors, "*")
   colnames(elements) <- conv[oxides, "Element"]
 
@@ -227,6 +287,10 @@ oxide_to_element <- function(df, oxides, normalise = FALSE, drop = TRUE) {
     out[[nm]] <- elements[, nm]
   }
 
+  if (drop) {
+    out[oxides] <- NULL
+  }
+
   return(out)
 }
 
@@ -241,7 +305,7 @@ oxide_to_element <- function(df, oxides, normalise = FALSE, drop = TRUE) {
 interactive_oxide_select <- function(elements) {
   message("Starting interactive selection of oxides")
 
-  names(oxides) <- oxides <- elements
+  oxides <- setNames(elements, elements)
 
   for (el in elements) {
     ox <- conversion_oxides$Oxide[conversion_oxides$Element == el]
@@ -274,6 +338,10 @@ interactive_oxide_select <- function(elements) {
 #' name but were made unique by R functions.
 #'
 #' @keywords internal
+#' @importFrom magrittr %>%
+#' @importFrom dplyr rowwise mutate ungroup c_across
+#' @importFrom tidyselect starts_with
+#'
 sum_duplicates <- function(values) {
   if (ncol(values) == 0) {
     return(values)
@@ -289,9 +357,9 @@ sum_duplicates <- function(values) {
 
   for (i in col_names) {
     values <- values %>%
-      rowwise() %>%
-      mutate({{ i }} := sum(c_across(tidyselect::starts_with(i))), .keep = "unused") %>%
-      ungroup()
+      dplyr::rowwise() %>%
+      dplyr::mutate({{ i }} := sum(dplyr::c_across(tidyselect::starts_with(i))), .keep = "unused") %>%
+      dplyr::ungroup()
   }
 
   return(values)
