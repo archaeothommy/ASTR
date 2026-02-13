@@ -61,9 +61,9 @@ with the sum of all converted values of the respective element.
 In \code{element_to_oxide()}, the parameter \code{oxide_preference} controls the
 behaviour of the function if the element forms more than one oxide:
 \itemize{
-\item \code{reducing}: Use the oxide with the highest oxide number of the element
+\item \code{oxidising}: Use the oxide with the highest oxidation state of the element
 (e.g., \code{Fe2O3})
-\item \code{oxidising}: Use the oxide with the lowest oxide number of the element
+\item \code{reducing}: Use the oxide with the lowest oxidation state of the element
 (e.g., \code{FeO})
 \item \code{ask}: The user is asked for each element which oxide should be used.
 \item named vector: A named vector mapping the oxides to be used to the
@@ -76,6 +76,19 @@ encounter an oxide that is currently not included, please reach out to the
 package maintainers or create a pull request to add it.
 }
 \examples{
-# example code
+# Example data frame with element weight percents
+df <- data.frame(Si = 45, Fe = 10, Cr = 2)
+
+# Convert elements to oxides using oxidising preference
+element_to_oxide(df, elements = c("Si", "Fe", "Cr"), oxide_preference = "oxidising")
+
+# Convert elements to oxides using reducing preference
+element_to_oxide(df, elements = c("Si", "Fe", "Cr"), oxide_preference = "reducing")
+
+# Manually specify which oxide to use for each element
+element_to_oxide(df, elements = c("Fe", "Cr"), oxide_preference = c(Fe = "FeO", Cr = "Cr2O3"))
+
+# Preserve original element columns
+element_to_oxide(df, elements = c("Si", "Fe", "Cr"), oxide_preference = "oxidising", drop = FALSE)
 
 }
