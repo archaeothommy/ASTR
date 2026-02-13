@@ -31,7 +31,7 @@ colnames_to_constructors <- function(
         if (idx %in% context || colname %in% context) {
           return(
             function(x) {
-              if (guess_context_type) {
+              if (guess_context_type && is.character(x)) {
                 x <- readr::parse_guess(x, na = na)
               }
               x <- add_archchem_class(x, "archchem_context")
@@ -71,7 +71,7 @@ colnames_to_constructors <- function(
               #   x / 100 # parts per 10000 -> percent
               # }
               x <- as_numeric_info(x, colname)
-              x <- add_archchem_class(x, c("archchem_element", "archchem_ratio"))
+              x <- add_archchem_class(x, c("archchem_isotope", "archchem_ratio"))
               return(x)
             }
           )
@@ -88,28 +88,12 @@ colnames_to_constructors <- function(
           break
         }
         # concentrations
-        if (is_concentration_fraction(colname)) {
+        if (is_concentration(colname)) {
           unit_from_col <- extract_unit_string(colname)
           # handle special cases
-          # unit_from_col_modified <- dplyr::case_match(
-          #   unit_from_col,
-          #   c("at%", "wt%") ~ "%",
-          #   .default = unit_from_col
-          # )
-          return(
-            function(x) {
-              x <- apply_bdl_strategy(x, colname, bdl, bdl_strategy)
-              x <- as_numeric_info(x, colname)
-              x <- add_archchem_class(x, c("archchem_concentration_fraction"))
-              return(x)
-            }
-          )
-          break
-        }
-        if (is_concentration_other(colname)) {
-          unit_from_col <- extract_unit_string(colname)
           unit_from_col <- dplyr::case_match(
             unit_from_col,
+            c("at%", "wt%") ~ "%",
             c("cps") ~ "count/s",
             .default = unit_from_col
           )
@@ -118,7 +102,7 @@ colnames_to_constructors <- function(
               x <- apply_bdl_strategy(x, colname, bdl, bdl_strategy)
               x <- as_numeric_info(x, colname)
               x <- units::set_units(x, value = unit_from_col, mode = "standard")
-              x <- add_archchem_class(x, c("archchem_concentration_SI"))
+              x <- add_archchem_class(x, c("archchem_concentration"))
               return(x)
             }
           )
@@ -134,7 +118,9 @@ colnames_to_constructors <- function(
         )
         if (drop_columns) {
           warning(m)
-          return(function(x) { NULL })
+          return(function(x) {
+            NULL
+          })
         } else {
           stop(m)
         }
@@ -149,15 +135,21 @@ add_archchem_class <- function(x, class) {
 }
 
 as_numeric_info <- function(x, colname) {
-  tryCatch(
-    as.numeric(x),
+  withCallingHandlers(
+    y <- as.numeric(x),
     warning = function(w) {
       message <- conditionMessage(w)
-      warning(paste0(
-        "Issue when transforming column \"", colname, "\" to numeric values: "
-      ), message)
+      warning(
+        paste0(
+          "Issue when transforming column \"", colname, "\" to numeric values: "
+        ),
+        message,
+        call. = FALSE
+      )
+      tryInvokeRestart("muffleWarning")
     }
   )
+  return(y)
 }
 
 # colname only an argument in case we want to implement more specific handling
@@ -182,11 +174,8 @@ is_isotope_delta_epsilon <- function(colname) {
 is_elemental_ratio <- function(colname) {
   grepl(elemental_ratio(), colname, perl = TRUE)
 }
-is_concentration_fraction <- function(colname) {
-  grepl(concentrations_fraction(), colname, perl = TRUE)
-}
-is_concentration_other <- function(colname) {
-  grepl(concentrations_other(), colname, perl = TRUE)
+is_concentration <- function(colname) {
+  grepl(concentration(), colname, perl = TRUE)
 }
 extract_unit_string <- function(colname) {
   pos <- regexpr("(?<=_).*", colname, perl = TRUE)
@@ -212,12 +201,13 @@ oxides_list <- function() {
 ox_elem_list <- function() paste0(oxides_list(), "|", elements_list())
 ox_elem_iso_list <- function() paste0(ox_elem_list(), "|", isotopes_list())
 
-fraction_type_list <- function() {
-  paste0(c(
-    "ppm", "ppb", "ppt", "%", "wt%", "at%", "w/w%",
-    "\u2030" # for the per-mille symbol
-  ), collapse = "|")
-}
+# special_type_list <- function() {
+#   paste0(c(
+#     "wt%", "at%", "w/w%"
+#     #"ppm", "ppb", "ppt", "%", ,
+#     #"\u2030" # for the per-mille symbol
+#   ), collapse = "|")
+# }
 
 # define regex pattern for isotope ratio:
 # any isotope followed by a / and another isotope, e.g. 206Pb/204Pb
@@ -269,16 +259,7 @@ elemental_ratio <- function() {
 # parentheses, e.g. Sb_, Feo+SiO2_, (Al2O3+SiO2)_
 # The underscore enforces that concentrations always have a unit and prevents
 # partial matching in elemental ratios
-concentrations_fraction <- function() {
-  paste0(
-    "^\\(?(",
-    ox_elem_iso_list(), ")(?!/)((\\+|-)(",
-    ox_elem_iso_list(), "))*\\)?_",
-    fraction_type_list()
-  )
-}
-
-concentrations_other <- function() {
+concentration <- function() {
   paste0(
     "^\\(?(",
     ox_elem_iso_list(), ")(?!/)((\\+|-)(",
