@@ -6,10 +6,13 @@
 \usage{
 interactive_oxide_select(elements)
 }
+\arguments{
+\item{elements}{A character vector with chemical symbols of elements}
+}
 \value{
 named vector with all oxides for the supplied list of elements
 }
 \description{
-Provides a selection
+Interactively compiles list of oxides from user input.
 }
 \keyword{internal}

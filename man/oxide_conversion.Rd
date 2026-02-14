@@ -10,9 +10,9 @@ element_to_oxide(
   df,
   elements,
   oxide_preference,
-  which_concentrations = c("all", "major", "minor"),
+  which_concentrations = c("all", "major", "minor", "no_trace"),
   normalise = FALSE,
-  drop = TRUE
+  drop = FALSE
 )
 
 oxide_to_element(df, oxides, normalise = FALSE, drop = TRUE)
@@ -20,43 +20,43 @@ oxide_to_element(df, oxides, normalise = FALSE, drop = TRUE)
 \arguments{
 \item{df}{Data frame with compositional data.}
 
-\item{elements}{character vector with the chemical symbols of the elements
-that should be converted.}
+\item{elements, oxides}{Character vector with the chemical symbols of the
+elements or oxides that should be converted.}
 
 \item{oxide_preference}{String that controls which oxide should be used if an
 element forms more than one oxide. Allowed values are: \code{reducing},
-\code{oxidizing}, \code{ask}, or a named vector mapping the specific oxide to its
+\code{oxidising}, \code{ask}, or a named vector mapping the specific oxide to its
 element. See details for further information.}
 
-\item{which_concentrations}{Character string that determines which elements or
-oxides are converted based on their concentrations. Allowed values are
-\code{all} (no restriction), \code{major} (only concentrations >= 1 wt\%), or "minor"
-(only concentrations >= 0.1 wt\%).}
+\item{which_concentrations}{Character string that determines by concentration
+which of the \code{elements} or \code{oxides} are converted. Allowed values are:
+\itemize{
+\item \code{all} (convert all elements; the default)
+\item \code{major} (convert elements with concentrations >= 1 wt\%)
+\item \code{minor} (convert elements with concentrations between 0.1 and 1 wt\%).
+\item \code{no_trace} (convert elements with concentration >=0.1 wt\%)
+}}
 
 \item{normalise}{If \code{TRUE}, converted concentrations will be normalised to
 100\%. Default to \code{FALSE}.}
 
-\item{drop}{If \code{TRUE}, the default, columns with unconverted values are
-dropped. If false, columns with unconverted values are kept.}
-
-\item{oxides}{character vector with the chemical symbols of the oxides that
-should be converted.}
+\item{drop}{If \code{FALSE}, the default, columns with unconverted values are
+kept. If \code{TRUE}, columns with unconverted values are dropped. Dropping
+column could result in loss of information as this will also drop
+columns with values excluded from conversion by the parameter
+\code{which_concentrations}.}
 }
 \value{
 The original data frame with the converted concentrations
 }
 \description{
-Convert between element and oxide weight percent (wt\%) compositions using
+Convert between element and oxide weight percent (oxide\%) compositions using
 pre-compiled conversion factors.
 }
 \details{
 If the dataset includes already an element and its respective oxide,
-the function leaves the column of the respective oxide or element
+the conversion leaves the column of the respective oxide or element
 unaffected.
-
-In \code{oxide_to_element()}, conversions from different oxides to the same
-element (e.g., Fe_2_O3 and FeO to Fe) result in one column for the element
-with the sum of all converted values of the respective element.
 
 In \code{element_to_oxide()}, the parameter \code{oxide_preference} controls the
 behaviour of the function if the element forms more than one oxide:
@@ -67,13 +67,17 @@ behaviour of the function if the element forms more than one oxide:
 (e.g., \code{FeO})
 \item \code{ask}: The user is asked for each element which oxide should be used.
 \item named vector: A named vector mapping the oxides to be used to the
-elements (e.g., \code{c(Fe = "FeO")})
+elements (e.g., \code{c(Fe = "FeO", Cu = "Cu2O")})
 }
+
+In \code{oxide_to_element()}, conversions from different oxides to the same
+element (e.g., Fe\if{html}{\out{<sub>}}2\if{html}{\out{</sub>}}O\if{html}{\out{<sub>}}3\if{html}{\out{</sub>}} and FeO to Fe) result in one column for the element
+with the sum of all converted values of the respective element.
 
 Conversion factors are pre-compiled for a wide range of oxides.
 consequently, conversion is restricted to the oxides on this list. If you
 encounter an oxide that is currently not included, please reach out to the
-package maintainers or create a pull request to add it.
+package maintainers or create a pull request in the \href{https://github.com/archaeothommy/ASTR}{package's GitHub repo} to add it.
 }
 \examples{
 # Example data frame with element weight percents

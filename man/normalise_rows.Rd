@@ -4,9 +4,14 @@
 \alias{normalise_rows}
 \title{Normalise rows to 100\%}
 \usage{
-normalise_rows(values)
+normalise_rows(df)
+}
+\arguments{
+\item{df}{A data frame
+
+Normalises values in a vector to 100\%}
 }
 \description{
-Normalises values in a vector to 100\%
+Normalise rows to 100\%
 }
 \keyword{internal}

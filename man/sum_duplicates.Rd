@@ -4,7 +4,10 @@
 \alias{sum_duplicates}
 \title{Sum columns with same column name}
 \usage{
-sum_duplicates(values)
+sum_duplicates(df)
+}
+\arguments{
+\item{df}{A data frame}
 }
 \description{
 The function recognises and includes column names that in fact have the same
