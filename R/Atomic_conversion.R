@@ -49,9 +49,7 @@ wt_to_at <- function(df, elements, drop = TRUE) {
          paste(invalid_elements, collapse = ", "))
   }
 
-  atomic_weight <- conversion_oxides$AtomicWeight[match(elements, conversion_oxides$Element)]
-
-  moles <- t(t(df[elements]) / atomic_weight)
+  moles <- t(t(df[elements]) / conversion_oxides$AtomicWeight[match(elements, conversion_oxides$Element)])
 
   total <- rowSums(moles, na.rm = TRUE)
   total[total == 0] <- NA_real_
@@ -90,9 +88,7 @@ at_to_wt <- function(df, elements, drop = TRUE) {
          paste(invalid_elements, collapse = ", "))
   }
 
-  atomic_weight <- conversion_oxides$AtomicWeight[match(elements, conversion_oxides$Element)]
-
-  weight <- t(t(df[elements]) * atomic_weight)
+ weight <- t(t(df[elements]) * conversion_oxides$AtomicWeight[match(elements, conversion_oxides$Element)])
 
   total <- rowSums(weight, na.rm = TRUE)
   total[total == 0] <- NA_real_
