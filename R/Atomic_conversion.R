@@ -88,7 +88,7 @@ at_to_wt <- function(df, elements, drop = TRUE) {
          paste(invalid_elements, collapse = ", "))
   }
 
- weight <- t(t(df[elements]) * conversion_oxides$AtomicWeight[match(elements, conversion_oxides$Element)])
+  weight <- t(t(df[elements]) * conversion_oxides$AtomicWeight[match(elements, conversion_oxides$Element)])
 
   total <- rowSums(weight, na.rm = TRUE)
   total[total == 0] <- NA_real_
