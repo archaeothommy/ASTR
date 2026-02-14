@@ -12,8 +12,9 @@ A data frame with 106 rows and 7 variables:
 \item{Oxide}{The formula of the chemical element's oxide.}
 \item{M}{The number of oxygen atoms in the oxide = the number of moles oxygen per mole oxide.}
 \item{OxideWeight}{The molar mass of the oxide.}
-\item{element_to_oxide}{The factor used in the conversion from the chemical element to its oxide.}
-\item{oxide_to_element}{The factor used in the conversion from the oxide to its chemical element.}
+\item{ElementToOxide}{The factor used in the conversion from the chemical element to its oxide.}
+\item{OxideToElement}{The factor used in the conversion from the oxide to its chemical element.}
+\item{OxidationState}{The oxidation state of the kation as numeric value.}
 }
 }
 \usage{
