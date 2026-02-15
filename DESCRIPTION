@@ -1,10 +1,35 @@
 Package: ASTR
-Title: What the Package Does (One Line, Title Case)
+Title: Archaeometric Standards and Tools in R
 Version: 0.0.0.9000
-URL: https://example.com
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+URL: https://archaeothommy.github.io/ASTR/index.html
+Authors@R: c(
+    person("Thomas", "Rose", comment = c(ORCID = "0000-0002-8186-3566"), role = c("cre", "aut"), email = "roseth@posteo.com"),
+    person("Andrea", "Acevedo Mejia", comment = c(ORCID = "0009-0002-7441-1737"), role = "aut"),
+    person("Gilberto", "Artioli", comment = c(ORCID = "0000-0002-8693-7392"), role = "aut"),
+    person("María Florencia", "Becerra", comment = c(ORCID = "0000-0001-6302-7452"), role = "aut"),
+    person("Adam Kevin", "Benfer", comment = c(ORCID = "0009-0004-1253-1068"), role = "aut"),
+    person("Lisa", "Bellemère", role = "aut"),
+    person("Thomas Edward", "Birch", comment = c(ORCID = "0000-0002-4568-9767"), role = "aut"),
+    person("Karan", "Desai", comment = c(ORCID = "0009-0008-8224-8435"), role = "aut"),
+    person("Paolo", "d'Imporzano", role = "aut"),
+    person("Tzilla", "Eshel", comment = c(ORCID = "0000-0003-0976-0877"), role = "aut"),
+    person("Valerio", "Gentile", comment = c(ORCID = "0000-0003-4402-2730"), role = "aut"),
+    person("Sabine", "Klein", comment = c(ORCID = "0000-0002-3939-4428"), role = "aut"),
+    person("Catherine", "Klesner", comment = c(ORCID = "0000-0002-2264-9383"), role = "aut"),
+    person("Kathryn", "Murphy", comment = c(ORCID = "0000-0002-5906-7299"), role = "aut"),
+    person("Ben", "Marwick", comment = c(ORCID = "0000-0001-7879-4531"), role = "aut"),
+    person("Stephen", "Merkel", comment = c(ORCID = "0000-0001-8730-6923"), role = "aut"),
+    person("Marco Daniele", "Pelizzari", role = "aut"), 
+    person("Alexandra", "Rodler", comment = c(ORCID = "0000-0002-4087-7160"), role = "aut"),
+    person("Benjamin", "Sabatini", comment = c(ORCID = "0000-0002-4199-0253"), role = "aut"),
+    person("Clemens", "Schmid", comment = c(ORCID = "0000-0003-3448-5715"), role = "aut"),
+    person("Berber", "van der Meulen-van der Veen", comment = c(ORCID = "0000-0001-5297-0269"), role = "aut"),
+    person("Chen", "Wang", comment = c(ORCID = "0009-0007-1851-2388"), role = "aut"),
+    person("Katrin Julia", "Westner", comment = c(ORCID = "0000-0001-5529-1165"), role = "aut")
+    )
+Description: ASTR defines and implements a community reporting standard for archaeometric datasets. 
+    It also provides easy-to-use functions for common plots, statistical analyses, data processing 
+    and transformation workflows in archaeometry. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -18,12 +43,19 @@ Suggests:
 Imports:
     checkmate,
     dplyr,
+    geometry,
     magrittr,
     purrr,
+    rdist,
     readr,
     rlang,
+    stats,
     tibble,
     tidyselect,
+    units,
+    robCompositions,
+    ggplot2,
+    ks,
     units, 
     rootSolve
 Config/testthat/edition: 3

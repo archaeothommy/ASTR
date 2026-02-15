@@ -10,3 +10,6 @@
 ^data-raw$
 ^\.lintr$
 ^LICENSE\.md$
+^doc$
+^Meta$
+^CODE_OF_CONDUCT\.md$

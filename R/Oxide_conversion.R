@@ -12,10 +12,10 @@
 #'   element. See details for further information.
 #' @param which_concentrations Character string that determines by concentration
 #'   which of the `elements` or `oxides` are converted. Allowed values are:
-#'   * `all` (convert all elements; the default)
-#'   * `major` (convert elements with concentrations >= 1 wt%)
-#'   * `minor` (convert elements with concentrations between 0.1 and 1 wt%).
-#'   * `no_trace` (convert elements with concentration >=0.1 wt%)
+#'   * `all` (convert all elements or oxides; the default)
+#'   * `major` (convert elements or oxides with concentrations >= 1 wt%)
+#'   * `minor` (convert elements or concentrations between 0.1 and 1 wt%).
+#'   * `no_trace` (convert elements or oxides with concentration >=0.1 wt%)
 #' @param normalise If `TRUE`, converted concentrations will be normalised to
 #'   100%. Default to `FALSE`.
 #' @param drop If `FALSE`, the default, columns with unconverted values are
@@ -225,7 +225,7 @@ element_to_oxide <- function(
 
 #' @rdname oxide_conversion
 #' @export
-oxide_to_element <- function(df, oxides, normalise = FALSE, drop = TRUE) {
+oxide_to_element <- function(df, oxides, normalise = FALSE, drop = FALSE) {
   # Validate inputs
   if (!is.data.frame(df)) {
     stop("df must be a data frame")

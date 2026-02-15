@@ -56,3 +56,26 @@
 #' @family chemical_reference_data
 #' @name conversion_oxides
 "conversion_oxides"
+
+#' Example input data for ASTR
+#'
+#' @docType data
+#' @keywords datasets
+#' @name archchem_example_input
+#' @usage data(archchem_example_input)
+#' @format A data frame with 15 observations and 53 variables.
+#'
+"archchem_example_input"
+
+#' ArgentinaDatabase
+#'
+#' Lead isotope data from ore deposits in Argentina prepared for TerraLID database.
+#'
+#' @format ## `ArgentinaDatabase`
+#'
+#' A dataframe with 112 rows and 49 columns
+#'
+#' @source <https://globalid.dmt-lb.de/>
+#' @name ArgentinaDatabase
+"ArgentinaDatabase"
+
