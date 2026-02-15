@@ -15,7 +15,7 @@ element_to_oxide(
   drop = FALSE
 )
 
-oxide_to_element(df, oxides, normalise = FALSE, drop = TRUE)
+oxide_to_element(df, oxides, normalise = FALSE, drop = FALSE)
 }
 \arguments{
 \item{df}{Data frame with compositional data.}
@@ -31,10 +31,10 @@ element. See details for further information.}
 \item{which_concentrations}{Character string that determines by concentration
 which of the \code{elements} or \code{oxides} are converted. Allowed values are:
 \itemize{
-\item \code{all} (convert all elements; the default)
-\item \code{major} (convert elements with concentrations >= 1 wt\%)
-\item \code{minor} (convert elements with concentrations between 0.1 and 1 wt\%).
-\item \code{no_trace} (convert elements with concentration >=0.1 wt\%)
+\item \code{all} (convert all elements or oxides; the default)
+\item \code{major} (convert elements or oxides with concentrations >= 1 wt\%)
+\item \code{minor} (convert elements or concentrations between 0.1 and 1 wt\%).
+\item \code{no_trace} (convert elements or oxides with concentration >=0.1 wt\%)
 }}
 
 \item{normalise}{If \code{TRUE}, converted concentrations will be normalised to
