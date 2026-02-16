@@ -87,6 +87,7 @@
 #' ggplot(df, aes(x, y, fill = group, colour = group)) +
 #'   geom_kde2d(alpha = 0.4) +
 #'   theme_minimal()
+
 geom_kde2d <- function(mapping = NULL,
                        data = NULL,
                        inherit.aes = TRUE,

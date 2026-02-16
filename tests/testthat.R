@@ -9,5 +9,7 @@
 library(testthat)
 library(ASTR)
 library(tibble)
+library(ggplot2)
+library(vdiffr)
 
 test_check("ASTR")
