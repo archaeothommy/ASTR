@@ -49,8 +49,6 @@ as_archchem(
   ...
 )
 
-validate(x, quiet = TRUE, ...)
-
 read_archchem(
   path,
   id_column = "ID",
@@ -150,14 +148,6 @@ unify_concentration_unit(x, unit, ...)
   - [`readr::read_delim()`](https://readr.tidyverse.org/reference/read_delim.html)
     for all other file formats.
 
-- x:
-
-  an object of class archchem
-
-- quiet:
-
-  should warnings be printed? Defaults to TRUE
-
 - path:
 
   path to the file that should be read
@@ -167,6 +157,14 @@ unify_concentration_unit(x, unit, ...)
   A character string with the separator for tabular data. Must be
   provided for all file types except `.xlsx` or `.xls`. Default to `,`.
   Use `\t` for tab-separated data.
+
+- x:
+
+  an object of class archchem
+
+- quiet:
+
+  should warnings be printed? Defaults to TRUE
 
 - unit:
 

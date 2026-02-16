@@ -13,53 +13,53 @@ Useful links:
 
 ## Author
 
-**Maintainer**: Rose Thomas <roseth@posteo.com>
+**Maintainer**: Thomas Rose <roseth@posteo.com>
 ([ORCID](https://orcid.org/0000-0002-8186-3566))
 
 Authors:
 
-- Acevedo Mejia Andrea ([ORCID](https://orcid.org/0009-0002-7441-1737))
+- Andrea Acevedo Mejia ([ORCID](https://orcid.org/0009-0002-7441-1737))
 
-- Artioli Gilberto ([ORCID](https://orcid.org/0000-0002-8693-7392))
+- Gilberto Artioli ([ORCID](https://orcid.org/0000-0002-8693-7392))
 
-- Becerra María Florencia
+- María Florencia Becerra
   ([ORCID](https://orcid.org/0000-0001-6302-7452))
 
-- Benfer Adam Kevin ([ORCID](https://orcid.org/0009-0004-1253-1068))
+- Adam Kevin Benfer ([ORCID](https://orcid.org/0009-0004-1253-1068))
 
-- Bellemère Lisa
+- Lisa Bellemère
 
-- Birch Thomas Edward ([ORCID](https://orcid.org/0000-0002-4568-9767))
+- Thomas Edward Birch ([ORCID](https://orcid.org/0000-0002-4568-9767))
 
-- Desai Karan ([ORCID](https://orcid.org/0009-0008-8224-8435))
+- Karan Desai ([ORCID](https://orcid.org/0009-0008-8224-8435))
 
-- d'Imporzano Paolo
+- Paolo d'Imporzano
 
-- Eshel Tzilla ([ORCID](https://orcid.org/0000-0003-0976-0877))
+- Tzilla Eshel ([ORCID](https://orcid.org/0000-0003-0976-0877))
 
-- Gentile Valerio ([ORCID](https://orcid.org/0000-0003-4402-2730))
+- Valerio Gentile ([ORCID](https://orcid.org/0000-0003-4402-2730))
 
-- Klein Sabine ([ORCID](https://orcid.org/0000-0002-3939-4428))
+- Sabine Klein ([ORCID](https://orcid.org/0000-0002-3939-4428))
 
-- Klesner Catherine ([ORCID](https://orcid.org/0000-0002-2264-9383))
+- Catherine Klesner ([ORCID](https://orcid.org/0000-0002-2264-9383))
 
-- Murphy Kathryn ([ORCID](https://orcid.org/0000-0002-5906-7299))
+- Kathryn Murphy ([ORCID](https://orcid.org/0000-0002-5906-7299))
 
-- Marwick Ben ([ORCID](https://orcid.org/0000-0001-7879-4531))
+- Ben Marwick ([ORCID](https://orcid.org/0000-0001-7879-4531))
 
-- Merkel Stephen ([ORCID](https://orcid.org/0000-0001-8730-6923))
+- Stephen Merkel ([ORCID](https://orcid.org/0000-0001-8730-6923))
 
-- Pelizzari Marco Daniele
+- Marco Daniele Pelizzari
 
-- Rodler Alexandra ([ORCID](https://orcid.org/0000-0002-4087-7160))
+- Alexandra Rodler ([ORCID](https://orcid.org/0000-0002-4087-7160))
 
-- Sabatini Benjamin ([ORCID](https://orcid.org/0000-0002-4199-0253))
+- Benjamin Sabatini ([ORCID](https://orcid.org/0000-0002-4199-0253))
 
-- Schmid Clemens ([ORCID](https://orcid.org/0000-0003-3448-5715))
+- Clemens Schmid ([ORCID](https://orcid.org/0000-0003-3448-5715))
 
-- van der Meulen-van der Veen Berber
+- Berber van der Meulen-van der Veen
   ([ORCID](https://orcid.org/0000-0001-5297-0269))
 
-- Wang Chen ([ORCID](https://orcid.org/0009-0007-1851-2388))
+- Chen Wang ([ORCID](https://orcid.org/0009-0007-1851-2388))
 
-- Westner Katrin Julia ([ORCID](https://orcid.org/0000-0001-5529-1165))
+- Katrin Julia Westner ([ORCID](https://orcid.org/0000-0001-5529-1165))

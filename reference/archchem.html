@@ -117,8 +117,6 @@ data manipulation tools in the tidyverse.</p>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">validate</span><span class="op">(</span><span class="va">x</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
 <span><span class="fu">read_archchem</span><span class="op">(</span></span>
 <span>  <span class="va">path</span>,</span>
 <span>  id_column <span class="op">=</span> <span class="st">"ID"</span>,</span>
@@ -216,14 +214,6 @@ See their documentation for details:</p><ul><li><p><code><a href="https://readxl
 </ul></dd>
 
 
-<dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>an object of class archchem</p></dd>
-
-
-<dt id="arg-quiet">quiet<a class="anchor" aria-label="anchor" href="#arg-quiet"></a></dt>
-<dd><p>should warnings be printed? Defaults to TRUE</p></dd>
-
-
 <dt id="arg-path">path<a class="anchor" aria-label="anchor" href="#arg-path"></a></dt>
 <dd><p>path to the file that should be read</p></dd>
 
@@ -232,6 +222,14 @@ See their documentation for details:</p><ul><li><p><code><a href="https://readxl
 <dd><p>A character string with the separator for tabular data. Must be
 provided for all file types except <code>.xlsx</code> or <code>.xls</code>. Default to <code>,</code>. Use
 <code>\t</code> for tab-separated data.</p></dd>
+
+
+<dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
+<dd><p>an object of class archchem</p></dd>
+
+
+<dt id="arg-quiet">quiet<a class="anchor" aria-label="anchor" href="#arg-quiet"></a></dt>
+<dd><p>should warnings be printed? Defaults to TRUE</p></dd>
 
 
 <dt id="arg-unit">unit<a class="anchor" aria-label="anchor" href="#arg-unit"></a></dt>

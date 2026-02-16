@@ -12,8 +12,8 @@
   : Calculate lead isotope age models
 
 - [`as_archchem()`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
-  [`validate()`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
   [`read_archchem()`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
+  [`validate()`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
   [`format(`*`<archchem>`*`)`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
   [`print(`*`<archchem>`*`)`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
   [`get_contextual_columns()`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
