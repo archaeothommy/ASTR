@@ -225,12 +225,22 @@ element_to_oxide <- function(
 
 #' @rdname oxide_conversion
 #' @export
-oxide_to_element <- function(df, oxides, normalise = FALSE, drop = FALSE) {
-  # Validate inputs
-  if (!is.data.frame(df)) {
-    stop("df must be a data frame")
-  }
+oxide_to_element <- function(
+  df,
+  oxides,
+  normalise = FALSE,
+  drop = FALSE
+) {
+  #Validate inputs
+  checkmate::assert_data_frame(df)
 
+  checkmate::assert_character(
+    oxides,
+    any.missing = FALSE,
+    all.missing = FALSE
+  )
+
+  # Check if all requested oxides are in df
   missing <- setdiff(oxides, names(df))
   if (length(missing) > 0) {
     stop(
@@ -239,37 +249,38 @@ oxide_to_element <- function(df, oxides, normalise = FALSE, drop = FALSE) {
     )
   }
 
-  conv <- conversion_oxides
+  # subset conversion table
+  conversion_table <- conversion_oxides[
+    conversion_oxides$Oxide %in% oxides &
+      !is.na(conversion_oxides$OxideToElement),
+  ]
 
-  # Filter for requested oxides
-  conv <- conv[conv$Oxide %in% oxides, ]
-
-  if (nrow(conv) == 0) {
-    warning("No valid oxides found for conversion")
-    return(df)
+  if (!all(oxides %in% conversion_table$Oxide)) {
+    stop(
+      "Conversion factors for one or more oxides are not available. ",
+      "See 'ASTR::conversion_oxides' for a list of available oxides.\n\n",
+      "See instructions in the 'Details' section of the function documentation to add oxides to the list."
+    )
   }
 
-  # Use Oxide as row names for indexing
-  rownames(conv) <- conv$Oxide
+  # concentration filtering
+  element_percent <- df
 
-  # Ensure all oxides are in conversion table
-  oxides <- intersect(oxides, rownames(conv))
-  if (!length(oxides)) {
-    warning("No matching oxides found in conversion table")
-    return(df)
-  }
+  # convert
+  element_percent <- t(
+    t(element_percent[oxides]) *
+      conversion_table$OxideToElement[
+        match(oxides, conversion_table$Oxide)
+      ]
+  )
 
-  # Extract and convert oxide values
-  x <- as.matrix(df[oxides])
-  storage.mode(x) <- "double"
-
-  # Convert oxides to elements
-  factors <- conv[oxides, "OxideToElement"]
-  elements <- sweep(x, 2, factors, "*")
-  colnames(elements) <- conv[oxides, "Element"]
+  colnames(element_percent) <-
+    conversion_table$Element[
+      match(oxides, conversion_table$Oxide)
+    ]
 
   # Sum duplicate elements (e.g., Fe from FeO + Fe2O3)
-  elements <- sum_duplicates(elements)
+  element_percent <- sum_duplicates(as.data.frame(element_percent))
 
   # Normalise if requested
   if (normalise) {
@@ -277,16 +288,13 @@ oxide_to_element <- function(df, oxides, normalise = FALSE, drop = FALSE) {
   }
 
   # Add element columns to output
-  out <- df
-  for (nm in colnames(elements)) {
-    out[[nm]] <- elements[, nm]
-  }
+  df <- cbind(df, element_percent)
 
   if (drop) {
-    out[oxides] <- NULL
+    df[oxides] <- NULL
   }
 
-  return(out)
+  return(df)
 }
 
 #' Interactive oxide selection
