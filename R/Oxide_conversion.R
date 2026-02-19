@@ -284,7 +284,7 @@ oxide_to_element <- function(
 
   # Normalise if requested
   if (normalise) {
-    elements <- normalise_rows(elements)
+    element_percent <- normalise_rows(element_percent)
   }
 
   # Add element columns to output
@@ -380,6 +380,10 @@ sum_duplicates <- function(df) {
 #'
 #' @keywords internal
 normalise_rows <- function(df) {
+  # Convert to matrix if it's a data frame
+  if (is.data.frame(df)) {
+    df <- as.matrix(df)
+  }
   checkmate::assert_numeric(df)
 
   if (ncol(df) == 0) {
@@ -390,5 +394,12 @@ normalise_rows <- function(df) {
   row_sums[row_sums == 0] <- NA_real_
 
   # Normalise and return as percentages
-  df / row_sums * 100
+  result <- df / row_sums * 100
+
+  # Convert back to data frame if input was data frame
+  if (is.data.frame(df)) {
+    result <- as.data.frame(result)
+  }
+
+  return(result)
 }
