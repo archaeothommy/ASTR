@@ -7,7 +7,7 @@
 normalise_rows(df)
 }
 \arguments{
-\item{df}{A data frame
+\item{df}{A matrix or data frame
 
 Normalises values in a vector to 100\%}
 }

@@ -12,8 +12,6 @@ df <- data.frame(
   Ba = c(0.5, 0.02)
 )
 
-#df2 <-
-
 test_that("element_to_oxide: oxide preferences", {
   # Oxidising preference
   res_ox <- element_to_oxide(df,
@@ -90,95 +88,69 @@ test_that("oxide conversion: errors", {
   )
 })
 
-test_that("oxide_to_element converts back correctly", {
-  df_ox <- data.frame(
-    Ag2O = 5 * 1.07416,
-    FeO = 50 * 1.286489,
-    SiO2 = 45 * 2.139286
-  )
+df_ox <- data.frame(
+  metadata = "Sample2",
+  Ag2O = c(5, 5),
+  FeO = c(40, 45),
+  SiO2 = c(45, 50),
+  Fe2O3 = c(10, 0)
+)
 
+test_that("oxide_to_element converts back correctly", {
   res <- oxide_to_element(df_ox, oxides = c("Ag2O", "FeO", "SiO2"))
   expect_true(all(c("Ag", "Fe", "Si") %in% names(res)))
-  expect_equal(res$Ag, 5, tolerance = 0.1)
-  expect_equal(res$Fe, 50, tolerance = 0.1)
-  expect_equal(res$Si, 45, tolerance = 0.1)
+  expect_equal(res$Ag[1], 4.65, tolerance = 0.1)
+  expect_equal(res$Fe[2], 34.97, tolerance = 0.1)
+  expect_equal(res$Si[1], 21.03, tolerance = 0.1)
 })
 
 test_that("oxide_to_element: errors", {
   expect_error(
-    oxide_to_element(df, oxides = c("Ag2O", "FeO", "SiO2", "Lu2O3")),
-    regexp = "The following oxides are not present in df.*"
-  )
-
-  expect_error(
-    oxide_to_element(data.frame(Ag2O = 5), oxides = c("Ag2O", "FeO")),
+    oxide_to_element(df_ox, oxides = c("Ag2O", "FeO", "SiO2", "Lu2O3")),
     regexp = "The following oxides are not present in df.*"
   )
 
   # Test for unavailable conversion factors
-  df_bad <- data.frame(XyO = 10)
+  df_bad <- cbind(df_ox, O4 = 23)
   expect_error(
-    oxide_to_element(df_bad, oxides = "XyO"),
+    oxide_to_element(df_bad, oxides = c("Ag2O", "FeO", "SiO2", "O4")),
     regexp = "Conversion factors for one or more oxides are not available.*"
   )
 })
 
 test_that("conversion is reversible", {
-  ox <- element_to_oxide(df,
-                         elements = c("Ag", "Fe", "Si"),
-                         oxide_preference = "reducing")
-  el <- oxide_to_element(ox,
-                         oxides = c("Ag2O", "FeO", "SiO2"))
+  ox <- element_to_oxide(df, elements = c("Ag", "Fe", "Si"), oxide_preference = "reducing")
+  el <- oxide_to_element(ox, oxides = c("Ag2O", "FeO", "SiO2"))
 
-  expect_equal(el$Ag, df$Ag, tolerance = 0.1)
-  expect_equal(el$Fe, df$Fe, tolerance = 0.1)
-  expect_equal(el$Si, df$Si, tolerance = 0.1)
+  expect_equal(el$Ag, df$Ag, tolerance = 0.01)
+  expect_equal(el$Fe, df$Fe, tolerance = 0.01)
+  expect_equal(el$Si, df$Si, tolerance = 0.01)
 })
 
 test_that("oxide conversion: drop argument", {
-  res <- element_to_oxide(df,
-    elements = c("Ag", "Fe"),
-    oxide_preference = "reducing",
-    drop = TRUE
-  )
+  res <- element_to_oxide(df, elements = c("Ag", "Fe"), oxide_preference = "reducing", drop = TRUE)
   expect_true(all(!c("Ag", "Fe") %in% names(res)))
 
-  # Test drop in oxide_to_element
-  df_ox <- data.frame(
-    Ag2O = 5 * 1.07416,
-    FeO = 50 * 1.286489,
-    other = "keep"
-  )
-  res_ox <- oxide_to_element(df_ox,
-                             oxides = c("Ag2O", "FeO"),
-                             drop = TRUE)
-  expect_true(all(c("Ag", "Fe", "other") %in% names(res_ox)))
+  res_ox <- oxide_to_element(df_ox, oxides = c("Ag2O", "FeO"), drop = TRUE)
   expect_false(any(c("Ag2O", "FeO") %in% names(res_ox)))
 })
 
 test_that("oxide conversion: normalise argument", {
-  res <- element_to_oxide(df,
-    elements = c("Ag", "Fe", "Si"),
-    oxide_preference = "reducing",
-    normalise = TRUE
-  )
+  res <- element_to_oxide(df, elements = c("Ag", "Fe", "Si"), oxide_preference = "reducing", normalise = TRUE)
   expect_equal(res$SiO2, c(55.6, 60.5), tolerance = 0.01)
   # Check both rows sum to 100
   expect_equal(rowSums(res[, c("Ag2O", "FeO", "SiO2")]), c(100, 100), tolerance = 0.01)
 
   # Test normalise in oxide_to_element
-  df_ox <- data.frame(
-    Ag2O = c(5 * 1.07416, 5 * 1.07416),
-    FeO = c(50 * 1.286489, 45 * 1.286489),
-    SiO2 = c(45 * 2.139286, 50 * 2.139286)
-  )
-
-  res_ox <- oxide_to_element(df_ox,
-                             oxides = c("Ag2O", "FeO", "SiO2"),
-                             normalise = TRUE)
-
+  res_ox <- oxide_to_element(df_ox, oxides = c("Ag2O", "FeO", "SiO2"), normalise = TRUE)
+  expect_equal(res_ox$Si, c(37.05, 37.1), tolerance = 0.01)
   # Both rows should sum to 100
   expect_equal(rowSums(res_ox[, c("Ag", "Fe", "Si")]), c(100, 100), tolerance = 0.01)
+})
+
+test_that("oxide conversion: duplicated elements summarised", {
+  res_ox <- oxide_to_element(df_ox, oxides = c("Ag2O", "FeO", "SiO2", "Fe2O3"))
+  expect_equal(res_ox$Fe, c(38.086, 34.97), tolerance = 0.01)
 })
 
 df_math <- data.frame(
@@ -189,30 +161,27 @@ df_math <- data.frame(
   Si = 32.13
 )
 
-test_that("Oxide conversion: math is correct", {
+test_that("Oxide conversion: math is correct and conversions are reversible", {
   res <- element_to_oxide(
     df_math,
     elements = names(df_math)[-2:-1],
     oxide_preference = "oxidising",
-    normalise = TRUE
+    drop = TRUE
   )
   expect_equal(res$Na2O, 11.82, tolerance = 0.01)
 
   # Test full circle with feldspar data
-  res_ox <- element_to_oxide(
-    df_math,
-    elements = c("Na", "Al", "Si"),
-    oxide_preference = "oxidising",
-    normalise = TRUE
-  )
-
-  res_el <- oxide_to_element(
-    res_ox,
+  res_ox <- oxide_to_element(
+    res,
     oxides = c("Na2O", "Al2O3", "SiO2"),
-    normalise = TRUE
+    drop = TRUE
   )
 
-  expect_equal(res_el$Na, df_math$Na, tolerance = 0.1)
-  expect_equal(res_el$Al, df_math$Al, tolerance = 0.1)
-  expect_equal(res_el$Si, df_math$Si, tolerance = 0.1)
+  expect_equal(df_math, res_ox, tolerance = 0.01)
+})
+
+test_that("Additional tests for internal functions", {
+  df_internal <- data.frame(row.names = 1:5)
+  expect_equal(sum_duplicates(df_internal), df_internal)
+  expect_equal(normalise_rows(df_internal), df_internal)
 })

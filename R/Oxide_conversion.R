@@ -55,20 +55,45 @@
 #'
 #' @examples
 #' # Example data frame with element weight percents
-#' df <- data.frame(Si = 45, Fe = 10, Cr = 2)
+#' df <- data.frame(ID = "Sample1", Si = 45, Fe = 50, Al = 5)
 #'
-#' # Convert elements to oxides using oxidising preference
-#' element_to_oxide(df, elements = c("Si", "Fe", "Cr"), oxide_preference = "oxidising")
+#' # Select elements by oxide_preference
+#' element_to_oxide(df, elements = c("Si", "Fe", "Al"), oxide_preference = "oxidising")
+#' element_to_oxide(df, elements = c("Fe", "Al"), oxide_preference = c(Fe = "FeO", Al = "Al2O3"))
+#' \dontrun{
+#' element_to_oxide(df, elements = c("Si", "Fe", "Al"), oxide_preference = "ask")
+#' }
 #'
-#' # Convert elements to oxides using reducing preference
-#' element_to_oxide(df, elements = c("Si", "Fe", "Cr"), oxide_preference = "reducing")
+#' # Loss of information when converting a subset 'which_concentration' and 'drop = TRUE'
+#' df2 <- data.frame(ID = "feldspar", Na = 8.77, Al = 10.29, Si = 32.13, Ba = 0.3, Sr = 0.05)
+#' element_to_oxide(
+#'   df2,
+#'   elements =  names(df2[-1]),
+#'   which_concentration = "major",
+#'   oxide_preference = "reducing",
+#'   drop = TRUE
+#' )
 #'
-#' # Manually specify which oxide to use for each element
-#' element_to_oxide(df, elements = c("Fe", "Cr"), oxide_preference = c(Fe = "FeO", Cr = "Cr2O3"))
+#' # Conversions are reversible
+#' oxides <- element_to_oxide(
+#'   df,
+#'   elements = names(df[-1]),
+#'   oxide_preference = "oxidising",
+#'   drop = TRUE,
+#'   normalise = TRUE
+#' )
+#' elements <- oxide_to_element(
+#'   oxides,
+#'   oxides = names(oxides[-1]),
+#'   drop = TRUE,
+#'   normalise = TRUE
+#' )
+#' all.equal(df, elements)
 #'
-#' # Preserve original element columns
-#' element_to_oxide(df, elements = c("Si", "Fe", "Cr"), oxide_preference = "oxidising", drop = FALSE)
-#'
+#' # Conversion from oxide to element summarises columns converting to the same element
+#' df3 <- data.frame(Fe2O3 = 20, FeO = 20, Cr2O3 = 15, CrO2 = 15, CuO = 20, Cu2O = 20)
+#' oxide_to_element(df3, oxides = names(df3), drop = TRUE)
+
 element_to_oxide <- function(
   df,
   elements,
@@ -250,10 +275,8 @@ oxide_to_element <- function(
   }
 
   # subset conversion table
-  conversion_table <- conversion_oxides[
-    conversion_oxides$Oxide %in% oxides &
-      !is.na(conversion_oxides$OxideToElement),
-  ]
+  conversion_table <- conversion_oxides[conversion_oxides$Oxide %in% oxides &
+                                          !is.na(conversion_oxides$OxideToElement), ]
 
   if (!all(oxides %in% conversion_table$Oxide)) {
     stop(
@@ -263,24 +286,22 @@ oxide_to_element <- function(
     )
   }
 
-  # concentration filtering
+  # convert
   element_percent <- df
 
-  # convert
   element_percent <- t(
-    t(element_percent[oxides]) *
-      conversion_table$OxideToElement[
-        match(oxides, conversion_table$Oxide)
-      ]
+    t(element_percent[oxides]) * conversion_table$OxideToElement[match(oxides, conversion_table$Oxide)]
   )
 
-  colnames(element_percent) <-
-    conversion_table$Element[
-      match(oxides, conversion_table$Oxide)
-    ]
+  element_percent <- as.data.frame(element_percent)
+
+  colnames(element_percent) <- conversion_table$Element[match(oxides, conversion_table$Oxide)]
+
+  # make column names syntactically valid
+  colnames(element_percent) <- make.names(colnames(element_percent), unique = TRUE)
 
   # Sum duplicate elements (e.g., Fe from FeO + Fe2O3)
-  element_percent <- sum_duplicates(as.data.frame(element_percent))
+  element_percent <- sum_duplicates(element_percent)
 
   # Normalise if requested
   if (normalise) {
@@ -374,17 +395,12 @@ sum_duplicates <- function(df) {
 
 #' Normalise rows to 100%
 #'
-#' @param df A data frame
+#' @param df A matrix or data frame
 #'
 #' Normalises values in a vector to 100%
 #'
 #' @keywords internal
 normalise_rows <- function(df) {
-  # Convert to matrix if it's a data frame
-  if (is.data.frame(df)) {
-    df <- as.matrix(df)
-  }
-  checkmate::assert_numeric(df)
 
   if (ncol(df) == 0) {
     return(df)
@@ -395,11 +411,6 @@ normalise_rows <- function(df) {
 
   # Normalise and return as percentages
   result <- df / row_sums * 100
-
-  # Convert back to data frame if input was data frame
-  if (is.data.frame(df)) {
-    result <- as.data.frame(result)
-  }
 
   return(result)
 }
