@@ -29,7 +29,14 @@
   **archchem**
 
 - [`archchem_example_input`](https://archaeothommy.github.io/ASTR/reference/archchem_example_input.md)
-  : archchem_example_input
+  : Example input data for ASTR
+
+- [`wt_to_at()`](https://archaeothommy.github.io/ASTR/reference/atomic_conversion.md)
+  [`at_to_wt()`](https://archaeothommy.github.io/ASTR/reference/atomic_conversion.md)
+  : Conversion between wt% and at%
+
+- [`conversion_oxides`](https://archaeothommy.github.io/ASTR/reference/conversion_oxides.md)
+  : Conversion factors from oxides to elements
 
 - [`copper_alloy_bb()`](https://archaeothommy.github.io/ASTR/reference/copper_alloy_bb.md)
   : Copper alloy classification according to Bayley & Butcher (2004)
@@ -40,17 +47,24 @@
 - [`copper_group_bray()`](https://archaeothommy.github.io/ASTR/reference/copper_group_bray.md)
   : Copper classification according to Bray et al. (2015)
 
-- [`elements`](https://archaeothommy.github.io/ASTR/reference/elements.md)
+- [`elements_data`](https://archaeothommy.github.io/ASTR/reference/elements_data.md)
   : Elements
 
 - [`geom_kde2d()`](https://archaeothommy.github.io/ASTR/reference/geom_kde2d.md)
   : Draw 2D Kernel Density Estimate Polygons by Quantiles
 
-- [`isotopes`](https://archaeothommy.github.io/ASTR/reference/isotopes.md)
+- [`isotopes_data`](https://archaeothommy.github.io/ASTR/reference/isotopes_data.md)
   : Isotopes
 
-- [`oxides`](https://archaeothommy.github.io/ASTR/reference/oxides.md) :
-  Oxides
+- [`element_to_oxide()`](https://archaeothommy.github.io/ASTR/reference/oxide_conversion.md)
+  [`oxide_to_element()`](https://archaeothommy.github.io/ASTR/reference/oxide_conversion.md)
+  : Oxide conversion functions
+
+- [`oxides_data`](https://archaeothommy.github.io/ASTR/reference/oxides_data.md)
+  : Oxides
 
 - [`pointcloud_distribution()`](https://archaeothommy.github.io/ASTR/reference/pointcloud_distribution.md)
   : Comparing Isotope Samples to Reference Data in 3D Space
+
+- [`special_oxide_states`](https://archaeothommy.github.io/ASTR/reference/special_oxide_states.md)
+  : Special oxide states
