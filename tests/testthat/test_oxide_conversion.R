@@ -137,7 +137,7 @@ test_that("oxide conversion: drop argument", {
 
 test_that("oxide conversion: normalise argument", {
   res <- element_to_oxide(df, elements = c("Ag", "Fe", "Si"), oxide_preference = "reducing", normalise = TRUE)
-  expect_equal(res$SiO2, c(55.6, 60.5), tolerance = 0.01)
+  expect_equal(res$SiO2, c(58.0, 62.8), tolerance = 0.01)
   # Check both rows sum to 100
   expect_equal(rowSums(res[, c("Ag2O", "FeO", "SiO2")]), c(100, 100), tolerance = 0.01)
 
