@@ -81,16 +81,30 @@ package maintainers or create a pull request in the \href{https://github.com/arc
 }
 \examples{
 # Example data frame with element weight percents
-df <- data.frame(ID = "Sample1", Si = 45, Fe = 50, Al = 5)
+df <- data.frame(ID = "Sample1", Si = 45, Fe = 50, Cr = 5)
 
 # Select elements by oxide_preference
-element_to_oxide(df, elements = c("Si", "Fe", "Al"), oxide_preference = "oxidising")
-element_to_oxide(df, elements = c("Fe", "Al"), oxide_preference = c(Fe = "FeO", Al = "Al2O3"))
+element_to_oxide(df, elements = c("Si", "Fe", "Cr"), oxide_preference = "oxidising")
+element_to_oxide(df, elements = c("Fe", "Cr"), oxide_preference = c(Fe = "FeO", Cr = "Cr2O3"))
 \dontrun{
-element_to_oxide(df, elements = c("Si", "Fe", "Al"), oxide_preference = "ask")
+element_to_oxide(df, elements = c("Si", "Fe", "Cr"), oxide_preference = "ask")
 }
 
-# Loss of information when converting a subset 'which_concentration' and 'drop = TRUE'
+# Conversions are reversible
+oxides <- element_to_oxide(
+  df,
+  elements = names(df[-1]),
+  oxide_preference = "oxidising",
+  drop = TRUE
+)
+elements <- oxide_to_element(
+  oxides,
+  oxides = names(oxides[-1]),
+  drop = TRUE
+)
+all.equal(df, elements)
+
+# Loss of information by using 'which_concentration' to convert a subset when 'drop = TRUE'
 df2 <- data.frame(ID = "feldspar", Na = 8.77, Al = 10.29, Si = 32.13, Ba = 0.3, Sr = 0.05)
 element_to_oxide(
   df2,
@@ -99,22 +113,6 @@ element_to_oxide(
   oxide_preference = "reducing",
   drop = TRUE
 )
-
-# Conversions are reversible
-oxides <- element_to_oxide(
-  df,
-  elements = names(df[-1]),
-  oxide_preference = "oxidising",
-  drop = TRUE,
-  normalise = TRUE
-)
-elements <- oxide_to_element(
-  oxides,
-  oxides = names(oxides[-1]),
-  drop = TRUE,
-  normalise = TRUE
-)
-all.equal(df, elements)
 
 # Conversion from oxide to element summarises columns converting to the same element
 df3 <- data.frame(Fe2O3 = 20, FeO = 20, Cr2O3 = 15, CrO2 = 15, CuO = 20, Cu2O = 20)
