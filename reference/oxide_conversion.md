@@ -101,20 +101,35 @@ GitHub repo](https://github.com/archaeothommy/ASTR) to add it.
 
 ``` r
 # Example data frame with element weight percents
-df <- data.frame(ID = "Sample1", Si = 45, Fe = 50, Al = 5)
+df <- data.frame(ID = "Sample1", Si = 45, Fe = 50, Cr = 5)
 
 # Select elements by oxide_preference
-element_to_oxide(df, elements = c("Si", "Fe", "Al"), oxide_preference = "oxidising")
-#>        ID Si Fe Al     SiO2   Fe2O3    Al2O3
-#> 1 Sample1 45 50  5 96.26789 71.4867 9.447131
-element_to_oxide(df, elements = c("Fe", "Al"), oxide_preference = c(Fe = "FeO", Al = "Al2O3"))
-#>        ID Si Fe Al     FeO    Al2O3
-#> 1 Sample1 45 50  5 71.4867 9.447131
+element_to_oxide(df, elements = c("Si", "Fe", "Cr"), oxide_preference = "oxidising")
+#>        ID Si Fe Cr     SiO2   Fe2O3     CrO3
+#> 1 Sample1 45 50  5 96.26789 71.4867 9.615451
+element_to_oxide(df, elements = c("Fe", "Cr"), oxide_preference = c(Fe = "FeO", Cr = "Cr2O3"))
+#>        ID Si Fe Cr      FeO    Cr2O3
+#> 1 Sample1 45 50  5 64.32447 7.307726
 if (FALSE) { # \dontrun{
-element_to_oxide(df, elements = c("Si", "Fe", "Al"), oxide_preference = "ask")
+element_to_oxide(df, elements = c("Si", "Fe", "Cr"), oxide_preference = "ask")
 } # }
 
-# Loss of information when converting a subset 'which_concentration' and 'drop = TRUE'
+# Conversions are reversible
+oxides <- element_to_oxide(
+  df,
+  elements = names(df[-1]),
+  oxide_preference = "oxidising",
+  drop = TRUE
+)
+elements <- oxide_to_element(
+  oxides,
+  oxides = names(oxides[-1]),
+  drop = TRUE
+)
+all.equal(df, elements)
+#> [1] TRUE
+
+# Loss of information by using 'which_concentration' to convert a subset when 'drop = TRUE'
 df2 <- data.frame(ID = "feldspar", Na = 8.77, Al = 10.29, Si = 32.13, Ba = 0.3, Sr = 0.05)
 element_to_oxide(
   df2,
@@ -123,25 +138,8 @@ element_to_oxide(
   oxide_preference = "reducing",
   drop = TRUE
 )
-#>         ID     Na2O     AlO     SiO2 BaO SrO
-#> 1 feldspar 11.82157 19.4422 68.73527  NA  NA
-
-# Conversions are reversible
-oxides <- element_to_oxide(
-  df,
-  elements = names(df[-1]),
-  oxide_preference = "oxidising",
-  drop = TRUE,
-  normalise = TRUE
-)
-elements <- oxide_to_element(
-  oxides,
-  oxides = names(oxides[-1]),
-  drop = TRUE,
-  normalise = TRUE
-)
-all.equal(df, elements)
-#> [1] TRUE
+#>         ID     Na2O      AlO     SiO2 BaO SrO
+#> 1 feldspar 11.82157 16.39146 68.73527  NA  NA
 
 # Conversion from oxide to element summarises columns converting to the same element
 df3 <- data.frame(Fe2O3 = 20, FeO = 20, Cr2O3 = 15, CrO2 = 15, CuO = 20, Cu2O = 20)
