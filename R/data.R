@@ -5,19 +5,28 @@
 #' @format a vector
 #'
 #' @family chemical_reference_data
-#' @name elements
-"elements"
+#' @name elements_data
+"elements_data"
 
 #' Oxides
 #'
-#' List of oxides, retrieved from https://www.wikidoc.org/index.php/Oxide,
-#' sorted according to alphabet
+#' List of oxides, sorted according to alphabet.
 #'
 #' @format a vector
 #'
 #' @family chemical_reference_data
-#' @name oxides
-"oxides"
+#' @name oxides_data
+"oxides_data"
+
+#' Special oxide states
+#'
+#' List of values that are treated like oxides, but are no chemical oxides.
+#'
+#' @format a vector
+#'
+#' @family chemical_reference_data
+#' @name special_oxide_states
+"special_oxide_states"
 
 #' Isotopes
 #'
@@ -27,29 +36,28 @@
 #' @format a vector
 #'
 #' @family chemical_reference_data
-#' @name isotopes
-"isotopes"
+#' @name isotopes_data
+"isotopes_data"
 
-#' archchem_example_input
+#' Conversion factors from oxides to elements
 #'
-#' A dataset that contains fictitious data mimicking lead slags
-#' including composition, isotopic, and contextual information.
-#' The variable names conform to ASTR conventions (see "ASTR Schema" vignette).
+#' @format A data frame with 106 rows and 7 variables:
+#' \describe{
+#'   \item{Element}{The symbol of a chemical element.}
+#'   \item{AtomicWeight}{The atomic weight (= molar mass) of the respective element.}
+#'   \item{Oxide}{The formula of the chemical element's oxide.}
+#'   \item{M}{The number of oxygen atoms in the oxide = the number of moles oxygen per mole oxide.}
+#'   \item{OxideWeight}{The molar mass of the oxide.}
+#'   \item{ElementToOxide}{The factor used in the conversion from the chemical element to its oxide.}
+#'   \item{OxideToElement}{The factor used in the conversion from the oxide to its chemical element.}
+#'   \item{OxidationState}{The oxidation state of the kation as numeric value.}
+#' }
 #'
-#' \itemize{
-#'   \item Sample. Individual samples for which compositional and isotopic data,
-#'   and contextual information is provided in this dataset.
-#'   \item Lab.no, Site, latitude, longitude, Type, method_comp. Columns containing
-#'   contextual information on the samples.
-#'   \item 143Nd/144Nd, d65Cu, d65Cu_err2SD, 206Pb/204Pb, 206Pb/204Pb_err2SD,
-#'   207Pb/204Pb, 207Pb/204Pb_err2SD, 208Pb/204Pb, 208Pb/204Pb_err2SD,207Pb/206Pb,
-#'   207Pb/206Pb_err2SD,208Pb/206Pb, 208Pb/206Pb_err2SD. Columns containing isotopic data.
-#'   \item Na2O_wt%, BaO_wt%, Pb_wt%, MgO_wt%, Al2O3_wt%, SiO2_wt%, SiO2_errSD%,
-#'   P2O5_wt%, S_at%, CaO_wt%,TiO2_wt%, MnO_wt%, FeOtot_wt%, FeOtot_err2SD, ZnO%,
-#'   K2O_wt%, Cu_wt%, As_wt%, LOI_wt%, Ag_ppb, Sn_µg/ml, Sb_ppm, Te_ppm, Bi_ppm,
-#'   U_ppm, V_ppm, Cr_ppm, Co_ppm, Ni_ppm, Sr_ppm, Se_ppm, FeOtot/SiO2, (Na2O+K2O)/SiO2.
-#'   Columns containing compositional data.
-#'   }
+#' @family chemical_reference_data
+#' @name conversion_oxides
+"conversion_oxides"
+
+#' Example input data for ASTR
 #'
 #' @docType data
 #' @keywords datasets
