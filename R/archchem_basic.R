@@ -169,6 +169,8 @@ as_archchem <- function(
     purrr::discard(is.null)
   # turn into tibble-derived object
   df <- tibble::new_tibble(df, nrow = nrow(df), class = "archchem")
+  # remove unit names from columns if they got a unit
+  df <- remove_unit_substrings(df)
   # post-reading validation
   if (validate) {
     validation_output <- validate(df, quiet = FALSE)
@@ -180,6 +182,21 @@ as_archchem <- function(
     }
   }
   return(df)
+}
+
+# helper function to rename column names
+remove_unit_substrings <- function(x, ...) {
+  dplyr::rename_with(
+    x,
+    remove_unit_substring,
+    tidyselect::where(function(y) {
+      class(y) == "units"
+    })
+  )
+}
+
+remove_unit_substring <- function(colname) {
+  sub("_.*$", "", colname, perl = TRUE)
 }
 
 #' @param path path to the file that should be read
