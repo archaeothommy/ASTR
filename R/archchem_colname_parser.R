@@ -93,7 +93,8 @@ colnames_to_constructors <- function(
           # handle special cases
           unit_from_col <- dplyr::case_match(
             unit_from_col,
-            c("at%", "wt%") ~ "%",
+            c("at%", "atP") ~ "atP",
+            c("wt%", "wtP") ~ "wtP",
             c("cps") ~ "count/s",
             .default = unit_from_col
           )
