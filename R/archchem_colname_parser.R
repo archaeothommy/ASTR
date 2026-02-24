@@ -5,14 +5,10 @@
 # SI-unit column types are defined with the units package
 # https://cran.r-project.org/web/packages/units/index.html
 # (so the udunits library)
-colnames_to_constructors <- function(
-  x,
-  context,
-  bdl, bdl_strategy,
-  guess_context_type, na,
-  drop_columns
-) {
-  purrr::imap(
+
+# 1. evaluate column names
+parse_colnames <- function(x, context, drop_columns) {
+  column_table <- purrr::imap_dfr(
     colnames(x),
     function(colname, idx) {
       # use while for hacky switch statement
@@ -20,91 +16,126 @@ colnames_to_constructors <- function(
         # ID column
         if (colname == "ID") {
           return(
-            function(x) {
-              x <- add_archchem_class(x, "archchem_id")
-              return(x)
-            }
+            tibble::tibble(
+              drop = FALSE,
+              idx,
+              colname,
+              consider_bdl = FALSE,
+              type = "as input",
+              unit = "none",
+              class = list("archchem_id"),
+            )
           )
           break
         }
         # contextual columns
         if (idx %in% context || colname %in% context) {
           return(
-            function(x) {
-              if (guess_context_type && is.character(x)) {
-                x <- readr::parse_guess(x, na = na)
-              }
-              x <- add_archchem_class(x, "archchem_context")
-              return(x)
-            }
+            tibble::tibble(
+              drop = FALSE,
+              idx,
+              colname,
+              consider_bdl = FALSE,
+              type = "guess",
+              unit = "none",
+              class = list("archchem_context")
+            )
           )
           break
         }
         # error columns
-        if (is_err(colname)) {
+        if (is_err_percent(colname)) { # check for percent err must be first
           return(
-            function(x) {
-              x <- apply_bdl_strategy(x, colname, bdl, bdl_strategy)
-              x <- as_numeric_info(x, colname)
-              x <- add_archchem_class(x, c("archchem_error"))
-            }
+            tibble::tibble(
+              drop = FALSE,
+              idx,
+              colname,
+              consider_bdl = TRUE,
+              type = "numeric",
+              unit = "%",
+              class = list("archchem_error"),
+            )
           )
+          break
+        }
+        if (is_err_abs(colname)) {
+          return(
+            tibble::tibble(
+              drop = FALSE,
+              idx,
+              colname,
+              consider_bdl = TRUE,
+              type = "numeric",
+              unit = "from main field",
+              class = list("archchem_error")
+            )
+          )
+          break
         }
         # ratios
         if (is_isotope_ratio(colname)) {
           return(
-            function(x) {
-              x <- as_numeric_info(x, colname)
-              x <- add_archchem_class(x, c("archchem_isotope", "archchem_ratio"))
-              return(x)
-            }
+            tibble::tibble(
+              drop = FALSE,
+              idx,
+              colname,
+              consider_bdl = FALSE,
+              type = "numeric",
+              unit = "none",
+              class = list(c("archchem_isotope", "archchem_ratio")),
+            )
           )
           break
         }
         if (is_isotope_delta_epsilon(colname)) {
-          # delta_epsilon <- extract_delta_epsilon_string(colname)
           return(
-            function(x) {
-              # if (delta_epsilon == "d") {
-              #   x / 10 # per mille -> percent
-              # } else if (delta_epsilon == "e") {
-              #   x / 100 # parts per 10000 -> percent
-              # }
-              x <- as_numeric_info(x, colname)
-              x <- add_archchem_class(x, c("archchem_isotope", "archchem_ratio"))
-              return(x)
-            }
+            tibble::tibble(
+              drop = FALSE,
+              idx,
+              colname,
+              consider_bdl = FALSE,
+              type = "numeric",
+              unit = "none",
+              class = list(c("archchem_isotope", "archchem_ratio"))
+            )
           )
           break
         }
         if (is_elemental_ratio(colname)) {
           return(
-            function(x) {
-              x <- as_numeric_info(x, colname)
-              x <- add_archchem_class(x, c("archchem_element", "archchem_ratio"))
-              return(x)
-            }
+            tibble::tibble(
+              drop = FALSE,
+              idx,
+              colname,
+              consider_bdl = FALSE,
+              type = "numeric",
+              unit = "none",
+              class = list(c("archchem_element", "archchem_ratio"))
+            )
           )
           break
         }
         # concentrations
         if (is_concentration(colname)) {
-          unit_from_col <- extract_unit_string(colname)
+          unit_from_name <- extract_unit_string(colname)
           # handle special cases
-          unit_from_col <- dplyr::case_match(
-            unit_from_col,
-            c("at%", "wt%") ~ "%",
+          unit_from_name <- dplyr::case_match(
+            unit_from_name,
+            c("at%", "atP") ~ "atP",
+            c("wt%", "wtP", "w/w%") ~ "wtP",
             c("cps") ~ "count/s",
-            .default = unit_from_col
+            .default = unit_from_name
           )
           return(
-            function(x) {
-              x <- apply_bdl_strategy(x, colname, bdl, bdl_strategy)
-              x <- as_numeric_info(x, colname)
-              x <- units::set_units(x, value = unit_from_col, mode = "standard")
-              x <- add_archchem_class(x, c("archchem_concentration"))
-              return(x)
-            }
+            tibble::tibble(
+              drop = FALSE,
+              idx,
+              colname,
+              consider_bdl = TRUE,
+              type = "numeric",
+              unit = unit_from_name,
+              class = list("archchem_concentration"),
+            )
           )
           break
         }
@@ -116,15 +147,79 @@ colnames_to_constructors <- function(
           "Either analytical columns do not conform to ASTR conventions or ",
           "contextual columns are not specified as such."
         )
+        warning(m)
         if (drop_columns) {
-          warning(m)
-          return(function(x) {
-            NULL
-          })
+          return(
+            tibble::tibble(
+              drop = TRUE,
+              idx,
+              colname,
+              unit = "none"
+            )
+          )
         } else {
           stop(m)
         }
       }
+    }
+  )
+  # get units for columns that depend on a main column,
+  # so overwrite unit "from main field" with the unit of
+  # said main field
+  is_dependent <- column_table$unit == "from main field"
+  dependent_cols <- column_table[is_dependent, ]
+  dependent_bases <- remove_suffix(dependent_cols$colname)
+  independent_cols <- column_table[!is_dependent, ]
+  independent_bases <- remove_suffix(independent_cols$colname)
+  for (i in seq_along(dependent_bases)) {
+    j <- which(dependent_bases[i] == independent_bases)
+    if (length(j) != 1) {
+      stop("Column ", dependent_cols$colname[i], " can not be uniquely matched to a non-error column.")
+    } else {
+      column_table[is_dependent, ]$unit[i] <- independent_cols$unit[j]
+    }
+  }
+  return(column_table)
+}
+
+# 2. build constructor functions
+build_constructors <- function(
+  column_table,
+  bdl, bdl_strategy,
+  guess_context_type, na
+) {
+  purrr::pmap(
+    column_table, function(drop, idx, colname, consider_bdl, type, unit, class) {
+      # delete fields that should be dropped (NULL-constructor)
+      if (drop) {
+        return(
+          function(x) {
+            NULL
+          }
+        )
+      }
+      # assemble normal constructor function based on column properties
+      return(
+        function(x) {
+          # bdl
+          if (consider_bdl) {
+            x <- apply_bdl_strategy(x, colname, bdl, bdl_strategy)
+          }
+          # type
+          if (type == "numeric") {
+            x <- as_numeric_info(x, colname)
+          } else if (type == "guess" && guess_context_type && is.character(x)) {
+            x <- readr::parse_guess(x, na = na)
+          }
+          # unit
+          if (unit != "none" && unit != "from main field") {
+            x <- units::set_units(x, value = unit, mode = "standard")
+          }
+          # class
+          x <- add_archchem_class(x, class)
+          return(x)
+        }
+      )
     }
   )
 }
@@ -162,8 +257,11 @@ apply_bdl_strategy <- function(x, colname, bdl, bdl_strategy) {
 
 #### regex validators ####
 
-is_err <- function(colname) {
-  grepl(err(), colname, perl = TRUE)
+is_err_percent <- function(colname) {
+  grepl(err_percent(), colname, perl = TRUE)
+}
+is_err_abs <- function(colname) {
+  grepl(err_abs(), colname, perl = TRUE)
 }
 is_isotope_ratio <- function(colname) {
   grepl(isotope_ratio(), colname, perl = TRUE)
@@ -225,17 +323,22 @@ isotope_delta_epsilon <- function() {
 }
 
 # error states
-err <- function() {
+err_percent <- function() {
+  paste0(c(
+    err_2sd_percent(), err_sd_percent()
+  ), collapse = "|")
+}
+err_2sd_percent <- function() "\\_err2SD%"
+err_sd_percent <- function() "\\_errSD%"
+
+err_abs <- function() {
   paste0(c(
     err_2sd(), err_sd(),
-    err_2sd_percent(), err_sd_percent(),
     err_2se(), err_se()
   ), collapse = "|")
 }
 err_2sd <- function() "\\_err2SD"
 err_sd <- function() "\\_errSD"
-err_2sd_percent <- function() "\\_err2SD%"
-err_sd_percent <- function() "\\_errSD%"
 err_2se <- function() "\\_err2SE"
 err_se <- function() "\\_errSE"
 
