@@ -187,14 +187,14 @@ as_archchem <- function(
 remove_unit_substrings <- function(x, ...) {
   dplyr::rename_with(
     x,
-    remove_unit_substring,
+    remove_suffix,
     tidyselect::where(function(y) {
       class(y) == "units" && !is_archchem_class(y, "archchem_error")
     })
   )
 }
 
-remove_unit_substring <- function(colname) {
+remove_suffix <- function(colname) {
   sub("_.*$", "", colname, perl = TRUE)
 }
 

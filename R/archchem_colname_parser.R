@@ -8,7 +8,7 @@
 
 # 1. evaluate column names
 parse_colnames <- function(x, context) {
-  purrr::imap_dfr(
+  column_table <- purrr::imap_dfr(
     colnames(x),
     function(colname, idx) {
       # use while for hacky switch statement
@@ -158,6 +158,23 @@ parse_colnames <- function(x, context) {
       }
     }
   )
+  # get units for columns that depend on a main column,
+  # so overwrite unit "from main field" with the unit of
+  # said main field
+  is_dependent <- column_table$unit == "from main field"
+  dependent_cols <- column_table[is_dependent, ]
+  dependent_bases <- remove_suffix(dependent_cols$colname)
+  independent_cols <- column_table[!is_dependent, ]
+  independent_bases <- remove_suffix(independent_cols$colname)
+  for (i in seq_along(dependent_bases)) {
+    j <- which(dependent_bases[i] == independent_bases)
+    if (length(j) != 1) {
+      stop("Column ", dependent_cols$colname[i], " can not be uniquely matched to a non-error column.")
+    } else {
+      column_table[is_dependent, ]$unit[i] <- independent_cols$unit[j]
+    }
+  }
+  return(column_table)
 }
 
 # 2. build constructor functions
