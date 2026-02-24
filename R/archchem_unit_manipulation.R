@@ -30,7 +30,7 @@ unify_concentration_unit <- function(x, unit, ...) {
     dplyr::across(
       tidyselect::where(function(y) {
         class(y) == "units" &&
-          is_archchem_class(y, "archchem_concentration")
+          units::ud_are_convertible(units::deparse_unit(y), "%")
       }),
       function(z) units::set_units(z, unit, mode = "standard")
     )

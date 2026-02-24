@@ -93,11 +93,11 @@
 #' conc <- get_concentration_columns(arch) # see also other get_..._columns functions
 #'
 #' # unit-aware arithmetics on archchem columns thanks to the units package
-#' conc$Sb_ppm + conc$Ag_ppb # works
-#' \dontrun{conc$Sb_ppm + conc$`Sn_µg/ml`} # fails with: cannot convert µg/ml into ppm
+#' conc$Sb + conc$Ag # works
+#' \dontrun{conc$Sb + conc$Sn} # fails with: cannot convert µg/ml into ppm
 #'
 #' # converting units
-#' conc$Sb_ppb <- units::set_units(arch$Sb_ppm, "ppb") %>%
+#' conc$Sb <- units::set_units(arch$Sb, "ppb") %>%
 #'   magrittr::set_attr("archchem_class", "archchem_concentration")
 #'
 #' # removing all units from archchem tables
@@ -106,14 +106,13 @@
 #' # applying tidyverse data manipulation on archchem tables
 #' arch %>%
 #'   dplyr::group_by(Site) %>%
-#'   dplyr::summarise(mean_Na2O = mean(`Na2O_wt%`))
+#'   dplyr::summarise(mean_Na2O = mean(Na2O))
 #' conc_subset <- conc %>%
-#'   dplyr::select(-`Sn_µg/ml`, -`Sb_ppm`) %>%
-#'   dplyr::filter(`Na2O_wt%` > units::set_units(1, "%"))
+#'   dplyr::select(-Sn, -Sb) %>%
+#'   dplyr::filter(Na2O > units::set_units(4, "wtP"))
 #'
 #' # unify all concentration units
-#' unify_concentration_unit(conc_subset, "ppm")
-#' # note that the column names are inaccurate now
+#' unify_concentration_unit(conc_subset, "ppb")
 #'
 #' @export
 as_archchem <- function(
@@ -142,17 +141,17 @@ as_archchem <- function(
   }
   context <- append(context, id_column)
   # add ID column to context for the following operation
-  df <- df %>%
+  df1 <- df %>%
     dplyr::mutate(ID = .data[[id_column]]) %>%
     dplyr::relocate("ID", .before = 1)
   # handle ID duplicates
-  if (length(unique(df$ID)) != nrow(df)) {
+  if (length(unique(df1$ID)) != nrow(df1)) {
     warning(
       "Detected multiple data rows with the same ID. They will be renamed ",
       "consecutively using the following convention: _1, _2, ... _n"
     )
   }
-  df <- df %>%
+  df2 <- df1 %>%
     dplyr::group_by(.data[["ID"]]) %>%
     dplyr::mutate(
       ID = dplyr::case_when(
@@ -163,17 +162,18 @@ as_archchem <- function(
     dplyr::ungroup()
   # determine and apply column types
   constructors <- colnames_to_constructors(
-    df, context, bdl, bdl_strategy, guess_context_type, na, drop_columns
+    df2, context, bdl, bdl_strategy, guess_context_type, na, drop_columns
   )
-  df <- purrr::map2(df, constructors, function(col, f) f(col)) %>%
+  col_list <- purrr::map2(df2, constructors, function(col, f) f(col)) %>%
     purrr::discard(is.null)
-  # turn into tibble-derived object
-  df <- tibble::new_tibble(df, nrow = nrow(df), class = "archchem")
+  df3 <- as.data.frame(col_list, check.names = FALSE)
   # remove unit names from columns if they got a unit
-  df <- remove_unit_substrings(df)
+  df4 <- remove_unit_substrings(df3)
+  # turn into tibble-derived object
+  df5 <- tibble::new_tibble(df4, nrow = nrow(df4), class = "archchem")
   # post-reading validation
   if (validate) {
-    validation_output <- validate(df, quiet = FALSE)
+    validation_output <- validate(df5, quiet = FALSE)
     if (nrow(validation_output) > 0) {
       warning(
         "See the full list of validation output with: ",
@@ -181,7 +181,7 @@ as_archchem <- function(
       )
     }
   }
-  return(df)
+  return(df5)
 }
 
 # helper function to rename column names
@@ -376,20 +376,20 @@ print.archchem <- function(x, ...) {
 
 # carry over archchem_class column attribute
 preserve_archchem_attrs <- function(modified, original) {
-  purrr::map2(modified, original, function(new_col, old_col) {
-    arch_attr <- attr(old_col, "archchem_class")
-    if (!is.null(arch_attr)) attr(new_col, "archchem_class") <- arch_attr
-    new_col
-  }) %>%
-    magrittr::set_names(names(modified)) %>%
-    tibble::new_tibble(nrow = nrow(modified), class = class(original))
+  for (nm in intersect(names(modified), names(original))) {
+    arch_attr <- attr(original[[nm]], "archchem_class")
+    if (!is.null(arch_attr)) {
+      attr(modified[[nm]], "archchem_class") <- arch_attr
+    }
+  }
+  tibble::new_tibble(modified, class = class(original))
 }
 
 # row-slice method
 #' @exportS3Method dplyr::dplyr_row_slice
 dplyr_row_slice.archchem <- function(data, i, ...) {
-  sliced <- purrr::map(data, function(x) x[i])
-  sliced_tbl <- tibble::new_tibble(sliced, nrow = length(i), class = class(data))
+  sliced <- purrr::map(data, vctrs::vec_slice, i = i)
+  sliced_tbl <- tibble::new_tibble(sliced, class = class(data))
   preserve_archchem_attrs(sliced_tbl, data)
 }
 
@@ -397,12 +397,13 @@ dplyr_row_slice.archchem <- function(data, i, ...) {
 #' @exportS3Method dplyr::dplyr_col_modify
 dplyr_col_modify.archchem <- function(data, cols) {
   modified_list <- utils::modifyList(as.list(data), cols)
-  modified_tbl <- tibble::new_tibble(modified_list, nrow = nrow(data), class = class(data))
+  modified_tbl <- tibble::new_tibble(modified_list, class = class(data))
   preserve_archchem_attrs(modified_tbl, data)
 }
+
 
 # final reconstruction
 #' @exportS3Method dplyr::dplyr_reconstruct
 dplyr_reconstruct.archchem <- function(data, template) {
-  tibble::new_tibble(data, nrow = nrow(data), class = class(template))
+  preserve_archchem_attrs(data, template)
 }
