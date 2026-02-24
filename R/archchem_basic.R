@@ -190,7 +190,7 @@ remove_unit_substrings <- function(x, ...) {
     x,
     remove_unit_substring,
     tidyselect::where(function(y) {
-      class(y) == "units"
+      class(y) == "units" && !is_archchem_class(y, "archchem_error")
     })
   )
 }

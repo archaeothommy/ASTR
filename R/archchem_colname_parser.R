@@ -41,7 +41,17 @@ colnames_to_constructors <- function(
           break
         }
         # error columns
-        if (is_err(colname)) {
+        if (is_err_percent(colname)) { # check for percent err must be first
+          return(
+            function(x) {
+              x <- apply_bdl_strategy(x, colname, bdl, bdl_strategy)
+              x <- as_numeric_info(x, colname)
+              x <- units::set_units(x, value = "%", mode = "standard")
+              x <- add_archchem_class(x, c("archchem_error"))
+            }
+          )
+        }
+        if (is_err_abs(colname)) {
           return(
             function(x) {
               x <- apply_bdl_strategy(x, colname, bdl, bdl_strategy)
@@ -163,8 +173,11 @@ apply_bdl_strategy <- function(x, colname, bdl, bdl_strategy) {
 
 #### regex validators ####
 
-is_err <- function(colname) {
-  grepl(err(), colname, perl = TRUE)
+is_err_percent <- function(colname) {
+  grepl(err_percent(), colname, perl = TRUE)
+}
+is_err_abs <- function(colname) {
+  grepl(err_abs(), colname, perl = TRUE)
 }
 is_isotope_ratio <- function(colname) {
   grepl(isotope_ratio(), colname, perl = TRUE)
@@ -226,17 +239,22 @@ isotope_delta_epsilon <- function() {
 }
 
 # error states
-err <- function() {
+err_percent <- function() {
+  paste0(c(
+    err_2sd_percent(), err_sd_percent()
+  ), collapse = "|")
+}
+err_2sd_percent <- function() "\\_err2SD%"
+err_sd_percent <- function() "\\_errSD%"
+
+err_abs <- function() {
   paste0(c(
     err_2sd(), err_sd(),
-    err_2sd_percent(), err_sd_percent(),
     err_2se(), err_se()
   ), collapse = "|")
 }
 err_2sd <- function() "\\_err2SD"
 err_sd <- function() "\\_errSD"
-err_2sd_percent <- function() "\\_err2SD%"
-err_sd_percent <- function() "\\_errSD%"
 err_2se <- function() "\\_err2SE"
 err_se <- function() "\\_errSE"
 
