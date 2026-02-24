@@ -12,20 +12,24 @@ NULL
 # registers the dimensionless units at% (atom percent) and wt% (weight percent)
 # when the package is loaded
 .onLoad <- function(libname, pkgname) {
-  try(
-    units::install_unit(
-      symbol = "atP", # at% is not allowed https://github.com/r-quantities/units/issues/289
-      def = "percent",
-      name = "atom percent"
-    ),
-    silent = TRUE
+  safe_install <- function(...) {
+    tryCatch(
+      units::install_unit(...),
+      error = function(e) NULL
+    )
+  }
+  # dummy base units (purely semantic)
+  safe_install("atomic_basis")
+  safe_install("mass_basis")
+  # percent-like units
+  safe_install(
+    symbol = "atP",
+    def    = "0.01 atomic_basis",
+    name   = "atom percent"
   )
-  try(
-    units::install_unit(
-      symbol = "wtP",
-      def = "percent",
-      name = "weight percent"
-    ),
-    silent = TRUE
+  safe_install(
+    symbol = "wtP",
+    def    = "0.01 mass_basis",
+    name   = "weight percent"
   )
 }
