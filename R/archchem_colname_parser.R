@@ -7,7 +7,7 @@
 # (so the udunits library)
 
 # 1. evaluate column names
-parse_colnames <- function(x, context) {
+parse_colnames <- function(x, context, drop_columns) {
   column_table <- purrr::imap_dfr(
     colnames(x),
     function(colname, idx) {
@@ -148,13 +148,18 @@ parse_colnames <- function(x, context) {
           "contextual columns are not specified as such."
         )
         warning(m)
-        return(
-          tibble::tibble(
-            drop = TRUE,
-            idx,
-            colname
+        if (drop_columns) {
+          return(
+            tibble::tibble(
+              drop = TRUE,
+              idx,
+              colname,
+              unit = "none"
+            )
           )
-        )
+        } else {
+          stop(m)
+        }
       }
     }
   )
@@ -181,8 +186,7 @@ parse_colnames <- function(x, context) {
 build_constructors <- function(
   column_table,
   bdl, bdl_strategy,
-  guess_context_type, na,
-  drop_columns
+  guess_context_type, na
 ) {
   purrr::pmap(
     column_table, function(drop, idx, colname, consider_bdl, type, unit, class) {
