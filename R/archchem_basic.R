@@ -161,9 +161,8 @@ as_archchem <- function(
     ) %>%
     dplyr::ungroup()
   # determine and apply column types
-  constructors <- colnames_to_constructors(
-    df2, context, bdl, bdl_strategy, guess_context_type, na, drop_columns
-  )
+  column_table <- parse_colnames(df2, context)
+  constructors <- build_constructors(column_table, bdl, bdl_strategy, guess_context_type, na, drop_columns)
   col_list <- purrr::map2(df2, constructors, function(col, f) f(col)) %>%
     purrr::discard(is.null)
   df3 <- as.data.frame(col_list, check.names = FALSE)

@@ -5,15 +5,10 @@
 # SI-unit column types are defined with the units package
 # https://cran.r-project.org/web/packages/units/index.html
 # (so the udunits library)
-colnames_to_constructors <- function(
-  x,
-  context,
-  bdl, bdl_strategy,
-  guess_context_type, na,
-  drop_columns
-) {
-  # determine column properties
-  column_table <- purrr::imap_dfr(
+
+# 1. evaluate column names
+parse_colnames <- function(x, context) {
+  purrr::imap_dfr(
     colnames(x),
     function(colname, idx) {
       # use while for hacky switch statement
@@ -25,7 +20,7 @@ colnames_to_constructors <- function(
               drop = FALSE,
               idx,
               colname,
-              bdl = FALSE,
+              consider_bdl = FALSE,
               type = "as input",
               unit = "none",
               class = list("archchem_id"),
@@ -40,7 +35,7 @@ colnames_to_constructors <- function(
               drop = FALSE,
               idx,
               colname,
-              bdl = FALSE,
+              consider_bdl = FALSE,
               type = "guess",
               unit = "none",
               class = list("archchem_context")
@@ -55,7 +50,7 @@ colnames_to_constructors <- function(
               drop = FALSE,
               idx,
               colname,
-              bdl = TRUE,
+              consider_bdl = TRUE,
               type = "numeric",
               unit = "%",
               class = list("archchem_error"),
@@ -69,7 +64,7 @@ colnames_to_constructors <- function(
               drop = FALSE,
               idx,
               colname,
-              bdl = TRUE,
+              consider_bdl = TRUE,
               type = "numeric",
               unit = "from main field",
               class = list("archchem_error")
@@ -84,7 +79,7 @@ colnames_to_constructors <- function(
               drop = FALSE,
               idx,
               colname,
-              bdl = FALSE,
+              consider_bdl = FALSE,
               type = "numeric",
               unit = "none",
               class = list(c("archchem_isotope", "archchem_ratio")),
@@ -98,7 +93,7 @@ colnames_to_constructors <- function(
               drop = FALSE,
               idx,
               colname,
-              bdl = FALSE,
+              consider_bdl = FALSE,
               type = "numeric",
               unit = "none",
               class = list(c("archchem_isotope", "archchem_ratio"))
@@ -112,7 +107,7 @@ colnames_to_constructors <- function(
               drop = FALSE,
               idx,
               colname,
-              bdl = FALSE,
+              consider_bdl = FALSE,
               type = "numeric",
               unit = "none",
               class = list(c("archchem_element", "archchem_ratio"))
@@ -136,7 +131,7 @@ colnames_to_constructors <- function(
               drop = FALSE,
               idx,
               colname,
-              bdl = TRUE,
+              consider_bdl = TRUE,
               type = "numeric",
               unit = unit_from_name,
               class = list("archchem_concentration"),
@@ -163,9 +158,17 @@ colnames_to_constructors <- function(
       }
     }
   )
-  # build constructors
+}
+
+# 2. build constructor functions
+build_constructors <- function(
+  column_table,
+  bdl, bdl_strategy,
+  guess_context_type, na,
+  drop_columns
+) {
   purrr::pmap(
-    column_table, function(drop, idx, colname, bdl, type, unit, class) {
+    column_table, function(drop, idx, colname, consider_bdl, type, unit, class) {
       # delete fields that should be dropped (NULL-constructor)
       if (drop) {
         return(
@@ -178,7 +181,7 @@ colnames_to_constructors <- function(
       return(
         function(x) {
           # bdl
-          if (bdl) {
+          if (consider_bdl) {
             x <- apply_bdl_strategy(x, colname, bdl, bdl_strategy)
           }
           # type
