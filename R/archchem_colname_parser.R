@@ -174,7 +174,7 @@ parse_colnames <- function(x, context, drop_columns) {
   for (i in seq_along(dependent_bases)) {
     j <- which(dependent_bases[i] == independent_bases)
     if (length(j) != 1) {
-      stop("Column ", dependent_cols$colname[i], " can not be uniquely matched to a non-error column.")
+      stop("Column ", dependent_cols$colname[i], " cannot be uniquely matched to a non-error column.")
     } else {
       column_table[is_dependent, ]$unit[i] <- independent_cols$unit[j]
     }
@@ -313,7 +313,7 @@ isotope_ratio <- function() {
   paste0("(", isotopes_list(), ")/(", isotopes_list(), ")")
 }
 
-# define regex pattern for delta and espilon notation:
+# define regex pattern for delta and epsilon notation:
 # letter d OR e followed by any isotope
 isotope_delta_epsilon <- function() {
   paste0(
