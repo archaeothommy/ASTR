@@ -4,6 +4,7 @@ Version: 0.0.0.9000
 URL: https://archaeothommy.github.io/ASTR/index.html
 Authors@R: c(
     person("Thomas", "Rose", comment = c(ORCID = "0000-0002-8186-3566"), role = c("cre", "aut"), email = "roseth@posteo.com"),
+    person("Mathias Ayine", "Abagna", role = "aut"),    
     person("Andrea", "Acevedo Mejia", comment = c(ORCID = "0009-0002-7441-1737"), role = "aut"),
     person("Gilberto", "Artioli", comment = c(ORCID = "0000-0002-8693-7392"), role = "aut"),
     person("María Florencia", "Becerra", comment = c(ORCID = "0000-0001-6302-7452"), role = "aut"),
