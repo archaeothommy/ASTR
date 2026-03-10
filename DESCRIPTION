@@ -54,6 +54,7 @@ Imports:
     tibble,
     tidyselect,
     units,
+    vctrs,
     robCompositions,
     ggplot2,
     ks,

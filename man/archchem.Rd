@@ -189,11 +189,11 @@ validate(arch)
 conc <- get_concentration_columns(arch) # see also other get_..._columns functions
 
 # unit-aware arithmetics on archchem columns thanks to the units package
-conc$Sb_ppm + conc$Ag_ppb # works
-\dontrun{conc$Sb_ppm + conc$`Sn_µg/ml`} # fails with: cannot convert µg/ml into ppm
+conc$Sb + conc$Ag # works
+\dontrun{conc$Sb + conc$Sn} # fails with: cannot convert µg/ml into ppm
 
 # converting units
-conc$Sb_ppb <- units::set_units(arch$Sb_ppm, "ppb") \%>\%
+conc$Sb <- units::set_units(arch$Sb, "ppb") \%>\%
   magrittr::set_attr("archchem_class", "archchem_concentration")
 
 # removing all units from archchem tables
@@ -202,13 +202,12 @@ remove_units(arch)
 # applying tidyverse data manipulation on archchem tables
 arch \%>\%
   dplyr::group_by(Site) \%>\%
-  dplyr::summarise(mean_Na2O = mean(`Na2O_wt\%`))
+  dplyr::summarise(mean_Na2O = mean(Na2O))
 conc_subset <- conc \%>\%
-  dplyr::select(-`Sn_µg/ml`, -`Sb_ppm`) \%>\%
-  dplyr::filter(`Na2O_wt\%` > units::set_units(1, "\%"))
+  dplyr::select(-Sn, -Sb) \%>\%
+  dplyr::filter(Na2O > units::set_units(4, "wtP"))
 
 # unify all concentration units
-unify_concentration_unit(conc_subset, "ppm")
-# note that the column names are inaccurate now
+unify_concentration_unit(conc_subset, "ppb")
 
 }
