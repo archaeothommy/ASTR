@@ -1,5 +1,5 @@
 ---
-title: "ASTR schema: Naming conventions"
+title: "ASTR schema"
 csl: apa.csl
 link-citations: TRUE
 output: rmarkdown::html_vignette
