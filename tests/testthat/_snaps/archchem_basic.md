@@ -3,10 +3,12 @@
     Code
       as.data.frame(test_input)
     Output
-           ID 206Pb/204Pb       Al2O3 SiO2+Al2O3   204Pb other other2      K2O  d18O
-      1 troet         0.5 3 [count/s]   20 [ppt] 7 [ppm] troet     27 23 [wtP] -5.32
-        SiO2/FeO         Mn        Zn SiO2/(FeO+MnO) Sb/As        Sn K2O+MgO+Na2O
-      1      0.5 2.45 [atP] 240 [ppm]           0.32  5.69 56 [µg/g]     54 [wtP]
+           ID 206Pb/204Pb       Al2O3 SiO2+Al2O3     204Pb other other2      K2O
+      1 troet         0.5 3 [count/s] 20 [ng/kg] 7 [mg/kg] troet     27 23 [wtP]
+         d18O SiO2/FeO         Mn          Zn SiO2/(FeO+MnO) Sb/As        Sn
+      1 -5.32      0.5 2.45 [atP] 240 [mg/kg]           0.32  5.69 56 [µg/g]
+        K2O+MgO+Na2O
+      1     54 [wtP]
 
 ---
 
@@ -73,66 +75,66 @@
       12 1.39 [wtP] 0.17 [wtP] 0.13 [wtP] 47.64 [wtP]   4.235 [wtP]  6.56 [%]
       13 2.10 [wtP] 0.34 [wtP] 1.32 [wtP] 43.21 [wtP]   2.161 [wtP]  1.52 [%]
       14 3.51 [wtP] 0.24 [wtP] 0.34 [wtP] 45.90 [wtP]   2.387 [wtP]  0.85 [%]
-                K2O         Cu         As        LOI         Ag           Sn
-      1  1.34 [wtP] 0.11 [wtP] 0.02 [wtP] 1.89 [wtP]  500 [ppb]   85 [µg/ml]
-      2  1.26 [wtP] 0.22 [wtP] 0.01 [wtP]   NA [wtP]  200 [ppb]   85 [µg/ml]
-      3  1.54 [wtP] 0.74 [wtP]   NA [wtP]   NA [wtP]  210 [ppb]   98 [µg/ml]
-      4  1.66 [wtP] 0.13 [wtP] 0.01 [wtP]   NA [wtP]  350 [ppb]   45 [µg/ml]
-      5  2.15 [wtP] 0.14 [wtP] 0.03 [wtP] 3.57 [wtP]  400 [ppb]   14 [µg/ml]
-      6  1.21 [wtP] 0.09 [wtP] 0.11 [wtP] 5.66 [wtP]  250 [ppb]  181 [µg/ml]
-      7  2.26 [wtP] 0.21 [wtP] 0.23 [wtP] 0.12 [wtP]  120 [ppb]  566 [µg/ml]
-      8  1.86 [wtP] 0.43 [wtP] 0.02 [wtP] 0.89 [wtP]  430 [ppb]  203 [µg/ml]
-      9  2.01 [wtP] 0.59 [wtP] 0.08 [wtP] 4.75 [wtP]  300 [ppb] 5594 [µg/ml]
-      10 1.34 [wtP] 0.07 [wtP] 0.06 [wtP]   NA [wtP] 2420 [ppb]   32 [µg/ml]
-      11 1.34 [wtP] 0.15 [wtP] 0.01 [wtP] 4.22 [wtP]  140 [ppb]   23 [µg/ml]
-      12 0.98 [wtP] 0.16 [wtP] 0.02 [wtP] 6.01 [wtP] 1610 [ppb]   45 [µg/ml]
-      13 1.48 [wtP] 0.27 [wtP] 0.05 [wtP] 3.22 [wtP]  100 [ppb]   15 [µg/ml]
-      14 1.32 [wtP] 0.09 [wtP] 0.14 [wtP]   NA [wtP]  100 [ppb]  146 [µg/ml]
-                 Sb       Te        Bi        U        V        Cr       Co        Ni
-      1   370 [ppm]  2 [ppm]  18 [ppm]  3 [ppm] 60 [ppm] 160 [ppm] 60 [ppm]  60 [ppm]
-      2   210 [ppm]  2 [ppm]  20 [ppm]  2 [ppm] 60 [ppm] 140 [ppm] 70 [ppm] 100 [ppm]
-      3   256 [ppm] NA [ppm]  47 [ppm] NA [ppm] 63 [ppm]  99 [ppm] 55 [ppm]  87 [ppm]
-      4   400 [ppm]  2 [ppm]  NA [ppm]  2 [ppm] 45 [ppm]  30 [ppm] 30 [ppm]  20 [ppm]
-      5   410 [ppm]  2 [ppm]   6 [ppm]  3 [ppm] 55 [ppm]  75 [ppm] NA [ppm]  10 [ppm]
-      6   453 [ppm]  6 [ppm]   9 [ppm]  3 [ppm] 54 [ppm]  41 [ppm]  8 [ppm]  47 [ppm]
-      7   701 [ppm]  8 [ppm]   9 [ppm] NA [ppm] 75 [ppm] 106 [ppm] 22 [ppm]  19 [ppm]
-      8   231 [ppm] 15 [ppm]   3 [ppm] NA [ppm] 84 [ppm]  91 [ppm] 47 [ppm]  34 [ppm]
-      9   107 [ppm]  6 [ppm]   5 [ppm]  5 [ppm] 32 [ppm]  63 [ppm] 17 [ppm]  37 [ppm]
-      10 3310 [ppm]  9 [ppm] 150 [ppm] NA [ppm] 61 [ppm]  45 [ppm] NA [ppm]   4 [ppm]
-      11   95 [ppm]  5 [ppm]   1 [ppm]  3 [ppm] 37 [ppm]  36 [ppm] 69 [ppm]  39 [ppm]
-      12   78 [ppm]  5 [ppm]   4 [ppm]  3 [ppm] 40 [ppm]  33 [ppm] 43 [ppm]  39 [ppm]
-      13  610 [ppm]  2 [ppm]   1 [ppm]  2 [ppm] 80 [ppm] 190 [ppm] 20 [ppm]  50 [ppm]
-      14  390 [ppm] NA [ppm]  NA [ppm]  1 [ppm] 40 [ppm] 100 [ppm] 10 [ppm]  65 [ppm]
-                Sr       Se FeOtot/SiO2 (Na2O+K2O)/SiO2 206Pb/204Pb
-      1  130 [ppm] NA [ppm]       1.386         0.14037    18.61147
-      2  120 [ppm] NA [ppm]       1.756         0.11906    18.61617
-      3  121 [ppm] 15 [ppm]       1.003         0.21443    18.61615
-      4  250 [ppm] NA [ppm]       1.791         0.33269    18.61272
-      5  160 [ppm] NA [ppm]       0.734         0.11839    18.63562
-      6  258 [ppm] NA [ppm]       1.081         0.15696    18.63952
-      7  122 [ppm]  3 [ppm]       1.051         0.16741    18.64465
-      8  280 [ppm]  3 [ppm]       1.561         0.13869    18.83274
-      9  310 [ppm] NA [ppm]       2.279         0.33569    18.83312
-      10 287 [ppm]  5 [ppm]       0.166         0.17145    18.80371
-      11 155 [ppm] NA [ppm]       3.333         0.28031    18.80760
-      12 165 [ppm] NA [ppm]       1.672         0.19235    18.81356
-      13 100 [ppm] NA [ppm]       1.136         0.12303    18.81501
-      14 120 [ppm] NA [ppm]       1.449         0.15851    18.82037
-         206Pb/204Pb_err2SD 207Pb/204Pb 207Pb/204Pb_err2SD 208Pb/204Pb
-      1             0.01082    15.65405            0.00915    38.75630
-      2             0.01629    15.65682            0.01341    38.76404
-      3             0.01698    15.65740            0.01441    38.76411
-      4             0.00926    15.65677            0.00747    38.76097
-      5             0.01189    15.64765            0.00989    38.73583
-      6             0.01802    15.65502            0.01513    38.75729
-      7             0.01468    15.65836            0.01210    38.76615
-      8             0.01608    15.82161            0.01350    39.20161
-      9             0.01875    15.82042            0.01619    39.20067
-      10            0.03129    15.81646            0.02600    39.15557
-      11            0.01550    15.82128            0.01309    39.17608
-      12            0.01557    15.82045            0.01305    39.17244
-      13            0.01535    15.80824            0.01350    39.13346
-      14            0.01483    15.81119            0.01252    39.13715
+                K2O         Cu         As        LOI           Ag           Sn
+      1  1.34 [wtP] 0.11 [wtP] 0.02 [wtP] 1.89 [wtP]  500 [ug/kg]   85 [µg/ml]
+      2  1.26 [wtP] 0.22 [wtP] 0.01 [wtP]   NA [wtP]  200 [ug/kg]   85 [µg/ml]
+      3  1.54 [wtP] 0.74 [wtP]   NA [wtP]   NA [wtP]  210 [ug/kg]   98 [µg/ml]
+      4  1.66 [wtP] 0.13 [wtP] 0.01 [wtP]   NA [wtP]  350 [ug/kg]   45 [µg/ml]
+      5  2.15 [wtP] 0.14 [wtP] 0.03 [wtP] 3.57 [wtP]  400 [ug/kg]   14 [µg/ml]
+      6  1.21 [wtP] 0.09 [wtP] 0.11 [wtP] 5.66 [wtP]  250 [ug/kg]  181 [µg/ml]
+      7  2.26 [wtP] 0.21 [wtP] 0.23 [wtP] 0.12 [wtP]  120 [ug/kg]  566 [µg/ml]
+      8  1.86 [wtP] 0.43 [wtP] 0.02 [wtP] 0.89 [wtP]  430 [ug/kg]  203 [µg/ml]
+      9  2.01 [wtP] 0.59 [wtP] 0.08 [wtP] 4.75 [wtP]  300 [ug/kg] 5594 [µg/ml]
+      10 1.34 [wtP] 0.07 [wtP] 0.06 [wtP]   NA [wtP] 2420 [ug/kg]   32 [µg/ml]
+      11 1.34 [wtP] 0.15 [wtP] 0.01 [wtP] 4.22 [wtP]  140 [ug/kg]   23 [µg/ml]
+      12 0.98 [wtP] 0.16 [wtP] 0.02 [wtP] 6.01 [wtP] 1610 [ug/kg]   45 [µg/ml]
+      13 1.48 [wtP] 0.27 [wtP] 0.05 [wtP] 3.22 [wtP]  100 [ug/kg]   15 [µg/ml]
+      14 1.32 [wtP] 0.09 [wtP] 0.14 [wtP]   NA [wtP]  100 [ug/kg]  146 [µg/ml]
+                   Sb         Te          Bi          U          V          Cr
+      1   370 [mg/kg]  2 [mg/kg]  18 [mg/kg]  3 [mg/kg] 60 [mg/kg] 160 [mg/kg]
+      2   210 [mg/kg]  2 [mg/kg]  20 [mg/kg]  2 [mg/kg] 60 [mg/kg] 140 [mg/kg]
+      3   256 [mg/kg] NA [mg/kg]  47 [mg/kg] NA [mg/kg] 63 [mg/kg]  99 [mg/kg]
+      4   400 [mg/kg]  2 [mg/kg]  NA [mg/kg]  2 [mg/kg] 45 [mg/kg]  30 [mg/kg]
+      5   410 [mg/kg]  2 [mg/kg]   6 [mg/kg]  3 [mg/kg] 55 [mg/kg]  75 [mg/kg]
+      6   453 [mg/kg]  6 [mg/kg]   9 [mg/kg]  3 [mg/kg] 54 [mg/kg]  41 [mg/kg]
+      7   701 [mg/kg]  8 [mg/kg]   9 [mg/kg] NA [mg/kg] 75 [mg/kg] 106 [mg/kg]
+      8   231 [mg/kg] 15 [mg/kg]   3 [mg/kg] NA [mg/kg] 84 [mg/kg]  91 [mg/kg]
+      9   107 [mg/kg]  6 [mg/kg]   5 [mg/kg]  5 [mg/kg] 32 [mg/kg]  63 [mg/kg]
+      10 3310 [mg/kg]  9 [mg/kg] 150 [mg/kg] NA [mg/kg] 61 [mg/kg]  45 [mg/kg]
+      11   95 [mg/kg]  5 [mg/kg]   1 [mg/kg]  3 [mg/kg] 37 [mg/kg]  36 [mg/kg]
+      12   78 [mg/kg]  5 [mg/kg]   4 [mg/kg]  3 [mg/kg] 40 [mg/kg]  33 [mg/kg]
+      13  610 [mg/kg]  2 [mg/kg]   1 [mg/kg]  2 [mg/kg] 80 [mg/kg] 190 [mg/kg]
+      14  390 [mg/kg] NA [mg/kg]  NA [mg/kg]  1 [mg/kg] 40 [mg/kg] 100 [mg/kg]
+                 Co          Ni          Sr         Se FeOtot/SiO2 (Na2O+K2O)/SiO2
+      1  60 [mg/kg]  60 [mg/kg] 130 [mg/kg] NA [mg/kg]       1.386         0.14037
+      2  70 [mg/kg] 100 [mg/kg] 120 [mg/kg] NA [mg/kg]       1.756         0.11906
+      3  55 [mg/kg]  87 [mg/kg] 121 [mg/kg] 15 [mg/kg]       1.003         0.21443
+      4  30 [mg/kg]  20 [mg/kg] 250 [mg/kg] NA [mg/kg]       1.791         0.33269
+      5  NA [mg/kg]  10 [mg/kg] 160 [mg/kg] NA [mg/kg]       0.734         0.11839
+      6   8 [mg/kg]  47 [mg/kg] 258 [mg/kg] NA [mg/kg]       1.081         0.15696
+      7  22 [mg/kg]  19 [mg/kg] 122 [mg/kg]  3 [mg/kg]       1.051         0.16741
+      8  47 [mg/kg]  34 [mg/kg] 280 [mg/kg]  3 [mg/kg]       1.561         0.13869
+      9  17 [mg/kg]  37 [mg/kg] 310 [mg/kg] NA [mg/kg]       2.279         0.33569
+      10 NA [mg/kg]   4 [mg/kg] 287 [mg/kg]  5 [mg/kg]       0.166         0.17145
+      11 69 [mg/kg]  39 [mg/kg] 155 [mg/kg] NA [mg/kg]       3.333         0.28031
+      12 43 [mg/kg]  39 [mg/kg] 165 [mg/kg] NA [mg/kg]       1.672         0.19235
+      13 20 [mg/kg]  50 [mg/kg] 100 [mg/kg] NA [mg/kg]       1.136         0.12303
+      14 10 [mg/kg]  65 [mg/kg] 120 [mg/kg] NA [mg/kg]       1.449         0.15851
+         206Pb/204Pb 206Pb/204Pb_err2SD 207Pb/204Pb 207Pb/204Pb_err2SD 208Pb/204Pb
+      1     18.61147            0.01082    15.65405            0.00915    38.75630
+      2     18.61617            0.01629    15.65682            0.01341    38.76404
+      3     18.61615            0.01698    15.65740            0.01441    38.76411
+      4     18.61272            0.00926    15.65677            0.00747    38.76097
+      5     18.63562            0.01189    15.64765            0.00989    38.73583
+      6     18.63952            0.01802    15.65502            0.01513    38.75729
+      7     18.64465            0.01468    15.65836            0.01210    38.76615
+      8     18.83274            0.01608    15.82161            0.01350    39.20161
+      9     18.83312            0.01875    15.82042            0.01619    39.20067
+      10    18.80371            0.03129    15.81646            0.02600    39.15557
+      11    18.80760            0.01550    15.82128            0.01309    39.17608
+      12    18.81356            0.01557    15.82045            0.01305    39.17244
+      13    18.81501            0.01535    15.80824            0.01350    39.13346
+      14    18.82037            0.01483    15.81119            0.01252    39.13715
          208Pb/204Pb_err2SD 207Pb/206Pb 207Pb/206Pb_err2SD 208Pb/206Pb
       1             0.02270     0.84110            0.00006     2.08239
       2             0.03450     0.84103            0.00013     2.08229
@@ -174,8 +176,8 @@
       Contextual columns: [0;35mother[0m, [0;35mother2[0m 
       # A data frame: 1 x 16
         ID    `206Pb/204Pb`     Al2O3 `SiO2+Al2O3` `204Pb` other other2   K2O  d18O
-        <chr>         <dbl> [count/s]        [ppt]   [ppm] <chr>  <dbl> [wtP] <dbl>
+        <chr>         <dbl> [count/s]      [ng/kg] [mg/kg] <chr>  <dbl> [wtP] <dbl>
       1 troet           0.5         3           20       7 troet     27    23 -5.32
-      # i 7 more variables: `SiO2/FeO` <dbl>, Mn [atP], Zn [ppm],
+      # i 7 more variables: `SiO2/FeO` <dbl>, Mn [atP], Zn [mg/kg],
       #   `SiO2/(FeO+MnO)` <dbl>, `Sb/As` <dbl>, Sn [µg/g], `K2O+MgO+Na2O` [wtP]
 
