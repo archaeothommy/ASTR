@@ -54,14 +54,42 @@ unify_concentration_unit <- function(x, unit, ...) {
 }
 #' @export
 unify_concentration_unit <- function(x, unit, ...) {
-  dplyr::mutate(
-    x,
-    dplyr::across(
-      tidyselect::where(function(y) {
-        class(y) == "units" &&
-          units::ud_are_convertible(units::deparse_unit(y), "%")
-      }),
-      function(z) units::set_units(z, unit, mode = "standard")
-    )
+  switch(unit,
+    # Conversion to atP
+    atP = {
+      # identify all oxides and present, convert to wt%
+
+      # convert all other concentrations to wt%
+
+      # convert to at%
+
+    },
+    # Conversion to oxP
+    oxP = {
+      # identify all elements that are not oxides and convert to wt%
+
+      # convert all elements to ox%
+
+    },
+    # conversion to all other units
+    {
+      # something here to convert from atP and oxP to wt% first
+
+      dplyr::mutate(
+        x,
+        dplyr::across(
+          tidyselect::where(function(y) {
+            class(y) == "units" &&
+              units::ud_are_convertible(units::deparse_unit(y), "mg/kg")
+          }),
+          function(z) units::set_units(z, unit, mode = "standard")
+        )
+      )
+    }
   )
 }
+
+# units_to_convert <- unlist(
+#   sapply(df[elements], function(x) class(x) == "units" & units(x)[1] != unit)
+# )
+# df_convert <- cbind(df$ID, subset(df[elements], select = units_to_convert))
