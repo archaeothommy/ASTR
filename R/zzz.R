@@ -39,6 +39,7 @@ NULL
   )
   safe_install(
     symbol = "wtP",
+    #def    = "(0.01 g) / g",
     def    = "0.01 mass_basis",
     name   = "weight percent"
   )
