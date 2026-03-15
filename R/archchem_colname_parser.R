@@ -118,11 +118,32 @@ parse_colnames <- function(x, context, drop_columns) {
         # concentrations
         if (is_concentration(colname)) {
           unit_from_name <- extract_unit_string(colname)
-          # handle special cases
+          # handle relative units and special cases
           unit_from_name <- dplyr::recode_values(
             unit_from_name,
             c("at%", "atP") ~ "atP",
-            c("wt%", "wtP", "w/w%") ~ "wtP",
+            c("wt%", "wtP",
+              "w/w%", "m/m%", "%w/w", "%m/m",
+              "(w/w)%", "(m/m)%", "%(w/w)", "%(m/m)",
+              "pph", "pph(m/m)", "pph(w/w)"
+            ) ~ "wtP",
+            c("%w/v", "%m/v", "%(w/v)", "%(m/v)",
+              "w/v%", "m/v%", "(w/v)%", "(m/v)%",
+              "pph(m/v)"
+            ) ~ "0.01 g/L",
+            c("%v/v", "v/v%", "%(v/v)", "(v/v)%", "pph(v/v)") ~ "0.01 L/L",
+            c("ppm(w/w)", "ppm(m/m)", "ppm") ~ "mg/kg",
+            c("ppm(m/v)") ~ "mg/L",
+            c("ppm(v/v)") ~ "ml/L",
+            c("ppb(m/m)", "ppb(w/w)", "ppb") ~ "ug/kg",
+            c("ppb(m/v)", "ppb(w/v)") ~ "ug/L",
+            c("ppb(v/v)") ~ "ul/L",
+            c("ppt(m/m)", "ppt(w/w)", "ppt") ~ "ng/kg",
+            c("ppt(m/v)", "ppt(w/v)") ~ "ng/L",
+            c("ppt(v/v)") ~ "nl/L",
+            c("ppq(m/m)", "ppq(w/w)", "ppq") ~ "pg/kg",
+            c("ppq(m/v)", "ppq(w/v)") ~ "pg/L",
+            c("ppq(v/v)") ~ "pl/L",
             c("cps") ~ "count/s",
             default = unit_from_name
           )
