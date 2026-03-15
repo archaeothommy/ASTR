@@ -119,12 +119,12 @@ parse_colnames <- function(x, context, drop_columns) {
         if (is_concentration(colname)) {
           unit_from_name <- extract_unit_string(colname)
           # handle special cases
-          unit_from_name <- dplyr::case_match(
+          unit_from_name <- dplyr::recode_values(
             unit_from_name,
             c("at%", "atP") ~ "atP",
             c("wt%", "wtP", "w/w%") ~ "wtP",
             c("cps") ~ "count/s",
-            .default = unit_from_name
+            default = unit_from_name
           )
           return(
             tibble::tibble(

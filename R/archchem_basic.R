@@ -154,11 +154,11 @@ as_archchem <- function(
   df2 <- df1 %>%
     dplyr::group_by(.data[["ID"]]) %>%
     dplyr::mutate(
-      ID = dplyr::case_when(
-        dplyr::n() > 1 ~ paste0(.data[["ID"]], "_", as.character(dplyr::row_number())),
-        .default = .data[["ID"]]
-      )
-    ) %>%
+      ID = if (dplyr::n() > 1) {
+        paste0(.data[["ID"]], "_", as.character(dplyr::row_number()))
+      } else  {
+        .data[["ID"]]
+      }) %>%
     dplyr::ungroup()
   # determine and apply column types
   column_table <- parse_colnames(df2, context, drop_columns)
