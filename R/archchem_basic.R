@@ -156,9 +156,10 @@ as_archchem <- function(
     dplyr::mutate(
       ID = if (dplyr::n() > 1) {
         paste0(.data[["ID"]], "_", as.character(dplyr::row_number()))
-      } else  {
+      } else {
         .data[["ID"]]
-      }) %>%
+      }
+    ) %>%
     dplyr::ungroup()
   # determine and apply column types
   column_table <- parse_colnames(df2, context, drop_columns)
