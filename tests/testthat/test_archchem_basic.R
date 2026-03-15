@@ -6,9 +6,15 @@ test_input <- read_archchem(
   context = c("other", "other2")
 )
 
+test_input_xlsx <- read_archchem(
+  system.file("extdata", "input_format.xlsx", package = "ASTR"),
+  id_column = "other",
+  context = c("other", "other2")
+)
+
 test_input2 <- suppressWarnings(
-  as_archchem(
-    archchem_example_input,
+  read_archchem(
+    system.file("extdata", "test_data_input_good.csv", package = "ASTR"),
     id_column = "Sample",
     context = c("Lab no.", "Site", "latitude", "longitude", "Type", "method_comp")
   )
@@ -25,6 +31,7 @@ test_that("reading of a basic example table works as expected", {
     # turn to data.frame to render the entire table
     as.data.frame(test_input)
   })
+  expect_equal(test_input_xlsx, test_input)
   expect_snapshot({
     # turn to data.frame to render the entire table
     as.data.frame(test_input2)
