@@ -1,7 +1,8 @@
 Package: ASTR
 Title: Archaeometric Standards and Tools in R
 Version: 0.0.0.9000
-URL: https://archaeothommy.github.io/ASTR/index.html
+URL: https://archaeothommy.github.io/ASTR/, https://github.com/archaeothommy/ASTR
+BugReports: https://github.com/archaeothommy/ASTR/issues
 Authors@R: c(
     person("Thomas", "Rose", comment = c(ORCID = "0000-0002-8186-3566"), role = c("cre", "aut"), email = "roseth@posteo.com"),
     person("Mathias Ayine", "Abagna", role = "aut"),    
