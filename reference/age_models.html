@@ -31,6 +31,7 @@ to calculate all age models simultaneously."></head><body>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/archaeothommy/ASTR/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -40,7 +41,7 @@ to calculate all age models simultaneously."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Calculate lead isotope age models</h1>
-
+      <small class="dont-index">Source: <a href="https://github.com/archaeothommy/ASTR/blob/main/R/ASTR_PbIso_AgeModels.R" class="external-link"><code>R/ASTR_PbIso_AgeModels.R</code></a></small>
       <div class="d-none name"><code>age_models.Rd</code></div>
     </div>
 
@@ -167,33 +168,33 @@ isotope evolution by a two-stage model. Earth and Planetary Science Letters
 <span class="r-in"><span><span class="co"># calculate values for all age models</span></span></span>
 <span class="r-in"><span><span class="fu">pb_iso_age_model</span><span class="op">(</span><span class="va">df</span>, model <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   206Pb/204Pb 207Pb/204Pb 208Pb/204Pb model_age_SK75 mu_SK75 kappa_SK75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    18.30038    15.14488    2.006848       -963.871   7.820    -15.103</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    18.07860    15.36644    2.064077       -109.337   8.745    -16.169</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    18.00370    15.38626    2.080466          2.782   8.843    -16.421</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    18.23320    15.43730    2.039134        -65.723   9.016    -15.861</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    18.24889    15.08747    2.080708      -1112.699   7.600    -15.074</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    18.04038    15.23320    2.174920       -432.383   8.199    -15.960</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    18.41717    15.24889    2.034988       -741.575   8.219    -14.994</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    18.30038    15.14488    2.006848       -963.871   7.820    -15.103</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    18.07860    15.36644    2.064077       -109.337   8.745    -16.169</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    18.00370    15.38626    2.080466          2.782   8.843    -16.421</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   model_age_CR75 mu_CR75 kappa_CR75 model_age_AJ84 mu_AJ84 kappa_AJ84</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        326.633  10.575      3.854       -811.770   7.932    -14.881</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        447.135  10.510      3.860        -30.577   8.772    -15.869</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        489.280  10.488      3.862         76.023   8.862    -16.108</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4        355.354  10.559      3.855         -0.593   9.015    -15.565</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5        358.829  10.558      3.855       -937.725   7.732    -14.866</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        474.280  10.496      3.861       -318.863   8.279    -15.686</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        254.489  10.614      3.850       -623.768   8.293    -14.757</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        326.633  10.575      3.854       -811.770   7.932    -14.881</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        447.135  10.510      3.860        -30.577   8.772    -15.869</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        489.280  10.488      3.862         76.023   8.862    -16.108</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># calculate values for a specific age model</span></span></span>
 <span class="r-in"><span><span class="fu">pb_iso_age_model</span><span class="op">(</span><span class="va">df</span>, model <span class="op">=</span> <span class="st">"SK75"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   206Pb/204Pb 207Pb/204Pb 208Pb/204Pb model_age_SK75 mu_SK75 kappa_SK75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    18.30038    15.14488    2.006848       -963.871   7.820    -15.103</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    18.07860    15.36644    2.064077       -109.337   8.745    -16.169</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    18.00370    15.38626    2.080466          2.782   8.843    -16.421</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    18.23320    15.43730    2.039134        -65.723   9.016    -15.861</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    18.24889    15.08747    2.080708      -1112.699   7.600    -15.074</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    18.04038    15.23320    2.174920       -432.383   8.199    -15.960</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    18.41717    15.24889    2.034988       -741.575   8.219    -14.994</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    18.30038    15.14488    2.006848       -963.871   7.820    -15.103</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    18.07860    15.36644    2.064077       -109.337   8.745    -16.169</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    18.00370    15.38626    2.080466          2.782   8.843    -16.421</span>
 <span class="r-in"><span><span class="fu">stacey_kramers_1975</span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   206Pb/204Pb 207Pb/204Pb 208Pb/204Pb model_age_SK75 mu_SK75 kappa_SK75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    18.30038    15.14488    2.006848       -963.871   7.820    -15.103</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    18.07860    15.36644    2.064077       -109.337   8.745    -16.169</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    18.00370    15.38626    2.080466          2.782   8.843    -16.421</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    18.23320    15.43730    2.039134        -65.723   9.016    -15.861</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    18.24889    15.08747    2.080708      -1112.699   7.600    -15.074</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    18.04038    15.23320    2.174920       -432.383   8.199    -15.960</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    18.41717    15.24889    2.034988       -741.575   8.219    -14.994</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    18.30038    15.14488    2.006848       -963.871   7.820    -15.103</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    18.07860    15.36644    2.064077       -109.337   8.745    -16.169</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    18.00370    15.38626    2.080466          2.782   8.843    -16.421</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
