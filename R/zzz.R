@@ -23,15 +23,19 @@ NULL
 # when the package is loaded
 .onLoad <- function(libname, pkgname) {
   safe_install <- function(...) {
+    # tryCatch to prevent an error when these units are already defined in
+    # the current session
     tryCatch(
       units::install_unit(...),
       error = function(e) NULL
     )
   }
-  # dummy base units (purely semantic)
+  # define dummy base units (purely semantic)
+  # see ?units::install_unit for details on this mechanism
   safe_install("atomic_basis")
-  safe_install("mass_basis")
-  # percent-like units
+  safe_install("mass_basis", "unitless")
+  # create percent-like units
+  # the %-sign can not be used in custom unit names, so we use P
   safe_install(
     symbol = "atP",
     def    = "0.01 atomic_basis",
@@ -39,7 +43,6 @@ NULL
   )
   safe_install(
     symbol = "wtP",
-    #def    = "(0.01 g) / g",
     def    = "0.01 mass_basis",
     name   = "weight percent"
   )
