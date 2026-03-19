@@ -26,7 +26,7 @@ All columns that contain element and oxide compositions and analytical errors, i
 
 - The names of oxides and trace elements are self-explanatory (e.g. `SiO2` or `Si`). Total iron, if given, should be expressed as: `FeOtot` or `Fe2O3tot`. Loss on ignition, where known, should be expressed as `LOI`.
 
-- Units for values should follow element or oxide, as `_<unit>`. Units supported include *all SI units*, as well as *ppm*, *ppb*, *ppt*, *%*, *wt%*, *at%*, *w/w%*, *‰*, *counts*, and *cps*, noted as such.
+- Units for values should follow element or oxide, as `_<unit>`. Units supported include *all SI units*, as well as *ppm*, *ppb*, *ppt*, *ppq*, *%*, *wt%*, *at%*, *‰*, *counts*, and *cps*, noted as such. For relative units, the type of concentration can be specified, e.g. *w/w%* or *ppm(m/v)*
 
 - Where known, specify *wt%* and *at%* instead of using *%*. For *‘per mille’*, use the symbol *‰*.
 
