@@ -1,7 +1,7 @@
 # test columns selection function not checked elsewhere
 
 test_input <- suppressWarnings(
-  read_archchem(
+  read_ASTR(
     system.file("extdata", "test_data_input_good.csv", package = "ASTR"),
     id_column = "Sample",
     context = c("Lab no.", "Site", "latitude", "longitude", "Type", "method_comp")
@@ -10,7 +10,7 @@ test_input <- suppressWarnings(
 
 no_unit <- remove_units(test_input, recover_unit_names = TRUE)
 
-test_that("units are removed from archchem objects", {
+test_that("units are removed from ASTR objects", {
   expect_false(inherits(no_unit$`Co_mg/kg`, "units"))
   expect_all_true(c("Te_mg/kg", "As_wt%", "S_at%") %in% colnames(no_unit))
 })

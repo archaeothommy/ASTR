@@ -1,10 +1,10 @@
-#' @rdname archchem
+#' @rdname ASTR
 #' @export
 remove_units <- function(x, ...) {
   UseMethod("remove_units")
 }
 #' @export
-remove_units.archchem <- function(x, recover_unit_names = FALSE, ...) {
+remove_units.ASTR <- function(x, recover_unit_names = FALSE, ...) {
   # rename columns: recover units in column names
   if (recover_unit_names) {
     x <- dplyr::rename_with(
@@ -29,7 +29,7 @@ remove_units.archchem <- function(x, recover_unit_names = FALSE, ...) {
         paste0(column_names, "_", unit_names)
       },
       tidyselect::where(function(y) {
-        class(y) == "units" && !is_archchem_class(y, "archchem_error")
+        class(y) == "units" && !is_ASTR_class(y, "ASTR_error")
       })
     )
   }
@@ -45,7 +45,7 @@ remove_units.archchem <- function(x, recover_unit_names = FALSE, ...) {
   )
 }
 
-#' @rdname archchem
+#' @rdname ASTR
 #' @param unit string with a unit definition that can be understood by
 #' \link[units]{set_units}, e.g. "%", "kg", or "m/s^2"
 #' @export

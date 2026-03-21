@@ -1,6 +1,6 @@
 #### column type constructor mechanism ####
 
-# define the correct constructor function for an archchem column
+# define the correct constructor function for an ASTR column
 # based on some clever parsing of the column name
 # SI-unit column types are defined with the units package
 # https://cran.r-project.org/web/packages/units/index.html
@@ -23,7 +23,7 @@ parse_colnames <- function(x, context, drop_columns) {
               consider_bdl = FALSE,
               type = "as input",
               unit = "none",
-              class = list("archchem_id"),
+              class = list("ASTR_id"),
             )
           )
           break
@@ -38,7 +38,7 @@ parse_colnames <- function(x, context, drop_columns) {
               consider_bdl = FALSE,
               type = "guess",
               unit = "none",
-              class = list("archchem_context")
+              class = list("ASTR_context")
             )
           )
           break
@@ -53,7 +53,7 @@ parse_colnames <- function(x, context, drop_columns) {
               consider_bdl = TRUE,
               type = "numeric",
               unit = "%",
-              class = list("archchem_error"),
+              class = list("ASTR_error"),
             )
           )
           break
@@ -67,7 +67,7 @@ parse_colnames <- function(x, context, drop_columns) {
               consider_bdl = TRUE,
               type = "numeric",
               unit = "from main field",
-              class = list("archchem_error")
+              class = list("ASTR_error")
             )
           )
           break
@@ -82,7 +82,7 @@ parse_colnames <- function(x, context, drop_columns) {
               consider_bdl = FALSE,
               type = "numeric",
               unit = "none",
-              class = list(c("archchem_isotope", "archchem_ratio")),
+              class = list(c("ASTR_isotope", "ASTR_ratio")),
             )
           )
           break
@@ -96,7 +96,7 @@ parse_colnames <- function(x, context, drop_columns) {
               consider_bdl = FALSE,
               type = "numeric",
               unit = "none",
-              class = list(c("archchem_isotope", "archchem_ratio"))
+              class = list(c("ASTR_isotope", "ASTR_ratio"))
             )
           )
           break
@@ -110,7 +110,7 @@ parse_colnames <- function(x, context, drop_columns) {
               consider_bdl = FALSE,
               type = "numeric",
               unit = "none",
-              class = list(c("archchem_element", "archchem_ratio"))
+              class = list(c("ASTR_element", "ASTR_ratio"))
             )
           )
           break
@@ -155,7 +155,7 @@ parse_colnames <- function(x, context, drop_columns) {
               consider_bdl = TRUE,
               type = "numeric",
               unit = unit_from_name,
-              class = list("archchem_concentration"),
+              class = list("ASTR_concentration"),
             )
           )
           break
@@ -237,7 +237,7 @@ build_constructors <- function(
             x <- units::set_units(x, value = unit, mode = "standard")
           }
           # class
-          x <- add_archchem_class(x, class)
+          x <- add_ASTR_class(x, class)
           return(x)
         }
       )
@@ -245,8 +245,8 @@ build_constructors <- function(
   )
 }
 
-add_archchem_class <- function(x, class) {
-  attr(x, "archchem_class") <- class
+add_ASTR_class <- function(x, class) {
+  attr(x, "ASTR_class") <- class
   return(x)
 }
 

@@ -1,13 +1,13 @@
-# functions to select sets of columns for archchem tables
+# functions to select sets of columns for ASTR tables
 
-is_archchem_class <- function(x, classes) {
-  any(attr(x, "archchem_class") %in% classes)
+is_ASTR_class <- function(x, classes) {
+  any(attr(x, "ASTR_class") %in% classes)
 }
 
 get_cols_with_ac_class <- function(x, classes) {
   dplyr::select(x, tidyselect::where(
     function(y) {
-      is_archchem_class(y, classes)
+      is_ASTR_class(y, classes)
     }
   ))
 }
@@ -15,69 +15,69 @@ get_cols_with_ac_class <- function(x, classes) {
 get_cols_without_ac_class <- function(x, classes) {
   dplyr::select(x, tidyselect::where(
     function(y) {
-      !is_archchem_class(y, classes)
+      !is_ASTR_class(y, classes)
     }
   ))
 }
 
-#' @rdname archchem
+#' @rdname ASTR
 #' @export
 get_contextual_columns <- function(x, ...) {
   UseMethod("get_contextual_columns")
 }
 #' @export
-get_contextual_columns.archchem <- function(x, ...) {
-  get_cols_with_ac_class(x, c("archchem_id", "archchem_context"))
+get_contextual_columns.ASTR <- function(x, ...) {
+  get_cols_with_ac_class(x, c("ASTR_id", "ASTR_context"))
 }
 
-#' @rdname archchem
+#' @rdname ASTR
 #' @export
 get_analytical_columns <- function(x, ...) {
   UseMethod("get_analytical_columns")
 }
 #' @export
-get_analytical_columns.archchem <- function(x, ...) {
-  get_cols_without_ac_class(x, "archchem_context")
+get_analytical_columns.ASTR <- function(x, ...) {
+  get_cols_without_ac_class(x, "ASTR_context")
 }
 
-#' @rdname archchem
+#' @rdname ASTR
 #' @export
 get_isotope_columns <- function(x, ...) {
   UseMethod("get_isotope_columns")
 }
 #' @export
-get_isotope_columns.archchem <- function(x, ...) {
-  get_cols_with_ac_class(x, c("archchem_id", "archchem_isotope"))
+get_isotope_columns.ASTR <- function(x, ...) {
+  get_cols_with_ac_class(x, c("ASTR_id", "ASTR_isotope"))
 }
 
-#' @rdname archchem
+#' @rdname ASTR
 #' @export
 get_element_columns <- function(x, ...) {
   UseMethod("get_element_columns")
 }
 #' @export
-get_element_columns.archchem <- function(x, ...) {
-  get_cols_with_ac_class(x, c("archchem_id", "archchem_element"))
+get_element_columns.ASTR <- function(x, ...) {
+  get_cols_with_ac_class(x, c("ASTR_id", "ASTR_element"))
 }
 
-#' @rdname archchem
+#' @rdname ASTR
 #' @export
 get_ratio_columns <- function(x, ...) {
   UseMethod("get_ratio_columns")
 }
 #' @export
-get_ratio_columns.archchem <- function(x, ...) {
-  get_cols_with_ac_class(x, c("archchem_id", "archchem_ratio"))
+get_ratio_columns.ASTR <- function(x, ...) {
+  get_cols_with_ac_class(x, c("ASTR_id", "ASTR_ratio"))
 }
 
-#' @rdname archchem
+#' @rdname ASTR
 #' @export
 get_concentration_columns <- function(x, ...) {
   UseMethod("get_concentration_columns")
 }
 #' @export
-get_concentration_columns.archchem <- function(x, ...) {
-  get_cols_with_ac_class(x, c("archchem_id", "archchem_concentration"))
+get_concentration_columns.ASTR <- function(x, ...) {
+  get_cols_with_ac_class(x, c("ASTR_id", "ASTR_concentration"))
 }
 
 get_cols_with_unit <- function(x, units) {
@@ -96,13 +96,13 @@ get_cols_with_unit <- function(x, units) {
     ))
 }
 
-#' @rdname archchem
+#' @rdname ASTR
 #' @param units A character vector with units to be selected.
 #' @export
 get_unit_columns <- function(x, units, ...) {
   UseMethod("get_unit_columns")
 }
 #' @export
-get_unit_columns.archchem <- function(x, units, ...) {
+get_unit_columns.ASTR <- function(x, units, ...) {
   get_cols_with_unit(x, units)
 }
