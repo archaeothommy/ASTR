@@ -122,7 +122,7 @@ parse_colnames <- function(x, context, drop_columns) {
           unit_from_name <- dplyr::recode_values(
             unit_from_name,
             c("at%", "atP") ~ "atP",
-            c("wt%", "wtP",
+            c("wt%", "wtP", "%",
               "w/w%", "m/m%", "%w/w", "%m/m",
               "(w/w)%", "(m/m)%", "%(w/w)", "%(m/m)",
               "pph", "pph(m/m)", "pph(w/w)"
@@ -135,9 +135,9 @@ parse_colnames <- function(x, context, drop_columns) {
             c("ppm(w/w)", "ppm(m/m)", "ppm") ~ "mg/kg",
             c("ppm(m/v)") ~ "mg/L",
             c("ppm(v/v)") ~ "ml/L",
-            c("ppb(m/m)", "ppb(w/w)", "ppb") ~ "ug/kg",
-            c("ppb(m/v)", "ppb(w/v)") ~ "ug/L",
-            c("ppb(v/v)") ~ "ul/L",
+            c("ppb(m/m)", "ppb(w/w)", "ppb") ~ "µg/kg",
+            c("ppb(m/v)", "ppb(w/v)") ~ "µg/L",
+            c("ppb(v/v)") ~ "µl/L",
             c("ppt(m/m)", "ppt(w/w)", "ppt") ~ "ng/kg",
             c("ppt(m/v)", "ppt(w/v)") ~ "ng/L",
             c("ppt(v/v)") ~ "nl/L",
