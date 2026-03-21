@@ -2,7 +2,6 @@
 % Please edit documentation in R/ASTR-package.R
 \docType{package}
 \name{ASTR-package}
-\alias{ASTR}
 \alias{ASTR-package}
 \title{ASTR: Archaeometric Standards and Tools in R}
 \description{
@@ -20,6 +19,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Mathias Ayine Abagna
   \item Andrea Acevedo Mejia (\href{https://orcid.org/0009-0002-7441-1737}{ORCID})
   \item Gilberto Artioli (\href{https://orcid.org/0000-0002-8693-7392}{ORCID})
   \item María Florencia Becerra (\href{https://orcid.org/0000-0001-6302-7452}{ORCID})

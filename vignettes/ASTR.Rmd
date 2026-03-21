@@ -1,5 +1,5 @@
 ---
-title: "ASTR"
+title: "Working with ASTR objects"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{ASTR}
@@ -17,3 +17,11 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(ASTR)
 ```
+
+
+- If you have columns with Pb isotope model calculations in your dataset prior to importing data, ensure the names do **not** contain a dash (‘-’) or underscore (‘\_’) and specify these columns as context in the `read_archem()` function. The function `pb_iso_age_model()` can calculate model ages, µ (^238^U/^204^Pb), and κ (^232^Th/^238^U) values using the @stacey1975, @cumming1975, and @albarede1984 systems within ASTR.
+
+
+- relative units are converted to absolute units whereever possible with m/m assumed as default: ppm to µm/g
+
+- unify units (ppm, ppq, etc.) 
