@@ -33,7 +33,7 @@ test_that("column selection based on archchem column types", {
       )
   )
   expect_all_true(
-    colnames(get_unit_columns(test_input, c("µg/kg", "µg/ml", "%"))) ==
+    colnames(get_unit_columns(test_input, c("ng/g", "µg/ml", "%"))) ==
       c("SiO2_errSD%", "Ag", "Sn")
   )
 })
