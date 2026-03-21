@@ -1,3 +1,13 @@
+test_that("unit notation transformation works", {
+  expect_equal(transform_notation("wt%"), "wt%")
+  expect_equal(transform_notation("µg/kg"), "µg kg-1")
+  expect_equal(transform_notation("g/g2"), "g g-2")
+  expect_error(transform_notation(c("wt%", "mg/kg", "kg2/m2", "g/l2")), "Assertion on 'unit' failed:.*")
+  expect_error(transform_notation("kg/m2/s2"), "This unit cannot be converted.*")
+})
+
+
+
 # Sample tibble for tests
 df <- tibble::tibble(
   id = 1:2,

@@ -20,6 +20,33 @@ get_cols_without_ac_class <- function(x, classes) {
   ))
 }
 
+get_cols_with_unit <- function(x, units) {
+
+  units <- sapply(units, function(unit) transform_notation(unit))
+
+  dplyr::select(x, tidyselect::where(
+    function(y) {
+      inherits(y, "units")
+    }
+  )) %>%
+    dplyr::select(tidyselect::where(
+      function(y) {
+        units::deparse_unit(y) %in% units
+      }
+    ))
+}
+
+#' @rdname archchem
+#' @export
+get_unit_columns <- function(x, units, ...) {
+  UseMethod("get_unit_columns")
+}
+#' @export
+get_unit_columns.archchem <- function(x, units, ...) {
+  get_cols_with_unit(x, units)
+}
+
+
 #' @rdname archchem
 #' @export
 get_contextual_columns <- function(x, ...) {

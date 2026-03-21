@@ -8,6 +8,7 @@
 \alias{validate}
 \alias{format.archchem}
 \alias{print.archchem}
+\alias{get_unit_columns}
 \alias{get_contextual_columns}
 \alias{get_analytical_columns}
 \alias{get_isotope_columns}
@@ -52,6 +53,8 @@ validate(x, quiet = TRUE, ...)
 \method{format}{archchem}(x, ...)
 
 \method{print}{archchem}(x, ...)
+
+get_unit_columns(x, units, ...)
 
 get_contextual_columns(x, ...)
 
