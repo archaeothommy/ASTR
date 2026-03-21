@@ -43,7 +43,7 @@ Suggests:
     vdiffr
 Imports:
     checkmate,
-    dplyr,
+    dplyr  (>= 1.2.0),
     geometry,
     magrittr,
     purrr,

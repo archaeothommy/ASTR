@@ -17,12 +17,12 @@ remove_units.archchem <- function(x, recover_unit_names = FALSE, ...) {
             unit <- units(x[[column_name]])
             rendered_unit <- as.character(unit, neg_power = FALSE, prod_sep = "*")
             # handle special cases
-            dplyr::case_match(
+            dplyr::recode_values(
               rendered_unit,
               "atP" ~ "at%",
               "wtP" ~ "wt%",
               "count/s" ~ "cps",
-              .default = rendered_unit
+              default = rendered_unit
             )
           }
         )
