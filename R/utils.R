@@ -65,13 +65,14 @@ return_numeric_columns <- function(df, columns, all = FALSE) {
 #'
 #' @param unit Character string
 transform_notation <- function(unit) {
-
   checkmate::assert_character(unit, len = 1)
 
   unit <- unlist(strsplit(unit, "/"))
   if (length(unit) == 2) {
     unit[3] <- sub("[[:alpha:]]*", "", unit[2])
-    if (unit[3] == "") {unit[3] <- "1"}
+    if (unit[3] == "") {
+      unit[3] <- "1"
+    }
     unit[2] <- sub("[[:digit:]]*$", "", unit[2])
     unit[2] <- paste0(unit[2:3], collapse = "-")
     unit <- paste0(unit[1:2], collapse = " ")
