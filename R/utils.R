@@ -64,7 +64,6 @@ return_numeric_columns <- function(df, columns, all = FALSE) {
 #' Transform unit in ratio notation into notation with negative exponents
 #'
 #' @param unit Character string
-#' @export
 transform_notation <- function(unit) {
 
   checkmate::assert_character(unit, len = 1)
