@@ -8,13 +8,13 @@
 \alias{validate}
 \alias{format.archchem}
 \alias{print.archchem}
-\alias{get_unit_columns}
 \alias{get_contextual_columns}
 \alias{get_analytical_columns}
 \alias{get_isotope_columns}
 \alias{get_element_columns}
 \alias{get_ratio_columns}
 \alias{get_concentration_columns}
+\alias{get_unit_columns}
 \alias{remove_units}
 \alias{unify_concentration_unit}
 \title{\strong{archchem}}
@@ -54,8 +54,6 @@ validate(x, quiet = TRUE, ...)
 
 \method{print}{archchem}(x, ...)
 
-get_unit_columns(x, units, ...)
-
 get_contextual_columns(x, ...)
 
 get_analytical_columns(x, ...)
@@ -67,6 +65,8 @@ get_element_columns(x, ...)
 get_ratio_columns(x, ...)
 
 get_concentration_columns(x, ...)
+
+get_unit_columns(x, units, ...)
 
 remove_units(x, ...)
 
@@ -117,6 +117,8 @@ provided for all file types except \code{.xlsx} or \code{.xls}. Default to \verb
 \item{x}{an object of class archchem}
 
 \item{quiet}{should warnings be printed? Defaults to TRUE}
+
+\item{units}{A character vector with units to be selected.}
 
 \item{unit}{string with a unit definition that can be understood by
 \link[units]{set_units}, e.g. "\%", "kg", or "m/s^2"}
