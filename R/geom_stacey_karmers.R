@@ -181,7 +181,7 @@ StatStaceyKramers <- ggplot2::ggproto(
 #' @export
 #' @example
 #'library(ggplot2)
-#'
+#'set.seed(50)
 #'df <- data.frame(
 #'  pb64 = rnorm(10, 18,0.2),
 #'  pb74 = rnorm(10, 15.7,0.1),
@@ -195,7 +195,7 @@ StatStaceyKramers <- ggplot2::ggproto(
 #'  geom_sk_labels(system = "76") +
 #'  coord_cartesian(
 #'    xlim = range(df$pb64) * c(.99, 1.01),
-#'    ylim = range(df$pb74) ** c(.99, 1.01)
+#'    ylim = range(df$pb74) * c(.99, 1.01)
 #'  ) +
 #'  labs(
 #'    x = expression({}^206*Pb / {}^204*Pb),
@@ -213,7 +213,7 @@ StatStaceyKramers <- ggplot2::ggproto(
 #'                 kappa_list = c(3.2, 3.4, 3.6, 3.8)) +
 #'  coord_cartesian(
 #'    xlim = range(df$pb64) * c(.99, 1.01),
-#'    ylim = range(df$pb84) ** c(.99, 1.01)
+#'    ylim = range(df$pb84) * c(.99, 1.01)
 #'  ) +
 #'  labs(
 #'    x = expression({}^206*Pb / {}^204*Pb),
@@ -231,7 +231,7 @@ StatStaceyKramers <- ggplot2::ggproto(
 #'  geom_sk_labels(system = "76", show_isochrons = FALSE, color = 'red') +
 #'  coord_cartesian(
 #'    xlim = range(df$pb64) * c(.99, 1.01),
-#'    ylim = range(df$pb74) ** c(.99, 1.01)
+#'    ylim = range(df$pb74) * c(.99, 1.01)
 #'  ) +
 #'  labs(
 #'    x = expression({}^206*Pb / {}^204*Pb),
