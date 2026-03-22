@@ -134,19 +134,52 @@ StatStaceyKramers <- ggplot2::ggproto(
 
 #' Stacey-Kramers Lead Evolution Geom
 #'
+#' This Geom is used for drawing and labeling isochron, geochron and kappa
+#' lines used for isotope age model refrencing using in Lead Isotope biplots.
+#' The line follow the model used by Stacey and Kramers (1975).
+#'
+#' The ploting system follows the convetion of showing geochron and isochorn
+#' lines for the #' Pb 207/204~Pb 206/204 plot and the kappa lines for
+#' Pb 208/204~Pb 206/204 plot.
+#'
+#' # Note
+#'
+#' Curretnly the plot will scale the xlim and ylim to their maximum bounds.
+#' To prevent this use `coord_cartisian(xlim, ylim)` to force the axis range
+#' to the desiered values.
+#'
 #'
 #' @inheritParams ggplot2::geom_path
 #' @param Mu1 Second-stage 238U/204Pb ratio (default 10).
 #' @param Kappa Second-stage 232Th/238U ratio (default 4).
 #' @param Ti Initial time of the second stage in years (default 3.7Ga).
 #' @param interval Time interval for isochron labels in years (default 200Ma).
-#' @param system Character "76" or "86" defining the isotope system.
-#' @param show_geochron Logical; should the Geochron be plotted?
+#' @param system Character "76" or "86" defining the isotope plot axis
+#' (default "76").
+#' @param show_geochron Logical; should the Geochron be plotted? (degault TRUE)
 #' @param show_isochrons Logical; should time isochrons be plotted?
+#' (degault TRUE)
 #' @param kappa_list Numeric vector of Kappa values to plot in "86" system.
 #'
+#' @section Asthetics:
+#' `geom_sk_lines()` and `geom_sk_labels()` accpet the following astheic vlues
+#'
+#' * `alpha`
+#' * `colour` (controls the polygon outline)
+#' * `fill` (controls the polygon fill)
+#' * `linetype`
+#' * `linewidth` (controls the outline thickness)
+#' * `text.colour` (controls colour of the text)
+#' * `size.unit` (controls size aesthetic in "mm", "pt", "cm", "in" or "pc")
+#'
+#' @return A ggplot2 layer object.
+#'
+#' @seealso
+#' [age_models()]
+#'
+#'
 #' @export
-geom_stacey_kramers <- function(mapping = NULL,
+geom_sk_lines <- function(mapping = NULL,
                                 data = NULL,
                                 system = "76",
                                 Mu1 = 10,
@@ -168,7 +201,7 @@ geom_stacey_kramers <- function(mapping = NULL,
   )
 }
 
-#' @rdname geom_stacey_kramers
+#' @rdname geom_sk_lines
 #' @export
 geom_sk_labels <- function(mapping = NULL,
                            data = NULL,
