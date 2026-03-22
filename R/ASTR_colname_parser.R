@@ -122,7 +122,7 @@ parse_colnames <- function(x, context, drop_columns) {
           unit_from_name <- dplyr::recode_values(
             unit_from_name,
             c("at%", "atP") ~ "atP",
-            c("wt%", "wtP", "%",
+            c("wt%", "wtP",
               "w/w%", "m/m%", "%w/w", "%m/m",
               "(w/w)%", "(m/m)%", "%(w/w)", "%(m/m)",
               "pph", "pph(m/m)", "pph(w/w)"
