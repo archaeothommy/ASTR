@@ -31,11 +31,11 @@ test_that("atomic conversions are reversible", {
 
 test_that("drop argument behaves correctly", {
   res_keep <- wt_to_at(df, elements = c("Si", "O"), drop = FALSE)
-  expect_true("Si_at" %in% names(res_keep))
+  expect_true("Si_atP" %in% names(res_keep))
   expect_true("Si" %in% names(res_keep))
 
   res2_keep <- at_to_wt(df2, elements = c("Si", "O"), drop = FALSE)
-  expect_true("Si_wt" %in% names(res2_keep))
+  expect_true("Si_wtP" %in% names(res2_keep))
   expect_true("Si" %in% names(res2_keep))
 })
 
@@ -49,7 +49,7 @@ test_that("functions throw correct errors where intended", {
     regexp = "The following elements are not present*"
   )
   expect_error(wt_to_at(data.frame(Xx = 10), elements = "Xx"),
-    regexp = "The following are not valid*"
+    regexp = "The following elements are not valid*"
   )
   expect_error(wt_to_at("test", elements = "Si"))
 
@@ -57,7 +57,27 @@ test_that("functions throw correct errors where intended", {
     regexp = "The following elements are not present*"
   )
   expect_error(at_to_wt(data.frame(Xx = 10), elements = "Xx"),
-    regexp = "The following are not valid*"
+    regexp = "The following elements are not valid*"
   )
   expect_error(wt_to_at("test", elements = "Si"))
+})
+
+# ASTR objects handled correctly
+test_input <- read_ASTR(
+  system.file("extdata", "input_format.csv", package = "ASTR"),
+  id_column = "other",
+  context = c("other", "other2")
+) %>% unify_concentration_unit("wtP")
+
+test_input_atP <- wt_to_at(test_input, drop = FALSE)
+test_input_wtP <- at_to_wt(test_input)
+
+test_that("Conversion handles ASTR objects correctly", {
+  expect_equal(units(test_input_atP$Sn_atP)[[1]], "atP")
+  expect_equal(units(test_input_atP$K2O)[[1]], "wtP")
+  expect_equal(attributes(test_input_atP$Zn)$ASTR_class, attributes(test_input$Zn)$ASTR_class)
+
+  expect_equal(units(test_input_wtP$Mn)[[1]], "wtP")
+  expect_equal(attributes(test_input_wtP$Mn)$ASTR_class, attributes(test_input$Mn)$ASTR_class)
+
 })

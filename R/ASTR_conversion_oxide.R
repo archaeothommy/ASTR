@@ -3,6 +3,38 @@
 #' Convert between element and oxide weight percent (oxide%) compositions using
 #' pre-compiled conversion factors.
 #'
+#' If the dataset includes already an element and its respective oxide, the
+#' conversion leaves the values of the respective oxide or element unaffected.
+#' The functions convert only values in *wt%*. If concentrations are present in
+#' another concentration unit (e.g. *ppm*, *µg/kg*), run
+#' [`unify_concentration_unit(df, "wtP")`][unify_concentration_unit()] first to
+#' convert all concentrations to *wt%*. When the input is an
+#' [`ASTR object`](ASTR), the functions convert #' only elements or oxides with
+#' the respective other type being automatically excluded, even though the unit
+#' for both is *wt%*. To convert oxides into *at%* and vice versa, convert to
+#' *wt%* first.
+#'
+#' In `element_to_oxide()`, the parameter `oxide_preference` controls the
+#' behaviour of the function if the element forms more than one oxide:
+#'   * `oxidising`: Use the oxide with the highest oxidation state of the element
+#' (e.g., `Fe2O3`)
+#'   * `reducing`: Use the oxide with the lowest oxidation state of the element
+#' (e.g., `FeO`)
+#'   * `ask`: The user is asked for each element which oxide should be used.
+#'   * named vector: A named vector mapping the oxides to be used to the
+#' elements (e.g., `c(Fe = "FeO", Cu = "Cu2O")`)
+#'
+#' In `oxide_to_element()`, conversions from different oxides to the same
+#' element (e.g., Fe<sub>2</sub>O<sub>3</sub> and FeO to Fe) result in one
+#' column for the element with the sum of all converted values of the respective
+#' element.
+#'
+#' Conversion factors are pre-compiled for a wide range of oxides. consequently,
+#' conversion is restricted to the oxides on this list. If you encounter an
+#' oxide that is currently not included, please reach out to the package
+#' maintainers or create a pull request in the [package's GitHub
+#' repo](https://github.com/archaeothommy/ASTR) to add it.
+#'
 #' @param df Data frame with compositional data.
 #' @param elements,oxides Character vector with the chemical symbols of the
 #'   elements or oxides that should be converted.
@@ -20,40 +52,19 @@
 #'   100%. Default to `FALSE`.
 #' @param drop If `FALSE`, the default, columns with unconverted values are
 #'   kept. If `TRUE`, columns with unconverted values are dropped. Dropping
-#'   column could result in loss of information as this will also drop
-#'   columns with values excluded from conversion by the parameter
+#'   column could result in loss of information as this will also drop columns
+#'   with values excluded from conversion by the parameter
 #'   `which_concentrations`.
 #'
 #' @returns The original data frame with the converted concentrations
-#'
-#' @details If the dataset includes already an element and its respective oxide,
-#'   the conversion leaves the column of the respective oxide or element
-#'   unaffected.
-#'
-#'   In `element_to_oxide()`, the parameter `oxide_preference` controls the
-#'   behaviour of the function if the element forms more than one oxide:
-#'   * `oxidising`: Use the oxide with the highest oxidation state of the element
-#'   (e.g., `Fe2O3`)
-#'   * `reducing`: Use the oxide with the lowest oxidation state of the element
-#'   (e.g., `FeO`)
-#'   * `ask`: The user is asked for each element which oxide should be used.
-#'   * named vector: A named vector mapping the oxides to be used to the
-#'   elements (e.g., `c(Fe = "FeO", Cu = "Cu2O")`)
-#'
-#'   In `oxide_to_element()`, conversions from different oxides to the same
-#'   element (e.g., Fe<sub>2</sub>O<sub>3</sub> and FeO to Fe) result in one column for the element
-#'   with the sum of all converted values of the respective element.
-#'
-#'   Conversion factors are pre-compiled for a wide range of oxides.
-#'   consequently, conversion is restricted to the oxides on this list. If you
-#'   encounter an oxide that is currently not included, please reach out to the
-#'   package maintainers or create a pull request in the [package's GitHub
-#'   repo](https://github.com/archaeothommy/ASTR) to add it.
 #'
 #' @export
 #' @name oxide_conversion
 #'
 #' @examples
+#'
+#' library(magrittr)
+#'
 #' # Example data frame with element weight percents
 #' df <- data.frame(ID = "Sample1", Si = 45, Fe = 50, Cr = 5)
 #'
@@ -91,10 +102,22 @@
 #' # Conversion from oxide to element summarises columns converting to the same element
 #' df3 <- data.frame(Fe2O3 = 20, FeO = 20, Cr2O3 = 15, CrO2 = 15, CuO = 20, Cu2O = 20)
 #' oxide_to_element(df3, oxides = names(df3), drop = TRUE)
-
+#'
+#' # Use with ASTR objects
+#' # Create ASTR object
+#' test_file <- system.file("extdata", "test_data_input_good.csv", package = "ASTR")
+#' arch <- read_ASTR(test_file, id_column = "Sample", context = 1:7)
+#'
+#' # Convert columns from oxide to wt%
+#' arch_wtP <- element_to_oxide(arch, oxide_preference = "oxidising")
+#'
+#' # To convert all applicable concentrations, unify units first:
+#' arch_all <- unify_concentration_unit(arch, "wtP") %>%
+#'   element_to_oxide(oxide_preference = "oxidising")
+#'
 element_to_oxide <- function(
   df,
-  elements,
+  elements = colnames(get_unit_columns(df, "wtP")),
   oxide_preference,
   which_concentrations = c("all", "major", "minor", "no_trace"),
   normalise = FALSE,
@@ -119,6 +142,10 @@ element_to_oxide <- function(
   )
 
   which_concentrations <- match.arg(which_concentrations)
+
+  if (inherits(df, "ASTR")) {
+    elements <- intersect(elements, elements_data)
+  }
 
   # Check if all requested elements are in df
   missing_from_df <- setdiff(elements, names(df))
@@ -231,15 +258,24 @@ element_to_oxide <- function(
     t(oxide_percent[elements]) * conversion_table$ElementToOxide[match(elements, conversion_table$Element)]
   )
 
-  colnames(oxide_percent)[match(names(pref), colnames(oxide_percent))] <- pref
+  colnames(oxide_percent)[match(names(pref), colnames(oxide_percent))] <- paste0(pref, "_wtP")
 
   # Normalise if requested
   if (normalise) {
     oxide_percent <- normalise_rows(oxide_percent)
   }
 
+  df_old <- df
+
   # Add oxide columns to output
-  df <- cbind(df, oxide_percent)
+  df[colnames(oxide_percent)] <- oxide_percent
+
+  if (inherits(df, "ASTR")) {
+    df <- remove_units(df, recover_unit_names = TRUE)
+    df <- as_ASTR(df, id_column = "ID", context = colnames(get_contextual_columns(df_old)))
+  } else {
+    colnames(df) <- gsub("_wtP", "", colnames(df))
+  }
 
   # drop input columns if requested
   if (drop) {
@@ -253,7 +289,7 @@ element_to_oxide <- function(
 #' @export
 oxide_to_element <- function(
   df,
-  oxides,
+  oxides = colnames(get_unit_columns(df, "wtP")),
   normalise = FALSE,
   drop = FALSE
 ) {
@@ -265,6 +301,10 @@ oxide_to_element <- function(
     any.missing = FALSE,
     all.missing = FALSE
   )
+
+  if (inherits(df, "ASTR")) {
+    oxides <- intersect(oxides, oxides_data)
+  }
 
   # Check if all requested oxides are in df
   missing <- setdiff(oxides, names(df))
@@ -296,7 +336,7 @@ oxide_to_element <- function(
 
   element_percent <- as.data.frame(element_percent)
 
-  colnames(element_percent) <- conversion_table$Element[match(oxides, conversion_table$Oxide)]
+  colnames(element_percent) <- paste0(conversion_table$Element[match(oxides, conversion_table$Oxide)], "_wtP")
 
   # make column names syntactically valid
   colnames(element_percent) <- make.names(colnames(element_percent), unique = TRUE)
@@ -309,8 +349,18 @@ oxide_to_element <- function(
     element_percent <- normalise_rows(element_percent)
   }
 
+  df_old <- df
+
   # Add element columns to output
-  df <- cbind(df, element_percent)
+  df[colnames(element_percent)] <- element_percent
+
+  if (inherits(df, "ASTR")) {
+    df <- remove_units(df, recover_unit_names = TRUE)
+    df <- as_ASTR(df, id_column = "ID", context = colnames(get_contextual_columns(df_old)))
+  } else {
+    colnames(df) <- gsub("_wtP", "", colnames(df))
+  }
+
 
   if (drop) {
     df[oxides] <- NULL
