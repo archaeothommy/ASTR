@@ -179,6 +179,67 @@ StatStaceyKramers <- ggplot2::ggproto(
 #'
 #'
 #' @export
+#' @example
+#'library(ggplot2)
+#'
+#'df <- data.frame(
+#'  pb64 = rnorm(10, 18,0.2),
+#'  pb74 = rnorm(10, 15.7,0.1),
+#'  pb84 = rnorm(10, 37.5,0.1)
+#')
+#'
+#'# Creating the Pb 207/204~206/204 plot
+#'ggplot(df, aes(x = pb64, y = pb74)) +
+#'  geom_point() +
+#'  geom_sk_lines(system = "76") +
+#'  geom_sk_labels(system = "76") +
+#'  coord_cartesian(
+#'    xlim = range(df$pb64) * c(.99, 1.01),
+#'    ylim = range(df$pb74) ** c(.99, 1.01)
+#'  ) +
+#'  labs(
+#'    x = expression({}^206*Pb / {}^204*Pb),
+#'    y = expression({}^207*Pb / {}^204*Pb),
+#'  )
+#'
+#'# Creating the Pb 208/204~206/204 plot
+#'ggplot(df, aes(x = pb64, y = pb84)) +
+#'  geom_point() +
+#'  geom_sk_lines(system = "86",
+#'                show_isochrons = FALSE, show_geochron = FALSE,
+#'                kappa_list = c(3.2, 3.4, 3.6, 3.8)) +
+#'  geom_sk_labels(system = "86",
+#'                 show_isochrons = FALSE, show_geochron = FALSE,
+#'                 kappa_list = c(3.2, 3.4, 3.6, 3.8)) +
+#'  coord_cartesian(
+#'    xlim = range(df$pb64) * c(.99, 1.01),
+#'    ylim = range(df$pb84) ** c(.99, 1.01)
+#'  ) +
+#'  labs(
+#'    x = expression({}^206*Pb / {}^204*Pb),
+#'    y = expression({}^207*Pb / {}^204*Pb),
+#'  )
+#'
+#'# Creating the Pb 207/204~206/204 plot with a seperate Geocrone color
+#'
+#'ggplot(df, aes(x = pb64, y = pb74)) +
+#'  geom_point() +
+#'  geom_sk_lines(system = "76", show_geochron = FALSE) +
+#'  geom_sk_lines(system = "76", show_isochrons = FALSE,
+#'                color = 'red', linetype = 'dashed') +
+#'  geom_sk_labels(system = "76", show_geochron  = FALSE) +
+#'  geom_sk_labels(system = "76", show_isochrons = FALSE, color = 'red') +
+#'  coord_cartesian(
+#'    xlim = range(df$pb64) * c(.99, 1.01),
+#'    ylim = range(df$pb74) ** c(.99, 1.01)
+#'  ) +
+#'  labs(
+#'    x = expression({}^206*Pb / {}^204*Pb),
+#'    y = expression({}^207*Pb / {}^204*Pb),
+#'  )
+#'
+#'rm(df)
+
 geom_sk_lines <- function(mapping = NULL,
                                 data = NULL,
                                 system = "76",
