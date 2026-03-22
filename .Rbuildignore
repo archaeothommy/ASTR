@@ -10,7 +10,13 @@
 ^data-raw$
 ^\.lintr$
 ^LICENSE\.md$
+<<<<<<< HEAD
 ^R/lever_rule_ternary\.R$
 ^R/mix_exersize\.R$
 ^data/.*\.xlsx$
 ^data/.*\.csv$
+=======
+^doc$
+^Meta$
+^CODE_OF_CONDUCT\.md$
+>>>>>>> main
