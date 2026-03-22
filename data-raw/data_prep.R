@@ -15,7 +15,8 @@ oxides_data <- na.omit(unique(conversion_oxides$Oxide))
 special_oxide_states <- c(
   "LOI", # loss of ignition
   "FeOtot", # total iron
-  "Fe2O3tot"
+  "Fe2O3tot",
+  "Bal", "Balance" # reported by pXRF instruments
 )
 
 isotopes_data <- c(
