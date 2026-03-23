@@ -2,8 +2,7 @@
 #'
 #' @description Classification of copper artefacts according to Bray et al.
 #'   (2015) into one of 16 trace element compositional groups based on As, Sb,
-#'   Ag, or Ni being below or above 0.1 wt%. Concentrations must be given in
-#'   wt%.
+#'   Ag, or Ni being below or above 0.1 wt%.
 #'
 #' @references Bray, P., Cuénod, A., Gosden, C., Hommel, P., Liu, P. and
 #'   Pollard, A. M. (2015), Form and flow: the ‘karmic cycle’ of copper. Journal
@@ -13,13 +12,18 @@
 #' @param df data frame with the data to be classified.
 #' @param elements named character vector with the column names of the As, Sb,
 #'   Ag, and Ni concentrations.
-#' @param id_sample name of the column in `df` with the identifiers of each row.
+#' @param id_column name of the column in `df` with the identifiers of each row.
 #'   Default to `ID`.
 #' @param group_as_number logical. If `FALSE`, the default, copper groups are
 #'   reported as their label. Otherwise, copper groups are reported by their
 #'   number.
+#' @param ... Additional arguments for unit conversion, see [atomic_conversion]
+#'   and [oxide_conversion] for details.
 #'
-#' @return The original data frame with the added column `copper_group_bray`.
+#' @return If `df` is an [ASTR object][ASTR], the output is an object of the
+#'   same type including the ID column, the contextual columns, the elements
+#'   used for classification and the alloy type. In all other cases, the data
+#'   frame provided as input with the column for the alloy type.
 #'
 #' @examples
 #' # create dataset
@@ -36,20 +40,38 @@
 #' # classification with group number as output
 #' copper_group_bray(sample_df, group_as_number = TRUE)
 #'
+#' # For ASTR objects, units and oxides are automatically converted
+#' sample_df2 <- as_ASTR(
+#'   data.frame(
+#'     ID = 1:3,
+#'     As2O3_wtP = c(0.2, 0.01, 0.15),
+#'     Sb2O3_wtP = c(0.00, 0.2, 0.11),
+#'     Ag2O_wtP = c(0.00, 0.00, 0.12),
+#'     NiO_wtP = c(0.00, 50, 0.20)
+#'   )
+#' )
+#' copper_group_bray(sample_df2, elements = c(As = "As2O3", Sb = "Sb2O3", Ag = "Ag2O", Ni = "NiO"))
+#'
 #' @export
+#'
 copper_group_bray <- function(
     df,
     elements = c(As = "As", Sb = "Sb", Ag = "Ag", Ni = "Ni"),
-    id_sample = "ID",
-    group_as_number = FALSE) {
+    id_column = "ID",
+    group_as_number = FALSE,
+    ...) {
 
-  # to do: check and convert concentrations to wt%
-
-  threshold <- 0.1 # wt%, set in Bray et al. (2015)
+  if (inherits(df, "ASTR")) {
+    df <- convert_concentration_units(df, elements, "wtP", ...)
+    elements <- c(As = "As", Sb = "Sb", Ag = "Ag", Ni = "Ni") # rename in case input was in oxides
+    threshold <- units::set_units(0.1, "wtP")
+  } else {
+    threshold <- 0.1 # wt%, set in Bray et al. (2015)
+  }
 
   # Build temporary classification table (df stays unchanged)
   flags <- data.frame(
-    ID_sample = df[[id_sample]],
+    ID_sample = df[[id_column]],
     As_flag = df[[elements["As"]]] > threshold,
     Sb_flag = df[[elements["Sb"]]] > threshold,
     Ag_flag = df[[elements["Ag"]]] > threshold,
@@ -111,10 +133,19 @@ copper_group_bray <- function(
 
   # Add correct output column
   if (!group_as_number) {
-    df$copper_group_bray <- out$group_name[match(df[[id_sample]], out$ID_sample)]
+    copper_group_bray <- out$group_name[match(df[[id_column]], out$ID_sample)]
   } else {
-    df$copper_group_bray <- out$group_number[match(df[[id_sample]], out$ID_sample)]
+    copper_group_bray <- out$group_number[match(df[[id_column]], out$ID_sample)]
   }
 
-  return(df)
+  if (inherits(df, "ASTR")) {
+    df_out <- df[c(colnames(get_contextual_columns(df)), elements)]
+    df_out[["copper_group_bray"]] <- copper_group_bray
+    df_out[["copper_group_bray"]] <- add_ASTR_class(df_out[["copper_group_bray"]], "ASTR_context")
+  } else {
+    df_out <- df
+    df_out[["copper_group_bray"]] <- copper_group_bray
+  }
+
+  return(df_out)
 }

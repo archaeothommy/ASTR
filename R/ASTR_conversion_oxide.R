@@ -272,7 +272,9 @@ element_to_oxide <- function(
 
   if (inherits(df, "ASTR")) {
     df <- remove_units(df, recover_unit_names = TRUE)
-    df <- as_ASTR(df, id_column = "ID", context = colnames(get_contextual_columns(df_old)))
+    df <- suppressWarnings(
+      as_ASTR(df, id_column = "ID", context = colnames(get_contextual_columns(df_old)))
+    )
   } else {
     colnames(df) <- gsub("_wtP", "", colnames(df))
   }
@@ -356,7 +358,9 @@ oxide_to_element <- function(
 
   if (inherits(df, "ASTR")) {
     df <- remove_units(df, recover_unit_names = TRUE)
-    df <- as_ASTR(df, id_column = "ID", context = colnames(get_contextual_columns(df_old)))
+    df <- suppressWarnings(
+      as_ASTR(df, id_column = "ID", context = colnames(get_contextual_columns(df_old)))
+    )
   } else {
     colnames(df) <- gsub("_wtP", "", colnames(df))
   }

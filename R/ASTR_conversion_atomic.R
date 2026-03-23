@@ -101,7 +101,8 @@ wt_to_at <- function(df, elements = colnames(get_unit_columns(df, "wtP")), drop 
     df <- preserve_ASTR_attrs(df, df_old)
     df[colnames(at_percent)] <- sapply(
       df[colnames(at_percent)],
-      function(x) units::set_units(x, "atP"), simplify = FALSE
+      function(x) units::set_units(x, "atP"),
+      simplify = FALSE
     )
   }
 
@@ -155,7 +156,8 @@ at_to_wt <- function(df, elements = colnames(get_unit_columns(df, "atP")), drop 
     df <- preserve_ASTR_attrs(df, df_old)
     df[colnames(wt_percent)] <- sapply(
       df[colnames(wt_percent)],
-      function(x) units::set_units(x, "wtP"), simplify = FALSE
+      function(x) units::set_units(x, "wtP"),
+      simplify = FALSE
     )
   }
 

@@ -7,7 +7,8 @@
 copper_alloy_bb(
   df,
   elements = c(Sn = "Sn", Zn = "Zn", Pb = "Pb"),
-  id_sample = "ID"
+  id_column = "ID",
+  ...
 )
 }
 \arguments{
@@ -16,17 +17,22 @@ copper_alloy_bb(
 \item{elements}{named character vector with column names of Zn, Sn, and Pb
 concentrations.}
 
-\item{id_sample}{name of the column in \code{df} with the identifiers of each
+\item{id_column}{name of the column in \code{df} with the identifiers of each
 row. Default to \code{ID}.}
+
+\item{...}{Additional arguments for unit conversion, see \link{atomic_conversion}
+and \link{oxide_conversion} for details.}
 }
 \value{
-Original data frame with added column \code{copper_alloy_bb}.
+If \code{df} is an \link[=ASTR]{ASTR object}, the output is an object of the
+same type including the ID column, the contextual columns, the elements
+used for classification and the alloy type. In all other cases, the data
+frame provided as input with the column for the alloy type.
 }
 \description{
 Classification of copper alloy artefacts according to Bayley &
 Butcher (2004) based on Zn, Sn, and Pb concentrations in wt\%.
-Concentrations must be given in wt\%. Classification uses specific
-thresholds and ratios to define alloy types.
+Classification uses specific thresholds and ratios to define alloy types.
 }
 \examples{
 sample_df <- data.frame(
@@ -36,6 +42,17 @@ sample_df <- data.frame(
   Pb = c(1, 0.5, 5, 9, 12)
 )
 copper_alloy_bb(sample_df)
+
+# For ASTR objects, units and oxides are automatically converted
+sample_df <- as_ASTR(
+  data.frame(
+    ID = 1:8,
+    SnO_wtP = c(0.5, 0.5, 5, 5, 0.5, 5, 5, 5),
+    ZnO_wtP = c(0.5, 0.5, 0.5, 0.5, 5, 5, 0.5, 5),
+    PbO_wtP = c(0.5, 5, 0.5, 5, 0.5, 0.5, 5, 5)
+  )
+)
+copper_alloy_bb(sample_df, elements = c(Sn = "SnO", Zn = "ZnO", Pb = "PbO"))
 
 }
 \references{

@@ -59,9 +59,13 @@ calculate:
 }}
 }
 \value{
-The data frame provided as input with columns added for the model
-age, mu, and kappa value(s) of the respective age models. The used model is
-indicated in the column names of the output by the abbreviations given above.
+If \code{df} is an \link[=ASTR]{ASTR object}, the output is an object of the
+same type including the ID column, the contextual columns, the lead isotope
+ratios used for calculation of the age model parameters, and the calculated
+age model parameters. In all other cases, the data frame provided as input
+with columns added for the calculated age model parameters. The used age
+model is indicated in the column names of the output by the abbreviations
+given above.
 }
 \description{
 The functions calculate the age model and their respective mu and kappa
@@ -78,18 +82,18 @@ The implemented age models are:
 }
 
 The used model is indicated in the column names of the output by the initials
-of the author's last names and the publication year (e. g.\code{SK75} for Stacey
-& Kramers 1975).
+of the author's last names and the publication year (e. g.\code{SK75} for Stacey &
+Kramers 1975).
 
 See the references for the respective publications of the age models. The
 function for the age model of Albarède & Juteau (1984) is based on the
-MATLAB-script of F. Albarède (version 2020-11-06). The age model published
-in Albarède et al. (2012) should not be used according to F. Albarède and is
+MATLAB-script of F. Albarède (version 2020-11-06). The age model published in
+Albarède et al. (2012) should not be used according to F. Albarède and is
 therefore not implemented. Instead, he recommends to use the age model
 published in Albarède & Juteau (1984).
 
-The ratio of 208Pb/204Pb is not necessary for \link{cumming_richards_1975}.
-The function takes it as argument only to be consistent with the input of the
+The ratio of 208Pb/204Pb is not necessary for \link{cumming_richards_1975}. The
+function takes it as argument only to be consistent with the input of the
 other age model functions. If provided, it will be ignored.
 }
 \examples{
