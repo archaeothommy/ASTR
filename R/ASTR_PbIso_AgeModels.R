@@ -50,7 +50,7 @@
 #' @export
 #'
 #' @references Albarède, F. and Juteau, M. (1984) Unscrambling the lead model
-#'   ages. Geochimica et Cosmochimica Acta 48(1), pp. 207–212.
+#'   ages. Geochimica et Cosmochimica Acta 48(1), pp. 207-212.
 #'   <https://dx.doi.org/10.1016/0016-7037(84)90364-8>.
 #'
 #'   Albarède, F., Desaulty, A.-M. and Blichert-Toft, J. (2012) A geological

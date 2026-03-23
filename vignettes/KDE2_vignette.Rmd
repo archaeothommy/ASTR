@@ -18,10 +18,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(ASTR)
-```
-
 # Introduction
 
 This vignette introduces `geom_kde2()`, which generates a binary plot with kernel density estimation.
@@ -77,7 +73,11 @@ The following examples showcase the different visualisation and density estimate
 ### Basic biplot
 
 ```{r, fig.width=7, fig.height=8}
+
+library(ASTR)
+
 # load example lead isotope data that is included with the package
+
 data(ArgentinaDatabase)
 
 library(ggplot2)
