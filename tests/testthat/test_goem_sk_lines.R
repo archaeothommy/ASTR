@@ -12,16 +12,12 @@ test_that("geom_image", {
       geom_point() +
       geom_sk_lines(system = "76", show_geochron = FALSE) +
       geom_sk_lines(system = "76", show_isochrons = FALSE,
-                    color = 'red', linetype = 'dashed') +
+                    color = "red", linetype = "dashed") +
       geom_sk_labels(system = "76", show_geochron  = FALSE) +
-      geom_sk_labels(system = "76", show_isochrons = FALSE, color = 'red') +
+      geom_sk_labels(system = "76", show_isochrons = FALSE, color = "red") +
       coord_cartesian(
         xlim = range(df$pb64) * c(.99, 1.01),
         ylim = range(df$pb74) * c(.99, 1.01)
-      ) +
-      labs(
-        x = expression({}^206*Pb / {}^204*Pb),
-        y = expression({}^207*Pb / {}^204*Pb),
       )
   )
 })
