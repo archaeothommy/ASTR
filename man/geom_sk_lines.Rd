@@ -78,17 +78,6 @@ lists which parameters it can accept.
 \code{...}. This can be one of the functions described as
 \link[ggplot2:draw_key]{key glyphs}, to change the display of the layer in the legend.
 }}
-
-\item{Ti}{Initial time of the second stage in years (default 3.7Ga).}
-
-\item{interval}{Time interval for isochron labels in years (default 200Ma).}
-
-\item{show_geochron}{Logical; should the Geochron be plotted? (degault TRUE)}
-
-\item{show_isochrons}{Logical; should time isochrons be plotted?
-(degault TRUE)}
-
-\item{kappa_list}{Numeric vector of Kappa values to plot in "86" system.}
 }
 \value{
 A ggplot2 layer object.
@@ -107,6 +96,17 @@ Pb 208/204~Pb 206/204 plot.
 Curretnly the plot will scale the xlim and ylim to their maximum bounds.
 To prevent this use \code{coord_cartisian(xlim, ylim)} to force the axis range
 to the desiered values.
+}
+
+\section{Aditional parmeters}{
+
+\itemize{
+\item \code{Ti}  Initial time of the second stage in years (default 3.7Ga).
+\item \code{interval} Time interval for isochron labels in years (default 200Ma).
+\item \code{show_geochron} Logical; should the Geochron be plotted? (degault TRUE).
+\item \code{show_isochrons} Logical; should time isochrons be plotted? (degault TRUE)
+\item \code{kappa_list} Numeric vector of Kappa values to plot in "86" system.
+}
 }
 
 \section{Asthetics}{

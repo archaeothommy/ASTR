@@ -114,15 +114,14 @@ StatStaceyKramers <- ggplot2::ggproto(
 
     all_data <- dplyr::bind_rows(growth, mu_label, isochrons, geochron, kappa_data)
 
-    # Use .data pronoun to avoid "no visible binding" notes
     label_rows <- all_data %>%
-      dplyr::filter(!is.na(.data$label)) %>%
+      dplyr::filter(!is.na(label)) %>%
       dplyr::mutate(
-        x = ifelse(!is.na(.data$x_lab), .data$x_lab, .data$x),
-        y = ifelse(!is.na(.data$y_lab), .data$y_lab, .data$y)
+        x = ifelse(!is.na(x_lab), x_lab, x),
+        y = ifelse(!is.na(y_lab), y_lab, y)
       )
 
-    line_rows <- all_data %>% dplyr::select(-.data$x_lab, -.data$y_lab)
+    line_rows <- all_data %>% dplyr::select(-x_lab, -y_lab)
 
     return(dplyr::bind_rows(line_rows, label_rows))
   }
@@ -148,18 +147,19 @@ StatStaceyKramers <- ggplot2::ggproto(
 #' To prevent this use `coord_cartisian(xlim, ylim)` to force the axis range
 #' to the desiered values.
 #'
-#'
 #' @inheritParams ggplot2::geom_path
 #' @param Mu1 Second-stage 238U/204Pb ratio (default 10).
 #' @param Kappa Second-stage 232Th/238U ratio (default 4).
-#' @param Ti Initial time of the second stage in years (default 3.7Ga).
-#' @param interval Time interval for isochron labels in years (default 200Ma).
 #' @param system Character "76" or "86" defining the isotope plot axis
 #' (default "76").
-#' @param show_geochron Logical; should the Geochron be plotted? (degault TRUE)
-#' @param show_isochrons Logical; should time isochrons be plotted?
-#' (degault TRUE)
-#' @param kappa_list Numeric vector of Kappa values to plot in "86" system.
+#'
+#' @section Aditional parmeters:
+#'
+#' * `Ti`  Initial time of the second stage in years (default 3.7Ga).
+#' * `interval` Time interval for isochron labels in years (default 200Ma).
+#' * `show_geochron` Logical; should the Geochron be plotted? (degault TRUE).
+#' * `show_isochrons` Logical; should time isochrons be plotted? (degault TRUE)
+#' * `kappa_list` Numeric vector of Kappa values to plot in "86" system.
 #'
 #' @section Asthetics:
 #' `geom_sk_lines()` and `geom_sk_labels()` accpet the following astheic vlues
