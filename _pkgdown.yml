@@ -26,3 +26,20 @@ navbar:
 #  - title: ...
 # see  https://pkgdown.r-lib.org/articles/pkgdown.html#reference for further details
 # repeat for articles and other section, see e.g. https://github.com/r-lib/usethis/blob/main/_pkgdown.yml
+
+  articles:
+  - title: ASTR schema
+    navbar: ASTR schema
+    desc: >
+      These articles describe the ASTR schema, its implementation, and how to
+      work with ASTR objects.
+    contents:
+    - VG.ASTR.Schema.0.0.2
+    - VG.ASTR.Conventions.explained
+    - VG.ASTR.Schema.Implementation
+    - ASTR
+  - title: Specific functions
+    desc: >
+      These articles illustrate the use of specific functions in the package.
+    contents:
+    - KDE2_vignette

@@ -1,0 +1,42 @@
+---
+title: "ASTR schema: Naming conventions"
+csl: apa.csl
+link-citations: TRUE
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ASTR schema: Naming conventions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: references.bib
+---
+
+The ASTR schema defines a set of naming and data conventions to create data objects that can be easily subset with (almost) no loss of information to allow for frictionless handling of data sets and their subsets across software and humans. This requires reduction of implicit information as much as possible (e.g. units of a value being defined in a separate column). Moreover, data objects must be readable for machines while preserving human readability and allow for direct import of spreadsheet-like formats. The conventions defined below are further influenced by considerations related to the analytical data and their quality, which are explained in this [vignette](VG.ASTR.Conventions.explained.html). 
+
+The schema is platform and programming language agnostic. You can learn about the implementation of the schema in the ASTR package in [the dedicated vignette](VG.ASTR.Schema.Implementation.html). 
+
+## Data preparation
+
+* All variable names are case sensitive.
+* Decimals can only be read when indicated by a decimal point (0.5), as opposed to decimal commas (0,5).
+* Apostrophes and any other special characters should be avoided in the sample/variable names.
+
+## Analytical data columns naming
+
+All columns that contain element and oxide compositions, isotopic values, or ratios derived therefrom as well as analytical uncertaintities ("errors") should be named using the following conventions.
+
+* Only Latin characters can be supported in the column names, i.e. δ and ε will not be identified.
+* The names of oxides and trace elements are self-explanatory (e.g. `SiO2` or `Si`). Total iron, if given, should be expressed as: `FeOtot` or `Fe2O3tot`. Loss on ignition, where known, should be expressed as `LOI`. The value "balance" provided by many pXRF instruments should be expressed as `Bal` or `Balance`. 
+* Units for values should follow element or oxide, as `_<unit>`. Units supported include *all SI units*, as well as *ppm*, *ppb*, *ppt*, *ppq*, *%*, *wt%*, *at%*, *‰*, *counts*, and *cps*, noted as such. 
+* Where known, specify *wt%* and *at%* instead of using *%* and make the mixture type of concentrations explicit, e.g. write *ppm(m/m)* instead of *ppm*. For *‘per mille’*, use the symbol *‰*. 
+* For isotopic ratios, use simple forms such as `206Pb/204Pb`, `87Sr/86Sr`, `147Sm/144Nd`, or `d18O`. For isotope ratios expressed in δ-notation and similar expressions, always provide the mass of the isotope in the numerator (e.g. write `e143Nd` instead of `eNd`). 
+* If your dataset includes columns with additional information such as geolocation, or values derived from analytial data such as Pb isotope age model parameters, ensure the names do **not** contain a dash (‘-’) or underscore (‘\_’) prior to import and specify these columns as context in the `read_archem()` function. 
+* Analytical precision should be indicated in the column name as: `_err2SD`, `_errSD`, `_errSE`, `_err2SE` without indicating the unit. For absolute analytical uncertainties, the unit will be inferred from the corresponding composition column. Relative analytical uncertaintinties are indicated by adding a `%` sign, e.g. `_err2SD%`. We strongly recommend that the uncertainty is included in the data table, and properly noted following the conventions described. 
+ 
+| Components | Accepted formats |
+|----|----|
+| Oxides and elements | `SiO2` ; `Si` |
+| Total iron | `FeOtot` ; `Fe2O3tot` |
+| Loss on ignition | `LOI` |
+| Isotopic ratios | `206Pb/204Pb` ; `87Sr/86Sr` ; `147Sm/144Nd` ; `d18O` |
+| Units for value | `_wt%` ; `_at%` |
+| Analytical precision | `_err2SD` ; `_errSD` ; `_errSD%` ; `_errSD%` ; `_errSE` ; `_err2SE` |
