@@ -17,6 +17,6 @@ p <- ggplot(df, aes(x = pb64, y = pb74)) +
   )
 
 test_that("geom_image", {
-  expect_s7_class(p, "ggplot")
+  expect_s3_class(p, "ggplot")
   expect_equal(rlang::as_name(p$mapping$x), "pb64")
 })
