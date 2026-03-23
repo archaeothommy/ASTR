@@ -1,10 +1,71 @@
-#' GeomSpider ggproto
+#' Spidergram geom for ggplot2
 #'
+#' Descriptions goes here ###################
+#' #### This will likely only work with ASTR objects or similarly wide data frame!?
+#' #### Or is there a way to identify short vs. long form!?
+#' #### e.g. single value to x and col content = character: long format, x = character vector length > 1 and column content of x = numeric: wide format
+#' #### y = single value and numeric: long format, concentration, y is not provided: wide format
+#' #### long format values do not need to be transformed (but normalised!?), wide format must be transformed to long format
+#'
+#' Normalisation is done with [normalise_geochem()]. If data are geochemically
+#' normalised, only normalised elements are plotted. Otherwise, all elements
+#' are plotted.
+#'
+#' @inheritParams ggplot2::layer
+#' @param reference `NULL`, the default, if data should not be normalised or
+#'   name of the geochemical reference composition to which data should be
+#'   normalised. See [references_geochem] for a list of names.
+#' @param na.rm Logical: remove NA values
+#' @param ... Other arguments passed on to [ggplot2::layer()]. These are often
+#'   aesthetics used to set a fixed value, such as `colour = "red"` or `alpha =
+#'   0.5`.
+#'
+#' @export
+#'
+#' @examples
+#' # include example with data[[standard_groups$REE]]
+#'
+#' library(ggplot2)
+#'
+#' test <- data.frame(
+#'   Sample = c("A","B"),
+#'   Yb = c(8,9),
+#'   La = c(10,5),
+#'   Ce = c(20,8)
+#' )
+#'
+#' ggplot(test) + geom_spider(mapping = aes(x = standard_groups$REE, color = Sample))
+#'
+geom_spider <- function(mapping = NULL,
+                        data = NULL,
+                        inherit.aes = TRUE,
+                        reference = NULL,
+                        na.rm = FALSE,
+                        show.legend = NA,
+                        ...) {
+
+  # Check required arguments
+  ggplot2::layer(
+    geom = GeomSpider,
+    mapping = mapping,   # empty mapping keeps raw columns
+    data = data,
+    stat = "identity",
+    position = "identity",
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(
+      reference = reference,
+      na.rm = na.rm,
+      ...
+    )
+  )
+}
+
 GeomSpider <- ggplot2::ggproto(
   "GeomSpider",
   ggplot2::Geom,
 
-  required_aes = character(0),
+  required_aes = character(0), # one grouping aes (group, colour, ...)
 
   default_aes = ggplot2::aes(
     colour = "black",
@@ -13,37 +74,17 @@ GeomSpider <- ggplot2::ggproto(
     alpha = NA
   ),
 
-  extra_params = c("na.rm", "elements", "reference", "sample_id"),
+  extra_params = c("na.rm", "reference"),
 
   draw_key = ggplot2::draw_key_path,
 
   setup_data = function(data, params) {
 
-    if (!inherits(data, "data.frame")) {
-      cli::cli_abort("geom_spider: data must be a data frame")
+    # Normalisation
+    if (!is.null(params$reference)) {
+      data <- normalise_geochem(data, reference = params$reference)
     }
 
-    elements <- params$elements
-    # Resolve predefined element groups
-    if (length(elements) == 1 && elements %in% names(element_groups)) {
-      elements <- element_groups[[elements]]
-    }
-
-    # Check elements exist
-    missing_elements <- setdiff(elements, names(data))
-    if (length(missing_elements) > 0) {
-      cli::cli_abort(c(
-        "Elements not found in data: {.val {missing_elements}}",
-        "i" = "Available columns: {.val {names(data)}}"
-      ))
-    }
-
-    # Normalize
-    norm_data <- normalise_spider(
-      df = data,
-      elements = elements,
-      reference = params$reference
-    )
 
     # Pivot wide -> long
     data_long <- tidyr::pivot_longer(

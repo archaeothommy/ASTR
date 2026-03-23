@@ -4,8 +4,8 @@
 \name{archchem}
 \alias{archchem}
 \alias{as_archchem}
-\alias{validate}
 \alias{read_archchem}
+\alias{validate}
 \alias{format.archchem}
 \alias{print.archchem}
 \alias{get_contextual_columns}
@@ -31,8 +31,6 @@ as_archchem(
   validate = TRUE,
   ...
 )
-
-validate(x, quiet = TRUE, ...)
 
 read_archchem(
   path,
@@ -107,15 +105,15 @@ See their documentation for details:
 \item \code{\link[readr:read_delim]{readr::read_delim()}} for all other file formats.
 }}
 
-\item{x}{an object of class archchem}
-
-\item{quiet}{should warnings be printed? Defaults to TRUE}
-
 \item{path}{path to the file that should be read}
 
 \item{delim}{A character string with the separator for tabular data. Must be
 provided for all file types except \code{.xlsx} or \code{.xls}. Default to \verb{,}. Use
 \verb{\\t} for tab-separated data.}
+
+\item{x}{an object of class archchem}
+
+\item{quiet}{should warnings be printed? Defaults to TRUE}
 
 \item{unit}{string with a unit definition that can be understood by
 \link[units]{set_units}, e.g. "\%", "kg", or "m/s^2"}

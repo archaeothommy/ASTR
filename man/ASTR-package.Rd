@@ -16,32 +16,32 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Rose Thomas \email{roseth@posteo.com} (\href{https://orcid.org/0000-0002-8186-3566}{ORCID})
+\strong{Maintainer}: Thomas Rose \email{roseth@posteo.com} (\href{https://orcid.org/0000-0002-8186-3566}{ORCID})
 
 Authors:
 \itemize{
-  \item Acevedo Mejia Andrea (\href{https://orcid.org/0009-0002-7441-1737}{ORCID})
-  \item Artioli Gilberto (\href{https://orcid.org/0000-0002-8693-7392}{ORCID})
-  \item Becerra María Florencia (\href{https://orcid.org/0000-0001-6302-7452}{ORCID})
-  \item Benfer Adam Kevin (\href{https://orcid.org/0009-0004-1253-1068}{ORCID})
-  \item Bellemère Lisa
-  \item Birch Thomas Edward (\href{https://orcid.org/0000-0002-4568-9767}{ORCID})
-  \item Desai Karan (\href{https://orcid.org/0009-0008-8224-8435}{ORCID})
-  \item d'Imporzano Paolo
-  \item Eshel Tzilla (\href{https://orcid.org/0000-0003-0976-0877}{ORCID})
-  \item Gentile Valerio (\href{https://orcid.org/0000-0003-4402-2730}{ORCID})
-  \item Klein Sabine (\href{https://orcid.org/0000-0002-3939-4428}{ORCID})
-  \item Klesner Catherine (\href{https://orcid.org/0000-0002-2264-9383}{ORCID})
-  \item Murphy Kathryn (\href{https://orcid.org/0000-0002-5906-7299}{ORCID})
-  \item Marwick Ben (\href{https://orcid.org/0000-0001-7879-4531}{ORCID})
-  \item Merkel Stephen (\href{https://orcid.org/0000-0001-8730-6923}{ORCID})
-  \item Pelizzari Marco Daniele
-  \item Rodler Alexandra (\href{https://orcid.org/0000-0002-4087-7160}{ORCID})
-  \item Sabatini Benjamin (\href{https://orcid.org/0000-0002-4199-0253}{ORCID})
-  \item Schmid Clemens (\href{https://orcid.org/0000-0003-3448-5715}{ORCID})
-  \item van der Meulen-van der Veen Berber (\href{https://orcid.org/0000-0001-5297-0269}{ORCID})
-  \item Wang Chen (\href{https://orcid.org/0009-0007-1851-2388}{ORCID})
-  \item Westner Katrin Julia (\href{https://orcid.org/0000-0001-5529-1165}{ORCID})
+  \item Andrea Acevedo Mejia (\href{https://orcid.org/0009-0002-7441-1737}{ORCID})
+  \item Gilberto Artioli (\href{https://orcid.org/0000-0002-8693-7392}{ORCID})
+  \item María Florencia Becerra (\href{https://orcid.org/0000-0001-6302-7452}{ORCID})
+  \item Adam Kevin Benfer (\href{https://orcid.org/0009-0004-1253-1068}{ORCID})
+  \item Lisa Bellemère
+  \item Thomas Edward Birch (\href{https://orcid.org/0000-0002-4568-9767}{ORCID})
+  \item Karan Desai (\href{https://orcid.org/0009-0008-8224-8435}{ORCID})
+  \item Paolo d'Imporzano
+  \item Tzilla Eshel (\href{https://orcid.org/0000-0003-0976-0877}{ORCID})
+  \item Valerio Gentile (\href{https://orcid.org/0000-0003-4402-2730}{ORCID})
+  \item Sabine Klein (\href{https://orcid.org/0000-0002-3939-4428}{ORCID})
+  \item Catherine Klesner (\href{https://orcid.org/0000-0002-2264-9383}{ORCID})
+  \item Kathryn Murphy (\href{https://orcid.org/0000-0002-5906-7299}{ORCID})
+  \item Ben Marwick (\href{https://orcid.org/0000-0001-7879-4531}{ORCID})
+  \item Stephen Merkel (\href{https://orcid.org/0000-0001-8730-6923}{ORCID})
+  \item Marco Daniele Pelizzari
+  \item Alexandra Rodler (\href{https://orcid.org/0000-0002-4087-7160}{ORCID})
+  \item Benjamin Sabatini (\href{https://orcid.org/0000-0002-4199-0253}{ORCID})
+  \item Clemens Schmid (\href{https://orcid.org/0000-0003-3448-5715}{ORCID})
+  \item Berber van der Meulen-van der Veen (\href{https://orcid.org/0000-0001-5297-0269}{ORCID})
+  \item Chen Wang (\href{https://orcid.org/0009-0007-1851-2388}{ORCID})
+  \item Katrin Julia Westner (\href{https://orcid.org/0000-0001-5529-1165}{ORCID})
 }
 
 }

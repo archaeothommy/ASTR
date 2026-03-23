@@ -5,20 +5,16 @@
 # REE retrieved from https://en.wikipedia.org/wiki/Rare-earth_element,
 # HFSE & LILE retrieved from https://en.wikipedia.org/wiki/Incompatible_element
 
-element_groups <- list(
+standard_groups <- list(
   REE = c("La", "Ce", "Pr", "Nd", "Sm", "Eu", "Gd", "Tb", "Dy",
           "Ho", "Er", "Tm", "Yb", "Lu"),
   HFSE = c("Nb", "Ta", "Zr", "Hf", "Ti", "Th", "U"),
   LILE = c("Rb", "Ba", "K", "Sr", "Cs")
 )
 
-# Normalisation standards
-
-# Source: Sun, S.-s. & McDonough, W.F. (1989). Chemical and isotopic systematics
-#         of oceanic basalts. Geological Society, London, Special Publications 42,
-#         313-345. Table 1, page 318. MORB values are NMORB.
-
-spider_references <- list(
+# Geochemical reference compositions
+# units: ppm
+references_geochem <- list(
   chondrite = c(
     La = 0.237, Ce = 0.612, Pr = 0.095, Nd = 0.467, Sm = 0.153,
     Eu = 0.058, Gd = 0.2055, Tb = 0.0374, Dy = 0.2540, Ho = 0.0566,
@@ -33,8 +29,7 @@ spider_references <- list(
 )
 
 # Save as internal data
-usethis::use_data(element_groups, spider_references,
-                  internal = TRUE,
+usethis::use_data(standard_groups,
+                  references_geochem,
+                  internal = FALSE,
                   overwrite = TRUE)
-
-# Units: ppm
