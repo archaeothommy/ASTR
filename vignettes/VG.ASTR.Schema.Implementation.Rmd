@@ -12,7 +12,7 @@ bibliography: references.bib
 
 This vignette outlines how the conventions defined in [the ASTR schema](VG.ASTRschema.0.0.2.html) were implemented in the ASTR package.  
 
-## Naming patterns
+# Naming patterns
 
 * Elements, oxides, and isotopes in column names are compared to pre-compiled lists. While we aimed to be as exhaustive as possible, we cannot guarantee they are complete for oxides and isotopes. For example, only naturally occurring isotopes are currently supported. If you encounter a missing compound, please reach out to the package maintainers or open an issue in the [ASTR GitHub repo](https://github.com/archaeothommy/ASTR).  
 * In addition to column names with single isotope, element, or oxide, ratios and sums are also supported. The table below provides some examples and as which type they will be recognized. 
@@ -36,7 +36,7 @@ This vignette outlines how the conventions defined in [the ASTR schema](VG.ASTRs
 |`(Na2O+K2O)/SiO2` | elemental ratio | unitless | 
 |`(Ti/SiO2)/(Ag2O-Fe)` | elemental ratio | unitless | 
 
-## Data import
+# Data import
 
 * Columns in a dataset are recognized either as isotope ratio, concentration, concentration ratio, error (i.e., analytical precision), or contextual information. 
 * Contextual information is additional information about the analytical values such as sample number, geolocation or a group. Columns with such information must be explicitly declared during import, excluding them from pattern recognition. 
@@ -45,7 +45,7 @@ This vignette outlines how the conventions defined in [the ASTR schema](VG.ASTRs
 * The following notations will be automatically identified and replaced with `NA`, unless you explicitly define other values in `read_archem()`: `NA`, `N.A.`, `N/A`, `na`, `n/a`, `-`, and `n.d.`. Values containing common excel error messages (*#DIV/0!*, *#VALUE!*, *#REF!*, *#NAME?*, *#NUM!*, *#N/A*, and *#NULL!*) are also replaced by `NA` automatically.
 * Units will be removed from column names because {units} stores them in the column attributed. This allows for clean column names and therefore of e.g. axis labels in plots. They can be "shifted" from the column attributes back to the column names by `remove_units()` with `recover_unit_names = TRUE`. 
 
-## Units
+# Units
 
 * The package relies on `{units}`, which uses the [udunits](https://www.unidata.ucar.edu/software/udunits) C library, for handling all SI units (e.g. *µg/ml*) and relative concentration units (e.g. *ppm(m/V)*). If the mixture type is not specified, *m/m* is assumed. Non-SI units *wt%* and *at%* were defined as `wtP` and `atP`, respectively.
 * Following the use of relative units being discouraged in current IUPAC recommendations, relative units are converted to absolute units wherever possible, with *m/m* assumed as default. This means that import of data in e.g. *ppm* is possible but they will be converted to *mg/kg* during import. Explicit conversion to *ppm* is still possible. 
@@ -55,14 +55,14 @@ This vignette outlines how the conventions defined in [the ASTR schema](VG.ASTRs
 
 **NOTE**: Conversions currently support only concentrations provided as elements or oxides but not as isotopes (e.g. `204Pb`). 
 
-## Output
+# Output
 
 * Values derived by calculations, such as age model parameters of lead isotope data, are returned as an ASTR object together with the ID column, contextual columns and the input used for the calculation, but without analytical values not used in the calculation. This avoids datasets growing unwieldingly complex and large. Unless the result is clearly another valid analytical value that can be named according to the ASTR schema, they are classified as contextual information.
 
-## Export
+# Export
 
 * ASTR (currently) does not provide a dedicated function to save ASTR objects as e.g. csv file. Instead, use the functions already available in R and its packages. Don't forget to "shift" the units from the column attributes back into the column names with `remove_units(df, recover_unit_names = TRUE)` before. 
 
-## ASTR vs. non-ASTR objects
+# ASTR vs. non-ASTR objects
 
 We do not want following the ASTR schema mandatory for using the functions in this package. Therefore, many of the functions not dedicated to the ASTR schema and its implementation support also non-ASTR objects. However, default values of functions are defined for ASTR objects and other convenient features such as on-the-fly unit conversion are restricted to ASTR objects. Read more about how to work with ASTR objects [in this vignette](ASTR.html). 

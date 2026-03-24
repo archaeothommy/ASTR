@@ -14,13 +14,13 @@ The ASTR schema defines a set of naming and data conventions to create data obje
 
 The schema is platform and programming language agnostic. You can learn about the implementation of the schema in the ASTR package in [the dedicated vignette](VG.ASTR.Schema.Implementation.html). 
 
-## Data preparation
+# Data preparation
 
 * All variable names are case sensitive.
 * Decimals can only be read when indicated by a decimal point (0.5), as opposed to decimal commas (0,5).
 * Apostrophes and any other special characters should be avoided in the sample/variable names.
 
-## Analytical data columns naming
+# Analytical data columns naming
 
 All columns that contain element and oxide compositions, isotopic values, or ratios derived therefrom as well as analytical uncertaintities ("errors") should be named using the following conventions.
 
