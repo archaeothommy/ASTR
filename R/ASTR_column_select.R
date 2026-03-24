@@ -84,7 +84,7 @@ get_cols_with_unit <- function(x, units) {
 
   units <- sapply(units, function(unit) transform_notation(unit))
 
-  dplyr::select(x, tidyselect::where(
+  df <- dplyr::select(x, tidyselect::where(
     function(y) {
       inherits(y, "units")
     }
@@ -94,6 +94,10 @@ get_cols_with_unit <- function(x, units) {
         units::deparse_unit(y) %in% units
       }
     ))
+
+  df <- cbind(x["ID"], df)
+  df <- preserve_ASTR_attrs(df, x)
+  df
 }
 
 #' @rdname ASTR

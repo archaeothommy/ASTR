@@ -63,7 +63,7 @@
 #'
 #'   Stacey, J.S. and Kramers, J.D. (1975) Approximation of terrestrial lead
 #'   isotope evolution by a two-stage model. Earth and Planetary Science Letters
-#'   26(2), pp. 207–221. <https://dx.doi.org/10.1016/0012-821X(75)90088-6<.
+#'   26(2), pp. 207–221. <https://dx.doi.org/10.1016/0012-821X(75)90088-6>.
 #'
 #' @name age_models
 #' @aliases stacey_kramers_1975

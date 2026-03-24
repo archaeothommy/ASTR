@@ -54,7 +54,7 @@
 #'   wt_to_at()
 #'
 #' # Elements already present in the converted unit are ignored.
-#' rowSums(get_unit_columns(arch_all, "atP"), na.rm = TRUE) > 100
+#' rowSums(get_unit_columns(arch_all, "atP")[-1], na.rm = TRUE) > 100
 #'
 wt_to_at <- function(df, elements = colnames(get_unit_columns(df, "wtP")), drop = TRUE) {
 

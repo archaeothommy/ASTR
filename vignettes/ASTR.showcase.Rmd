@@ -1,0 +1,160 @@
+---
+title: "Working with ASTR objects"
+csl: apa.csl
+link-citations: TRUE
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Working with ASTR objects}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: references.bib
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+```{r data-prep, include=FALSE}
+
+set.seed(123)
+data <- data.frame(
+  "Group" = c(rep("A", 5), rep("B",5 )), 
+  "Cu_wt%" = round(runif(10, 85, 95), 1), 
+  "Sn_wt%" = round(runif(10, 5, 10), 1), 
+  "As_wt%" = round(runif(10, 1.5, 2.5), 2), 
+  "Sb_wt%" = round(runif(10, 0.5, 1), 2), 
+  "Ag_ppm" = round(runif(10, 100, 350), 0), 
+  "Ni_ppm" = round(runif(10, 300, 650), 0), 
+  "d65Cu" = c(round(runif(6, -0.5, 0.5), 2), rep("#REF!", 4)), 
+  "206Pb/204Pb" = round(c(rep(NA, 5), runif(5, 18.3, 18.8)), 4), 
+  "206Pb/204Pb_err2SD" = round(c(rep(NA, 5), runif(5, 0.0007, 0.0011)), 5), 
+  "207Pb/204Pb" = round(c(rep(NA, 5), runif(5, 15.6, 15.7)), 4), 
+  "207Pb/204Pb_err2SD" = round(c(rep(NA, 5), runif(5, 0.0006, 0.0009)), 5), 
+  "208Pb/204Pb" = round(c(rep(NA, 5), runif(5, 38.0, 38.5)), 3), 
+  "208Pb/204Pb_err2SD" = round(c(rep(NA, 5), runif(5, 0.001, 0.002)), 4), 
+  check.names = FALSE
+)
+
+```
+
+To make the most out of the features offered by the ASTR package, the object should be imported as ASTR object. Because they adhere to the conventions set out in the [ASTR schema](VG.ASTRschema.0.0.2.html), a lot of information can be extracted and used for efficient and convenient handling of archaeometric and geochemical data. This is also why many of the package functions require only the data set as input, making it convenient for persons less experienced in R. This article highlights some of these functionalities. 
+
+Before we start, we want to load the ASTR package: 
+
+```{r setup}
+library(ASTR)
+```
+
+## Data import and inspection
+To work with an ASTR object, we have to create one. The function `read_ASTR()` imports spreadsheets in a variety of formats, including Excel files, and passes then on to the function `as_ASTR()`. For this article, I created some mock-up data: 
+
+```{r echo=FALSE}
+data
+```
+
+
+which do already have the column headers organised according to the ASTR conventions. We also see that there were some problems with the copper isotope data: it seems that some Excel formulas did not work as intended. To convert the data to ASTR, we have to define one of the columns as the column with the IDs of the data and and any column providing contextual information, i.e. no analytical values (cf. [ASTR schema: Implementation](VG.ASTR.Schema.Implementation.html)). 
+
+```{r echo=TRUE}
+data <- as_ASTR(data, id_column = "Group", context = "Group")
+```
+
+While ASTR attempts to make data import as easy as possible, it also aims to be as transparent about it as possible. Consequently, the function issued several warnings, flagging (potential) issues with our data set: 
+
+* The column for the ID did contain non-unique values but ASTR automatically created unique values from it
+* Some values in the column `d65Cu` were replaced with `NA`, when inspecting the data set, it is clear that these were the Excel error messages. In general, ASTR replaces by default common and user-defined indicators for missing values and also for indicators of "below detection limit" during import. 
+* Across the dataset, 34 values are missing.  
+
+To learn more about the (potential) issues with out dataset, it suggests to run `validate()`: 
+
+```{r echo=TRUE}
+validate(data) 
+```
+
+This summary of where to find the missing values comes in very handy for (very) large datasets! 
+
+In our case, the dataset is fine. We might want to check on the missing values in the copper isotope data because apparently there was something wrong with the Excel file. In case of the lead isotop data, however, they are intentional (they were not measured for these samples).
+
+Having a closer look on the imported data set shows, that ASTR did one more things: 
+
+```{r echo=TRUE}
+data
+```
+
+Our relative unit "ppm" was converted into SI-units and the values now have a measurement unit R can understand (not that the unit `wt%` must be written `wtP`[^The %-sign can not be used in custom units]: 
+
+``` {r}
+units(data$Ag[1])
+```
+
+When looking into the data structure, we also see that it also labelled the different columns as e.g. concentration or  isotope ratio: 
+
+``` {r}
+str(data)
+```
+
+## Subsetting data: 
+With this much information about our data, it is easy to subset data. Let's say that, for example, we want to check if our data can be differentiated into groups based on the chemical composition by creating biplots of all possible combinations. The `get_ ... _columns()`-family comes in very handy here: 
+
+```{r}
+pairs(get_concentration_columns(data)[-1])
+```
+
+Note that we have to exclude the first column here, because the first column of ASTR objects and their subsets is always the ID column to ensure that data can be clearly assigned to a single sample. Actually, we might only be interested in the main elements of the metal. In this case, we can take advantage that these are the only ones values in `wtP`: 
+
+```{r}
+pairs(get_unit_columns(data, units = "wtP")[-1])
+```
+
+### Unit conversions 
+
+While continuing investigating the metal, we want to estimate its approximate melting temperature and remember that we can get this information from a phase diagram. While our values for copper and tin are in `wt%`, the phase diagram in front of us is in `at%`. Converting from `wt%` to `at%` is probably faster than searching for a version of the phase diagram in `wt%`:   
+
+```{r}
+unify_concentration_unit(data, unit = "wtP") |> 
+  wt_to_at()
+```
+We use a two-step approach here to be more accurate: The actual conversion from `wt%` to `at%` is done by `wt_to_at()`. However, because Ag and Ni are not in `wt%`, they need to be converted first. That's why we have to run `unify_concentration_unit()` first: is detects values with units that can be converted into the target unit and converts them all into the same unit. While it is nice to be scientifically accurate, we can get only a rough estimate anyway because of the significant amounts of arsenic and antimony in the metal. Therefore, converting only copper and tin would be sufficient: 
+
+```{r}
+wt_to_at(data, elements = c("Cu", "Sn"))
+```
+
+<!-- ### Geochemical normalisation
+-->
+
+## Working with data 
+
+Another task in our investigation of the copper items is to identify the type of copper alloy our metal is made of. A first rough approach could be to use the classification suggested by @Bray2015. Not surprising, we see that they all belong to the group "As+Sb": 
+
+```{r}
+copper_group <- copper_group_bray(data)
+copper_group
+```
+
+After we look into the chemical compositions, it is time to turn to the lead isotope data. Before plotting them, we want to calculate their age model parameters because they give us some idea about the geological setting. The model by @stacey1975 is still the most commonly used one. Because we have lead isotope data only for group B, we exclude data from group A: 
+
+```{r warning=FALSE}
+data_pb_iso <- data[data$Group == "B", ]
+age_model_params <- pb_iso_age_model(data_pb_iso, model = "SK75")
+age_model_params
+```
+<!--
+## Visualisation
+
+-->
+
+## Data export
+
+After finishing our analysis of the data, we want to save the copper type and lead isotope model age parameters to our hard drive. For this task, ASTR relies on the functions already provided by R and other R packages. Before export, we have to make sure that the information about the units of the values is preserved by including it back in the column name: 
+
+```{r}
+data <- remove_units(data, recover_unit_names = TRUE)
+data
+```
+## References
+

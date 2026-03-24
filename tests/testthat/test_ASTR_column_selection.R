@@ -34,6 +34,6 @@ test_that("column selection based on ASTR column types", {
   )
   expect_all_true(
     colnames(get_unit_columns(test_input, c("ng/g", "µg/ml", "%"))) ==
-      c("SiO2_errSD%", "ZnO", "Ag", "Sn")
+      c("ID", "SiO2_errSD%", "ZnO", "Ag", "Sn")
   )
 })
