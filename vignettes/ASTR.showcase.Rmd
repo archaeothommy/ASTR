@@ -19,26 +19,24 @@ knitr::opts_chunk$set(
 
 
 ```{r data-prep, include=FALSE}
-
 set.seed(123)
 data <- data.frame(
-  "Group" = c(rep("A", 5), rep("B",5 )), 
-  "Cu_wt%" = round(runif(10, 85, 95), 1), 
-  "Sn_wt%" = round(runif(10, 5, 10), 1), 
-  "As_wt%" = round(runif(10, 1.5, 2.5), 2), 
-  "Sb_wt%" = round(runif(10, 0.5, 1), 2), 
-  "Ag_ppm" = round(runif(10, 100, 350), 0), 
-  "Ni_ppm" = round(runif(10, 300, 650), 0), 
-  "d65Cu" = c(round(runif(6, -0.5, 0.5), 2), rep("#REF!", 4)), 
-  "206Pb/204Pb" = round(c(rep(NA, 5), runif(5, 18.3, 18.8)), 4), 
-  "206Pb/204Pb_err2SD" = round(c(rep(NA, 5), runif(5, 0.0007, 0.0011)), 5), 
-  "207Pb/204Pb" = round(c(rep(NA, 5), runif(5, 15.6, 15.7)), 4), 
-  "207Pb/204Pb_err2SD" = round(c(rep(NA, 5), runif(5, 0.0006, 0.0009)), 5), 
-  "208Pb/204Pb" = round(c(rep(NA, 5), runif(5, 38.0, 38.5)), 3), 
-  "208Pb/204Pb_err2SD" = round(c(rep(NA, 5), runif(5, 0.001, 0.002)), 4), 
+  "Group" = c(rep("A", 5), rep("B", 5)),
+  "Cu_wt%" = round(runif(10, 85, 95), 1),
+  "Sn_wt%" = round(runif(10, 5, 10), 1),
+  "As_wt%" = round(runif(10, 1.5, 2.5), 2),
+  "Sb_wt%" = round(runif(10, 0.5, 1), 2),
+  "Ag_ppm" = round(runif(10, 100, 350), 0),
+  "Ni_ppm" = round(runif(10, 300, 650), 0),
+  "d65Cu" = c(round(runif(6, -0.5, 0.5), 2), rep("#REF!", 4)),
+  "206Pb/204Pb" = round(c(rep(NA, 5), runif(5, 18.3, 18.8)), 4),
+  "206Pb/204Pb_err2SD" = round(c(rep(NA, 5), runif(5, 0.0007, 0.0011)), 5),
+  "207Pb/204Pb" = round(c(rep(NA, 5), runif(5, 15.6, 15.7)), 4),
+  "207Pb/204Pb_err2SD" = round(c(rep(NA, 5), runif(5, 0.0006, 0.0009)), 5),
+  "208Pb/204Pb" = round(c(rep(NA, 5), runif(5, 38.0, 38.5)), 3),
+  "208Pb/204Pb_err2SD" = round(c(rep(NA, 5), runif(5, 0.001, 0.002)), 4),
   check.names = FALSE
 )
-
 ```
 
 To make the most out of the features offered by the ASTR package, the object should be imported as ASTR object. Because they adhere to the conventions set out in the [ASTR schema](VG.ASTRschema.0.0.2.html), a lot of information can be extracted and used for efficient and convenient handling of archaeometric and geochemical data. This is also why many of the package functions require only the data set as input, making it convenient for persons less experienced in R. This article highlights some of these functionalities. 
@@ -72,7 +70,7 @@ While ASTR attempts to make data import as easy as possible, it also aims to be 
 To learn more about the (potential) issues with out dataset, it suggests to run `validate()`: 
 
 ```{r echo=TRUE}
-validate(data) 
+validate(data)
 ```
 
 This summary of where to find the missing values comes in very handy for (very) large datasets! 
@@ -85,7 +83,7 @@ Having a closer look on the imported data set shows, that ASTR did one more thin
 data
 ```
 
-Our relative unit "ppm" was converted into SI-units and the values now have a measurement unit R can understand (not that the unit `wt%` must be written `wtP`[^The %-sign can not be used in custom units]: 
+Our relative unit "ppm" was converted into SI-units and the values now have a measurement unit R can understand (note that the unit `wt%` must be written `wtP`)^[The %-sign can not be used in custom units]: 
 
 ``` {r}
 units(data$Ag[1])
@@ -112,12 +110,15 @@ pairs(get_unit_columns(data, units = "wtP")[-1])
 
 ### Unit conversions 
 
-While continuing investigating the metal, we want to estimate its approximate melting temperature and remember that we can get this information from a phase diagram. While our values for copper and tin are in `wt%`, the phase diagram in front of us is in `at%`. Converting from `wt%` to `at%` is probably faster than searching for a version of the phase diagram in `wt%`:   
+While continuing investigating the metal, we want to estimate its approximate melting temperature and remember that we can get this information from a phase diagram. While our values for copper and tin are in `wt%`, the phase diagram in front of us is in `at%`. Converting from `wt%` to `at%` is probably faster than searching for a version of the phase diagram in `wt%`^[While ASTR fully supports use the native pipe operator `|>`, it maintains backward compatibility to older R versions by using `%>%`]:  
 
 ```{r}
-unify_concentration_unit(data, unit = "wtP") |> 
+library(magrittr) # import of pipe operator `%>%`
+
+unify_concentration_unit(data, unit = "wtP") %>%
   wt_to_at()
 ```
+
 We use a two-step approach here to be more accurate: The actual conversion from `wt%` to `at%` is done by `wt_to_at()`. However, because Ag and Ni are not in `wt%`, they need to be converted first. That's why we have to run `unify_concentration_unit()` first: is detects values with units that can be converted into the target unit and converts them all into the same unit. While it is nice to be scientifically accurate, we can get only a rough estimate anyway because of the significant amounts of arsenic and antimony in the metal. Therefore, converting only copper and tin would be sufficient: 
 
 ```{r}
@@ -157,4 +158,3 @@ data <- remove_units(data, recover_unit_names = TRUE)
 data
 ```
 ## References
-
