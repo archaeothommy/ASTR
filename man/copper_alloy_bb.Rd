@@ -61,3 +61,9 @@ technological and typological study based on the Richborough Collection.
 London: Society of Antiquaries of London.
 \url{https://doi.org/10.26530/20.500.12657/50365}
 }
+\seealso{
+Other copper alloy classifications: 
+\code{\link{copper_alloy_pollard}()},
+\code{\link{copper_group_bray}()}
+}
+\concept{copper alloy classifications}

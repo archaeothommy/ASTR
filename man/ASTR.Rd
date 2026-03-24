@@ -17,7 +17,7 @@
 \alias{get_unit_columns}
 \alias{remove_units}
 \alias{unify_concentration_unit}
-\title{\strong{ASTR}}
+\title{ASTR Schema implementation}
 \usage{
 as_ASTR(
   df,

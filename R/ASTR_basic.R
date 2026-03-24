@@ -1,7 +1,7 @@
+#' @title ASTR Schema implementation
+#'
 #' @name ASTR
 #' @rdname ASTR
-#'
-#' @title \strong{ASTR}
 #'
 #' @description A tabular data format for chemical analysis datasets in
 #' archaeology, including contextual information, numerical elemental, and

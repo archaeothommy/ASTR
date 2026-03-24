@@ -17,29 +17,62 @@ navbar:
     left: [reference, articles, news]
     right: [search, github]
 
-# reference:
-#  - title: "Data import and export"
-#    desc: >
-#      Functions to import and export data
-#    contents:
-#    - <function>
-#  - title: ...
-# see  https://pkgdown.r-lib.org/articles/pkgdown.html#reference for further details
-# repeat for articles and other section, see e.g. https://github.com/r-lib/usethis/blob/main/_pkgdown.yml
+reference:
+- title: ASTR objects
+  desc: >
+    Functions for creating and handling ASTR objects.
+  contents:
+  - ASTR
+- title: Data subsetting
+  desc: >
+    Pre-compiled lists for easier subsetting of data
+  contents:
+  - isotopes_data
+  - elements_data
+  - oxides_data
+  - special_oxide_states
+- title: Unit conversions
+  desc: >
+    Functions and data tables for conversions between untis not covered in
+    {units}
+  contents:
+  - atomic_conversion
+  - oxide_conversion
+  - conversion_oxides
+- title: Calculations, Classifications, Statistics
+  desc: >
+    Functions for data transformation
+  contents:
+  - copper_alloy_bb
+  - copper_alloy_pollard
+  - copper_group_bray
+  - age_models
+  - pointcloud_distribution
+- title: Visualisation
+  desc: >
+    Functions for plotting data
+  contents:
+  - geom_kde2d
+- title: Data
+  desc: >
+    Datasets included in the package
+  contents:
+  - ArgentinaDatabase
 
-  articles:
-  - title: ASTR schema
-    navbar: ASTR schema
-    desc: >
-      These articles describe the ASTR schema, its implementation, and how to
-      work with ASTR objects.
-    contents:
-    - VG.ASTR.Schema.0.0.2
-    - VG.ASTR.Conventions.explained
-    - VG.ASTR.Schema.Implementation
-    - ASTR
-  - title: Specific functions
-    desc: >
-      These articles illustrate the use of specific functions in the package.
-    contents:
-    - KDE2_vignette
+articles:
+- title: ASTR schema
+  navbar: ASTR schema
+  desc: >
+    These articles describe the ASTR schema, its implementation, and how to
+    work with ASTR objects.
+  contents:
+  - VG.ASTR.Schema.0.0.2
+  - VG.ASTR.Conventions.explained
+  - VG.ASTR.Schema.Implementation
+  - ASTR.showcase
+- title: Specific functions
+  navbar: Specific functions
+  desc: >
+    These articles illustrate the use of specific functions in the package.
+  contents:
+  - KDE2_vignette

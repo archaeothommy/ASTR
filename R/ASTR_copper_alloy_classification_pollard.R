@@ -44,6 +44,7 @@
 #' )
 #' copper_alloy_pollard(sample_df, elements = c(Sn = "SnO", Zn = "ZnO", Pb = "PbO"))
 #'
+#' @family copper alloy classifications
 #' @export
 #'
 copper_alloy_pollard <- function(

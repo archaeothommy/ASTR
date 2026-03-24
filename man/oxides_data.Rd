@@ -14,11 +14,11 @@ oxides_data
 List of oxides, sorted according to alphabet.
 }
 \seealso{
-Other chemical_reference_data: 
+Other chemical reference data: 
 \code{\link{conversion_oxides}},
 \code{\link{elements_data}},
 \code{\link{isotopes_data}},
 \code{\link{special_oxide_states}}
 }
-\concept{chemical_reference_data}
+\concept{chemical reference data}
 \keyword{datasets}

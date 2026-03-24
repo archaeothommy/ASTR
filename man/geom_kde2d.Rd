@@ -2,7 +2,7 @@
 % Please edit documentation in R/ASTR_geom_kde2.R
 \name{geom_kde2d}
 \alias{geom_kde2d}
-\title{Draw 2D Kernel Density Estimate Polygons by Quantiles}
+\title{Draw 2D kernel density estimate polygons by quantiles}
 \usage{
 geom_kde2d(
   mapping = NULL,

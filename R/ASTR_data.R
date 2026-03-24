@@ -1,10 +1,10 @@
-#' Elements
+#' Chemical elements
 #'
 #' List of elements, sorted according to alphabet
 #'
 #' @format a vector
 #'
-#' @family chemical_reference_data
+#' @family chemical reference data
 #' @name elements_data
 "elements_data"
 
@@ -14,7 +14,7 @@
 #'
 #' @format a vector
 #'
-#' @family chemical_reference_data
+#' @family chemical reference data
 #' @name oxides_data
 "oxides_data"
 
@@ -24,7 +24,7 @@
 #'
 #' @format a vector
 #'
-#' @family chemical_reference_data
+#' @family chemical reference data
 #' @name special_oxide_states
 "special_oxide_states"
 
@@ -35,7 +35,7 @@
 #'
 #' @format a vector
 #'
-#' @family chemical_reference_data
+#' @family chemical reference data
 #' @name isotopes_data
 "isotopes_data"
 
@@ -53,13 +53,13 @@
 #'   \item{OxidationState}{The oxidation state of the kation as numeric value.}
 #' }
 #'
-#' @family chemical_reference_data
+#' @family chemical reference data
 #' @name conversion_oxides
 "conversion_oxides"
 
-#' ArgentinaDatabase
+#' Lead isotope data fro Argentina
 #'
-#' Lead isotope data from ore deposits in Argentina prepared for TerraLID database.
+#' Lead isotope data from ore deposits in Argentina prepared for the TerraLID database.
 #'
 #' @format ## `ArgentinaDatabase`
 #'

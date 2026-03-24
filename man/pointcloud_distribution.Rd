@@ -2,7 +2,7 @@
 % Please edit documentation in R/ASTR_pointcloud_distribution.R
 \name{pointcloud_distribution}
 \alias{pointcloud_distribution}
-\title{Comparing Isotope Samples to Reference Data in 3D Space}
+\title{Comparing isotope samples to reference data in 3D space}
 \usage{
 pointcloud_distribution(
   df,

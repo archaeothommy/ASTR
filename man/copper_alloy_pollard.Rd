@@ -65,3 +65,9 @@ Pollard, A. M., Bray, P., Gosden, C., Wilson, A., and Hamerow, H.
 millennium AD: a preliminary quantification of metal flow and recycling.
 Antiquity 89(345), pp. 697-713. \url{https://doi.org/10.15184/aqy.2015.20}
 }
+\seealso{
+Other copper alloy classifications: 
+\code{\link{copper_alloy_bb}()},
+\code{\link{copper_group_bray}()}
+}
+\concept{copper alloy classifications}

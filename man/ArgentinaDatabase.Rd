@@ -3,7 +3,7 @@
 \docType{data}
 \name{ArgentinaDatabase}
 \alias{ArgentinaDatabase}
-\title{ArgentinaDatabase}
+\title{Lead isotope data fro Argentina}
 \format{
 \subsection{\code{ArgentinaDatabase}}{
 
@@ -17,6 +17,6 @@ A dataframe with 112 rows and 49 columns
 ArgentinaDatabase
 }
 \description{
-Lead isotope data from ore deposits in Argentina prepared for TerraLID database.
+Lead isotope data from ore deposits in Argentina prepared for the TerraLID database.
 }
 \keyword{datasets}

@@ -14,11 +14,11 @@ special_oxide_states
 List of values that are treated like oxides, but are no chemical oxides.
 }
 \seealso{
-Other chemical_reference_data: 
+Other chemical reference data: 
 \code{\link{conversion_oxides}},
 \code{\link{elements_data}},
 \code{\link{isotopes_data}},
 \code{\link{oxides_data}}
 }
-\concept{chemical_reference_data}
+\concept{chemical reference data}
 \keyword{datasets}

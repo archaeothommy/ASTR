@@ -52,6 +52,7 @@
 #' )
 #' copper_group_bray(sample_df2, elements = c(As = "As2O3", Sb = "Sb2O3", Ag = "Ag2O", Ni = "NiO"))
 #'
+#' @family copper alloy classifications
 #' @export
 #'
 copper_group_bray <- function(

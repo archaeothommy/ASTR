@@ -1,4 +1,4 @@
-#' Comparing Isotope Samples to Reference Data in 3D Space
+#' Comparing isotope samples to reference data in 3D space
 #'
 #' This package compares isotope samples to reference data in 3D space to
 #' identify isotopic consistency and the possibility of mixing between sources.

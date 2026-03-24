@@ -44,5 +44,11 @@ Authors:
   \item Katrin Julia Westner (\href{https://orcid.org/0000-0001-5529-1165}{ORCID})
 }
 
+Other contributors:
+\itemize{
+  \item Deutsche Forschungsgemeinschaft (\href{https://ror.org/018mejw64}{ROR}) [funder]
+  \item Lorentz Center (\href{https://ror.org/00d503m77}{ROR}) [funder]
+}
+
 }
 \keyword{internal}
