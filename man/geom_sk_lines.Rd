@@ -109,20 +109,6 @@ to force the axis range to the desiered values.
 }
 }
 
-\section{Aesthetics}{
- \code{geom_sk_lines()} and \code{geom_sk_labels()} accept the
-following aesthetic values
-\itemize{
-\item \code{alpha}
-\item \code{colour} (controls the polygon outline)
-\item \code{fill} (controls the polygon fill)
-\item \code{linetype}
-\item \code{linewidth} (controls the outline thickness)
-\item \code{text.colour} (controls colour of the text)
-\item \code{size.unit} (controls size aesthetic in "mm", "pt", "cm", "in" or "pc")
-}
-}
-
 \examples{
 # example code
 
