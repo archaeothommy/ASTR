@@ -122,6 +122,11 @@ isotope evolution by a two-stage model. Earth and Planetary Science
 Letters 26(2), pp. 207–221.
 \<https://dx.doi.org/10.1016/0012-821X(75)90088-6\<.
 
+## See also
+
+Other Pb isotope functions:
+[`geom_sk_lines()`](https://archaeothommy.github.io/ASTR/reference/geom_sk_lines.md)
+
 ## Examples
 
 ``` r

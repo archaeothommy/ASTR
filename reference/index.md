@@ -53,6 +53,10 @@
 - [`geom_kde2d()`](https://archaeothommy.github.io/ASTR/reference/geom_kde2d.md)
   : Draw 2D Kernel Density Estimate Polygons by Quantiles
 
+- [`geom_sk_lines()`](https://archaeothommy.github.io/ASTR/reference/geom_sk_lines.md)
+  [`geom_sk_labels()`](https://archaeothommy.github.io/ASTR/reference/geom_sk_lines.md)
+  : Stacey-Kramers Lead Evolution Geom
+
 - [`isotopes_data`](https://archaeothommy.github.io/ASTR/reference/isotopes_data.md)
   : Isotopes
 

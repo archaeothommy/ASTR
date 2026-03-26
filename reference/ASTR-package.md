@@ -9,7 +9,11 @@ workflows in archaeometry.
 
 Useful links:
 
-- <https://archaeothommy.github.io/ASTR/index.html>
+- <https://archaeothommy.github.io/ASTR/>
+
+- <https://github.com/archaeothommy/ASTR>
+
+- Report bugs at <https://github.com/archaeothommy/ASTR/issues>
 
 ## Author
 
@@ -17,6 +21,8 @@ Useful links:
 ([ORCID](https://orcid.org/0000-0002-8186-3566))
 
 Authors:
+
+- Mathias Ayine Abagna
 
 - Andrea Acevedo Mejia ([ORCID](https://orcid.org/0009-0002-7441-1737))
 
