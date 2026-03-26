@@ -8,7 +8,7 @@
 geom_sk_lines(
   mapping = NULL,
   data = NULL,
-  system = "76",
+  system = c("76", "86"),
   Mu1 = 10,
   Kappa = 4,
   ...
@@ -44,8 +44,8 @@ the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
-\item{system}{Character "76" or "86" defining the isotope plot axis
-(default "76").}
+\item{system}{Character "76" or "86" defining the isotope plot axis (default
+"76").}
 
 \item{Mu1}{Second-stage 238U/204Pb ratio (default 10).}
 
@@ -83,35 +83,35 @@ lists which parameters it can accept.
 A ggplot2 layer object.
 }
 \description{
-This Geom is used for drawing and labeling isochron, geochron and kappa
-lines used for isotope age model refrencing using in Lead Isotope biplots.
-The line follow the model used by Stacey and Kramers (1975).
+This Geom is used for drawing and labeling isochron, geochron, and kappa
+lines used for isotope age model referencing used in lead isotope biplots.
+The lines follows the model used by Stacey and Kramers (1975).
 }
 \details{
-The ploting system follows the convetion of showing geochron and isochorn
-lines for the #' Pb 207/204~Pb 206/204 plot and the kappa lines for
-Pb 208/204~Pb 206/204 plot.
+The plotting system follows the convention of showing geochron and isochron
+lines for the 207Pb/204Pb vs. 206Pb/204Pb plot and the kappa lines for
+208Pb/204Pb vs. 206Pb/204Pb plot.
 }
 \section{Note}{
-Curretnly the plot will scale the xlim and ylim to their maximum bounds.
-To prevent this use \code{coord_cartisian(xlim, ylim)} to force the axis range
-to the desiered values.
+Currently the plot will scale the xlim and ylim to their maximum bounds. To
+prevent this use \code{\link[ggplot2:coord_cartesian]{coord_cartesian(xlim, ylim)}}
+to force the axis range to the desiered values.
 }
 
-\section{Aditional parmeters}{
+\section{Additional parameters}{
 
 \itemize{
-\item \code{Ti}  Initial time of the second stage in years (default 3.7Ga).
-\item \code{interval} Time interval for isochron labels in years (default 200Ma).
-\item \code{show_geochron} Logical; should the Geochron be plotted? (degault TRUE).
-\item \code{show_isochrons} Logical; should time isochrons be plotted? (degault TRUE)
+\item \code{Ti}  Initial time of the second stage in years (default 3.7 Ga).
+\item \code{interval} Time interval for isochron labels in years (default 200 Ma).
+\item \code{show_geochron} Logical; should the Geochron be plotted? (default \code{TRUE}).
+\item \code{show_isochrons} Logical; should time isochrons be plotted? (default \code{TRUE})
 \item \code{kappa_list} Numeric vector of Kappa values to plot in "86" system.
 }
 }
 
-\section{Asthetics}{
-
-\code{geom_sk_lines()} and \code{geom_sk_labels()} accpet the following astheic vlues
+\section{Aesthetics}{
+ \code{geom_sk_lines()} and \code{geom_sk_labels()} accept the
+following aesthetic values
 \itemize{
 \item \code{alpha}
 \item \code{colour} (controls the polygon outline)
@@ -186,6 +186,29 @@ ggplot(df, aes(x = pb64, y = pb74)) +
 
 rm(df)
 }
+\references{
+Stacey, J.S. and Kramers, J.D. (1975) Approximation of
+terrestrial lead isotope evolution by a two-stage model. Earth and
+Planetary Science Letters 26(2), pp. 207–221.
+\url{https://dx.doi.org/10.1016/0012-821X(75)90088-6}.
+}
 \seealso{
-\code{\link[=age_models]{age_models()}}
+Other Pb isotope functions: 
+\code{\link{age_models}}
+}
+\concept{Pb isotope functions}
+\section{Aesthetics}{
+
+\code{geom_path()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
+\tabular{rll}{
+ • \tab \strong{\code{\link[ggplot2:aes_position]{x}}} \tab   \cr
+ • \tab \strong{\code{\link[ggplot2:aes_position]{y}}} \tab   \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
+ • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{colour}} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linetype}} \tab → via \code{theme()} \cr
+ • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}} \tab → via \code{theme()} \cr
+}
+
+Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 }

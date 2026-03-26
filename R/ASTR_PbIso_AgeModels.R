@@ -62,6 +62,7 @@
 #' 26(2), pp. 207–221. <https://dx.doi.org/10.1016/0012-821X(75)90088-6<.
 #'
 #' @name age_models
+#' @family Pb isotope functions
 #' @aliases stacey_kramers_1975
 #' @aliases cumming_richards_1975
 #' @aliases albarede_juteau_1984

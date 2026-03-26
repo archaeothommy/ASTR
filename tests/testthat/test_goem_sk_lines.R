@@ -20,4 +20,5 @@ test_that("geom_image", {
   expect_s3_class(p, "ggplot")
   expect_equal(p$layers[[2]]$stat_params$show_geochron, FALSE)
   expect_equal(rlang::as_name(p$mapping$x), "pb64")
+  expect_doppelganger("image", p)
 })

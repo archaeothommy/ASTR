@@ -15,7 +15,7 @@ StatStaceyKramers <- ggplot2::ggproto(
                            Kappa = 4,
                            Ti = 3.70e9,
                            interval = 200e6,
-                           system = "76",
+                           system = c("76", "86"),
                            show_geochron = TRUE,
                            show_isochrons = TRUE,
                            kappa_list = c(3.4, 3.6, 3.8, 4, 4.2, 4.4)) {
@@ -133,50 +133,44 @@ StatStaceyKramers <- ggplot2::ggproto(
 
 #' Stacey-Kramers Lead Evolution Geom
 #'
-#' This Geom is used for drawing and labeling isochron, geochron and kappa
-#' lines used for isotope age model refrencing using in Lead Isotope biplots.
-#' The line follow the model used by Stacey and Kramers (1975).
+#' This Geom is used for drawing and labeling isochron, geochron, and kappa
+#' lines used for isotope age model referencing used in lead isotope biplots.
+#' The lines follows the model used by Stacey and Kramers (1975).
 #'
-#' The ploting system follows the convetion of showing geochron and isochorn
-#' lines for the #' Pb 207/204~Pb 206/204 plot and the kappa lines for
-#' Pb 208/204~Pb 206/204 plot.
+#' The plotting system follows the convention of showing geochron and isochron
+#' lines for the 207Pb/204Pb vs. 206Pb/204Pb plot and the kappa lines for
+#' 208Pb/204Pb vs. 206Pb/204Pb plot.
 #'
 #' # Note
 #'
-#' Curretnly the plot will scale the xlim and ylim to their maximum bounds.
-#' To prevent this use `coord_cartisian(xlim, ylim)` to force the axis range
-#' to the desiered values.
+#' Currently the plot will scale the xlim and ylim to their maximum bounds. To
+#' prevent this use [`coord_cartesian(xlim, ylim)`][ggplot2::coord_cartesian()]
+#' to force the axis range to the desiered values.
 #'
 #' @inheritParams ggplot2::geom_path
 #' @param Mu1 Second-stage 238U/204Pb ratio (default 10).
 #' @param Kappa Second-stage 232Th/238U ratio (default 4).
-#' @param system Character "76" or "86" defining the isotope plot axis
-#' (default "76").
+#' @param system Character "76" or "86" defining the isotope plot axis (default
+#'   "76").
 #'
-#' @section Aditional parmeters:
+#' @section Additional parameters:
 #'
-#' * `Ti`  Initial time of the second stage in years (default 3.7Ga).
-#' * `interval` Time interval for isochron labels in years (default 200Ma).
-#' * `show_geochron` Logical; should the Geochron be plotted? (degault TRUE).
-#' * `show_isochrons` Logical; should time isochrons be plotted? (degault TRUE)
+#' * `Ti`  Initial time of the second stage in years (default 3.7 Ga).
+#' * `interval` Time interval for isochron labels in years (default 200 Ma).
+#' * `show_geochron` Logical; should the Geochron be plotted? (default `TRUE`).
+#' * `show_isochrons` Logical; should time isochrons be plotted? (default `TRUE`)
 #' * `kappa_list` Numeric vector of Kappa values to plot in "86" system.
 #'
-#' @section Asthetics:
-#' `geom_sk_lines()` and `geom_sk_labels()` accpet the following astheic vlues
+#' @aesthetics GeomPath
 #'
-#' * `alpha`
-#' * `colour` (controls the polygon outline)
-#' * `fill` (controls the polygon fill)
-#' * `linetype`
-#' * `linewidth` (controls the outline thickness)
-#' * `text.colour` (controls colour of the text)
-#' * `size.unit` (controls size aesthetic in "mm", "pt", "cm", "in" or "pc")
+#' @references Stacey, J.S. and Kramers, J.D. (1975) Approximation of
+#'   terrestrial lead isotope evolution by a two-stage model. Earth and
+#'   Planetary Science Letters 26(2), pp. 207–221.
+#'   <https://dx.doi.org/10.1016/0012-821X(75)90088-6>.
 #'
 #' @return A ggplot2 layer object.
 #'
-#' @seealso
-#' [age_models()]
-#'
+#' @family Pb isotope functions
 #'
 #' @export
 #' @examples
@@ -244,7 +238,7 @@ StatStaceyKramers <- ggplot2::ggproto(
 
 geom_sk_lines <- function(mapping = NULL,
                           data = NULL,
-                          system = "76",
+                          system = c("76", "86"),
                           Mu1 = 10,
                           Kappa = 4,
                           ...) {
@@ -256,7 +250,7 @@ geom_sk_lines <- function(mapping = NULL,
     position = "identity",
     inherit.aes = TRUE, # Inherits x (206) and y (207 or 208)
     params = list(
-      system = system,
+      system = match.arg(system),
       Mu1 = Mu1,
       Kappa = Kappa,
       ...
