@@ -1,4 +1,4 @@
-# tests/testthat/test_oxide_conversion.R
+# Test for conversion between elemental wt% and oxide wt%
 
 # Test data
 df <- data.frame(
@@ -184,4 +184,22 @@ test_that("Additional tests for internal functions", {
   df_internal <- data.frame(row.names = 1:5)
   expect_equal(sum_duplicates(df_internal), df_internal)
   expect_equal(normalise_rows(df_internal), df_internal)
+})
+
+# ASTR objects handled correctly
+test_input <- read_ASTR(
+  system.file("extdata", "input_format.csv", package = "ASTR"),
+  id_column = "other",
+  context = c("other", "other2")
+) %>% unify_concentration_unit("wtP")
+
+test_input_element <- oxide_to_element(test_input, drop = TRUE, normalise = TRUE)
+test_input_oxide <- element_to_oxide(test_input, oxide_preference = "reducing", normalise = TRUE)
+
+test_that("Conversion handles ASTR objects correctly", {
+  expect_equal(test_input_element$K[[1]], set_units(100, "wtP"))
+  expect_equal(attributes(test_input_element$K)$ASTR_class, attributes(test_input$K2O)$ASTR_class)
+
+  expect_equal(units(test_input_oxide$ZnO)[[1]], "wtP")
+  expect_equal(attributes(test_input_oxide$SnO)$ASTR_class, attributes(test_input$Sn)$ASTR_class)
 })

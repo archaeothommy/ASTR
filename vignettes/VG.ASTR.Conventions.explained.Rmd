@@ -1,13 +1,12 @@
 ---
-title: "Data conventions explained"
+title: "ASTR schema: Explanation"
 csl: apa.csl
 link-citations: TRUE
 output: html_document
 vignette: >
-  %\VignetteIndexEntry{ASTR schema explained}
+  %\VignetteIndexEntry{ASTR schema: Explanation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-date: "2025-10-23"
 bibliography: references.bib
 ---
 
@@ -21,9 +20,9 @@ ASTR does not accept isotope, element, or oxide compositions without explicitly 
 
 ASTR explicitly handles measurement uncertainty for all analytical data. Measurement uncertainty is a parameter encompassing the dispersion of analytical data both random and systematically. It provides a quantitative estimate of the quality of the measurement.
 
--   **Random uncertainty**: The standard deviation (SD) denotes the dispersion or variability of individual data points around the mean value of a statistically normal data set and expresses the precision of the individual data within the statistical sample. A small SD means that the individual data points are close to the mean value (low variability), whereas a high SD means that the individual data points are more widely dispersed (high variability). In a normal distribution, 1 SD covers the range of approximately 68% of all data; 2 SD covers the range in which approximately 95% of the data in the data set is defined. The ratio is expressed in the so-called 68-95-99.7 rule.
+* **Random uncertainty**: The standard deviation (SD) denotes the dispersion or variability of individual data points around the mean value of a statistically normal data set and expresses the precision of the individual data within the statistical sample. A small SD means that the individual data points are close to the mean value (low variability), whereas a high SD means that the individual data points are more widely dispersed (high variability). In a normal distribution, 1 SD covers the range of approximately 68% of all data; 2 SD covers the range in which approximately 95% of the data in the data set is defined. The ratio is expressed in the so-called 68-95-99.7 rule.
 
--   **Systematic uncertainty**: The standard error (SE) expresses the variability of the means of measurements (statistical samples) in relation to multiple repetitions (the statistical population). It hence expresses the accuracy of the measurement. The SE becomes smaller as the sample size increases, since higher repetition of measurements provides more reliable information about the true population mean. Confidence intervals are used as for the standard deviation. A 2-fold standard error (2SD) defines the range around the calculated mean that contains the true population mean with ca. 95 % probability.
+* **Systematic uncertainty**: The standard error (SE) expresses the variability of the means of measurements (statistical samples) in relation to multiple repetitions (the statistical population). It hence expresses the accuracy of the measurement. The SE becomes smaller as the sample size increases, since higher repetition of measurements provides more reliable information about the true population mean. Confidence intervals are used as for the standard deviation. A 2-fold standard error (2SD) defines the range around the calculated mean that contains the true population mean with ca. 95 % probability.
 
 ## Limit of detection and limit of quantification
 
@@ -33,8 +32,8 @@ The limit of detection, usually expressed as `LOD` (or other indicative notation
 
 The limit of quantification (LOQ) is defined as the smallest amount that can be quantified with acceptable precision.
 
-In `archchem()`, the limit of detection where indicated by a below detection notation is automatically set to `NA`. Users requesting a more advanced approach by valuing the `LOD` in the ASTR package, e.g. for plotting functions, are requested to implement their own lambda function redefining the `bdl_strategy`.
+In `as_ASTR()`, the limit of detection where indicated by a below detection limit notation is automatically set to `NA`. Users requesting a more advanced approach by valuing the `LOD` in the ASTR package, e.g. for plotting functions, are requested to implement their own lambda function redefining the `bdl_strategy`.
 
 Substitution methods could be e.g. dropping the left-censored value by replacing it by `NA` or 0, calculating LOD/2 or LOD/√2, skipping \< of the left-censored value, or using regression models, enhanced censoring calculations, or maximum likelihood estimates [@giskeødegård2022; @helsel2006; @croghan2003f]
 
-# Bibliography
+# References

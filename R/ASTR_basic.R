@@ -1,30 +1,30 @@
-#' @name archchem
-#' @rdname archchem
+#' @title ASTR Schema implementation
 #'
-#' @title \strong{archchem}
+#' @name ASTR
+#' @rdname ASTR
 #'
 #' @description A tabular data format for chemical analysis datasets in
 #' archaeology, including contextual information, numerical elemental, and
 #' isotopic data. Columns are assigned units (using \link[units]{set_units}) and
-#' categories (in an attribute `archchem_class`) based on the column name.
-#' The following functions allow to create objects of class `archchem`, and to
+#' categories (in an attribute `ASTR_class`) based on the column name.
+#' The following functions allow to create objects of class `ASTR`, and to
 #' interact with them.
 #' \itemize{
-#'   \item **as_archchem**: Transforms an R `data.frame` to an object of class
-#'   `archchem`.
-#'   \item **read_archchem**: Reads data from a file (.csv, .xls, .xlsx) into
-#'   an object of class `archchem`.
-#'   \item **validate**: Performs additional validation on `archchem` and returns
+#'   \item **as_ASTR**: Transforms an R `data.frame` to an object of class
+#'   `ASTR`.
+#'   \item **read_ASTR**: Reads data from a file (.csv, .xls, .xlsx) into
+#'   an object of class `ASTR`.
+#'   \item **validate**: Performs additional validation on `ASTR` and returns
 #'   a `data.frame` as a workable list of potential issues.
-#'   \item **get_..._columns**: Subsets `archchem` tables to columns of a certain
-#'   category (or `archchem_class`), e.g. only contextual data columns.
+#'   \item **get_..._columns**: Subsets `ASTR` tables to columns of a certain
+#'   category (or `ASTR_class`), e.g. only contextual data columns.
 #'   \item **remove_units**: Removes unit vector types from the analytical columns
-#'   in an `archchem` table and replaces them with simple numeric columns of type
+#'   in an `ASTR` table and replaces them with simple numeric columns of type
 #'   `double`.
 #'   \item **unify_concentration_unit**: Unifies the unit of each concentration column,
 #'   e.g. to either % or ppm (or any SI unit) to avoid mixing units in derived analyses.
 #' }
-#' As `archchem` is derived from `tibble` it is directly compatible with the
+#' As `ASTR` is derived from `tibble` it is directly compatible with the
 #' data manipulation tools in the tidyverse.
 #'
 #' @param df a data.frame containing the input table
@@ -47,9 +47,9 @@
 #' `context`, nor automatically identified as analytical from the column name,
 #' be dropped to proceed with the reading? Defaults to FALSE
 #' @param validate should the post-reading input validation be run, which checks
-#' for additional properties of archchem tables. Defaults to TRUE
+#' for additional properties of ASTR tables. Defaults to TRUE
 #'
-#' @return Returns an object of class `archchem`, which is a tibble-derived object.
+#' @return Returns an object of class `ASTR`, which is a tibble-derived object.
 #'
 #' @details The input data files can be fairly freeform, i.e. no specified elements,
 #' oxides, or isotopic ratios are required and no exact order of these needs to
@@ -78,45 +78,44 @@
 #' @examples
 #' library(magrittr)
 #'
-#' # reading an archchem table directly from a file
+#' # reading an ASTR table directly from a file
 #' test_file <- system.file("extdata", "test_data_input_good.csv", package = "ASTR")
-#' arch <- read_archchem(test_file, id_column = "Sample", context = 1:7)
+#' arch <- read_ASTR(test_file, id_column = "Sample", context = 1:7)
 #'
-#' # turning a data.frame to an archchem table
+#' # turning a data.frame to an ASTR table
 #' test_df <- readr::read_csv(test_file)
-#' arch <- as_archchem(test_df, id_column = "Sample", context = 1:7)
+#' arch <- as_ASTR(test_df, id_column = "Sample", context = 1:7)
 #'
-#' # validating an archchem table
+#' # validating an ASTR table
 #' validate(arch)
 #'
 #' # extracting subsets of columns
 #' conc <- get_concentration_columns(arch) # see also other get_..._columns functions
 #'
-#' # unit-aware arithmetics on archchem columns thanks to the units package
-#' conc$Sb_ppm + conc$Ag_ppb # works
-#' \dontrun{conc$Sb_ppm + conc$`Sn_µg/ml`} # fails with: cannot convert µg/ml into ppm
+#' # unit-aware arithmetics on ASTR columns thanks to the units package
+#' conc$Sb + conc$Ag # works
+#' \dontrun{conc$Sb + conc$Sn} # fails with: cannot convert µg/ml into ppm
 #'
 #' # converting units
-#' conc$Sb_ppb <- units::set_units(arch$Sb_ppm, "ppb") %>%
-#'   magrittr::set_attr("archchem_class", "archchem_concentration")
+#' conc$Sb <- units::set_units(arch$Sb, "ppb") %>%
+#'   magrittr::set_attr("ASTR_class", "ASTR_concentration")
 #'
-#' # removing all units from archchem tables
+#' # removing all units from ASTR tables
 #' remove_units(arch)
 #'
-#' # applying tidyverse data manipulation on archchem tables
+#' # applying tidyverse data manipulation on ASTR tables
 #' arch %>%
 #'   dplyr::group_by(Site) %>%
-#'   dplyr::summarise(mean_Na2O = mean(`Na2O_wt%`))
+#'   dplyr::summarise(mean_Na2O = mean(Na2O))
 #' conc_subset <- conc %>%
-#'   dplyr::select(-`Sn_µg/ml`, -`Sb_ppm`) %>%
-#'   dplyr::filter(`Na2O_wt%` > units::set_units(1, "%"))
+#'   dplyr::select(-Sn, -Sb) %>%
+#'   dplyr::filter(Na2O > units::set_units(4, "wtP"))
 #'
 #' # unify all concentration units
-#' unify_concentration_unit(conc_subset, "ppm")
-#' # note that the column names are inaccurate now
+#' unify_concentration_unit(conc_subset, "ppb")
 #'
 #' @export
-as_archchem <- function(
+as_ASTR <- function(
   df, id_column = "ID", context = c(),
   bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
   bdl_strategy = function() NA_character_,
@@ -142,44 +141,62 @@ as_archchem <- function(
   }
   context <- append(context, id_column)
   # add ID column to context for the following operation
-  df <- df %>%
+  df1 <- df %>%
     dplyr::mutate(ID = .data[[id_column]]) %>%
     dplyr::relocate("ID", .before = 1)
   # handle ID duplicates
-  if (length(unique(df$ID)) != nrow(df)) {
+  if (length(unique(df1$ID)) != nrow(df1)) {
     warning(
       "Detected multiple data rows with the same ID. They will be renamed ",
       "consecutively using the following convention: _1, _2, ... _n"
     )
   }
-  df <- df %>%
+  df2 <- df1 %>%
     dplyr::group_by(.data[["ID"]]) %>%
     dplyr::mutate(
-      ID = dplyr::case_when(
-        dplyr::n() > 1 ~ paste0(.data[["ID"]], "_", as.character(dplyr::row_number())),
-        .default = .data[["ID"]]
-      )
+      ID = if (dplyr::n() > 1) {
+        paste0(.data[["ID"]], "_", as.character(dplyr::row_number()))
+      } else {
+        .data[["ID"]]
+      }
     ) %>%
     dplyr::ungroup()
   # determine and apply column types
-  constructors <- colnames_to_constructors(
-    df, context, bdl, bdl_strategy, guess_context_type, na, drop_columns
-  )
-  df <- purrr::map2(df, constructors, function(col, f) f(col)) %>%
+  column_table <- parse_colnames(df2, context, drop_columns)
+  constructors <- build_constructors(column_table, bdl, bdl_strategy, guess_context_type, na)
+  col_list <- purrr::map2(df2, constructors, function(col, f) f(col)) %>%
     purrr::discard(is.null)
+  df3 <- as.data.frame(col_list, check.names = FALSE)
+  # remove unit names from columns if they got a unit
+  df4 <- remove_unit_substrings(df3)
   # turn into tibble-derived object
-  df <- tibble::new_tibble(df, nrow = nrow(df), class = "archchem")
+  df5 <- tibble::new_tibble(df4, nrow = nrow(df4), class = "ASTR")
   # post-reading validation
   if (validate) {
-    validation_output <- validate(df, quiet = FALSE)
+    validation_output <- validate(df5, quiet = FALSE)
     if (nrow(validation_output) > 0) {
       warning(
         "See the full list of validation output with: ",
-        "ASTR::validate(<your archchem object>)."
+        "ASTR::validate(<your ASTR object>)."
       )
     }
   }
-  return(df)
+  return(df5)
+}
+
+# helper function to rename column names
+remove_unit_substrings <- function(x, ...) {
+  dplyr::rename_with(
+    x,
+    remove_suffix,
+    tidyselect::where(function(y) {
+      class(y) == "units" && !is_ASTR_class(y, "ASTR_error")
+    })
+  )
+}
+
+remove_suffix <- function(colname) {
+  sub("_.*$", "", colname, perl = TRUE)
 }
 
 #' @param path path to the file that should be read
@@ -190,9 +207,9 @@ as_archchem <- function(
 #'   See their documentation for details:
 #'   * [readxl::read_excel()] for file formats `.xlsx` or `.xls`
 #'   * [readr::read_delim()] for all other file formats.
-#' @rdname archchem
+#' @rdname ASTR
 #' @export
-read_archchem <- function(
+read_ASTR <- function(
   path, id_column = "ID", context = c(),
   delim = ",",
   guess_context_type = TRUE,
@@ -259,7 +276,7 @@ read_archchem <- function(
     # remove columns without a header
     dplyr::select(!tidyselect::starts_with("..."))
   # transform to desired data type
-  as_archchem(
+  as_ASTR(
     input_file,
     id_column = id_column, context = context,
     bdl = bdl, bdl_strategy = bdl_strategy,
@@ -269,7 +286,7 @@ read_archchem <- function(
   )
 }
 
-#' @rdname archchem
+#' @rdname ASTR
 #' @param quiet should warnings be printed? Defaults to TRUE
 #' @export
 validate <- function(x, quiet = TRUE, ...) {
@@ -278,11 +295,11 @@ validate <- function(x, quiet = TRUE, ...) {
 
 #' @export
 validate.default <- function(x, quiet = TRUE, ...) {
-  stop("x is not an object of class archchem")
+  stop("x is not an object of class ASTR")
 }
 
 #' @export
-validate.archchem <- function(x, quiet = TRUE, ...) {
+validate.ASTR <- function(x, quiet = TRUE, ...) {
   # check for missingness in analytical columns
   df_analytical <- get_analytical_columns(x)[-1]
   missing_values <- purrr::map2_dfr(
@@ -310,13 +327,13 @@ validate.archchem <- function(x, quiet = TRUE, ...) {
   return(all_warnings)
 }
 
-#' @param x an object of class archchem
-#' @rdname archchem
+#' @param x an object of class ASTR
+#' @rdname ASTR
 #' @export
-format.archchem <- function(x, ...) {
+format.ASTR <- function(x, ...) {
   out_str <- list()
   # compile information
-  out_str$title <- "\033[1marchchem table\033[22m"
+  out_str$title <- "\033[1mASTR table\033[22m"
   # analytical columns
   x_analytical <- colnames(get_analytical_columns(x))
   if (length(x_analytical[-1]) > 0) {
@@ -343,9 +360,9 @@ add_color <- function(x, col) {
   paste0("\033[0;", col, "m", x, "\033[0m")
 }
 
-#' @rdname archchem
+#' @rdname ASTR
 #' @export
-print.archchem <- function(x, ...) {
+print.ASTR <- function(x, ...) {
   # own format function
   cat(format(x, ...), "\n")
   # add table printed like a tibble
@@ -354,38 +371,39 @@ print.archchem <- function(x, ...) {
     print()
 }
 
-#### adjustments to preserve archchem properties with different dplyr verbs ####
+#### adjustments to preserve ASTR properties with different dplyr verbs ####
 # see ?dplyr_extending
 
-# carry over archchem_class column attribute
-preserve_archchem_attrs <- function(modified, original) {
-  purrr::map2(modified, original, function(new_col, old_col) {
-    arch_attr <- attr(old_col, "archchem_class")
-    if (!is.null(arch_attr)) attr(new_col, "archchem_class") <- arch_attr
-    new_col
-  }) %>%
-    magrittr::set_names(names(modified)) %>%
-    tibble::new_tibble(nrow = nrow(modified), class = class(original))
+# carry over ASTR_class column attribute
+preserve_ASTR_attrs <- function(modified, original) {
+  for (nm in intersect(names(modified), names(original))) {
+    arch_attr <- attr(original[[nm]], "ASTR_class")
+    if (!is.null(arch_attr)) {
+      attr(modified[[nm]], "ASTR_class") <- arch_attr
+    }
+  }
+  tibble::new_tibble(modified, class = class(original))
 }
 
 # row-slice method
 #' @exportS3Method dplyr::dplyr_row_slice
-dplyr_row_slice.archchem <- function(data, i, ...) {
-  sliced <- purrr::map(data, function(x) x[i])
-  sliced_tbl <- tibble::new_tibble(sliced, nrow = length(i), class = class(data))
-  preserve_archchem_attrs(sliced_tbl, data)
+dplyr_row_slice.ASTR <- function(data, i, ...) {
+  sliced <- purrr::map(data, vctrs::vec_slice, i = i)
+  sliced_tbl <- tibble::new_tibble(sliced, class = class(data))
+  preserve_ASTR_attrs(sliced_tbl, data)
 }
 
 # column modification method
 #' @exportS3Method dplyr::dplyr_col_modify
-dplyr_col_modify.archchem <- function(data, cols) {
+dplyr_col_modify.ASTR <- function(data, cols) {
   modified_list <- utils::modifyList(as.list(data), cols)
-  modified_tbl <- tibble::new_tibble(modified_list, nrow = nrow(data), class = class(data))
-  preserve_archchem_attrs(modified_tbl, data)
+  modified_tbl <- tibble::new_tibble(modified_list, class = class(data))
+  preserve_ASTR_attrs(modified_tbl, data)
 }
+
 
 # final reconstruction
 #' @exportS3Method dplyr::dplyr_reconstruct
-dplyr_reconstruct.archchem <- function(data, template) {
-  tibble::new_tibble(data, nrow = nrow(data), class = class(template))
+dplyr_reconstruct.ASTR <- function(data, template) {
+  preserve_ASTR_attrs(data, template)
 }

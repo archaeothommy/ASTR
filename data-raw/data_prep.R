@@ -15,7 +15,8 @@ oxides_data <- na.omit(unique(conversion_oxides$Oxide))
 special_oxide_states <- c(
   "LOI", # loss of ignition
   "FeOtot", # total iron
-  "Fe2O3tot"
+  "Fe2O3tot",
+  "Bal", "Balance" # reported by pXRF instruments
 )
 
 isotopes_data <- c(
@@ -72,11 +73,3 @@ usethis::use_data(
 # )
 #
 # usethis::use_data(isotopes, overwrite = T)
-
-#### archem data input table ####
-
-archchem_example_input <- readr::read_csv("data-raw/test_data_input_good.csv")
-
-usethis::use_data(archchem_example_input,
-  overwrite = TRUE
-)

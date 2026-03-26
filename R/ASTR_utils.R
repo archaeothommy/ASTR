@@ -60,3 +60,27 @@ return_numeric_columns <- function(df, columns, all = FALSE) {
   }
   df[columns]
 }
+
+#' Transform unit in ratio notation into notation with negative exponents
+#'
+#' @param unit Character string
+#' @keywords internal
+#'
+transform_notation <- function(unit) {
+  checkmate::assert_character(unit, len = 1)
+
+  unit <- unlist(strsplit(unit, "/"))
+  if (length(unit) == 2) {
+    unit[3] <- sub("[[:alpha:]]*", "", unit[2])
+    if (unit[3] == "") {
+      unit[3] <- "1"
+    }
+    unit[2] <- sub("[[:digit:]]*$", "", unit[2])
+    unit[2] <- paste0(unit[2:3], collapse = "-")
+    unit <- paste0(unit[1:2], collapse = " ")
+  }
+  if (length(unit) > 2) {
+    stop("This unit cannot be converted into a format with negative exponents. Please provide it in the proper format.")
+  }
+  unit
+}

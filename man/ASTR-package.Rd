@@ -2,7 +2,6 @@
 % Please edit documentation in R/ASTR-package.R
 \docType{package}
 \name{ASTR-package}
-\alias{ASTR}
 \alias{ASTR-package}
 \title{ASTR: Archaeometric Standards and Tools in R}
 \description{
@@ -45,6 +44,12 @@ Authors:
   \item Berber van der Meulen-van der Veen (\href{https://orcid.org/0000-0001-5297-0269}{ORCID})
   \item Chen Wang (\href{https://orcid.org/0009-0007-1851-2388}{ORCID})
   \item Katrin Julia Westner (\href{https://orcid.org/0000-0001-5529-1165}{ORCID})
+}
+
+Other contributors:
+\itemize{
+  \item Deutsche Forschungsgemeinschaft (\href{https://ror.org/018mejw64}{ROR}) [funder]
+  \item Lorentz Center (\href{https://ror.org/00d503m77}{ROR}) [funder]
 }
 
 }

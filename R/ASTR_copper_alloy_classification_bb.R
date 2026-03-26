@@ -2,8 +2,7 @@
 #'
 #' @description Classification of copper alloy artefacts according to Bayley &
 #'   Butcher (2004) based on Zn, Sn, and Pb concentrations in wt%.
-#'   Concentrations must be given in wt%. Classification uses specific
-#'   thresholds and ratios to define alloy types.
+#'   Classification uses specific thresholds and ratios to define alloy types.
 #'
 #' @references Bayley, J. and Butcher, S. (2004). Roman brooches in Britain: a
 #'   technological and typological study based on the Richborough Collection.
@@ -13,10 +12,15 @@
 #' @param df data frame with the data to be classified.
 #' @param elements named character vector with column names of Zn, Sn, and Pb
 #'   concentrations.
-#' @param id_sample  name of the column in `df` with the identifiers of each
+#' @param id_column  name of the column in `df` with the identifiers of each
 #'   row. Default to `ID`.
+#' @param ... Additional arguments for unit conversion, see [atomic_conversion]
+#'   and [oxide_conversion] for details.
 #'
-#' @return Original data frame with added column `copper_alloy_bb`.
+#' @return If `df` is an [ASTR object][ASTR], the output is an object of the
+#'   same type including the ID column, the contextual columns, the elements
+#'   used for classification and the alloy type. In all other cases, the data
+#'   frame provided as input with the column for the alloy type.
 #'
 #' @examples
 #' sample_df <- data.frame(
@@ -27,18 +31,36 @@
 #' )
 #' copper_alloy_bb(sample_df)
 #'
+#' # For ASTR objects, units and oxides are automatically converted
+#' sample_df <- as_ASTR(
+#'   data.frame(
+#'     ID = 1:8,
+#'     SnO_wtP = c(0.5, 0.5, 5, 5, 0.5, 5, 5, 5),
+#'     ZnO_wtP = c(0.5, 0.5, 0.5, 0.5, 5, 5, 0.5, 5),
+#'     PbO_wtP = c(0.5, 5, 0.5, 5, 0.5, 0.5, 5, 5)
+#'   )
+#' )
+#' copper_alloy_bb(sample_df, elements = c(Sn = "SnO", Zn = "ZnO", Pb = "PbO"))
+#'
+#' @family copper alloy classifications
 #' @export
 #'
 copper_alloy_bb <- function(
-  df,
-  elements = c(Sn = "Sn", Zn = "Zn", Pb = "Pb"),
-  id_sample = "ID"
-) {
-  # to do: check and convert concentrations to wt%
+    df,
+    elements = c(Sn = "Sn", Zn = "Zn", Pb = "Pb"),
+    id_column = "ID",
+    ...) {
+
+  if (inherits(df, "ASTR")) {
+    df <- convert_concentration_units(df, elements, "wtP")
+    elements <- c(Sn = "Sn", Zn = "Zn", Pb = "Pb") # rename in case input was in oxides
+    df_full <- df
+    df <- remove_units(df)
+  }
 
   # Create subset with just ID and classification column
   copper_alloy <- data.frame(
-    ID_sample = df[[id_sample]],
+    ID_sample = df[[id_column]],
     Sn = df[[elements["Sn"]]],
     Zn = df[[elements["Zn"]]],
     Pb = df[[elements["Pb"]]],
@@ -91,7 +113,16 @@ copper_alloy_bb <- function(
   copper_alloy$result[copper_alloy$Pb > 8] <- paste("Leaded", copper_alloy$result[copper_alloy$Pb > 8])
 
   # Merge results back to original dataframe by ID
-  df$copper_alloy_bb <- copper_alloy$result[match(df[[id_sample]], copper_alloy$ID_sample)]
+  copper_alloy_bb <- copper_alloy$result[match(df[[id_column]], copper_alloy$ID_sample)]
 
-  return(df)
+  if (inherits(df, "ASTR")) {
+    df_out <- df_full[c(colnames(get_contextual_columns(df_full)), elements)]
+    df_out[["copper_alloy_bb"]] <- copper_alloy_bb
+    df_out[["copper_alloy_bb"]] <- add_ASTR_class(df_out[["copper_alloy_bb"]], "ASTR_context")
+  } else {
+    df_out <- df
+    df_out[["copper_alloy_bb"]] <- copper_alloy_bb
+  }
+
+  return(df_out)
 }

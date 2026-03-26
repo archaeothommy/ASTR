@@ -20,3 +20,19 @@ test_that("copper_alloy_bb", {
     )
   )
 })
+
+test_that("copper_alloy_bb: Handling ASTR object", {
+  test_data_ASTR <- as_ASTR(
+    data.frame(
+      ID = 1:8,
+      Sn_atP = c(0.5, 0.5, 5, 5, 0.5, 5, 5, 5),
+      Zn_atP = c(0.5, 0.5, 0.5, 0.5, 5, 5, 0.5, 5),
+      Pb_atP = c(0.5, 5, 0.5, 5, 0.5, 0.5, 5, 5)
+    )
+  )
+  test_result_ASTR <- copper_alloy_bb(test_data_ASTR)
+
+  expect_equal(units(test_result_ASTR[["Zn"]])[[1]], "wtP")
+  expect_equal(attributes(test_result_ASTR[["copper_alloy_bb"]])[[1]], "ASTR_context")
+  expect_true(inherits(test_result_ASTR, "ASTR"))
+})
