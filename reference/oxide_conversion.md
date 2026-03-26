@@ -8,14 +8,19 @@ using pre-compiled conversion factors.
 ``` r
 element_to_oxide(
   df,
-  elements,
+  elements = colnames(get_unit_columns(df, "wtP")),
   oxide_preference,
   which_concentrations = c("all", "major", "minor", "no_trace"),
   normalise = FALSE,
   drop = FALSE
 )
 
-oxide_to_element(df, oxides, normalise = FALSE, drop = FALSE)
+oxide_to_element(
+  df,
+  oxides = colnames(get_unit_columns(df, "wtP")),
+  normalise = FALSE,
+  drop = FALSE
+)
 ```
 
 ## Arguments
@@ -70,8 +75,17 @@ The original data frame with the converted concentrations
 ## Details
 
 If the dataset includes already an element and its respective oxide, the
-conversion leaves the column of the respective oxide or element
-unaffected.
+conversion leaves the values of the respective oxide or element
+unaffected. The functions convert only values in *wt%*. If
+concentrations are present in another concentration unit (e.g. *ppm*,
+*µg/kg*), run
+[`unify_concentration_unit(df, "wtP")`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
+first to convert all concentrations to *wt%*. When the input is an
+[`ASTR object`](https://archaeothommy.github.io/ASTR/reference/ASTR),
+the functions convert \#' only elements or oxides with the respective
+other type being automatically excluded, even though the unit for both
+is *wt%*. To convert oxides into *at%* and vice versa, convert to *wt%*
+first.
 
 In `element_to_oxide()`, the parameter `oxide_preference` controls the
 behaviour of the function if the element forms more than one oxide:
@@ -100,6 +114,8 @@ GitHub repo](https://github.com/archaeothommy/ASTR) to add it.
 ## Examples
 
 ``` r
+library(magrittr)
+
 # Example data frame with element weight percents
 df <- data.frame(ID = "Sample1", Si = 45, Fe = 50, Cr = 5)
 
@@ -146,4 +162,18 @@ df3 <- data.frame(Fe2O3 = 20, FeO = 20, Cr2O3 = 15, CrO2 = 15, CuO = 20, Cu2O = 
 oxide_to_element(df3, oxides = names(df3), drop = TRUE)
 #>        Fe       Cr       Cu
 #> 1 29.5348 19.54877 33.74117
+
+# Use with ASTR objects
+# Create ASTR object
+test_file <- system.file("extdata", "test_data_input_good.csv", package = "ASTR")
+arch <- read_ASTR(test_file, id_column = "Sample", context = 1:7)
+#> Warning: 39 missing values across 12 analytical columns
+#> Warning: See the full list of validation output with: ASTR::validate(<your ASTR object>).
+
+# Convert columns from oxide to wt%
+arch_wtP <- element_to_oxide(arch, oxide_preference = "oxidising")
+
+# To convert all applicable concentrations, unify units first:
+arch_all <- unify_concentration_unit(arch, "wtP") %>%
+  element_to_oxide(oxide_preference = "oxidising")
 ```

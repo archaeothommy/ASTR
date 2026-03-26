@@ -94,87 +94,107 @@ Foundation) – project 571205551.
 
 # Package index
 
-## All functions
+## ASTR objects
 
-- [`ArgentinaDatabase`](https://archaeothommy.github.io/ASTR/reference/ArgentinaDatabase.md)
-  : ArgentinaDatabase
+Functions for creating and handling ASTR objects.
 
+- [`as_ASTR()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
+  [`read_ASTR()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
+  [`validate()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
+  [`format(`*`<ASTR>`*`)`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
+  [`print(`*`<ASTR>`*`)`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
+  [`get_contextual_columns()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
+  [`get_analytical_columns()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
+  [`get_isotope_columns()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
+  [`get_element_columns()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
+  [`get_ratio_columns()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
+  [`get_concentration_columns()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
+  [`get_unit_columns()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
+  [`remove_units()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
+  [`unify_concentration_unit()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
+  : ASTR Schema implementation
+
+## Data subsetting
+
+Pre-compiled lists for easier subsetting of data
+
+- [`isotopes_data`](https://archaeothommy.github.io/ASTR/reference/isotopes_data.md)
+  : Isotopes
+- [`elements_data`](https://archaeothommy.github.io/ASTR/reference/elements_data.md)
+  : Chemical elements
+- [`oxides_data`](https://archaeothommy.github.io/ASTR/reference/oxides_data.md)
+  : Oxides
+- [`special_oxide_states`](https://archaeothommy.github.io/ASTR/reference/special_oxide_states.md)
+  : Special oxide states
+
+## Unit conversions
+
+Functions and data tables for conversions between untis not covered in
+{units}
+
+- [`wt_to_at()`](https://archaeothommy.github.io/ASTR/reference/atomic_conversion.md)
+  [`at_to_wt()`](https://archaeothommy.github.io/ASTR/reference/atomic_conversion.md)
+  : Conversion between wt% and at%
+- [`element_to_oxide()`](https://archaeothommy.github.io/ASTR/reference/oxide_conversion.md)
+  [`oxide_to_element()`](https://archaeothommy.github.io/ASTR/reference/oxide_conversion.md)
+  : Oxide conversion functions
+- [`conversion_oxides`](https://archaeothommy.github.io/ASTR/reference/conversion_oxides.md)
+  : Conversion factors from oxides to elements
+
+## Calculations, Classifications, Statistics
+
+Functions for data transformation
+
+- [`copper_alloy_bb()`](https://archaeothommy.github.io/ASTR/reference/copper_alloy_bb.md)
+  : Copper alloy classification according to Bayley & Butcher (2004)
+- [`copper_alloy_pollard()`](https://archaeothommy.github.io/ASTR/reference/copper_alloy_pollard.md)
+  : Copper alloy classification according to Pollard et al. (2015).
+- [`copper_group_bray()`](https://archaeothommy.github.io/ASTR/reference/copper_group_bray.md)
+  : Copper classification according to Bray et al. (2015)
 - [`pb_iso_age_model()`](https://archaeothommy.github.io/ASTR/reference/age_models.md)
   [`stacey_kramers_1975()`](https://archaeothommy.github.io/ASTR/reference/age_models.md)
   [`cumming_richards_1975()`](https://archaeothommy.github.io/ASTR/reference/age_models.md)
   [`albarede_juteau_1984()`](https://archaeothommy.github.io/ASTR/reference/age_models.md)
   : Calculate lead isotope age models
+- [`pointcloud_distribution()`](https://archaeothommy.github.io/ASTR/reference/pointcloud_distribution.md)
+  : Comparing isotope samples to reference data in 3D space
 
-- [`as_archchem()`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
-  [`read_archchem()`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
-  [`validate()`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
-  [`format(`*`<archchem>`*`)`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
-  [`print(`*`<archchem>`*`)`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
-  [`get_contextual_columns()`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
-  [`get_analytical_columns()`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
-  [`get_isotope_columns()`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
-  [`get_element_columns()`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
-  [`get_ratio_columns()`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
-  [`get_concentration_columns()`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
-  [`remove_units()`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
-  [`unify_concentration_unit()`](https://archaeothommy.github.io/ASTR/reference/archchem.md)
-  :
+## Visualisation
 
-  **archchem**
-
-- [`archchem_example_input`](https://archaeothommy.github.io/ASTR/reference/archchem_example_input.md)
-  : Example input data for ASTR
-
-- [`wt_to_at()`](https://archaeothommy.github.io/ASTR/reference/atomic_conversion.md)
-  [`at_to_wt()`](https://archaeothommy.github.io/ASTR/reference/atomic_conversion.md)
-  : Conversion between wt% and at%
-
-- [`conversion_oxides`](https://archaeothommy.github.io/ASTR/reference/conversion_oxides.md)
-  : Conversion factors from oxides to elements
-
-- [`copper_alloy_bb()`](https://archaeothommy.github.io/ASTR/reference/copper_alloy_bb.md)
-  : Copper alloy classification according to Bayley & Butcher (2004)
-
-- [`copper_alloy_pollard()`](https://archaeothommy.github.io/ASTR/reference/copper_alloy_pollard.md)
-  : Copper alloy classification according to Pollard et al. (2015).
-
-- [`copper_group_bray()`](https://archaeothommy.github.io/ASTR/reference/copper_group_bray.md)
-  : Copper classification according to Bray et al. (2015)
-
-- [`elements_data`](https://archaeothommy.github.io/ASTR/reference/elements_data.md)
-  : Elements
+Functions for plotting data
 
 - [`geom_kde2d()`](https://archaeothommy.github.io/ASTR/reference/geom_kde2d.md)
-  : Draw 2D Kernel Density Estimate Polygons by Quantiles
-
+  : Draw 2D kernel density estimate polygons by quantiles
 - [`geom_sk_lines()`](https://archaeothommy.github.io/ASTR/reference/geom_sk_lines.md)
   [`geom_sk_labels()`](https://archaeothommy.github.io/ASTR/reference/geom_sk_lines.md)
   : Stacey-Kramers Lead Evolution Geom
 
-- [`isotopes_data`](https://archaeothommy.github.io/ASTR/reference/isotopes_data.md)
-  : Isotopes
+## Data
 
-- [`element_to_oxide()`](https://archaeothommy.github.io/ASTR/reference/oxide_conversion.md)
-  [`oxide_to_element()`](https://archaeothommy.github.io/ASTR/reference/oxide_conversion.md)
-  : Oxide conversion functions
+Datasets included in the package
 
-- [`oxides_data`](https://archaeothommy.github.io/ASTR/reference/oxides_data.md)
-  : Oxides
-
-- [`pointcloud_distribution()`](https://archaeothommy.github.io/ASTR/reference/pointcloud_distribution.md)
-  : Comparing Isotope Samples to Reference Data in 3D Space
-
-- [`special_oxide_states`](https://archaeothommy.github.io/ASTR/reference/special_oxide_states.md)
-  : Special oxide states
+- [`ArgentinaDatabase`](https://archaeothommy.github.io/ASTR/reference/ArgentinaDatabase.md)
+  : Lead isotope data fro Argentina
 
 # Articles
 
-### All vignettes
+### ASTR schema
 
-- [ASTR](https://archaeothommy.github.io/ASTR/articles/ASTR.md):
+These articles describe the ASTR schema, its implementation, and how to
+work with ASTR objects.
+
+- [ASTR schema: Naming
+  conventions](https://archaeothommy.github.io/ASTR/articles/VG.ASTR.Schema.0.0.2.md):
+- [ASTR schema:
+  Explanation](https://archaeothommy.github.io/ASTR/articles/VG.ASTR.Conventions.explained.md):
+- [ASTR schema:
+  Implementation](https://archaeothommy.github.io/ASTR/articles/VG.ASTR.Schema.Implementation.md):
+- [Working with ASTR
+  objects](https://archaeothommy.github.io/ASTR/articles/ASTR.showcase.md):
+
+### Specific functions
+
+These articles illustrate the use of specific functions in the package.
+
 - [Binary plot with kernel density
   estimation](https://archaeothommy.github.io/ASTR/articles/KDE2_vignette.md):
-- [Data conventions
-  explained](https://archaeothommy.github.io/ASTR/articles/VG.ASTR.Conventions.explained.md):
-- [ASTR schema: Naming
-  conventions](https://archaeothommy.github.io/ASTR/articles/VG.ASTRschema.0.0.2.md):

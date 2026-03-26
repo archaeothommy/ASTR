@@ -1,4 +1,4 @@
-# Elements
+# Chemical elements
 
 List of elements, sorted according to alphabet
 
@@ -14,7 +14,7 @@ a vector
 
 ## See also
 
-Other chemical_reference_data:
+Other chemical reference data:
 [`conversion_oxides`](https://archaeothommy.github.io/ASTR/reference/conversion_oxides.md),
 [`isotopes_data`](https://archaeothommy.github.io/ASTR/reference/isotopes_data.md),
 [`oxides_data`](https://archaeothommy.github.io/ASTR/reference/oxides_data.md),

@@ -73,10 +73,14 @@ albarede_juteau_1984(
 
 ## Value
 
-The data frame provided as input with columns added for the model age,
-mu, and kappa value(s) of the respective age models. The used model is
-indicated in the column names of the output by the abbreviations given
-above.
+If `df` is an [ASTR
+object](https://archaeothommy.github.io/ASTR/reference/ASTR.md), the
+output is an object of the same type including the ID column, the
+contextual columns, the lead isotope ratios used for calculation of the
+age model parameters, and the calculated age model parameters. In all
+other cases, the data frame provided as input with columns added for the
+calculated age model parameters. The used age model is indicated in the
+column names of the output by the abbreviations given above.
 
 ## Details
 
@@ -106,7 +110,7 @@ the other age model functions. If provided, it will be ignored.
 ## References
 
 Albarède, F. and Juteau, M. (1984) Unscrambling the lead model ages.
-Geochimica et Cosmochimica Acta 48(1), pp. 207–212.
+Geochimica et Cosmochimica Acta 48(1), pp. 207-212.
 <https://dx.doi.org/10.1016/0016-7037(84)90364-8>.
 
 Albarède, F., Desaulty, A.-M. and Blichert-Toft, J. (2012) A geological
@@ -120,7 +124,7 @@ pp. 155–171. <https://dx.doi.org/10.1016/0012-821X(75)90223-X>.
 Stacey, J.S. and Kramers, J.D. (1975) Approximation of terrestrial lead
 isotope evolution by a two-stage model. Earth and Planetary Science
 Letters 26(2), pp. 207–221.
-\<https://dx.doi.org/10.1016/0012-821X(75)90088-6\<.
+<https://dx.doi.org/10.1016/0012-821X(75)90088-6>.
 
 ## See also
 

@@ -61,6 +61,12 @@
 - **Katrin Julia Westner**. Author.
   [](https://orcid.org/0000-0001-5529-1165)
 
+- **Deutsche Forschungsgemeinschaft**. Funder.
+  [![ROR](https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb.svg)](https://ror.org/018mejw64)
+
+- **Lorentz Center**. Funder.
+  [![ROR](https://raw.githubusercontent.com/ror-community/ror-logos/main/ror-icon-rgb.svg)](https://ror.org/00d503m77)
+
 ## Citation
 
 Source:

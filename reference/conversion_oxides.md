@@ -49,7 +49,7 @@ A data frame with 106 rows and 7 variables:
 
 ## See also
 
-Other chemical_reference_data:
+Other chemical reference data:
 [`elements_data`](https://archaeothommy.github.io/ASTR/reference/elements_data.md),
 [`isotopes_data`](https://archaeothommy.github.io/ASTR/reference/isotopes_data.md),
 [`oxides_data`](https://archaeothommy.github.io/ASTR/reference/oxides_data.md),

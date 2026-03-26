@@ -33,9 +33,15 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/KDE2_vignette.html">Binary plot with kernel density estimation</a></li>
-    <li><a class="dropdown-item" href="../articles/VG.ASTR.Conventions.explained.html">Data conventions explained</a></li>
-    <li><a class="dropdown-item" href="../articles/VG.ASTRschema.0.0.2.html">ASTR schema: Naming conventions</a></li>
+<li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ASTR schema</h6></li>
+    <li><a class="dropdown-item" href="../articles/VG.ASTR.Schema.0.0.2.html">ASTR schema: Naming conventions</a></li>
+    <li><a class="dropdown-item" href="../articles/VG.ASTR.Conventions.explained.html">ASTR schema: Explanation</a></li>
+    <li><a class="dropdown-item" href="../articles/VG.ASTR.Schema.Implementation.html">ASTR schema: Implementation</a></li>
+    <li><a class="dropdown-item" href="../articles/ASTR.showcase.html">Working with ASTR objects</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Specific functions</h6></li>
+    <li><a class="dropdown-item" href="../articles/KDE2_vignette.html">Binary plot with kernel density estimation</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -67,8 +73,6 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://archaeothommy.github.io/ASTR/">ASTR</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
@@ -145,9 +149,10 @@ into an interval centred (symmetrically or not) around
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>x</mi><mi>i</mi></msub><annotation encoding="application/x-tex">x_i</annotation></semantics></math><span class="citation">(<a href="#ref-Weglarczyk2018">Węglarczyk,
 Stanisław, 2018</a>)</span>.</p>
 </div>
-<div class="section level3">
-<h3 id="function-workflow">Function workflow<a class="anchor" aria-label="anchor" href="#function-workflow"></a>
-</h3>
+</div>
+<div class="section level2">
+<h2 id="function-workflow">Function workflow<a class="anchor" aria-label="anchor" href="#function-workflow"></a>
+</h2>
 <p><code>geom_kde2()</code> calculates the 2D kernel density estimate
 using <code>kde()</code> from the ks package <span class="citation">(<a href="#ref-Duong2007">Duong, 2007</a>, <a href="#ref-Duong2025">2025</a>)</span>, while handling the contours
 manually (<code>compute.cont = FALSE</code>). It then calculates the
@@ -169,16 +174,20 @@ created, applying the determined aesthetics and these are drawn using
 the in-built GeomPoint <code>draw_panel</code>.</p>
 <p>Default aesthetic values are applied if unchanged by the user.</p>
 </div>
-<div class="section level3">
-<h3 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
-</h3>
+<div class="section level2">
+<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
+</h2>
 <p>The following examples showcase the different visualisation and
 density estimate calculations for <code><a href="../reference/geom_kde2d.html">geom_kde2d()</a></code>.</p>
-<div class="section level4">
-<h4 id="basic-biplot">Basic biplot<a class="anchor" aria-label="anchor" href="#basic-biplot"></a>
-</h4>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># load example lead isotope data that is included with the package</span></span>
+<div class="section level3">
+<h3 id="basic-biplot">Basic biplot<a class="anchor" aria-label="anchor" href="#basic-biplot"></a>
+</h3>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://archaeothommy.github.io/ASTR/">ASTR</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># load example lead isotope data that is included with the package</span></span>
+<span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ArgentinaDatabase</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
@@ -224,13 +233,13 @@ calculate the estimates:
 In those cases, the plotting falls back to plotting individual points
 from the original dataset.</p>
 </div>
-<div class="section level4">
-<h4 id="biplot-with-adjusted-quantiles-to-show-deciles">Biplot with adjusted quantiles to show deciles<a class="anchor" aria-label="anchor" href="#biplot-with-adjusted-quantiles-to-show-deciles"></a>
-</h4>
+<div class="section level3">
+<h3 id="biplot-with-adjusted-quantiles-to-show-deciles">Biplot with adjusted quantiles to show deciles<a class="anchor" aria-label="anchor" href="#biplot-with-adjusted-quantiles-to-show-deciles"></a>
+</h3>
 <p>The default function reverts to 4 quantiles. This examples
 illustrates the quantiles set to 10 to show deciles. It also sets the
 transparency to 0.5 (<code>alpha</code>).</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span></span>
 <span>  <span class="va">ArgentinaDatabase</span>,</span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
@@ -267,11 +276,11 @@ transparency to 0.5 (<code>alpha</code>).</p>
 <span><span class="co">#&gt; No density estimate possible for group '25', plotting points instead: infinite or missing values in 'x'</span></span></code></pre></div>
 <p><img src="KDE2_vignette_files/figure-html/unnamed-chunk-3-1.png" class="r-plt" alt="" width="672"></p>
 </div>
-<div class="section level4">
-<h4 id="biplot-with-the-minimum-probability-argument-added-to-show-only-density-regions-above-the-median">Biplot with the minimum probability argument added to show only
+<div class="section level3">
+<h3 id="biplot-with-the-minimum-probability-argument-added-to-show-only-density-regions-above-the-median">Biplot with the minimum probability argument added to show only
 density regions above the median<a class="anchor" aria-label="anchor" href="#biplot-with-the-minimum-probability-argument-added-to-show-only-density-regions-above-the-median"></a>
-</h4>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+</h3>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span></span>
 <span>  <span class="va">ArgentinaDatabase</span>,</span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
@@ -308,11 +317,11 @@ density regions above the median<a class="anchor" aria-label="anchor" href="#bip
 <span><span class="co">#&gt; No density estimate possible for group '25', plotting points instead: infinite or missing values in 'x'</span></span></code></pre></div>
 <p><img src="KDE2_vignette_files/figure-html/unnamed-chunk-4-1.png" class="r-plt" alt="" width="672"></p>
 </div>
-<div class="section level4">
-<h4 id="creation-of-an-outline-effect-around-the-density-region">Creation of an outline effect around the density region<a class="anchor" aria-label="anchor" href="#creation-of-an-outline-effect-around-the-density-region"></a>
-</h4>
+<div class="section level3">
+<h3 id="creation-of-an-outline-effect-around-the-density-region">Creation of an outline effect around the density region<a class="anchor" aria-label="anchor" href="#creation-of-an-outline-effect-around-the-density-region"></a>
+</h3>
 <p>For this effect the fill argument is set to <code>NA</code></p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span></span>
 <span>  <span class="va">ArgentinaDatabase</span>,</span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
@@ -350,16 +359,16 @@ density regions above the median<a class="anchor" aria-label="anchor" href="#bip
 <span><span class="co">#&gt; No density estimate possible for group '25', plotting points instead: infinite or missing values in 'x'</span></span></code></pre></div>
 <p><img src="KDE2_vignette_files/figure-html/unnamed-chunk-5-1.png" class="r-plt" alt="" width="672"></p>
 </div>
-<div class="section level4">
-<h4 id="creation-of-an-outline-effect-around-the-density-region-solving-clipping-issues">Creation of an outline effect around the density region solving
+<div class="section level3">
+<h3 id="creation-of-an-outline-effect-around-the-density-region-solving-clipping-issues">Creation of an outline effect around the density region solving
 clipping issues<a class="anchor" aria-label="anchor" href="#creation-of-an-outline-effect-around-the-density-region-solving-clipping-issues"></a>
-</h4>
+</h3>
 <p>In some cases density regions can be clipped by the plot area. The
 addition of <code><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian()</a></code> from the package
 <code>ggplot2</code> expands the plot area so that the full density
 regions are shown without clipping. The limits are set for the axes
 using the <code>xlim</code> and <code>ylim</code> arguments.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span></span>
 <span>  <span class="va">ArgentinaDatabase</span>,</span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
@@ -403,9 +412,9 @@ using the <code>xlim</code> and <code>ylim</code> arguments.</p>
 <p><img src="KDE2_vignette_files/figure-html/unnamed-chunk-6-1.png" class="r-plt" alt="" width="672"></p>
 </div>
 </div>
-<div class="section level3">
-<h3 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
-</h3>
+<div class="section level2">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
 <div id="ref-DeCeuster2025" class="csl-entry">
 De Ceuster, S., Hoogewerff, J., &amp; Degryse, P. (2025). Provenancing
@@ -449,7 +458,6 @@ application. <em>ITM Web Conf.</em>, <em>23</em>, 00037. <a href="https://doi.or
 </div>
 </div>
 </div>
-</div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
@@ -457,7 +465,7 @@ application. <em>ITM Web Conf.</em>, <em>23</em>, 00037. <a href="https://doi.or
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Thomas Rose, Mathias Ayine Abagna, Andrea Acevedo Mejia, Gilberto Artioli, María Florencia Becerra, Adam Kevin Benfer, Lisa Bellemère, Thomas Edward Birch, Karan Desai, Paolo d’Imporzano, Tzilla Eshel, Valerio Gentile, Sabine Klein, Catherine Klesner, Kathryn Murphy, Ben Marwick, Stephen Merkel, Marco Daniele Pelizzari, Alexandra Rodler, Benjamin Sabatini, Clemens Schmid, Berber van der Meulen-van der Veen, Chen Wang, Katrin Julia Westner.</p>
+  <p>Developed by Thomas Rose, Mathias Ayine Abagna, Andrea Acevedo Mejia, Gilberto Artioli, María Florencia Becerra, Adam Kevin Benfer, Lisa Bellemère, Thomas Edward Birch, Karan Desai, Paolo d’Imporzano, Tzilla Eshel, Valerio Gentile, Sabine Klein, Catherine Klesner, Kathryn Murphy, Ben Marwick, Stephen Merkel, Marco Daniele Pelizzari, Alexandra Rodler, Benjamin Sabatini, Clemens Schmid, Berber van der Meulen-van der Veen, Chen Wang, Katrin Julia Westner, Deutsche Forschungsgemeinschaft, Lorentz Center.</p>
 </div>
 
 <div class="pkgdown-footer-right">

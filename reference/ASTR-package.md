@@ -69,3 +69,10 @@ Authors:
 - Chen Wang ([ORCID](https://orcid.org/0009-0007-1851-2388))
 
 - Katrin Julia Westner ([ORCID](https://orcid.org/0000-0001-5529-1165))
+
+Other contributors:
+
+- Deutsche Forschungsgemeinschaft ([ROR](https://ror.org/018mejw64))
+  \[funder\]
+
+- Lorentz Center ([ROR](https://ror.org/00d503m77)) \[funder\]

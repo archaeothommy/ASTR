@@ -1,7 +1,7 @@
-# ArgentinaDatabase
+# Lead isotope data fro Argentina
 
-Lead isotope data from ore deposits in Argentina prepared for TerraLID
-database.
+Lead isotope data from ore deposits in Argentina prepared for the
+TerraLID database.
 
 ## Usage
 

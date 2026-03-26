@@ -1,9 +1,5 @@
 # Binary plot with kernel density estimation
 
-``` r
-library(ASTR)
-```
-
 ## Introduction
 
 This vignette introduces `geom_kde2()`, which generates a binary plot
@@ -69,7 +65,7 @@ In other words, the kernel transforms the “*sharp*” (point) location of
 $x_{i}$ into an interval centred (symmetrically or not) around
 $x_{i}$([Węglarczyk, Stanisław, 2018](#ref-Weglarczyk2018)).
 
-### Function workflow
+## Function workflow
 
 `geom_kde2()` calculates the 2D kernel density estimate using `kde()`
 from the ks package ([Duong, 2007](#ref-Duong2007),
@@ -96,16 +92,20 @@ the in-built GeomPoint `draw_panel`.
 
 Default aesthetic values are applied if unchanged by the user.
 
-### Examples
+## Examples
 
 The following examples showcase the different visualisation and density
 estimate calculations for
 [`geom_kde2d()`](https://archaeothommy.github.io/ASTR/reference/geom_kde2d.md).
 
-#### Basic biplot
+### Basic biplot
 
 ``` r
+
+library(ASTR)
+
 # load example lead isotope data that is included with the package
+
 data(ArgentinaDatabase)
 
 library(ggplot2)
@@ -155,7 +155,7 @@ calculate the estimates:
 In those cases, the plotting falls back to plotting individual points
 from the original dataset.
 
-#### Biplot with adjusted quantiles to show deciles
+### Biplot with adjusted quantiles to show deciles
 
 The default function reverts to 4 quantiles. This examples illustrates
 the quantiles set to 10 to show deciles. It also sets the transparency
@@ -200,7 +200,7 @@ ggplot(
 
 ![](KDE2_vignette_files/figure-html/unnamed-chunk-3-1.png)
 
-#### Biplot with the minimum probability argument added to show only density regions above the median
+### Biplot with the minimum probability argument added to show only density regions above the median
 
 ``` r
 ggplot(
@@ -241,7 +241,7 @@ ggplot(
 
 ![](KDE2_vignette_files/figure-html/unnamed-chunk-4-1.png)
 
-#### Creation of an outline effect around the density region
+### Creation of an outline effect around the density region
 
 For this effect the fill argument is set to `NA`
 
@@ -285,7 +285,7 @@ ggplot(
 
 ![](KDE2_vignette_files/figure-html/unnamed-chunk-5-1.png)
 
-#### Creation of an outline effect around the density region solving clipping issues
+### Creation of an outline effect around the density region solving clipping issues
 
 In some cases density regions can be clipped by the plot area. The
 addition of
@@ -339,7 +339,7 @@ ggplot(
 
 ![](KDE2_vignette_files/figure-html/unnamed-chunk-6-1.png)
 
-### References
+## References
 
 De Ceuster, S., Hoogewerff, J., & Degryse, P. (2025). Provenancing
 ancient materials with lead isotopes: Overlap uncovered. *Scientific

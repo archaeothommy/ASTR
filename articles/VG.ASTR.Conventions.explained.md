@@ -1,4 +1,4 @@
-# Data conventions explained
+# ASTR schema: Explanation
 
 This vignette explains the data conventions that ASTR follows.
 
@@ -61,12 +61,12 @@ The limit of quantification (LOQ) is defined as the smallest amount that
 can be quantified with acceptable precision.
 
 In
-[`archchem()`](https://archaeothommy.github.io/ASTR/reference/archchem.md),
-the limit of detection where indicated by a below detection notation is
-automatically set to `NA`. Users requesting a more advanced approach by
-valuing the `LOD` in the ASTR package, e.g. for plotting functions, are
-requested to implement their own lambda function redefining the
-`bdl_strategy`.
+[`as_ASTR()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md),
+the limit of detection where indicated by a below detection limit
+notation is automatically set to `NA`. Users requesting a more advanced
+approach by valuing the `LOD` in the ASTR package, e.g. for plotting
+functions, are requested to implement their own lambda function
+redefining the `bdl_strategy`.
 
 Substitution methods could be e.g. dropping the left-censored value by
 replacing it by `NA` or 0, calculating LOD/2 or LOD/√2, skipping \< of
@@ -75,7 +75,7 @@ calculations, or maximum likelihood estimates ([Croghan & Egeghy,
 2003](#ref-croghan2003f); [Giskeødegård & Lydersen,
 2022](#ref-giske%C3%B8deg%C3%A5rd2022); [Helsel, 2006](#ref-helsel2006))
 
-## Bibliography
+## References
 
 Croghan, C., & Egeghy, P. P. (2003). Methods of dealing with values
 below the limit of detection using SAS. *Southern SAS User Group*.

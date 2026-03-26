@@ -18,9 +18,15 @@
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/KDE2_vignette.html">Binary plot with kernel density estimation</a></li>
-    <li><a class="dropdown-item" href="../articles/VG.ASTR.Conventions.explained.html">Data conventions explained</a></li>
-    <li><a class="dropdown-item" href="../articles/VG.ASTRschema.0.0.2.html">ASTR schema: Naming conventions</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>ASTR schema</h6></li>
+    <li><a class="dropdown-item" href="../articles/VG.ASTR.Schema.0.0.2.html">ASTR schema: Naming conventions</a></li>
+    <li><a class="dropdown-item" href="../articles/VG.ASTR.Conventions.explained.html">ASTR schema: Explanation</a></li>
+    <li><a class="dropdown-item" href="../articles/VG.ASTR.Schema.Implementation.html">ASTR schema: Implementation</a></li>
+    <li><a class="dropdown-item" href="../articles/ASTR.showcase.html">Working with ASTR objects</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Specific functions</h6></li>
+    <li><a class="dropdown-item" href="../articles/KDE2_vignette.html">Binary plot with kernel density estimation</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -38,9 +44,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="astr-objects">ASTR objects<a class="anchor" aria-label="anchor" href="#astr-objects"></a></h2>
 
-
+      <div class="section-desc"><p>Functions for creating and handling ASTR objects.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -49,33 +55,58 @@
 
       <dl><dt>
 
-          <code><a href="ArgentinaDatabase.html">ArgentinaDatabase</a></code>
+          <code><a href="ASTR.html">as_ASTR()</a></code> <code><a href="ASTR.html">read_ASTR()</a></code> <code><a href="ASTR.html">validate()</a></code> <code><a href="ASTR.html">format(<i>&lt;ASTR&gt;</i>)</a></code> <code><a href="ASTR.html">print(<i>&lt;ASTR&gt;</i>)</a></code> <code><a href="ASTR.html">get_contextual_columns()</a></code> <code><a href="ASTR.html">get_analytical_columns()</a></code> <code><a href="ASTR.html">get_isotope_columns()</a></code> <code><a href="ASTR.html">get_element_columns()</a></code> <code><a href="ASTR.html">get_ratio_columns()</a></code> <code><a href="ASTR.html">get_concentration_columns()</a></code> <code><a href="ASTR.html">get_unit_columns()</a></code> <code><a href="ASTR.html">remove_units()</a></code> <code><a href="ASTR.html">unify_concentration_unit()</a></code>
 
         </dt>
-        <dd>ArgentinaDatabase</dd>
+        <dd>ASTR Schema implementation</dd>
+      </dl></div><div class="section level2">
+      <h2 id="data-subsetting">Data subsetting<a class="anchor" aria-label="anchor" href="#data-subsetting"></a></h2>
+
+      <div class="section-desc"><p>Pre-compiled lists for easier subsetting of data</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="isotopes_data.html">isotopes_data</a></code>
+
+        </dt>
+        <dd>Isotopes</dd>
 
         <dt>
 
-          <code><a href="age_models.html">pb_iso_age_model()</a></code> <code><a href="age_models.html">stacey_kramers_1975()</a></code> <code><a href="age_models.html">cumming_richards_1975()</a></code> <code><a href="age_models.html">albarede_juteau_1984()</a></code>
+          <code><a href="elements_data.html">elements_data</a></code>
 
         </dt>
-        <dd>Calculate lead isotope age models</dd>
+        <dd>Chemical elements</dd>
 
         <dt>
 
-          <code><a href="archchem.html">as_archchem()</a></code> <code><a href="archchem.html">read_archchem()</a></code> <code><a href="archchem.html">validate()</a></code> <code><a href="archchem.html">format(<i>&lt;archchem&gt;</i>)</a></code> <code><a href="archchem.html">print(<i>&lt;archchem&gt;</i>)</a></code> <code><a href="archchem.html">get_contextual_columns()</a></code> <code><a href="archchem.html">get_analytical_columns()</a></code> <code><a href="archchem.html">get_isotope_columns()</a></code> <code><a href="archchem.html">get_element_columns()</a></code> <code><a href="archchem.html">get_ratio_columns()</a></code> <code><a href="archchem.html">get_concentration_columns()</a></code> <code><a href="archchem.html">remove_units()</a></code> <code><a href="archchem.html">unify_concentration_unit()</a></code>
+          <code><a href="oxides_data.html">oxides_data</a></code>
 
         </dt>
-        <dd><strong>archchem</strong></dd>
+        <dd>Oxides</dd>
 
         <dt>
 
-          <code><a href="archchem_example_input.html">archchem_example_input</a></code>
+          <code><a href="special_oxide_states.html">special_oxide_states</a></code>
 
         </dt>
-        <dd>Example input data for ASTR</dd>
+        <dd>Special oxide states</dd>
+      </dl></div><div class="section level2">
+      <h2 id="unit-conversions">Unit conversions<a class="anchor" aria-label="anchor" href="#unit-conversions"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Functions and data tables for conversions between untis not covered in {units}</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="atomic_conversion.html">wt_to_at()</a></code> <code><a href="atomic_conversion.html">at_to_wt()</a></code>
 
@@ -84,12 +115,28 @@
 
         <dt>
 
+          <code><a href="oxide_conversion.html">element_to_oxide()</a></code> <code><a href="oxide_conversion.html">oxide_to_element()</a></code>
+
+        </dt>
+        <dd>Oxide conversion functions</dd>
+
+        <dt>
+
           <code><a href="conversion_oxides.html">conversion_oxides</a></code>
 
         </dt>
         <dd>Conversion factors from oxides to elements</dd>
+      </dl></div><div class="section level2">
+      <h2 id="calculations-classifications-statistics">Calculations, Classifications, Statistics<a class="anchor" aria-label="anchor" href="#calculations-classifications-statistics"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Functions for data transformation</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="copper_alloy_bb.html">copper_alloy_bb()</a></code>
 
@@ -112,17 +159,33 @@
 
         <dt>
 
-          <code><a href="elements_data.html">elements_data</a></code>
+          <code><a href="age_models.html">pb_iso_age_model()</a></code> <code><a href="age_models.html">stacey_kramers_1975()</a></code> <code><a href="age_models.html">cumming_richards_1975()</a></code> <code><a href="age_models.html">albarede_juteau_1984()</a></code>
 
         </dt>
-        <dd>Elements</dd>
+        <dd>Calculate lead isotope age models</dd>
 
         <dt>
+
+          <code><a href="pointcloud_distribution.html">pointcloud_distribution()</a></code>
+
+        </dt>
+        <dd>Comparing isotope samples to reference data in 3D space</dd>
+      </dl></div><div class="section level2">
+      <h2 id="visualisation">Visualisation<a class="anchor" aria-label="anchor" href="#visualisation"></a></h2>
+
+      <div class="section-desc"><p>Functions for plotting data</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="geom_kde2d.html">geom_kde2d()</a></code>
 
         </dt>
-        <dd>Draw 2D Kernel Density Estimate Polygons by Quantiles</dd>
+        <dd>Draw 2D kernel density estimate polygons by quantiles</dd>
 
         <dt>
 
@@ -130,47 +193,29 @@
 
         </dt>
         <dd>Stacey-Kramers Lead Evolution Geom</dd>
+      </dl></div><div class="section level2">
+      <h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a></h2>
 
-        <dt>
+      <div class="section-desc"><p>Datasets included in the package</p></div>
 
-          <code><a href="isotopes_data.html">isotopes_data</a></code>
+      <dl></dl></div><div class="section level2">
 
-        </dt>
-        <dd>Isotopes</dd>
 
-        <dt>
 
-          <code><a href="oxide_conversion.html">element_to_oxide()</a></code> <code><a href="oxide_conversion.html">oxide_to_element()</a></code>
 
-        </dt>
-        <dd>Oxide conversion functions</dd>
+      <dl><dt>
 
-        <dt>
-
-          <code><a href="oxides_data.html">oxides_data</a></code>
+          <code><a href="ArgentinaDatabase.html">ArgentinaDatabase</a></code>
 
         </dt>
-        <dd>Oxides</dd>
-
-        <dt>
-
-          <code><a href="pointcloud_distribution.html">pointcloud_distribution()</a></code>
-
-        </dt>
-        <dd>Comparing Isotope Samples to Reference Data in 3D Space</dd>
-
-        <dt>
-
-          <code><a href="special_oxide_states.html">special_oxide_states</a></code>
-
-        </dt>
-        <dd>Special oxide states</dd>
+        <dd>Lead isotope data fro Argentina</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Thomas Rose, Mathias Ayine Abagna, Andrea Acevedo Mejia, Gilberto Artioli, María Florencia Becerra, Adam Kevin Benfer, Lisa Bellemère, Thomas Edward Birch, Karan Desai, Paolo d’Imporzano, Tzilla Eshel, Valerio Gentile, Sabine Klein, Catherine Klesner, Kathryn Murphy, Ben Marwick, Stephen Merkel, Marco Daniele Pelizzari, Alexandra Rodler, Benjamin Sabatini, Clemens Schmid, Berber van der Meulen-van der Veen, Chen Wang, Katrin Julia Westner.</p>
+  <p>Developed by Thomas Rose, Mathias Ayine Abagna, Andrea Acevedo Mejia, Gilberto Artioli, María Florencia Becerra, Adam Kevin Benfer, Lisa Bellemère, Thomas Edward Birch, Karan Desai, Paolo d’Imporzano, Tzilla Eshel, Valerio Gentile, Sabine Klein, Catherine Klesner, Kathryn Murphy, Ben Marwick, Stephen Merkel, Marco Daniele Pelizzari, Alexandra Rodler, Benjamin Sabatini, Clemens Schmid, Berber van der Meulen-van der Veen, Chen Wang, Katrin Julia Westner, Deutsche Forschungsgemeinschaft, Lorentz Center.</p>
 </div>
 
 <div class="pkgdown-footer-right">

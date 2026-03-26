@@ -1,4 +1,4 @@
-# Draw 2D Kernel Density Estimate Polygons by Quantiles
+# Draw 2D kernel density estimate polygons by quantiles
 
 This geom creates polygons based on a 2D kernel density estimate, which
 is calculated using the
