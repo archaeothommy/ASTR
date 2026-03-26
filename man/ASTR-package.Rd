@@ -11,7 +11,9 @@ ASTR defines and implements a community reporting standard for archaeometric dat
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://archaeothommy.github.io/ASTR/index.html}
+  \item \url{https://archaeothommy.github.io/ASTR/}
+  \item \url{https://github.com/archaeothommy/ASTR}
+  \item Report bugs at \url{https://github.com/archaeothommy/ASTR/issues}
 }
 
 }
@@ -20,6 +22,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Mathias Ayine Abagna
   \item Andrea Acevedo Mejia (\href{https://orcid.org/0009-0002-7441-1737}{ORCID})
   \item Gilberto Artioli (\href{https://orcid.org/0000-0002-8693-7392}{ORCID})
   \item María Florencia Becerra (\href{https://orcid.org/0000-0001-6302-7452}{ORCID})
