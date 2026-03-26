@@ -53,6 +53,7 @@ reference:
     Functions for plotting data
   contents:
   - geom_kde2d
+  - geom_sk_lines
 - title: Data
   desc: >
     Datasets included in the package

@@ -128,7 +128,7 @@ StatStaceyKramers <- ggplot2::ggproto(
 )
 
 
-# Geomes ------------------------------------------------------------------
+# Geoms ------------------------------------------------------------------
 
 
 #' Stacey-Kramers Lead Evolution Geom
@@ -234,8 +234,6 @@ StatStaceyKramers <- ggplot2::ggproto(
 #'     y = expression({}^207*Pb / {}^204*Pb),
 #'   )
 #'
-#' rm(df)
-
 geom_sk_lines <- function(mapping = NULL,
                           data = NULL,
                           system = c("76", "86"),
