@@ -3,12 +3,11 @@
 \docType{data}
 \name{ArgentinaDatabase}
 \alias{ArgentinaDatabase}
-\title{Lead isotope data fro Argentina}
+\title{Lead isotope data from Argentina}
 \format{
-\subsection{\code{ArgentinaDatabase}}{
+\code{ArgentinaDatabase}
 
 A dataframe with 112 rows and 49 columns
-}
 }
 \source{
 \url{https://globalid.dmt-lb.de/}

@@ -13,16 +13,16 @@ at_to_wt(df, elements = colnames(get_unit_columns(df, "atP")), drop = TRUE)
 \arguments{
 \item{df}{Data frame with compositional data.}
 
-\item{elements}{character vector with the chemical symbols of the elements
-that should be converted. Default are all columns in an \href{ASTR}{\verb{ASTR object}} in the unit to be converted. See \emph{Details} for further
+\item{elements}{Character vector with the chemical symbols of the elements
+that should be converted. Default are all columns in an \code{\link[=ASTR]{ASTR object}} in the unit to be converted. See \emph{Details} for further
 information}
 
 \item{drop}{If \code{TRUE}, the default, columns with unconverted values are
 dropped. If false, columns with unconverted values are kept and a suffix
 added to the column names of the converted values.
 \itemize{
-\item \verb{_at} for conversions to atomic percent
-\item \verb{_wt} for conversions to weight percent.
+\item \verb{_atP} for conversions to atomic percent
+\item \verb{_wtP} for conversions to weight percent.
 }}
 }
 \value{
@@ -38,7 +38,7 @@ The column names of the elements to be converted must be equivalent to their
 chemical symbols. The functions convert only values in \emph{wt\%} or \emph{at\%}. If
 concentrations are present in another concentration unit (e.g. \emph{ppm},
 \emph{µg/kg}), run \code{\link[=unify_concentration_unit]{unify_concentration_unit(df, "wtP")}} first to convert all concentrations to
-\emph{wt\%}. If \code{df} is an \href{ASTR}{\verb{ASTR object}}, only elements will be converted
+\emph{wt\%}. If \code{df} is an \code{\link[=ASTR]{ASTR object}}, only elements will be converted
 to \emph{at\%}, and oxides in \emph{wt\%} are automatically excluded. To convert oxides
 into \emph{at\%} and vice versa, convert to \emph{wt\%} first.
 }

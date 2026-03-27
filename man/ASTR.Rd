@@ -83,23 +83,23 @@ may be column names, integer positions, or a logical inclusion vector}
 \item{bdl}{strings representing “below detection limit” values. By default,
 the following are recognized: "b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"}
 
-\item{bdl_strategy}{function used to replace BDL strings. Defaults to a static
-function returning NA}
+\item{bdl_strategy}{function used to replace BDL strings. Defaults to a
+static function returning \code{NA}}
 
-\item{guess_context_type}{should appropriate data types for contextual columns
-be guessed automatically? Defaults to TRUE}
+\item{guess_context_type}{should appropriate data types for contextual
+columns be guessed automatically? Defaults to \code{TRUE}}
 
-\item{na}{character vector of strings to be interpret as missing values.
-By default, the following are recognized: "", "n/a", "NA", "N.A.", "N/A", "na",
-"-", "n.d.", "n.a.", "#DIV/0!", "#VALUE!", "#REF!", "#NAME?", "#NUM!", "#N/A",
-"#NULL!"}
+\item{na}{character vector of strings to be interpret as missing values. By
+default, the following are recognized: "", "n/a", "NA", "N.A.", "N/A",
+"na", "-", "n.d.", "n.a.", "#DIV/0!", "#VALUE!", "#REF!", "#NAME?",
+"#NUM!", "#N/A", "#NULL!"}
 
 \item{drop_columns}{should columns that are neither marked as contextual in
 \code{context}, nor automatically identified as analytical from the column name,
-be dropped to proceed with the reading? Defaults to FALSE}
+be dropped to proceed with the reading? Defaults to \code{FALSE}}
 
 \item{validate}{should the post-reading input validation be run, which checks
-for additional properties of ASTR tables. Defaults to TRUE}
+for additional properties of ASTR tables. Defaults to \code{TRUE}}
 
 \item{...}{Additional arguments passed to the respective import functions.
 See their documentation for details:
@@ -116,7 +116,7 @@ provided for all file types except \code{.xlsx} or \code{.xls}. Default to \verb
 
 \item{x}{an object of class ASTR}
 
-\item{quiet}{should warnings be printed? Defaults to TRUE}
+\item{quiet}{should warnings be printed? Defaults to \code{TRUE}}
 
 \item{units}{A character vector with units to be selected.}
 
@@ -129,9 +129,9 @@ Returns an object of class \code{ASTR}, which is a tibble-derived object.
 \description{
 A tabular data format for chemical analysis datasets in
 archaeology, including contextual information, numerical elemental, and
-isotopic data. Columns are assigned units (using \link[units]{set_units}) and
-categories (in an attribute \code{ASTR_class}) based on the column name.
-The following functions allow to create objects of class \code{ASTR}, and to
+isotopic data. Columns are assigned units (using \link[units]{set_units})
+and categories (in an attribute \code{ASTR_class}) based on the column name. The
+following functions allow to create objects of class \code{ASTR}, and to
 interact with them.
 \itemize{
 \item \strong{as_ASTR}: Transforms an R \code{data.frame} to an object of class
@@ -148,33 +148,36 @@ in an \code{ASTR} table and replaces them with simple numeric columns of type
 \item \strong{unify_concentration_unit}: Unifies the unit of each concentration column,
 e.g. to either \% or ppm (or any SI unit) to avoid mixing units in derived analyses.
 }
-As \code{ASTR} is derived from \code{tibble} it is directly compatible with the
-data manipulation tools in the tidyverse.
+As \code{ASTR} is derived from \code{tibble} it is directly compatible with the data
+manipulation tools in the tidyverse.
 }
 \details{
-The input data files can be fairly freeform, i.e. no specified elements,
-oxides, or isotopic ratios are required and no exact order of these needs to
-be adhered to. Analyses can contain as many analytical columns as necessary.
+The input data files can be fairly freeform, i.e. no specified
+elements, oxides, or isotopic ratios are required and no exact order of
+these needs to be adhered to. Analyses can contain as many analytical
+columns as necessary.
 
-The column that contains the unique samples identifier must be specified using
-the \code{ID} argument. If the dataset contains duplicate ids they will be renamed
-consecutively using the following convention: \verb{_1},\verb{_2}, ... \verb{_n}.
+The column that contains the unique samples identifier must be specified
+using the \code{ID} argument. If the dataset contains duplicate IDs they will be
+renamed consecutively using the following convention: \verb{_1},\verb{_2}, ... \verb{_n}.
 
 Metadata contained within the dataset must be marked using the \code{context}
-argument. If any column in the dataframe is not specified as context and not
-recognised as an analytical column, this will result in an error.
+argument. If any column in the dataframe is not specified as context and
+not recognised as an analytical column, this will result in an error,
+unless \code{drop_columns = TRUE} (then it will result in warnings for the
+respective columns).
 
 Below detection limit notation (i.e. ‘b.d.’, ‘bd’, ‘b.d.l.’, ‘bdl’, ‘<LOD’,
 or ‘<..’) for element and oxide concentrations is specified using the \code{bdl}
-argument. One or more notations can be used as is appropriate for the dataset,
-and can be notations not included in the list above. The argument
+argument. One or more notations can be used as is appropriate for the
+dataset, and can be notations not included in the list above. The argument
 \code{bdl_strategy} is used to specify the value for handling detection limits.
-This is to facilitate the different handling needs of the detection limit for
-future statistical applications, as opposed to automatically assigning such
-values as ‘NA’.
+This is to facilitate the different handling needs of the detection limit
+for future statistical applications, as opposed to automatically assigning
+such values as ‘NA’.
 
-Missing values are allowed anywhere in the data file body, and will be replaced
-by \code{NA} automatically.
+Missing values are allowed anywhere in the data file body, and will be
+replaced by \code{NA} automatically.
 }
 \examples{
 library(magrittr)

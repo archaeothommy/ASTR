@@ -1,6 +1,6 @@
 #' Chemical elements
 #'
-#' List of elements, sorted according to alphabet
+#' List of chemical elements as their symbols, sorted according to alphabet.
 #'
 #' @format a vector
 #'
@@ -30,8 +30,9 @@
 
 #' Isotopes
 #'
-#' List of naturally occurring isotopes, retrieved from https://www.ciaaw.org/isotopic-abundances.htm,
-#' sorted according to chemical element and isotope number
+#' List of naturally occurring isotopes, retrieved from
+#' https://www.ciaaw.org/isotopic-abundances.htm, sorted according to chemical
+#' element and isotope number
 #'
 #' @format a vector
 #'
@@ -41,7 +42,7 @@
 
 #' Conversion factors from oxides to elements
 #'
-#' @format A data frame with 106 rows and 7 variables:
+#' @format A data frame with 151 rows and 8 variables:
 #' \describe{
 #'   \item{Element}{The symbol of a chemical element.}
 #'   \item{AtomicWeight}{The atomic weight (= molar mass) of the respective element.}
@@ -57,11 +58,11 @@
 #' @name conversion_oxides
 "conversion_oxides"
 
-#' Lead isotope data fro Argentina
+#' Lead isotope data from Argentina
 #'
 #' Lead isotope data from ore deposits in Argentina prepared for the TerraLID database.
 #'
-#' @format ## `ArgentinaDatabase`
+#' @format `ArgentinaDatabase`
 #'
 #' A dataframe with 112 rows and 49 columns
 #'

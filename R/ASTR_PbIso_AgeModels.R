@@ -5,15 +5,6 @@
 #' *References*). [pb_iso_age_model()] provides a wrapper for them and allows
 #' to calculate all age models simultaneously.
 #'
-#' The implemented age models are:
-#' * Stacey & Kramers (1975): [stacey_kramers_1975()]
-#' * Cumming & Richards (1975): [cumming_richards_1975()]
-#' * Albarède & Juteau (1984): [albarede_juteau_1984()]
-#'
-#' The used model is indicated in the column names of the output by the initials
-#' of the author's last names and the publication year (e. g.`SK75` for Stacey &
-#' Kramers 1975).
-#'
 #' See the references for the respective publications of the age models. The
 #' function for the age model of Albarède & Juteau (1984) is based on the
 #' MATLAB-script of F. Albarède (version 2020-11-06). The age model published in
@@ -25,7 +16,8 @@
 #' function takes it as argument only to be consistent with the input of the
 #' other age model functions. If provided, it will be ignored.
 #'
-#' @param df The data frame from which the age model should be calculated.
+#' @param df The data frame from which the age model parameters should be
+#'   calculated.
 #' @param ratio_206_204 Name of the column with the 206Pb/204Pb ratio as
 #'   character string. Default is `206Pb/204Pb`.
 #' @param ratio_207_204 Name of the column with the 207Pb/204Pb ratio as
@@ -43,9 +35,12 @@
 #'   same type including the ID column, the contextual columns, the lead isotope
 #'   ratios used for calculation of the age model parameters, and the calculated
 #'   age model parameters. In all other cases, the data frame provided as input
-#'   with columns added for the calculated age model parameters. The used age
-#'   model is indicated in the column names of the output by the abbreviations
-#'   given above.
+#'   with columns added for the calculated age model parameters.
+#'
+#'   The used age model is indicated in the column names of the output by the
+#'   abbreviations for the models given above. They represent the initials of
+#'   the author's last names and the publication year (e. g. `SK75` for Stacey &
+#'   Kramers 1975).
 #'
 #' @export
 #'

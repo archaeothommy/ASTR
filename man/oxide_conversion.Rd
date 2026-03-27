@@ -31,15 +31,15 @@ elements or oxides that should be converted.}
 \item{oxide_preference}{String that controls which oxide should be used if an
 element forms more than one oxide. Allowed values are: \code{reducing},
 \code{oxidising}, \code{ask}, or a named vector mapping the specific oxide to its
-element. See details for further information.}
+element. See \emph{Details} for further information.}
 
 \item{which_concentrations}{Character string that determines by concentration
 which of the \code{elements} or \code{oxides} are converted. Allowed values are:
 \itemize{
-\item \code{all} (convert all elements or oxides; the default)
-\item \code{major} (convert elements or oxides with concentrations >= 1 wt\%)
-\item \code{minor} (convert elements or concentrations between 0.1 and 1 wt\%).
-\item \code{no_trace} (convert elements or oxides with concentration >=0.1 wt\%)
+\item \code{all} (convert all elements; the default)
+\item \code{major} (convert elements with concentrations >= 1 wt\%)
+\item \code{minor} (convert elements with concentrations between 0.1 and 1 wt\%).
+\item \code{no_trace} (convert elements with concentrations >=0.1 wt\%)
 }}
 
 \item{normalise}{If \code{TRUE}, converted concentrations will be normalised to
@@ -55,19 +55,18 @@ with values excluded from conversion by the parameter
 The original data frame with the converted concentrations
 }
 \description{
-Convert between element and oxide weight percent (oxide\%) compositions using
-pre-compiled conversion factors.
+Convert between element and oxide weight percent ("oxide\%") compositions
+using pre-compiled conversion factors.
 }
 \details{
-If the dataset includes already an element and its respective oxide, the
-conversion leaves the values of the respective oxide or element unaffected.
-The functions convert only values in \emph{wt\%}. If concentrations are present in
+If the dataset includes already an element and its oxide, the conversion
+leaves the values of the respective oxide or element unaffected. The
+functions convert only values in \emph{wt\%}. If concentrations are present in
 another concentration unit (e.g. \emph{ppm}, \emph{µg/kg}), run
 \code{\link[=unify_concentration_unit]{unify_concentration_unit(df, "wtP")}} first to
-convert all concentrations to \emph{wt\%}. When the input is an
-\href{ASTR}{\verb{ASTR object}}, the functions convert #' only elements or oxides with
-the respective other type being automatically excluded, even though the unit
-for both is \emph{wt\%}. To convert oxides into \emph{at\%} and vice versa, convert to
+convert all concentrations to \emph{wt\%}. If the input is an \code{\link[=ASTR]{ASTR object}}, the functions convert only elements or oxides with the
+respective other type being automatically excluded, even though the unit for
+both is \emph{wt\%}. To convert oxides into \emph{at\%} and vice versa, convert to
 \emph{wt\%} first.
 
 In \code{element_to_oxide()}, the parameter \code{oxide_preference} controls the

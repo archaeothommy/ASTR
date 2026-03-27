@@ -14,7 +14,7 @@ copper_alloy_bb(
 \arguments{
 \item{df}{data frame with the data to be classified.}
 
-\item{elements}{named character vector with column names of Zn, Sn, and Pb
+\item{elements}{named character vector with column names of Sn, Zn, and Pb
 concentrations.}
 
 \item{id_column}{name of the column in \code{df} with the identifiers of each
