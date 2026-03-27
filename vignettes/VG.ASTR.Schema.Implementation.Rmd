@@ -24,7 +24,7 @@ This vignette outlines how the conventions defined in [the ASTR schema](VG.ASTRs
 |`Na2O_wt%` | concentration | wtP |
 |`S_at%` | concentration | atP |
 |`75As_wt%` | concentration | wtP |
-|`FeOtot_wt%` | concentration | wt% |
+|`FeOtot_wt%` | concentration | wtP |
 |`FeOtot_errSD%` | error | % |
 |`Ag_ppb` | concentration | ng/g | 
 |`Ag_err2D` | error | ppb |
