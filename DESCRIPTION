@@ -58,7 +58,6 @@ Imports:
     tidyselect,
     units,
     vctrs,
-    robCompositions,
     ggplot2,
     ks,
     units, 
