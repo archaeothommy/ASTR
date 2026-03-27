@@ -10,6 +10,7 @@ transform_notation(unit)
 \item{unit}{Character string}
 }
 \description{
-Transform unit in ratio notation into notation with negative exponents
+This is necessary to align with output of units from \code{\link[units:deparse_unit]{units::deparse_unit()}}.
+Example: m/s2 -> m s-2
 }
 \keyword{internal}

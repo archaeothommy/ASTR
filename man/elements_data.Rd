@@ -11,7 +11,7 @@ a vector
 elements_data
 }
 \description{
-List of elements, sorted according to alphabet
+List of chemical elements as their symbols, sorted according to alphabet.
 }
 \seealso{
 Other chemical reference data: 

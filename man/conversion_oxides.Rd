@@ -5,7 +5,7 @@
 \alias{conversion_oxides}
 \title{Conversion factors from oxides to elements}
 \format{
-A data frame with 106 rows and 7 variables:
+A data frame with 151 rows and 8 variables:
 \describe{
 \item{Element}{The symbol of a chemical element.}
 \item{AtomicWeight}{The atomic weight (= molar mass) of the respective element.}

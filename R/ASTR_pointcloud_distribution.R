@@ -38,7 +38,7 @@
 #' proximity to these end member centers.
 #'
 #' @importFrom geometry convhulln inhulln
-#' @importFrom  rdist cdist
+#' @importFrom rdist cdist
 #' @importFrom stats aggregate as.formula
 #'
 #' @export
@@ -81,13 +81,8 @@ pointcloud_distribution <- function(df,
                                     id_sample = "ID",
                                     id_ref = id_sample) {
   # Checks for isotope columns
-  if (length(isotope_sample) != 3) {
-    stop("isotope_sample must have exactly 3 values.")
-  }
-
-  if (length(isotope_ref) != 3) {
-    stop("isotope_ref must have exactly 3 values.")
-  }
+  checkmate::assert_character(isotope_sample, len = 3)
+  checkmate::assert_character(isotope_ref, len = 3)
 
   # Checks for Sample ID cols
   if (!(id_sample %in% names(df))) {

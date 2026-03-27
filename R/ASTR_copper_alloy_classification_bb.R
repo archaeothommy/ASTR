@@ -10,7 +10,7 @@
 #'   <https://doi.org/10.26530/20.500.12657/50365>
 #'
 #' @param df data frame with the data to be classified.
-#' @param elements named character vector with column names of Zn, Sn, and Pb
+#' @param elements named character vector with column names of Sn, Zn, and Pb
 #'   concentrations.
 #' @param id_column  name of the column in `df` with the identifiers of each
 #'   row. Default to `ID`.
@@ -53,7 +53,7 @@ copper_alloy_bb <- function(
 
   if (inherits(df, "ASTR")) {
     df <- convert_concentration_units(df, elements, "wtP")
-    elements <- c(Sn = "Sn", Zn = "Zn", Pb = "Pb") # rename in case input was in oxides
+    elements <- c(Sn = "Sn", Zn = "Zn", Pb = "Pb")
     df_full <- df
     df <- remove_units(df)
   }

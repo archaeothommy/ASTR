@@ -48,12 +48,11 @@ library(ASTR)
 ```
 
 ## Data import and inspection
-To work with an `ASTR` object, we have to create one. The function `read_ASTR()` imports spreadsheets in a variety of formats, including Excel files. For this article, I created some mock-up data: 
+To work with an `ASTR` object, we have to create one. The function `read_ASTR()` imports spreadsheets in a variety of formats, including Excel files. For this article, we use mock-up data: 
 
 ```{r echo=FALSE}
 data
 ```
-
 
 Note how the column headers are organised according to the ASTR conventions. This allows the package to _understand_ some of the semantics of the dataset in the `read_ASTR()` process, and correctly represent them in the resulting `ASTR` object. A closer look at the mock-up data also reveals (common) problems with the copper isotope data: it seems that some Excel formulas did not work as intended and left `#REF!` entries. `read_ASTR()` will read these as `NA` values. Finally, every `ASTR` object requires one column that acts as a unique row identifier. In this dataset there is no such column, though, only a `Group` identifier. `read_ASTR()` can automatically turn such a column to a unique identifier.
 
@@ -68,7 +67,7 @@ data <- as_ASTR(data, id_column = "Group", context = c("Group"))
 While ASTR attempts to make data import as easy as possible, it also aims to be transparent about it. Consequently, `as_ASTR()` issues several warnings when confronted with our mock-up data, flagging (potential) issues:
 
 * The column for the ID did contain non-unique values but ASTR automatically created unique values from it.
-* Some values in the column `d65Cu` were replaced with `NA`, when inspecting the data set, it is clear that these were the Excel `#REF!` error messages. In general, ASTR replaces by default common and user-defined indicators for missing values and also for indicators of "below detection limit" during import. 
+* Some values in the column `d65Cu` were replaced with `NA`; when inspecting the data set, it is clear that these were the Excel `#REF!` error messages. In general, ASTR replaces by default common and user-defined indicators for missing values and also for indicators of "below detection limit" during import. 
 * Across the dataset, 34 values are missing.
 
 To learn more about the (potential) issues with our dataset, it suggests to run `validate()`: 
@@ -79,7 +78,7 @@ validate(data)
 
 This summary of where to find the missing values comes in handy for large datasets! 
 
-In our case, the dataset is fine. We might want to check on the missing values in the copper isotope data because apparently there was something wrong with the Excel file. In case of the lead isotope data, however, they are intentional (they were not measured for these samples).
+In our case, the dataset is fine. We might want to check on the missing values in the copper isotope data because apparently there was something wrong with the Excel file. In case of the lead isotope data, however, they are intentional (they were not measured for samples from group A).
 
 Having a closer look on the imported data set shows, that ASTR did one more thing: 
 
@@ -107,7 +106,7 @@ With this much information about our data, it is easy to subset data. Let's say 
 pairs(get_concentration_columns(data)[-1])
 ```
 
-Note that we have to exclude the first column here, because the first column of `ASTR` objects and their subsets is always the ID column to ensure that data can be clearly assigned to a single sample. Actually, we might only be interested in the main elements of the metal. In this case, we can take advantage that these are the only ones values in `wtP`: 
+Note that we have to exclude the first column here, because the first column of `ASTR` objects and their subsets is always the ID column to ensure that data can be clearly assigned to a single sample. Actually, we might only be interested in the main elements of the metal. In this case, we can take advantage that these are the only values in `wtP`: 
 
 ```{r}
 pairs(get_unit_columns(data, units = "wtP")[-1])
@@ -124,7 +123,7 @@ unify_concentration_unit(data, unit = "wtP") %>%
   wt_to_at()
 ```
 
-We use a two-step approach here to be more accurate: The actual conversion from `wt%` to `at%` is done by `wt_to_at()`. However, because Ag and Ni are not in `wt%`, they need to be converted first. That's why we have to run `unify_concentration_unit()` first: is detects values with units that can be converted into the target unit and converts them all into the same unit. While it is nice to be scientifically accurate, we can get only a rough estimate anyway because of the significant amounts of arsenic and antimony in the metal. Therefore, converting only copper and tin would be sufficient: 
+We use a two-step approach here to be more accurate: The actual conversion from `wt%` to `at%` is done by `wt_to_at()`. However, because Ag and Ni are not in `wt%`, they need to be converted first. That's why we run `unify_concentration_unit()` first: it detects values with units that can be converted into the target unit and converts them all into the same unit. While it is nice to be scientifically accurate, we can get only a rough estimate anyway because of the significant amounts of arsenic and antimony in the metal. Therefore, converting only copper and tin would be sufficient: 
 
 ```{r}
 wt_to_at(data, elements = c("Cu", "Sn"))
@@ -149,6 +148,7 @@ data_pb_iso <- data[data$Group == "B", ]
 age_model_params <- pb_iso_age_model(data_pb_iso, model = "SK75")
 age_model_params
 ```
+
 <!--
 ## Visualisation
 
@@ -156,10 +156,11 @@ age_model_params
 
 ## Data export
 
-After finishing our analysis of the data, we want to save the copper type and lead isotope model age parameters to our hard drive. For this task, ASTR relies on the functions already provided by R and other R packages (e.g. `readr::write_csv()`). Before export, we have to make sure that the information about the units of the values is preserved by including it back in the column name: 
+After finishing our analysis of the data, we want to save the copper type and the parameters of the lead isotope model age to our hard drive. For this task, ASTR relies on the functions already provided by R and other R packages (e.g. `readr::write_csv()`). Before export, we have to make sure that the information about the units of the values is preserved by including it back in the column name: 
 
 ```{r}
 data_unitless <- remove_units(data, recover_unit_names = TRUE)
 data_unitless
 ```
+
 ## References

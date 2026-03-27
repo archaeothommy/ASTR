@@ -17,7 +17,7 @@
 #'   quantile to be drawn. The default, `0.02`, helps avoid creating
 #'   polygons around single outlier points.
 #' @param fallback_to_points Logical. To prevent points from being drawn for
-#'   groups that fail density estimation, set this to FALSE. For example, if you
+#'   groups that fail density estimation, set this to `FALSE`. For example, if you
 #'   want more control over the point aesthetics, independent of the KDE regions,
 #'   set this to FALSE and use geom_point to plot those points
 #' @param ... Other arguments passed on to [ggplot2::layer()]. These are

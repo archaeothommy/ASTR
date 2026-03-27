@@ -3,7 +3,7 @@
 \name{geom_sk_lines}
 \alias{geom_sk_lines}
 \alias{geom_sk_labels}
-\title{Stacey-Kramers Lead Evolution Geom}
+\title{Lead Evolution Geom for Stacey & Kramers (1975)}
 \usage{
 geom_sk_lines(
   mapping = NULL,
@@ -51,61 +51,51 @@ from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
 \item{Kappa}{Second-stage 232Th/238U ratio (default 4).}
 
-\item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{layer()}}'s \code{params} argument. These
-arguments broadly fall into one of 4 categories below. Notably, further
-arguments to the \code{position} argument, or aesthetics that are required
-can \emph{not} be passed through \code{...}. Unknown arguments that are not part
-of the 4 categories below are ignored.
-\itemize{
-\item Static aesthetics that are not mapped to a scale, but are at a fixed
-value and apply to the layer as a whole. For example, \code{colour = "red"}
-or \code{linewidth = 3}. The geom's documentation has an \strong{Aesthetics}
-section that lists the available options. The 'required' aesthetics
-cannot be passed on to the \code{params}. Please note that while passing
-unmapped aesthetics as vectors is technically possible, the order and
-required length is not guaranteed to be parallel to the input data.
-\item When constructing a layer using
-a \verb{stat_*()} function, the \code{...} argument can be used to pass on
-parameters to the \code{geom} part of the layer. An example of this is
-\code{stat_density(geom = "area", outline.type = "both")}. The geom's
-documentation lists which parameters it can accept.
-\item Inversely, when constructing a layer using a
-\verb{geom_*()} function, the \code{...} argument can be used to pass on parameters
-to the \code{stat} part of the layer. An example of this is
-\code{geom_area(stat = "density", adjust = 0.5)}. The stat's documentation
-lists which parameters it can accept.
-\item The \code{key_glyph} argument of \code{\link[ggplot2:layer]{layer()}} may also be passed on through
-\code{...}. This can be one of the functions described as
-\link[ggplot2:draw_key]{key glyphs}, to change the display of the layer in the legend.
-}}
+\item{...}{Additional parameters for the geoms (see \emph{Details}) and other
+arguments passed on to \code{\link[ggplot2:layer]{ggplot2::layer()}}. These are often aesthetics used
+to set a fixed value, such as \code{colour = "red"} or \code{alpha = 0.5}.}
 }
 \value{
 A ggplot2 layer object.
 }
 \description{
-This Geom is used for drawing and labeling isochron, geochron, and kappa
-lines used for isotope age model referencing used in lead isotope biplots.
-The lines follows the model used by Stacey and Kramers (1975).
+These Geoms draws and label isochron, geochron, and kappa lines used for
+isotope age model referencing in lead isotope biplots. The lines follows the
+model used by Stacey & Kramers (1975).
 }
 \details{
 The plotting system follows the convention of showing geochron and isochron
 lines for the 207Pb/204Pb vs. 206Pb/204Pb plot and the kappa lines for
 208Pb/204Pb vs. 206Pb/204Pb plot.
+
+The geoms accept the following additional parameters through \code{...}:
+\itemize{
+\item \code{Ti} : Initial time of the second stage in years (default 3.7 Ga).
+\item \code{interval} : Time interval for isochron labels in years (default 200 Ma).
+\item \code{show_geochron} : Logical; should the Geochron be plotted? (default \code{TRUE}).
+\item \code{show_isochrons} : Logical; should time isochrons be plotted? (default \code{TRUE})
+\item \code{kappa_list} : Numeric vector of Kappa values to plot in "86" system.
+}
 }
 \section{Note}{
 Currently the plot will scale the xlim and ylim to their maximum bounds. To
-prevent this use \code{\link[ggplot2:coord_cartesian]{coord_cartesian(xlim, ylim)}}
-to force the axis range to the desiered values.
+prevent this, use \code{\link[ggplot2:coord_cartesian]{coord_cartesian(xlim, ylim)}}
+to force the axis range to the desired values.
 }
 
-\section{Additional parameters}{
-
+\section{Aesthetics}{
+ \code{geom_sk_lines()} and \code{geom_sk_labels()} accept the
+following aesthetic values:
 \itemize{
-\item \code{Ti}  Initial time of the second stage in years (default 3.7 Ga).
-\item \code{interval} Time interval for isochron labels in years (default 200 Ma).
-\item \code{show_geochron} Logical; should the Geochron be plotted? (default \code{TRUE}).
-\item \code{show_isochrons} Logical; should time isochrons be plotted? (default \code{TRUE})
-\item \code{kappa_list} Numeric vector of Kappa values to plot in "86" system.
+\item \code{alpha}
+\item \code{colour} (controls the polygon outline)
+\item \code{fill} (controls the polygon fill)
+\item \code{linetype}
+\item \code{linewidth} (controls the outline thickness)
+\item \code{text.colour} (controls colour of the text)
+\item \code{size.unit} (controls size aesthetic in "mm", "pt", "cm", "in" or "pc")
+
+Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 }
 }
 
@@ -182,18 +172,3 @@ Other Pb isotope functions:
 \code{\link{age_models}}
 }
 \concept{Pb isotope functions}
-\section{Aesthetics}{
-
-\code{geom_path()} understands the following aesthetics. Required aesthetics are displayed in bold and defaults are displayed for optional aesthetics:
-\tabular{rll}{
- • \tab \strong{\code{\link[ggplot2:aes_position]{x}}} \tab   \cr
- • \tab \strong{\code{\link[ggplot2:aes_position]{y}}} \tab   \cr
- • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{alpha}} \tab → \code{NA} \cr
- • \tab \code{\link[ggplot2:aes_colour_fill_alpha]{colour}} \tab → via \code{theme()} \cr
- • \tab \code{\link[ggplot2:aes_group_order]{group}} \tab → inferred \cr
- • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linetype}} \tab → via \code{theme()} \cr
- • \tab \code{\link[ggplot2:aes_linetype_size_shape]{linewidth}} \tab → via \code{theme()} \cr
-}
-
-Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
-}

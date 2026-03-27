@@ -8,20 +8,20 @@
 #' concentrations are present in another concentration unit (e.g. *ppm*,
 #' *µg/kg*), run [`unify_concentration_unit(df,
 #' "wtP")`][unify_concentration_unit()] first to convert all concentrations to
-#' *wt%*. If `df` is an [`ASTR object`](ASTR), only elements will be converted
+#' *wt%*. If `df` is an [`ASTR object`][ASTR], only elements will be converted
 #' to *at%*, and oxides in *wt%* are automatically excluded. To convert oxides
 #' into *at%* and vice versa, convert to *wt%* first.
 #'
 #' @param df Data frame with compositional data.
-#' @param elements character vector with the chemical symbols of the elements
+#' @param elements Character vector with the chemical symbols of the elements
 #'   that should be converted. Default are all columns in an [`ASTR
-#'   object`](ASTR) in the unit to be converted. See *Details* for further
+#'   object`][ASTR] in the unit to be converted. See *Details* for further
 #'   information
 #' @param drop If `TRUE`, the default, columns with unconverted values are
 #'   dropped. If false, columns with unconverted values are kept and a suffix
 #'   added to the column names of the converted values.
-#'   * `_at` for conversions to atomic percent
-#'   * `_wt` for conversions to weight percent.
+#'   * `_atP` for conversions to atomic percent
+#'   * `_wtP` for conversions to weight percent.
 #'
 #' @return The original data frame with the converted concentrations normalised
 #'   to 100%.

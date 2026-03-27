@@ -38,7 +38,8 @@ albarede_juteau_1984(
 )
 }
 \arguments{
-\item{df}{The data frame from which the age model should be calculated.}
+\item{df}{The data frame from which the age model parameters should be
+calculated.}
 
 \item{ratio_206_204}{Name of the column with the 206Pb/204Pb ratio as
 character string. Default is \verb{206Pb/204Pb}.}
@@ -63,9 +64,12 @@ If \code{df} is an \link[=ASTR]{ASTR object}, the output is an object of the
 same type including the ID column, the contextual columns, the lead isotope
 ratios used for calculation of the age model parameters, and the calculated
 age model parameters. In all other cases, the data frame provided as input
-with columns added for the calculated age model parameters. The used age
-model is indicated in the column names of the output by the abbreviations
-given above.
+with columns added for the calculated age model parameters.
+
+The used age model is indicated in the column names of the output by the
+abbreviations for the models given above. They represent the initials of
+the author's last names and the publication year (e. g. \code{SK75} for Stacey &
+Kramers 1975).
 }
 \description{
 The functions calculate the age model and their respective mu and kappa
@@ -74,17 +78,6 @@ values according to the publications they are named after (see
 to calculate all age models simultaneously.
 }
 \details{
-The implemented age models are:
-\itemize{
-\item Stacey & Kramers (1975): \code{\link[=stacey_kramers_1975]{stacey_kramers_1975()}}
-\item Cumming & Richards (1975): \code{\link[=cumming_richards_1975]{cumming_richards_1975()}}
-\item Albarède & Juteau (1984): \code{\link[=albarede_juteau_1984]{albarede_juteau_1984()}}
-}
-
-The used model is indicated in the column names of the output by the initials
-of the author's last names and the publication year (e. g.\code{SK75} for Stacey &
-Kramers 1975).
-
 See the references for the respective publications of the age models. The
 function for the age model of Albarède & Juteau (1984) is based on the
 MATLAB-script of F. Albarède (version 2020-11-06). The age model published in
