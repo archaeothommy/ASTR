@@ -2,14 +2,14 @@
 
 The ASTR schema defines a set of naming and data conventions to create
 data objects that can be easily subset with (almost) no loss of
-information to allow for frictionless handling of data sets and their
-subsets across software and humans. This requires reduction of implicit
-information as much as possible (e.g. units of a value being defined in
-a separate column). Moreover, data objects must be readable for machines
-while preserving human readability and allow for direct import of
-spreadsheet-like formats. The conventions defined below are further
-influenced by considerations related to the analytical data and their
-quality, which are explained in this
+information. Such datasets allow frictionless handling of them and their
+subsets between software and humans. Creating such datasets requires
+reduction of implicit information as much as possible (e.g. units of a
+value being defined in a separate column). Moreover, data objects must
+be readable for machines while preserving human readability and allow
+for direct import of spreadsheet-like formats. The conventions defined
+below are further influenced by considerations related to the analytical
+data and their quality, which are explained in this
 [vignette](https://archaeothommy.github.io/ASTR/articles/VG.ASTR.Conventions.explained.md).
 
 The schema is platform and programming language agnostic. You can learn
@@ -28,23 +28,22 @@ vignette](https://archaeothommy.github.io/ASTR/articles/VG.ASTR.Schema.Implement
 ## Analytical data columns naming
 
 All columns that contain element and oxide compositions, isotopic
-values, or ratios derived therefrom as well as analytical
-uncertaintities (“errors”) should be named using the following
-conventions.
+values, or ratios derived therefrom as well as analytical uncertainties
+(“errors”) should be named using the following conventions:
 
 - Only Latin characters can be supported in the column names, i.e. δ and
   ε will not be identified.
 - The names of oxides and trace elements are self-explanatory
   (e.g. `SiO2` or `Si`). Total iron, if given, should be expressed as:
   `FeOtot` or `Fe2O3tot`. Loss on ignition, where known, should be
-  expressed as `LOI`. The value “balance” provided by many pXRF
+  expressed as `LOI`. The value “balance” provided by e.g. many pXRF
   instruments should be expressed as `Bal` or `Balance`.
 - Units for values should follow element or oxide, as `_<unit>`. Units
   supported include *all SI units*, as well as *ppm*, *ppb*, *ppt*,
   *ppq*, *%*, *wt%*, *at%*, *‰*, *counts*, and *cps*, noted as such.
-- Where known, specify *wt%* and *at%* instead of using *%* and make the
-  mixture type of concentrations explicit, e.g. write *ppm(m/m)* instead
-  of *ppm*. For *‘per mille’*, use the symbol *‰*.
+- Where known, specify *wt%* and *at%* instead of using *%*, and make
+  the mixture type of concentrations explicit, e.g. write *ppm(m/m)*
+  instead of *ppm*. For *‘per mille’*, use the symbol *‰*.
 - For isotopic ratios, use simple forms such as `206Pb/204Pb`,
   `87Sr/86Sr`, `147Sm/144Nd`, or `d18O`. For isotope ratios expressed in
   δ-notation and similar expressions, always provide the mass of the
@@ -53,14 +52,16 @@ conventions.
   geolocation, or values derived from analytial data such as Pb isotope
   age model parameters, ensure the names do **not** contain a dash (‘-’)
   or underscore (‘\_’) prior to import and specify these columns as
-  context in the `read_archem()` function.
+  context in the
+  [`read_ASTR()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
+  function.
 - Analytical precision should be indicated in the column name as:
   `_err2SD`, `_errSD`, `_errSE`, `_err2SE` without indicating the unit.
   For absolute analytical uncertainties, the unit will be inferred from
   the corresponding composition column. Relative analytical
-  uncertaintinties are indicated by adding a `%` sign, e.g. `_err2SD%`.
-  We strongly recommend that the uncertainty is included in the data
-  table, and properly noted following the conventions described.
+  uncertainties are indicated by adding a `%` sign, e.g. `_err2SD%`. We
+  strongly recommend that the uncertainty is included in the data table,
+  and properly noted following the conventions described.
 
 | Components           | Accepted formats                                                    |
 |----------------------|---------------------------------------------------------------------|

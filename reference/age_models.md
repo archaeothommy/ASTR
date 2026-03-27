@@ -42,7 +42,8 @@ albarede_juteau_1984(
 
 - df:
 
-  The data frame from which the age model should be calculated.
+  The data frame from which the age model parameters should be
+  calculated.
 
 - ratio_206_204:
 
@@ -79,22 +80,14 @@ output is an object of the same type including the ID column, the
 contextual columns, the lead isotope ratios used for calculation of the
 age model parameters, and the calculated age model parameters. In all
 other cases, the data frame provided as input with columns added for the
-calculated age model parameters. The used age model is indicated in the
-column names of the output by the abbreviations given above.
+calculated age model parameters.
+
+The used age model is indicated in the column names of the output by the
+abbreviations for the models given above. They represent the initials of
+the author's last names and the publication year (e. g. `SK75` for
+Stacey & Kramers 1975).
 
 ## Details
-
-The implemented age models are:
-
-- Stacey & Kramers (1975): `stacey_kramers_1975()`
-
-- Cumming & Richards (1975): `cumming_richards_1975()`
-
-- Albarède & Juteau (1984): `albarede_juteau_1984()`
-
-The used model is indicated in the column names of the output by the
-initials of the author's last names and the publication year (e.
-g.`SK75` for Stacey & Kramers 1975).
 
 See the references for the respective publications of the age models.
 The function for the age model of Albarède & Juteau (1984) is based on

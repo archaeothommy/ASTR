@@ -73,24 +73,26 @@
 
     
     
-<p>To make the most out of the features offered by the ASTR package, the
-object should be imported as ASTR object. Because they adhere to the
-conventions set out in the <a href="VG.ASTRschema.0.0.2.html">ASTR
-schema</a>, a lot of information can be extracted and used for efficient
-and convenient handling of archaeometric and geochemical data. This is
-also why many of the package functions require only the data set as
-input, making it convenient for persons less experienced in R. This
-article highlights some of these functionalities.</p>
+<p>To make the most out of the features offered by the ASTR package,
+input data should be imported into <code>ASTR</code> objects.
+<code>ASTR</code> objects represent archaeometric and geochemical data
+in R in a standardized and semantically rich format, to allow for
+convenient and safe data analysis. If the input data structure adheres
+to the conventions set out in the <a href="VG.ASTRschema.0.0.2.html">ASTR schema</a>, then the package can
+automatically build valid <code>ASTR</code> objects from it. When
+working with the package, many of its functions require only an
+<code>ASTR</code> object, making them convenient to use even for users
+who consider themselves less experienced with R. This article highlights
+some of these functionalities.</p>
 <p>Before we start, we want to load the ASTR package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://archaeothommy.github.io/ASTR/">ASTR</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="data-import-and-inspection">Data import and inspection<a class="anchor" aria-label="anchor" href="#data-import-and-inspection"></a>
 </h2>
-<p>To work with an ASTR object, we have to create one. The function
-<code><a href="../reference/ASTR.html">read_ASTR()</a></code> imports spreadsheets in a variety of formats,
-including Excel files, and passes then on to the function
-<code><a href="../reference/ASTR.html">as_ASTR()</a></code>. For this article, I created some mock-up
+<p>To work with an <code>ASTR</code> object, we have to create one. The
+function <code><a href="../reference/ASTR.html">read_ASTR()</a></code> imports spreadsheets in a variety of
+formats, including Excel files. For this article, we use mock-up
 data:</p>
 <pre><code><span><span class="co">#&gt;    Group Cu_wt% Sn_wt% As_wt% Sb_wt% Ag_ppm Ni_ppm d65Cu 206Pb/204Pb</span></span>
 <span><span class="co">#&gt; 1      A   87.9    9.8   2.39   0.98    136    316  0.17          NA</span></span>
@@ -125,39 +127,58 @@ data:</p>
 <span><span class="co">#&gt; 8              0.0017</span></span>
 <span><span class="co">#&gt; 9              0.0013</span></span>
 <span><span class="co">#&gt; 10             0.0012</span></span></code></pre>
-<p>which do already have the column headers organised according to the
-ASTR conventions. We also see that there were some problems with the
+<p>Note how the column headers are organised according to the ASTR
+conventions. This allows the package to <em>understand</em> some of the
+semantics of the dataset in the <code><a href="../reference/ASTR.html">read_ASTR()</a></code> process, and
+correctly represent them in the resulting <code>ASTR</code> object. A
+closer look at the mock-up data also reveals (common) problems with the
 copper isotope data: it seems that some Excel formulas did not work as
-intended. To convert the data to ASTR, we have to define one of the
-columns as the column with the IDs of the data and and any column
-providing contextual information, i.e. no analytical values (cf. <a href="VG.ASTR.Schema.Implementation.html">ASTR schema:
-Implementation</a>).</p>
+intended and left <code>#REF!</code> entries. <code><a href="../reference/ASTR.html">read_ASTR()</a></code>
+will read these as <code>NA</code> values. Finally, every
+<code>ASTR</code> object requires one column that acts as a unique row
+identifier. In this dataset there is no such column, though, only a
+<code>Group</code> identifier. <code><a href="../reference/ASTR.html">read_ASTR()</a></code> can
+automatically turn such a column to a unique identifier.</p>
+<p>We can now perform the reading process. As we are working with
+mock-up data in an R vignette, we do not read from the file system. We
+only need to call an essential internal function of
+<code><a href="../reference/ASTR.html">read_ASTR()</a></code>: <code><a href="../reference/ASTR.html">as_ASTR()</a></code>. It turns R data.frames
+to <code>ASTR</code> objects. If we would start from an Excel file we
+would call <code><a href="../reference/ASTR.html">read_ASTR()</a></code> instead.</p>
+<p>To do this in practice we not only have to submit our
+<code>data</code> to <code><a href="../reference/ASTR.html">as_ASTR()</a></code>, but also set two other
+arguments: 1. We have to define one of the columns as the ID column with
+<code>id_column</code>, and 2. we explicitly have to mark any column
+providing contextual information with <code>context</code> (i.e. no
+analytical values, cf. <a href="VG.ASTR.Schema.Implementation.html">ASTR
+schema: Implementation</a>).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ASTR.html">as_ASTR</a></span><span class="op">(</span><span class="va">data</span>, id_column <span class="op">=</span> <span class="st">"Group"</span>, context <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in as_ASTR(data, id_column = "Group", context = "Group"): Detected</span></span>
+<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ASTR.html">as_ASTR</a></span><span class="op">(</span><span class="va">data</span>, id_column <span class="op">=</span> <span class="st">"Group"</span>, context <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in as_ASTR(data, id_column = "Group", context = c("Group")): Detected</span></span>
 <span><span class="co">#&gt; multiple data rows with the same ID. They will be renamed consecutively using</span></span>
 <span><span class="co">#&gt; the following convention: _1, _2, ... _n</span></span>
 <span><span class="co">#&gt; Warning: Issue when transforming column "d65Cu" to numeric values: NAs</span></span>
 <span><span class="co">#&gt; introduced by coercion</span></span>
 <span><span class="co">#&gt; Warning in validate.ASTR(df5, quiet = FALSE): 34 missing values across 7</span></span>
 <span><span class="co">#&gt; analytical columns</span></span>
-<span><span class="co">#&gt; Warning in as_ASTR(data, id_column = "Group", context = "Group"): See the full</span></span>
-<span><span class="co">#&gt; list of validation output with: ASTR::validate(&lt;your ASTR object&gt;).</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning in as_ASTR(data, id_column = "Group", context = c("Group")): See the</span></span>
+<span><span class="co">#&gt; full list of validation output with: ASTR::validate(&lt;your ASTR object&gt;).</span></span></code></pre></div>
 <p>While ASTR attempts to make data import as easy as possible, it also
-aims to be as transparent about it as possible. Consequently, the
-function issued several warnings, flagging (potential) issues with our
-data set:</p>
+aims to be transparent about it. Consequently, <code><a href="../reference/ASTR.html">as_ASTR()</a></code>
+issues several warnings when confronted with our mock-up data, flagging
+(potential) issues:</p>
 <ul>
 <li>The column for the ID did contain non-unique values but ASTR
-automatically created unique values from it</li>
+automatically created unique values from it.</li>
 <li>Some values in the column <code>d65Cu</code> were replaced with
-<code>NA</code>, when inspecting the data set, it is clear that these
-were the Excel error messages. In general, ASTR replaces by default
-common and user-defined indicators for missing values and also for
-indicators of “below detection limit” during import.</li>
+<code>NA</code>; when inspecting the data set, it is clear that these
+were the Excel <code>#REF!</code> error messages. In general, ASTR
+replaces by default common and user-defined indicators for missing
+values and also for indicators of “below detection limit” during
+import.</li>
 <li>Across the dataset, 34 values are missing.</li>
 </ul>
-<p>To learn more about the (potential) issues with out dataset, it
+<p>To learn more about the (potential) issues with our dataset, it
 suggests to run <code><a href="../reference/ASTR.html">validate()</a></code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ASTR.html">validate</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
@@ -171,15 +192,15 @@ suggests to run <code><a href="../reference/ASTR.html">validate()</a></code>:</p
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 207Pb/204Pb_err2SD     5 missing values</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 208Pb/204Pb            5 missing values</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> 208Pb/204Pb_err2SD     5 missing values</span></span></code></pre></div>
-<p>This summary of where to find the missing values comes in very handy
-for (very) large datasets!</p>
+<p>This summary of where to find the missing values comes in handy for
+large datasets!</p>
 <p>In our case, the dataset is fine. We might want to check on the
 missing values in the copper isotope data because apparently there was
-something wrong with the Excel file. In case of the lead isotop data,
-however, they are intentional (they were not measured for these
-samples).</p>
+something wrong with the Excel file. In case of the lead isotope data,
+however, they are intentional (they were not measured for samples from
+group A).</p>
 <p>Having a closer look on the imported data set shows, that ASTR did
-one more things:</p>
+one more thing:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">ASTR table</span></span></span>
@@ -202,7 +223,7 @@ one more things:</p>
 <span><span class="co">#&gt; <span style="color: #949494;">#   `207Pb/204Pb_err2SD` &lt;dbl&gt;, `208Pb/204Pb` &lt;dbl&gt;, `208Pb/204Pb_err2SD` &lt;dbl&gt;</span></span></span></code></pre></div>
 <p>Our relative unit “ppm” was converted into SI-units and the values
 now have a measurement unit R can understand (note that the unit
-<code>wt%</code> must be written <code>wtP</code>)<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;The %-sign can not be used in custom units&lt;/p&gt;"><sup>1</sup></a>:</p>
+<code>wt%</code> is written as <code>wtP</code>)<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;The %-sign can not be used in custom units&lt;/p&gt;"><sup>1</sup></a>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/units.html" class="external-link">units</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">Ag</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $numerator</span></span>
@@ -251,7 +272,7 @@ ratio:</p>
 <span><span class="co">#&gt;   ..- attr(*, "ASTR_class")= chr "ASTR_error"</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="subsetting-data">Subsetting data:<a class="anchor" aria-label="anchor" href="#subsetting-data"></a>
+<h2 id="subsetting-data">Subsetting data<a class="anchor" aria-label="anchor" href="#subsetting-data"></a>
 </h2>
 <p>With this much information about our data, it is easy to subset data.
 Let’s say that, for example, we want to check if our data can be
@@ -262,10 +283,10 @@ biplots of all possible combinations. The
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="fu"><a href="../reference/ASTR.html">get_concentration_columns</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ASTR.showcase_files/figure-html/unnamed-chunk-8-1.png" class="r-plt" alt="" width="700"></p>
 <p>Note that we have to exclude the first column here, because the first
-column of ASTR objects and their subsets is always the ID column to
-ensure that data can be clearly assigned to a single sample. Actually,
-we might only be interested in the main elements of the metal. In this
-case, we can take advantage that these are the only ones values in
+column of <code>ASTR</code> objects and their subsets is always the ID
+column to ensure that data can be clearly assigned to a single sample.
+Actually, we might only be interested in the main elements of the metal.
+In this case, we can take advantage that these are the only values in
 <code>wtP</code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="fu"><a href="../reference/ASTR.html">get_unit_columns</a></span><span class="op">(</span><span class="va">data</span>, units <span class="op">=</span> <span class="st">"wtP"</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
@@ -273,7 +294,7 @@ case, we can take advantage that these are the only ones values in
 <div class="section level3">
 <h3 id="unit-conversions">Unit conversions<a class="anchor" aria-label="anchor" href="#unit-conversions"></a>
 </h3>
-<p>While continuing investigating the metal, we want to estimate its
+<p>While continuing investigating the metal, we may want to estimate its
 approximate melting temperature and remember that we can get this
 information from a phase diagram. While our values for copper and tin
 are in <code>wt%</code>, the phase diagram in front of us is in
@@ -308,13 +329,13 @@ versions by using &lt;code&gt;%&amp;gt;%&lt;/code&gt;&lt;/p&gt;"><sup>2</sup></a
 <p>We use a two-step approach here to be more accurate: The actual
 conversion from <code>wt%</code> to <code>at%</code> is done by
 <code><a href="../reference/atomic_conversion.html">wt_to_at()</a></code>. However, because Ag and Ni are not in
-<code>wt%</code>, they need to be converted first. That’s why we have to
-run <code><a href="../reference/ASTR.html">unify_concentration_unit()</a></code> first: is detects values
-with units that can be converted into the target unit and converts them
-all into the same unit. While it is nice to be scientifically accurate,
-we can get only a rough estimate anyway because of the significant
-amounts of arsenic and antimony in the metal. Therefore, converting only
-copper and tin would be sufficient:</p>
+<code>wt%</code>, they need to be converted first. That’s why we run
+<code><a href="../reference/ASTR.html">unify_concentration_unit()</a></code> first: it detects values with
+units that can be converted into the target unit and converts them all
+into the same unit. While it is nice to be scientifically accurate, we
+can get only a rough estimate anyway because of the significant amounts
+of arsenic and antimony in the metal. Therefore, converting only copper
+and tin would be sufficient:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/atomic_conversion.html">wt_to_at</a></span><span class="op">(</span><span class="va">data</span>, elements <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cu"</span>, <span class="st">"Sn"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">ASTR table</span></span></span>
@@ -396,14 +417,14 @@ from group A:</p>
 <h2 id="data-export">Data export<a class="anchor" aria-label="anchor" href="#data-export"></a>
 </h2>
 <p>After finishing our analysis of the data, we want to save the copper
-type and lead isotope model age parameters to our hard drive. For this
-task, ASTR relies on the functions already provided by R and other R
-packages. Before export, we have to make sure that the information about
-the units of the values is preserved by including it back in the column
-name:</p>
+type and the parameters of the lead isotope model age to our hard drive.
+For this task, ASTR relies on the functions already provided by R and
+other R packages (e.g. <code><a href="https://readr.tidyverse.org/reference/write_delim.html" class="external-link">readr::write_csv()</a></code>). Before export,
+we have to make sure that the information about the units of the values
+is preserved by including it back in the column name:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ASTR.html">remove_units</a></span><span class="op">(</span><span class="va">data</span>, recover_unit_names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">data</span></span>
+<code class="sourceCode R"><span><span class="va">data_unitless</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ASTR.html">remove_units</a></span><span class="op">(</span><span class="va">data</span>, recover_unit_names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">data_unitless</span></span>
 <span><span class="co">#&gt; <span style="font-weight: bold;">ASTR table</span></span></span>
 <span><span class="co">#&gt; Analytical columns: <span style="color: #00BB00;">Cu_wt%</span>, <span style="color: #00BB00;">Sn_wt%</span>, <span style="color: #00BB00;">As_wt%</span>, <span style="color: #00BB00;">Sb_wt%</span>, <span style="color: #00BB00;">Ag_mg/kg</span>, <span style="color: #00BB00;">Ni_mg/kg</span>, <span style="color: #00BB00;">d65Cu</span>, <span style="color: #00BB00;">206Pb/204Pb</span>, <span style="color: #00BB00;">206Pb/204Pb_err2SD</span>, <span style="color: #00BB00;">207Pb/204Pb</span>, <span style="color: #00BB00;">207Pb/204Pb_err2SD</span>, <span style="color: #00BB00;">208Pb/204Pb</span>, <span style="color: #00BB00;">208Pb/204Pb_err2SD</span></span></span>
 <span><span class="co">#&gt; Contextual columns: <span style="color: #BB00BB;">Group</span> </span></span>

@@ -68,16 +68,16 @@ percent (<em>at%</em>). Results are always normalised to 100%.</p>
 
 
 <dt id="arg-elements">elements<a class="anchor" aria-label="anchor" href="#arg-elements"></a></dt>
-<dd><p>character vector with the chemical symbols of the elements
-that should be converted. Default are all columns in an <a href="ASTR"><code>ASTR object</code></a> in the unit to be converted. See <em>Details</em> for further
+<dd><p>Character vector with the chemical symbols of the elements
+that should be converted. Default are all columns in an <code><a href="ASTR.html">ASTR object</a></code> in the unit to be converted. See <em>Details</em> for further
 information</p></dd>
 
 
 <dt id="arg-drop">drop<a class="anchor" aria-label="anchor" href="#arg-drop"></a></dt>
 <dd><p>If <code>TRUE</code>, the default, columns with unconverted values are
 dropped. If false, columns with unconverted values are kept and a suffix
-added to the column names of the converted values.</p><ul><li><p><code>_at</code> for conversions to atomic percent</p></li>
-<li><p><code>_wt</code> for conversions to weight percent.</p></li>
+added to the column names of the converted values.</p><ul><li><p><code>_atP</code> for conversions to atomic percent</p></li>
+<li><p><code>_wtP</code> for conversions to weight percent.</p></li>
 </ul></dd>
 
 </dl></div>
@@ -92,7 +92,7 @@ to 100%.</p>
 chemical symbols. The functions convert only values in <em>wt%</em> or <em>at%</em>. If
 concentrations are present in another concentration unit (e.g. <em>ppm</em>,
 <em>µg/kg</em>), run <code><a href="ASTR.html">unify_concentration_unit(df, "wtP")</a></code> first to convert all concentrations to
-<em>wt%</em>. If <code>df</code> is an <a href="ASTR"><code>ASTR object</code></a>, only elements will be converted
+<em>wt%</em>. If <code>df</code> is an <code><a href="ASTR.html">ASTR object</a></code>, only elements will be converted
 to <em>at%</em>, and oxides in <em>wt%</em> are automatically excluded. To convert oxides
 into <em>at%</em> and vice versa, convert to <em>wt%</em> first.</p>
     </div>

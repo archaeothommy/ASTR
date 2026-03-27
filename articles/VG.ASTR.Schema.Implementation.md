@@ -7,12 +7,12 @@ were implemented in the ASTR package.
 ## Naming patterns
 
 - Elements, oxides, and isotopes in column names are compared to
-  pre-compiled lists. While we aimed to be as exhaustive as possible, we
+  pre-compiled lists. While we aim to be as exhaustive as possible, we
   cannot guarantee they are complete for oxides and isotopes. For
   example, only naturally occurring isotopes are currently supported. If
-  you encounter a missing compound, please reach out to the package
-  maintainers or open an issue in the [ASTR GitHub
-  repo](https://github.com/archaeothommy/ASTR).  
+  you encounter a missing compound or isotope, please reach out to the
+  package maintainers or open an issue in the [ASTR GitHub
+  repo](https://github.com/archaeothommy/ASTR).
 - In addition to column names with single isotope, element, or oxide,
   ratios and sums are also supported. The table below provides some
   examples and as which type they will be recognized.
@@ -24,7 +24,7 @@ were implemented in the ASTR package.
 | `Na2O_wt%`            | concentration   | wtP      |
 | `S_at%`               | concentration   | atP      |
 | `75As_wt%`            | concentration   | wtP      |
-| `FeOtot_wt%`          | concentration   | wt%      |
+| `FeOtot_wt%`          | concentration   | wtP      |
 | `FeOtot_errSD%`       | error           | %        |
 | `Ag_ppb`              | concentration   | ng/g     |
 | `Ag_err2D`            | error           | ppb      |
@@ -39,25 +39,25 @@ were implemented in the ASTR package.
 ## Data import
 
 - Columns in a dataset are recognized either as isotope ratio,
-  concentration, concentration ratio, error (i.e., analytical
-  precision), or contextual information.
+  concentration, elemental ratio (i.e. ratio of concentrations), error
+  (i.e., analytical precision), or contextual information.
 - Contextual information is additional information about the analytical
   values such as sample number, geolocation or a group. Columns with
   such information must be explicitly declared during import, excluding
   them from pattern recognition.
 - One column must be specified as `ID` column during import to provide a
   unique identifier for each line in the dataset. To ensure uniqueness
-  of its values, `_1, _2 ... _n` will be added to non-unique values. The
-  original column is preserved.
+  of its values, `_1`, `_2`, … `_n` will be added to non-unique values.
+  The original column is preserved.
 - Columns without a column header will be removed during import.
 - The following notations will be automatically identified and replaced
   with `NA`, unless you explicitly define other values in
   `read_archem()`: `NA`, `N.A.`, `N/A`, `na`, `n/a`, `-`, and `n.d.`.
   Values containing common excel error messages (*\#DIV/0!*, *\#VALUE!*,
   *\#REF!*, *\#NAME?*, *\#NUM!*, *\#N/A*, and *\#NULL!*) are also
-  replaced by `NA` automatically.
+  replaced with `NA` by default.
 - Units will be removed from column names because {units} stores them in
-  the column attributed. This allows for clean column names and
+  the column attributes. This allows for clean column names and
   therefore of e.g. axis labels in plots. They can be “shifted” from the
   column attributes back to the column names by
   [`remove_units()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
@@ -74,20 +74,20 @@ were implemented in the ASTR package.
   `atP`, respectively.
 - Following the use of relative units being discouraged in current IUPAC
   recommendations, relative units are converted to absolute units
-  wherever possible, with *m/m* assumed as default. This means that
-  import of data in e.g. *ppm* is possible but they will be converted to
-  *mg/kg* during import. Explicit conversion to *ppm* is still possible.
+  wherever possible. This means that import of data in e.g. *ppm* is
+  possible but they will be converted to *mg/kg* during import. Explicit
+  conversion to *ppm* is still possible.
 - As an exception, the relative unit *%* will not be converted to its SI
   unit equivalent during data import. However, unit conversions will
   treat it as any other relative unit, essentially handling it the same
   as *wt%*.
 - The unit *wt%* (weight%) is defined as relative unit `wtP` analogous
   to e.g. *ppm*, meaning it is equivalent to “parts per hundred”. The
-  package provides support for conversion between `wt%` for elements and
-  oxides (sometimes referred to as `oxide%`). Because this is a chemical
+  package provides support for conversion between *wt%* for elements and
+  oxides (sometimes referred to as *oxide%*). Because this is a chemical
   rather than a mathematical conversion, both have the same unit and the
   distinction is made based on the chemical formula in the column name
-  (e.g., `Fe` vs. `Fe2O3`). This conversion adds additional complexity
+  (e.g., `Fe` vs. `Fe2O3`). This conversion has additional complexity
   because one element can have multiple oxides. The conversion functions
   take this into account: Different options are offered to choose the
   oxide to convert into and if oxides convert into the same element, the
@@ -99,31 +99,63 @@ were implemented in the ASTR package.
 **NOTE**: Conversions currently support only concentrations provided as
 elements or oxides but not as isotopes (e.g. `204Pb`).
 
+## Limit of detection
+
+In
+[`as_ASTR()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md),
+the limit of detection where indicated by a below detection limit
+notation is automatically set to `NA`. Users requesting a more advanced
+approach by valuing the `LOD` in the ASTR package, e.g. for plotting
+functions, are requested to implement their own lambda function
+redefining the `bdl_strategy`.
+
+Substitution methods could be e.g. dropping the left-censored value by
+replacing it by `NA` or 0, calculating LOD/2 or LOD/√2, skipping \< of
+the left-censored value, or using regression models, enhanced censoring
+calculations, or maximum likelihood estimates ([Croghan & Egeghy,
+2003](#ref-croghan2003f); [Giskeødegård & Lydersen,
+2022](#ref-giske%C3%B8deg%C3%A5rd2022); [Helsel, 2006](#ref-helsel2006))
+
 ## Output
 
 - Values derived by calculations, such as age model parameters of lead
   isotope data, are returned as an ASTR object together with the ID
-  column, contextual columns and the input used for the calculation, but
-  without analytical values not used in the calculation. This avoids
-  datasets growing unwieldingly complex and large. Unless the result is
-  clearly another valid analytical value that can be named according to
-  the ASTR schema, they are classified as contextual information.
+  column, contextual columns and the input used for the calculation
+  (after unit conversion), but without analytical values not used in the
+  calculation. This avoids datasets growing unwieldingly complex and
+  large. Unless the result is clearly another valid analytical value
+  that can be classified according to the ASTR schema, they are
+  classified as contextual information.
 
 ## Export
 
-- ASTR (currently) does not provide a dedicated function to save ASTR
-  objects as e.g. csv file. Instead, use the functions already available
-  in R and its packages. Don’t forget to “shift” the units from the
-  column attributes back into the column names with
-  `remove_units(df, recover_unit_names = TRUE)` before.
+- ASTR does not provide a dedicated function to save ASTR objects as
+  e.g. csv file. Instead, use the functions already available in R and
+  its packages. Don’t forget to “shift” the units from the column
+  attributes back into the column names with
+  `remove_units(df, recover_unit_names = TRUE)` before export.
 
 ## ASTR vs. non-ASTR objects
 
-We do not want following the ASTR schema mandatory for using the
+We do not want to make following the ASTR schema mandatory for using the
 functions in this package. Therefore, many of the functions not
 dedicated to the ASTR schema and its implementation support also
 non-ASTR objects. However, default values of functions are defined for
-ASTR objects and other convenient features such as on-the-fly unit
-conversion are restricted to ASTR objects. Read more about how to work
+ASTR objects and other convenient features, such as on-the-fly unit
+conversion, are restricted to ASTR objects. Read more about how to work
 with ASTR objects [in this
 vignette](https://archaeothommy.github.io/ASTR/articles/ASTR.md).
+
+## References
+
+Croghan, C., & Egeghy, P. P. (2003). Methods of dealing with values
+below the limit of detection using SAS. *Southern SAS User Group*.
+
+Giskeødegård, G. F., & Lydersen, S. (2022). Measurements below the
+detection limit. *Tidsskrift for Den norske legeforening*.
+<https://doi.org/10.4045/tidsskr.22.0439>
+
+Helsel, D. R. (2006). Fabricating data: How substituting values for
+nondetects can ruin results, and what can be done about it.
+*Chemosphere*, *65*(11), 2434–2439.
+<https://doi.org/10.1016/j.chemosphere.2006.04.051>

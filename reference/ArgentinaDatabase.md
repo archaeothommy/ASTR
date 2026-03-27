@@ -1,4 +1,4 @@
-# Lead isotope data fro Argentina
+# Lead isotope data from Argentina
 
 Lead isotope data from ore deposits in Argentina prepared for the
 TerraLID database.
@@ -11,7 +11,7 @@ ArgentinaDatabase
 
 ## Format
 
-### `ArgentinaDatabase`
+`ArgentinaDatabase`
 
 A dataframe with 112 rows and 49 columns
 

@@ -95,7 +95,8 @@ to calculate all age models simultaneously.</p>
 
 
 <dl><dt id="arg-df">df<a class="anchor" aria-label="anchor" href="#arg-df"></a></dt>
-<dd><p>The data frame from which the age model should be calculated.</p></dd>
+<dd><p>The data frame from which the age model parameters should be
+calculated.</p></dd>
 
 
 <dt id="arg-ratio-">ratio_206_204<a class="anchor" aria-label="anchor" href="#arg-ratio-"></a></dt>
@@ -128,19 +129,15 @@ calculate:</p><ul><li><p><code>SK75</code> for Stacey &amp; Kramers (1975)</p></
 same type including the ID column, the contextual columns, the lead isotope
 ratios used for calculation of the age model parameters, and the calculated
 age model parameters. In all other cases, the data frame provided as input
-with columns added for the calculated age model parameters. The used age
-model is indicated in the column names of the output by the abbreviations
-given above.</p>
+with columns added for the calculated age model parameters.</p>
+<p>The used age model is indicated in the column names of the output by the
+abbreviations for the models given above. They represent the initials of
+the author's last names and the publication year (e. g. <code>SK75</code> for Stacey &amp;
+Kramers 1975).</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The implemented age models are:</p><ul><li><p>Stacey &amp; Kramers (1975): <code>stacey_kramers_1975()</code></p></li>
-<li><p>Cumming &amp; Richards (1975): <code>cumming_richards_1975()</code></p></li>
-<li><p>Albarède &amp; Juteau (1984): <code>albarede_juteau_1984()</code></p></li>
-</ul><p>The used model is indicated in the column names of the output by the initials
-of the author's last names and the publication year (e. g.<code>SK75</code> for Stacey &amp;
-Kramers 1975).</p>
-<p>See the references for the respective publications of the age models. The
+    <p>See the references for the respective publications of the age models. The
 function for the age model of Albarède &amp; Juteau (1984) is based on the
 MATLAB-script of F. Albarède (version 2020-11-06). The age model published in
 Albarède et al. (2012) should not be used according to F. Albarède and is

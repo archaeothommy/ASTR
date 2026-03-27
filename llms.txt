@@ -167,14 +167,14 @@ Functions for plotting data
   : Draw 2D kernel density estimate polygons by quantiles
 - [`geom_sk_lines()`](https://archaeothommy.github.io/ASTR/reference/geom_sk_lines.md)
   [`geom_sk_labels()`](https://archaeothommy.github.io/ASTR/reference/geom_sk_lines.md)
-  : Stacey-Kramers Lead Evolution Geom
+  : Lead Evolution Geom for Stacey & Kramers (1975)
 
 ## Data
 
 Datasets included in the package
 
 - [`ArgentinaDatabase`](https://archaeothommy.github.io/ASTR/reference/ArgentinaDatabase.md)
-  : Lead isotope data fro Argentina
+  : Lead isotope data from Argentina
 
 # Articles
 

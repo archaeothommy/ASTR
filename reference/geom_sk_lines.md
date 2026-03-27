@@ -1,8 +1,8 @@
-# Stacey-Kramers Lead Evolution Geom
+# Lead Evolution Geom for Stacey & Kramers (1975)
 
-This Geom is used for drawing and labeling isochron, geochron, and kappa
-lines used for isotope age model referencing used in lead isotope
-biplots. The lines follows the model used by Stacey and Kramers (1975).
+These Geoms draws and label isochron, geochron, and kappa lines used for
+isotope age model referencing in lead isotope biplots. The lines follows
+the model used by Stacey & Kramers (1975).
 
 ## Usage
 
@@ -68,41 +68,11 @@ geom_sk_labels(
 
 - ...:
 
-  Other arguments passed on to
-  [`layer()`](https://ggplot2.tidyverse.org/reference/layer.html)'s
-  `params` argument. These arguments broadly fall into one of 4
-  categories below. Notably, further arguments to the `position`
-  argument, or aesthetics that are required can *not* be passed through
-  `...`. Unknown arguments that are not part of the 4 categories below
-  are ignored.
-
-  - Static aesthetics that are not mapped to a scale, but are at a fixed
-    value and apply to the layer as a whole. For example,
-    `colour = "red"` or `linewidth = 3`. The geom's documentation has an
-    **Aesthetics** section that lists the available options. The
-    'required' aesthetics cannot be passed on to the `params`. Please
-    note that while passing unmapped aesthetics as vectors is
-    technically possible, the order and required length is not
-    guaranteed to be parallel to the input data.
-
-  - When constructing a layer using a `stat_*()` function, the `...`
-    argument can be used to pass on parameters to the `geom` part of the
-    layer. An example of this is
-    `stat_density(geom = "area", outline.type = "both")`. The geom's
-    documentation lists which parameters it can accept.
-
-  - Inversely, when constructing a layer using a `geom_*()` function,
-    the `...` argument can be used to pass on parameters to the `stat`
-    part of the layer. An example of this is
-    `geom_area(stat = "density", adjust = 0.5)`. The stat's
-    documentation lists which parameters it can accept.
-
-  - The `key_glyph` argument of
-    [`layer()`](https://ggplot2.tidyverse.org/reference/layer.html) may
-    also be passed on through `...`. This can be one of the functions
-    described as [key
-    glyphs](https://ggplot2.tidyverse.org/reference/draw_key.html), to
-    change the display of the layer in the legend.
+  Additional parameters for the geoms (see *Details*) and other
+  arguments passed on to
+  [`ggplot2::layer()`](https://ggplot2.tidyverse.org/reference/layer.html).
+  These are often aesthetics used to set a fixed value, such as
+  `colour = "red"` or `alpha = 0.5`.
 
 ## Value
 
@@ -114,27 +84,50 @@ The plotting system follows the convention of showing geochron and
 isochron lines for the 207Pb/204Pb vs. 206Pb/204Pb plot and the kappa
 lines for 208Pb/204Pb vs. 206Pb/204Pb plot.
 
+The geoms accept the following additional parameters through `...`:
+
+- `Ti` : Initial time of the second stage in years (default 3.7 Ga).
+
+- `interval` : Time interval for isochron labels in years (default 200
+  Ma).
+
+- `show_geochron` : Logical; should the Geochron be plotted? (default
+  `TRUE`).
+
+- `show_isochrons` : Logical; should time isochrons be plotted? (default
+  `TRUE`)
+
+- `kappa_list` : Numeric vector of Kappa values to plot in "86" system.
+
 ## Note
 
 Currently the plot will scale the xlim and ylim to their maximum bounds.
-To prevent this use
+To prevent this, use
 [`coord_cartesian(xlim, ylim)`](https://ggplot2.tidyverse.org/reference/coord_cartesian.html)
-to force the axis range to the desiered values.
+to force the axis range to the desired values.
 
-## Additional parameters
+## Aesthetics
 
-- `Ti` Initial time of the second stage in years (default 3.7 Ga).
+`geom_sk_lines()` and `geom_sk_labels()` accept the following aesthetic
+values:
 
-- `interval` Time interval for isochron labels in years (default 200
-  Ma).
+- `alpha`
 
-- `show_geochron` Logical; should the Geochron be plotted? (default
-  `TRUE`).
+- `colour` (controls the polygon outline)
 
-- `show_isochrons` Logical; should time isochrons be plotted? (default
-  `TRUE`)
+- `fill` (controls the polygon fill)
 
-- `kappa_list` Numeric vector of Kappa values to plot in "86" system.
+- `linetype`
+
+- `linewidth` (controls the outline thickness)
+
+- `text.colour` (controls colour of the text)
+
+- `size.unit` (controls size aesthetic in "mm", "pt", "cm", "in" or
+  "pc")
+
+  Learn more about setting these aesthetics in
+  [`vignette("ggplot2-specs")`](https://ggplot2.tidyverse.org/articles/ggplot2-specs.html).
 
 ## References
 
@@ -147,25 +140,6 @@ Letters 26(2), pp. 207–221.
 
 Other Pb isotope functions:
 [`age_models`](https://archaeothommy.github.io/ASTR/reference/age_models.md)
-
-## Aesthetics
-
-[`geom_path()`](https://ggplot2.tidyverse.org/reference/geom_path.html)
-understands the following aesthetics. Required aesthetics are displayed
-in bold and defaults are displayed for optional aesthetics:
-
-|     |                                                                                     |                                                                       |
-|-----|-------------------------------------------------------------------------------------|-----------------------------------------------------------------------|
-| •   | **[`x`](https://ggplot2.tidyverse.org/reference/aes_position.html)**                |                                                                       |
-| •   | **[`y`](https://ggplot2.tidyverse.org/reference/aes_position.html)**                |                                                                       |
-| •   | [`alpha`](https://ggplot2.tidyverse.org/reference/aes_colour_fill_alpha.html)       | → `NA`                                                                |
-| •   | [`colour`](https://ggplot2.tidyverse.org/reference/aes_colour_fill_alpha.html)      | → via [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html) |
-| •   | [`group`](https://ggplot2.tidyverse.org/reference/aes_group_order.html)             | → inferred                                                            |
-| •   | [`linetype`](https://ggplot2.tidyverse.org/reference/aes_linetype_size_shape.html)  | → via [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html) |
-| •   | [`linewidth`](https://ggplot2.tidyverse.org/reference/aes_linetype_size_shape.html) | → via [`theme()`](https://ggplot2.tidyverse.org/reference/theme.html) |
-
-Learn more about setting these aesthetics in
-[`vignette("ggplot2-specs")`](https://ggplot2.tidyverse.org/articles/ggplot2-specs.html).
 
 ## Examples
 
@@ -232,6 +206,4 @@ ggplot(df, aes(x = pb64, y = pb74)) +
     y = expression({}^207*Pb / {}^204*Pb),
   )
 
-
-rm(df)
 ```

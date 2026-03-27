@@ -111,8 +111,8 @@ population). It hence expresses the accuracy of the measurement. The SE
 becomes smaller as the sample size increases, since higher repetition of
 measurements provides more reliable information about the true
 population mean. Confidence intervals are used as for the standard
-deviation. A 2-fold standard error (2SD) defines the range around the
-calculated mean that contains the true population mean with ca. 95 %
+deviation. A 2-fold standard error (2SE) defines the range around the
+calculated mean that contains the true population mean with ca. 95%
 probability.</p></li>
 </ul>
 <div class="section level3">
@@ -131,38 +131,6 @@ other indicative notation), is defined as the smallest value that can be
 reliably detected.</p>
 <p>The limit of quantification (LOQ) is defined as the smallest amount
 that can be quantified with acceptable precision.</p>
-<p>In <code><a href="../reference/ASTR.html">as_ASTR()</a></code>, the limit of detection where indicated by
-a below detection limit notation is automatically set to
-<code>NA</code>. Users requesting a more advanced approach by valuing
-the <code>LOD</code> in the ASTR package, e.g. for plotting functions,
-are requested to implement their own lambda function redefining the
-<code>bdl_strategy</code>.</p>
-<p>Substitution methods could be e.g. dropping the left-censored value
-by replacing it by <code>NA</code> or 0, calculating LOD/2 or LOD/√2,
-skipping &lt; of the left-censored value, or using regression models,
-enhanced censoring calculations, or maximum likelihood estimates <span class="citation">(<a href="#ref-croghan2003f">Croghan &amp; Egeghy,
-2003</a>; <a href="#ref-giske%C3%B8deg%C3%A5rd2022">Giskeødegård &amp; Lydersen,
-2022</a>; <a href="#ref-helsel2006">Helsel, 2006</a>)</span></p>
-</div>
-</div>
-<div class="section level2">
-<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
-</h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0" line-spacing="2">
-<div id="ref-croghan2003f" class="csl-entry">
-Croghan, C., &amp; Egeghy, P. P. (2003). Methods of dealing with values
-below the limit of detection using SAS. <em>Southern SAS User
-Group</em>.
-</div>
-<div id="ref-giskeødegård2022" class="csl-entry">
-Giskeødegård, G. F., &amp; Lydersen, S. (2022). Measurements below the
-detection limit. <em>Tidsskrift for Den norske legeforening</em>. <a href="https://doi.org/10.4045/tidsskr.22.0439" class="external-link">https://doi.org/10.4045/tidsskr.22.0439</a>
-</div>
-<div id="ref-helsel2006" class="csl-entry">
-Helsel, D. R. (2006). Fabricating data: How substituting values for
-nondetects can ruin results, and what can be done about it.
-<em>Chemosphere</em>, <em>65</em>(11), 2434–2439. <a href="https://doi.org/10.1016/j.chemosphere.2006.04.051" class="external-link">https://doi.org/10.1016/j.chemosphere.2006.04.051</a>
-</div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

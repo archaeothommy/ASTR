@@ -23,7 +23,7 @@ copper_alloy_bb(
 
 - elements:
 
-  named character vector with column names of Zn, Sn, and Pb
+  named character vector with column names of Sn, Zn, and Pb
   concentrations.
 
 - id_column:

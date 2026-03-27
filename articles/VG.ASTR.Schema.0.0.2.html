@@ -75,14 +75,14 @@
     
 <p>The ASTR schema defines a set of naming and data conventions to
 create data objects that can be easily subset with (almost) no loss of
-information to allow for frictionless handling of data sets and their
-subsets across software and humans. This requires reduction of implicit
-information as much as possible (e.g. units of a value being defined in
-a separate column). Moreover, data objects must be readable for machines
-while preserving human readability and allow for direct import of
-spreadsheet-like formats. The conventions defined below are further
-influenced by considerations related to the analytical data and their
-quality, which are explained in this <a href="VG.ASTR.Conventions.explained.html">vignette</a>.</p>
+information. Such datasets allow frictionless handling of them and their
+subsets between software and humans. Creating such datasets requires
+reduction of implicit information as much as possible (e.g. units of a
+value being defined in a separate column). Moreover, data objects must
+be readable for machines while preserving human readability and allow
+for direct import of spreadsheet-like formats. The conventions defined
+below are further influenced by considerations related to the analytical
+data and their quality, which are explained in this <a href="VG.ASTR.Conventions.explained.html">vignette</a>.</p>
 <p>The schema is platform and programming language agnostic. You can
 learn about the implementation of the schema in the ASTR package in <a href="VG.ASTR.Schema.Implementation.html">the dedicated
 vignette</a>.</p>
@@ -101,9 +101,8 @@ the sample/variable names.</li>
 <h2 id="analytical-data-columns-naming">Analytical data columns naming<a class="anchor" aria-label="anchor" href="#analytical-data-columns-naming"></a>
 </h2>
 <p>All columns that contain element and oxide compositions, isotopic
-values, or ratios derived therefrom as well as analytical
-uncertaintities (“errors”) should be named using the following
-conventions.</p>
+values, or ratios derived therefrom as well as analytical uncertainties
+(“errors”) should be named using the following conventions:</p>
 <ul>
 <li>Only Latin characters can be supported in the column names, i.e. δ
 and ε will not be identified.</li>
@@ -111,7 +110,7 @@ and ε will not be identified.</li>
 (e.g. <code>SiO2</code> or <code>Si</code>). Total iron, if given,
 should be expressed as: <code>FeOtot</code> or <code>Fe2O3tot</code>.
 Loss on ignition, where known, should be expressed as <code>LOI</code>.
-The value “balance” provided by many pXRF instruments should be
+The value “balance” provided by e.g. many pXRF instruments should be
 expressed as <code>Bal</code> or <code>Balance</code>.</li>
 <li>Units for values should follow element or oxide, as
 <code>_&lt;unit&gt;</code>. Units supported include <em>all SI
@@ -119,7 +118,7 @@ units</em>, as well as <em>ppm</em>, <em>ppb</em>, <em>ppt</em>,
 <em>ppq</em>, <em>%</em>, <em>wt%</em>, <em>at%</em>, <em>‰</em>,
 <em>counts</em>, and <em>cps</em>, noted as such.</li>
 <li>Where known, specify <em>wt%</em> and <em>at%</em> instead of using
-<em>%</em> and make the mixture type of concentrations explicit,
+<em>%</em>, and make the mixture type of concentrations explicit,
 e.g. write <em>ppm(m/m)</em> instead of <em>ppm</em>. For <em>‘per
 mille’</em>, use the symbol <em>‰</em>.</li>
 <li>For isotopic ratios, use simple forms such as
@@ -132,16 +131,15 @@ of <code>eNd</code>).</li>
 geolocation, or values derived from analytial data such as Pb isotope
 age model parameters, ensure the names do <strong>not</strong> contain a
 dash (‘-’) or underscore (‘_’) prior to import and specify these columns
-as context in the <code>read_archem()</code> function.</li>
+as context in the <code><a href="../reference/ASTR.html">read_ASTR()</a></code> function.</li>
 <li>Analytical precision should be indicated in the column name as:
 <code>_err2SD</code>, <code>_errSD</code>, <code>_errSE</code>,
 <code>_err2SE</code> without indicating the unit. For absolute
 analytical uncertainties, the unit will be inferred from the
-corresponding composition column. Relative analytical uncertaintinties
-are indicated by adding a <code>%</code> sign,
-e.g. <code>_err2SD%</code>. We strongly recommend that the uncertainty
-is included in the data table, and properly noted following the
-conventions described.</li>
+corresponding composition column. Relative analytical uncertainties are
+indicated by adding a <code>%</code> sign, e.g. <code>_err2SD%</code>.
+We strongly recommend that the uncertainty is included in the data
+table, and properly noted following the conventions described.</li>
 </ul>
 <table class="table">
 <colgroup>

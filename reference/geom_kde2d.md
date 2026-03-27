@@ -87,7 +87,7 @@ geom_kde2d(
 - fallback_to_points:
 
   Logical. To prevent points from being drawn for groups that fail
-  density estimation, set this to FALSE. For example, if you want more
+  density estimation, set this to `FALSE`. For example, if you want more
   control over the point aesthetics, independent of the KDE regions, set
   this to FALSE and use geom_point to plot those points
 

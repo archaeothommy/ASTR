@@ -19,9 +19,9 @@ at_to_wt(df, elements = colnames(get_unit_columns(df, "atP")), drop = TRUE)
 
 - elements:
 
-  character vector with the chemical symbols of the elements that should
+  Character vector with the chemical symbols of the elements that should
   be converted. Default are all columns in an
-  [`ASTR object`](https://archaeothommy.github.io/ASTR/reference/ASTR)
+  [`ASTR object`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
   in the unit to be converted. See *Details* for further information
 
 - drop:
@@ -30,9 +30,9 @@ at_to_wt(df, elements = colnames(get_unit_columns(df, "atP")), drop = TRUE)
   If false, columns with unconverted values are kept and a suffix added
   to the column names of the converted values.
 
-  - `_at` for conversions to atomic percent
+  - `_atP` for conversions to atomic percent
 
-  - `_wt` for conversions to weight percent.
+  - `_wtP` for conversions to weight percent.
 
 ## Value
 
@@ -47,7 +47,7 @@ their chemical symbols. The functions convert only values in *wt%* or
 *ppm*, *µg/kg*), run
 [`unify_concentration_unit(df, "wtP")`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
 first to convert all concentrations to *wt%*. If `df` is an
-[`ASTR object`](https://archaeothommy.github.io/ASTR/reference/ASTR),
+[`ASTR object`](https://archaeothommy.github.io/ASTR/reference/ASTR.md),
 only elements will be converted to *at%*, and oxides in *wt%* are
 automatically excluded. To convert oxides into *at%* and vice versa,
 convert to *wt%* first.

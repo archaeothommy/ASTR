@@ -113,12 +113,12 @@ unify_concentration_unit(x, unit, ...)
 - bdl_strategy:
 
   function used to replace BDL strings. Defaults to a static function
-  returning NA
+  returning `NA`
 
 - guess_context_type:
 
   should appropriate data types for contextual columns be guessed
-  automatically? Defaults to TRUE
+  automatically? Defaults to `TRUE`
 
 - na:
 
@@ -131,12 +131,12 @@ unify_concentration_unit(x, unit, ...)
 
   should columns that are neither marked as contextual in `context`, nor
   automatically identified as analytical from the column name, be
-  dropped to proceed with the reading? Defaults to FALSE
+  dropped to proceed with the reading? Defaults to `FALSE`
 
 - validate:
 
   should the post-reading input validation be run, which checks for
-  additional properties of ASTR tables. Defaults to TRUE
+  additional properties of ASTR tables. Defaults to `TRUE`
 
 - ...:
 
@@ -165,7 +165,7 @@ unify_concentration_unit(x, unit, ...)
 
 - quiet:
 
-  should warnings be printed? Defaults to TRUE
+  should warnings be printed? Defaults to `TRUE`
 
 - units:
 
@@ -189,13 +189,15 @@ needs to be adhered to. Analyses can contain as many analytical columns
 as necessary.
 
 The column that contains the unique samples identifier must be specified
-using the `ID` argument. If the dataset contains duplicate ids they will
+using the `ID` argument. If the dataset contains duplicate IDs they will
 be renamed consecutively using the following convention: `_1`,`_2`, ...
 `_n`.
 
 Metadata contained within the dataset must be marked using the `context`
 argument. If any column in the dataframe is not specified as context and
-not recognised as an analytical column, this will result in an error.
+not recognised as an analytical column, this will result in an error,
+unless `drop_columns = TRUE` (then it will result in warnings for the
+respective columns).
 
 Below detection limit notation (i.e. ‘b.d.’, ‘bd’, ‘b.d.l.’, ‘bdl’,
 ‘\<LOD’, or ‘\<..’) for element and oxide concentrations is specified

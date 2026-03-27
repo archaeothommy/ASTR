@@ -10,7 +10,7 @@ conversion_oxides
 
 ## Format
 
-A data frame with 106 rows and 7 variables:
+A data frame with 151 rows and 8 variables:
 
 - Element:
 

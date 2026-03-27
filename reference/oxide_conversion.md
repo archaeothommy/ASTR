@@ -1,6 +1,6 @@
 # Oxide conversion functions
 
-Convert between element and oxide weight percent (oxide%) compositions
+Convert between element and oxide weight percent ("oxide%") compositions
 using pre-compiled conversion factors.
 
 ## Usage
@@ -39,21 +39,21 @@ oxide_to_element(
   String that controls which oxide should be used if an element forms
   more than one oxide. Allowed values are: `reducing`, `oxidising`,
   `ask`, or a named vector mapping the specific oxide to its element.
-  See details for further information.
+  See *Details* for further information.
 
 - which_concentrations:
 
   Character string that determines by concentration which of the
   `elements` or `oxides` are converted. Allowed values are:
 
-  - `all` (convert all elements or oxides; the default)
+  - `all` (convert all elements; the default)
 
-  - `major` (convert elements or oxides with concentrations \>= 1 wt%)
+  - `major` (convert elements with concentrations \>= 1 wt%)
 
-  - `minor` (convert elements or concentrations between 0.1 and 1 wt%).
+  - `minor` (convert elements with concentrations between 0.1 and 1
+    wt%).
 
-  - `no_trace` (convert elements or oxides with concentration \>=0.1
-    wt%)
+  - `no_trace` (convert elements with concentrations \>=0.1 wt%)
 
 - normalise:
 
@@ -74,17 +74,16 @@ The original data frame with the converted concentrations
 
 ## Details
 
-If the dataset includes already an element and its respective oxide, the
-conversion leaves the values of the respective oxide or element
-unaffected. The functions convert only values in *wt%*. If
-concentrations are present in another concentration unit (e.g. *ppm*,
-*µg/kg*), run
+If the dataset includes already an element and its oxide, the conversion
+leaves the values of the respective oxide or element unaffected. The
+functions convert only values in *wt%*. If concentrations are present in
+another concentration unit (e.g. *ppm*, *µg/kg*), run
 [`unify_concentration_unit(df, "wtP")`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
-first to convert all concentrations to *wt%*. When the input is an
-[`ASTR object`](https://archaeothommy.github.io/ASTR/reference/ASTR),
-the functions convert \#' only elements or oxides with the respective
-other type being automatically excluded, even though the unit for both
-is *wt%*. To convert oxides into *at%* and vice versa, convert to *wt%*
+first to convert all concentrations to *wt%*. If the input is an
+[`ASTR object`](https://archaeothommy.github.io/ASTR/reference/ASTR.md),
+the functions convert only elements or oxides with the respective other
+type being automatically excluded, even though the unit for both is
+*wt%*. To convert oxides into *at%* and vice versa, convert to *wt%*
 first.
 
 In `element_to_oxide()`, the parameter `oxide_preference` controls the
