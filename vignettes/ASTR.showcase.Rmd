@@ -39,7 +39,7 @@ data <- data.frame(
 )
 ```
 
-To make the most out of the features offered by the ASTR package, the object should be imported as ASTR object. Because they adhere to the conventions set out in the [ASTR schema](VG.ASTRschema.0.0.2.html), a lot of information can be extracted and used for efficient and convenient handling of archaeometric and geochemical data. This is also why many of the package functions require only the data set as input, making it convenient for persons less experienced in R. This article highlights some of these functionalities. 
+To make the most out of the features offered by the ASTR package, input data should be imported into `ASTR` objects. `ASTR` objects represent archaeometric and geochemical data in R in a standardized and semantically rich format, to allow for convenient and safe data analysis. If the input data structure adheres to the conventions set out in the [ASTR schema](VG.ASTRschema.0.0.2.html), then the package can automatically build valid `ASTR` objects from it. When working with the package, many of its functions require only an `ASTR` object, making them convenient to use even for users who consider themselves less experienced with R. This article highlights some of these functionalities.
 
 Before we start, we want to load the ASTR package: 
 
@@ -48,54 +48,59 @@ library(ASTR)
 ```
 
 ## Data import and inspection
-To work with an ASTR object, we have to create one. The function `read_ASTR()` imports spreadsheets in a variety of formats, including Excel files, and passes then on to the function `as_ASTR()`. For this article, I created some mock-up data: 
+To work with an `ASTR` object, we have to create one. The function `read_ASTR()` imports spreadsheets in a variety of formats, including Excel files. For this article, I created some mock-up data: 
 
 ```{r echo=FALSE}
 data
 ```
 
 
-which do already have the column headers organised according to the ASTR conventions. We also see that there were some problems with the copper isotope data: it seems that some Excel formulas did not work as intended. To convert the data to ASTR, we have to define one of the columns as the column with the IDs of the data and and any column providing contextual information, i.e. no analytical values (cf. [ASTR schema: Implementation](VG.ASTR.Schema.Implementation.html)). 
+Note how the column headers are organised according to the ASTR conventions. This allows the package to _understand_ some of the semantics of the dataset in the `read_ASTR()` process, and correctly represent them in the resulting `ASTR` object. A closer look at the mock-up data also reveals (common) problems with the copper isotope data: it seems that some Excel formulas did not work as intended and left `#REF!` entries. `read_ASTR()` will read these as `NA` values. Finally, every `ASTR` object requires one column that acts as a unique row identifier. In this dataset there is no such column, though, only a `Group` identifier. `read_ASTR()` can automatically turn such a column to a unique identifier.
+
+We can now perform the reading process. As we are working with mock-up data in an R vignette, we do not read from the file system. We only need to call an essential internal function of `read_ASTR()`: `as_ASTR()`. It turns R data.frames to `ASTR` objects. If we would start from an Excel file we would call `read_ASTR()` instead.
+
+To do this in practice we not only have to submit our `data` to `as_ASTR()`, but also set two other arguments: 1. We have to define one of the columns as the ID column with `id_column`, and 2. we explicitly have to mark any column providing contextual information with `context` (i.e. no analytical values, cf. [ASTR schema: Implementation](VG.ASTR.Schema.Implementation.html)).
 
 ```{r echo=TRUE}
-data <- as_ASTR(data, id_column = "Group", context = "Group")
+data <- as_ASTR(data, id_column = "Group", context = c("Group"))
 ```
 
-While ASTR attempts to make data import as easy as possible, it also aims to be as transparent about it as possible. Consequently, the function issued several warnings, flagging (potential) issues with our data set: 
+While ASTR attempts to make data import as easy as possible, it also aims to be transparent about it. Consequently, `as_ASTR()` issues several warnings when confronted with our mock-up data, flagging (potential) issues:
 
-* The column for the ID did contain non-unique values but ASTR automatically created unique values from it
-* Some values in the column `d65Cu` were replaced with `NA`, when inspecting the data set, it is clear that these were the Excel error messages. In general, ASTR replaces by default common and user-defined indicators for missing values and also for indicators of "below detection limit" during import. 
-* Across the dataset, 34 values are missing.  
+* The column for the ID did contain non-unique values but ASTR automatically created unique values from it.
+* Some values in the column `d65Cu` were replaced with `NA`, when inspecting the data set, it is clear that these were the Excel `#REF!` error messages. In general, ASTR replaces by default common and user-defined indicators for missing values and also for indicators of "below detection limit" during import. 
+* Across the dataset, 34 values are missing.
 
-To learn more about the (potential) issues with out dataset, it suggests to run `validate()`: 
+To learn more about the (potential) issues with our dataset, it suggests to run `validate()`: 
 
 ```{r echo=TRUE}
 validate(data)
 ```
 
-This summary of where to find the missing values comes in very handy for (very) large datasets! 
+This summary of where to find the missing values comes in handy for large datasets! 
 
-In our case, the dataset is fine. We might want to check on the missing values in the copper isotope data because apparently there was something wrong with the Excel file. In case of the lead isotop data, however, they are intentional (they were not measured for these samples).
+In our case, the dataset is fine. We might want to check on the missing values in the copper isotope data because apparently there was something wrong with the Excel file. In case of the lead isotope data, however, they are intentional (they were not measured for these samples).
 
-Having a closer look on the imported data set shows, that ASTR did one more things: 
+Having a closer look on the imported data set shows, that ASTR did one more thing: 
 
 ```{r echo=TRUE}
 data
 ```
 
-Our relative unit "ppm" was converted into SI-units and the values now have a measurement unit R can understand (note that the unit `wt%` must be written `wtP`)^[The %-sign can not be used in custom units]: 
+Our relative unit "ppm" was converted into SI-units and the values now have a measurement unit R can understand (note that the unit `wt%` is written as `wtP`)^[The %-sign can not be used in custom units]: 
 
 ``` {r}
 units(data$Ag[1])
 ```
 
-When looking into the data structure, we also see that it also labelled the different columns as e.g. concentration or  isotope ratio: 
+When looking into the data structure, we also see that it also labelled the different columns as e.g. concentration or isotope ratio: 
 
 ``` {r}
 str(data)
 ```
 
-## Subsetting data: 
+## Subsetting data
+
 With this much information about our data, it is easy to subset data. Let's say that, for example, we want to check if our data can be differentiated into groups based on the chemical composition by creating biplots of all possible combinations. The `get_ ... _columns()`-family comes in very handy here: 
 
 ```{r}
@@ -110,7 +115,7 @@ pairs(get_unit_columns(data, units = "wtP")[-1])
 
 ### Unit conversions 
 
-While continuing investigating the metal, we want to estimate its approximate melting temperature and remember that we can get this information from a phase diagram. While our values for copper and tin are in `wt%`, the phase diagram in front of us is in `at%`. Converting from `wt%` to `at%` is probably faster than searching for a version of the phase diagram in `wt%`^[While ASTR fully supports use the native pipe operator `|>`, it maintains backward compatibility to older R versions by using `%>%`]:  
+While continuing investigating the metal, we may want to estimate its approximate melting temperature and remember that we can get this information from a phase diagram. While our values for copper and tin are in `wt%`, the phase diagram in front of us is in `at%`. Converting from `wt%` to `at%` is probably faster than searching for a version of the phase diagram in `wt%`^[While ASTR fully supports use the native pipe operator `|>`, it maintains backward compatibility to older R versions by using `%>%`]:  
 
 ```{r}
 library(magrittr) # import of pipe operator `%>%`
@@ -151,10 +156,10 @@ age_model_params
 
 ## Data export
 
-After finishing our analysis of the data, we want to save the copper type and lead isotope model age parameters to our hard drive. For this task, ASTR relies on the functions already provided by R and other R packages. Before export, we have to make sure that the information about the units of the values is preserved by including it back in the column name: 
+After finishing our analysis of the data, we want to save the copper type and lead isotope model age parameters to our hard drive. For this task, ASTR relies on the functions already provided by R and other R packages (e.g. `readr::write_csv()`). Before export, we have to make sure that the information about the units of the values is preserved by including it back in the column name: 
 
 ```{r}
-data <- remove_units(data, recover_unit_names = TRUE)
-data
+data_unitless <- remove_units(data, recover_unit_names = TRUE)
+data_unitless
 ```
 ## References
