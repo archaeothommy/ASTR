@@ -107,7 +107,7 @@ With this much information about our data, it is easy to subset data. Let's say 
 pairs(get_concentration_columns(data)[-1])
 ```
 
-Note that we have to exclude the first column here, because the first column of ASTR objects and their subsets is always the ID column to ensure that data can be clearly assigned to a single sample. Actually, we might only be interested in the main elements of the metal. In this case, we can take advantage that these are the only ones values in `wtP`: 
+Note that we have to exclude the first column here, because the first column of `ASTR` objects and their subsets is always the ID column to ensure that data can be clearly assigned to a single sample. Actually, we might only be interested in the main elements of the metal. In this case, we can take advantage that these are the only ones values in `wtP`: 
 
 ```{r}
 pairs(get_unit_columns(data, units = "wtP")[-1])
