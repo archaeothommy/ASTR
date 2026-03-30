@@ -11,7 +11,7 @@ utils::globalVariables(
     "oxides_data",
     "special_oxide_states",
     "conversion_oxides",
-    "ArgentinaDatabase"
+    "ArgentinaDatabase",
     "standard_groups",
     "references_geochem"
   )
