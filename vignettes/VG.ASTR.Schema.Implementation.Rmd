@@ -42,7 +42,7 @@ This vignette outlines how the conventions defined in [the ASTR schema](VG.ASTRs
 * Contextual information is additional information about the analytical values such as sample number, geolocation or a group. Columns with such information must be explicitly declared during import, excluding them from pattern recognition. 
 * One column must be specified as `ID` column during import to provide a unique identifier for each line in the dataset. To ensure uniqueness of its values, `_1`, `_2`, ... `_n` will be added to non-unique values. The original column is preserved. 
 * Columns without a column header will be removed during import. 
-* The following notations will be automatically identified and replaced with `NA`, unless you explicitly define other values in `read_archem()`: `NA`, `N.A.`, `N/A`, `na`, `n/a`, `-`, and `n.d.`. Values containing common excel error messages (*#DIV/0!*, *#VALUE!*, *#REF!*, *#NAME?*, *#NUM!*, *#N/A*, and *#NULL!*) are also replaced with `NA` by default.
+* The following notations will be automatically identified and replaced with `NA`, unless you explicitly define other values in `read_ASTR()`: `NA`, `N.A.`, `N/A`, `na`, `n/a`, `-`, and `n.d.`. Values containing common excel error messages (*#DIV/0!*, *#VALUE!*, *#REF!*, *#NAME?*, *#NUM!*, *#N/A*, and *#NULL!*) are also replaced with `NA` by default.
 * Units will be removed from column names because {units} stores them in the column attributes. This allows for clean column names and therefore of e.g. axis labels in plots. They can be "shifted" from the column attributes back to the column names by `remove_units()` with `recover_unit_names = TRUE`. 
 
 # Units
