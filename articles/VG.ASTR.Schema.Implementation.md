@@ -52,10 +52,11 @@ were implemented in the ASTR package.
 - Columns without a column header will be removed during import.
 - The following notations will be automatically identified and replaced
   with `NA`, unless you explicitly define other values in
-  `read_archem()`: `NA`, `N.A.`, `N/A`, `na`, `n/a`, `-`, and `n.d.`.
-  Values containing common excel error messages (*\#DIV/0!*, *\#VALUE!*,
-  *\#REF!*, *\#NAME?*, *\#NUM!*, *\#N/A*, and *\#NULL!*) are also
-  replaced with `NA` by default.
+  [`read_ASTR()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md):
+  `NA`, `N.A.`, `N/A`, `na`, `n/a`, `-`, and `n.d.`. Values containing
+  common excel error messages (*\#DIV/0!*, *\#VALUE!*, *\#REF!*,
+  *\#NAME?*, *\#NUM!*, *\#N/A*, and *\#NULL!*) are also replaced with
+  `NA` by default.
 - Units will be removed from column names because {units} stores them in
   the column attributes. This allows for clean column names and
   therefore of e.g. axis labels in plots. They can be “shifted” from the
