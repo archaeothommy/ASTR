@@ -13,7 +13,7 @@ pointcloud_distribution(
   isotope_sample = c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb"),
   isotope_ref = isotope_sample,
   id_sample = "ID",
-  id_ref = id_sample
+  id_ref = "ID"
 )
 ```
 
@@ -33,10 +33,14 @@ pointcloud_distribution(
   Character vectors with column names of isotope ratios. Default to
   `c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")`.
 
-- id_sample, id_ref:
+- id_sample:
 
-  String with the column name of the sample IDs and identifier for the
-  reference groups. Default `ID`.
+  String with the column name of the sample IDs. Default is `ID`
+
+- id_ref:
+
+  String with the column name of the variable used for subsetting the
+  reference data. Default is "ID".
 
 ## Value
 
@@ -65,10 +69,10 @@ The function also calculates:
 
 - The **distance** from each sample point to every subgroup's centroid.
 
-Interpretation: Inclusion within a hull suggests the sample is part of
-the **mixing group** (main hull) or is highly likely to be the specific
-**end member** (subgroup hull). The distance calculation provides a
-measure of proximity to these end member centers.
+  Interpretation: Inclusion within a hull suggests the sample is part of
+  the **mixing group** (main hull) or is highly likely to be the
+  specific **end member** (subgroup hull). The distance calculation
+  provides a measure of proximity to these end member centers.
 
 ## Examples
 

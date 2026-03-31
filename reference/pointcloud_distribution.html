@@ -60,7 +60,7 @@ identify isotopic consistency and the possibility of mixing between sources.</p>
 <span>  isotope_sample <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"206Pb/204Pb"</span>, <span class="st">"207Pb/204Pb"</span>, <span class="st">"208Pb/204Pb"</span><span class="op">)</span>,</span>
 <span>  isotope_ref <span class="op">=</span> <span class="va">isotope_sample</span>,</span>
 <span>  id_sample <span class="op">=</span> <span class="st">"ID"</span>,</span>
-<span>  id_ref <span class="op">=</span> <span class="va">id_sample</span></span>
+<span>  id_ref <span class="op">=</span> <span class="st">"ID"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -83,9 +83,14 @@ column.</p></dd>
 isotope ratios. Default to <code>c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")</code>.</p></dd>
 
 
-<dt id="arg-id-sample-id-ref">id_sample, id_ref<a class="anchor" aria-label="anchor" href="#arg-id-sample-id-ref"></a></dt>
-<dd><p>String with the column name of the sample IDs and
-identifier for the reference groups. Default <code>ID</code>.</p></dd>
+<dt id="arg-id-sample">id_sample<a class="anchor" aria-label="anchor" href="#arg-id-sample"></a></dt>
+<dd><p>String with the column name of the sample IDs. Default is
+<code>ID</code></p></dd>
+
+
+<dt id="arg-id-ref">id_ref<a class="anchor" aria-label="anchor" href="#arg-id-ref"></a></dt>
+<dd><p>String with the column name of the variable used for subsetting
+the reference data. Default is "ID".</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -105,12 +110,12 @@ points and all specified <strong>subgroups</strong>. It determines the inclusion
 exclusion of sample <strong>isotope values</strong> within these hulls.</p>
 <p>The function also calculates:</p><ul><li><p>The <strong>centroid</strong> of each reference subgroup as <strong>mean value</strong> of points
 within each vertex group.</p></li>
-<li><p>The <strong>distance</strong> from each sample point to every subgroup's centroid.</p></li>
-</ul><p>Interpretation: Inclusion within a hull suggests the sample is part of
-the <strong>mixing group</strong> (main hull) or is highly likely to be the specific <strong>end
+<li><p>The <strong>distance</strong> from each sample point to every subgroup's centroid.</p>
+<p>Interpretation: Inclusion within a hull suggests the sample is part of the
+<strong>mixing group</strong> (main hull) or is highly likely to be the specific <strong>end
 member</strong> (subgroup hull). The distance calculation provides a measure of
-proximity to these end member centers.</p>
-    </div>
+proximity to these end member centers.</p></li>
+</ul></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
