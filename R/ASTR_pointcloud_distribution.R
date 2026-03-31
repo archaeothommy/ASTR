@@ -10,32 +10,34 @@
 #' @param isotope_sample,isotope_ref Character vectors with column names of
 #'   isotope ratios. Default to `c("206Pb/204Pb", "207Pb/204Pb",
 #'   "208Pb/204Pb")`.
-#' @param id_sample,id_ref String with the column name of the sample IDs and
-#'   identifier for the reference groups. Default `ID`.
+#' @param id_sample String with the column name of the sample IDs. Default is
+#'   `ID`
+#' @param id_ref String with the column name of the variable used for subsetting
+#'   the reference data. Default is "ID".
 #'
 #' @returns A `list` of three elements:
 #'
 #' * in_hull: `logical`. Boolean value indicating the **inclusion** of sample
-#' data within the convex **hull** of the reference data.
+#'   data within the convex **hull** of the reference data.
 #' * centroids: `data.frame`. The coordinates of the **centroids** (mean values)
-#'  for each defined reference group.
+#'   for each defined reference group.
 #' * distances: `matrix`. A distance **matrix** where rows represent the samples
-#'  and columns represent the reference **centroids**, containing the distance
-#'  of each sample from each centroid.
+#'   and columns represent the reference **centroids**, containing the distance
+#'   of each sample from each centroid.
 #'
 #' @details Calculates the **convex hull** for the complete set of reference
-#' points and all specified **subgroups**. It determines the inclusion or
-#' exclusion of sample **isotope values** within these hulls.
+#'   points and all specified **subgroups**. It determines the inclusion or
+#'   exclusion of sample **isotope values** within these hulls.
 #'
-#' The function also calculates:
+#'   The function also calculates:
 #' * The **centroid** of each reference subgroup as **mean value** of points
-#' within each vertex group.
+#'   within each vertex group.
 #' * The **distance** from each sample point to every subgroup's centroid.
 #'
-#' Interpretation: Inclusion within a hull suggests the sample is part of
-#' the **mixing group** (main hull) or is highly likely to be the specific **end
-#' member** (subgroup hull). The distance calculation provides a measure of
-#' proximity to these end member centers.
+#'   Interpretation: Inclusion within a hull suggests the sample is part of the
+#'   **mixing group** (main hull) or is highly likely to be the specific **end
+#'   member** (subgroup hull). The distance calculation provides a measure of
+#'   proximity to these end member centers.
 #'
 #' @importFrom geometry convhulln inhulln
 #' @importFrom rdist cdist
@@ -79,7 +81,7 @@ pointcloud_distribution <- function(df,
                                                        "208Pb/204Pb"),
                                     isotope_ref = isotope_sample,
                                     id_sample = "ID",
-                                    id_ref = id_sample) {
+                                    id_ref = "ID") {
   # Checks for isotope columns
   checkmate::assert_character(isotope_sample, len = 3)
   checkmate::assert_character(isotope_ref, len = 3)
