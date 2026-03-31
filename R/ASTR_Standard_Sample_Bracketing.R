@@ -14,11 +14,12 @@
 #' @param df data frame including at least a column with the analysis results
 #'   from the machine and a column with the labels for the standard
 #'   measurements.
-#' @param values String with the name of the column in `df` with the numeric
+#' @param id_values String with the name of the column in `df` with the numeric
 #'   results. Default is ´values´.
 #' @param id_col String with the name of the column in `df`with the identifiers
 #'   of each row.
-#' @param id_std String identifying the standard used for bracketing. Default is
+#' @param id_error string with the name of the column  in `df` with the errors of each measurement
+#' @param std String identifying the standard used for bracketing. Default is
 #'   "Std".
 #' @param pos Integer giving the line of the first standard measurement that
 #'   opens the first bracket.
@@ -32,13 +33,16 @@
 #'   both standards.
 #' @param sd_input integer that gives the number the standard deviation will be multiplied for.
 #'
+#' @param display_details boolean to indicate if the user wants to get the detailed list of each
+#'  measurement with their respective error calculation
+#'
 #' @references Mason, T. F.D., Weiss, D. J., Horstwood, M., Parrish, R. R.,
 #'   Russell, S. S., Mullaneb, E., and Colesa, B. J. (2004) High-precision Cu
 #'   and Zn isotope analysis by plasma source mass spectrometry. Journal of
 #'   Analytical Atomic Spectrometry 19, pp. 209-217.
 #'   <https://doi.org/10.1039/B306958C>
 #'
-#' @returns A data frame with the SSB values plus Standard Error (SE)
+#' @returns A list object with the average values plus Standard Error (SE)
 #'
 #' @export
 #'
@@ -56,21 +60,23 @@
 
 standard_sample_bracketing <- function(
   df,
-  values = "values",
+  id_values = "Data",
   id_col = "ID",
-  id_std = "Std",
+  id_error="Error_errSE",
+  std = "Std",
   pos = 1,
   notation = c("ratio", "delta", "epsilon"),
   sd_input = 1,
-  weight_std = c(0.5, 0.5)
+  weight_std = c(0.5, 0.5),
+  display_details=FALSE
 ) {
 
   # Check there are no empty values in header nor id_std
-  if (id_std == "") {
+  if (std == "") {
     stop("You need to assign the ID of the standard.")
   }
 
-  if (!(values %in% colnames(df))) {
+  if (!(id_values %in% colnames(df))) {
     stop("The column name for the measured values is not included in the provided data frame.")
   }
 
@@ -85,27 +91,33 @@ standard_sample_bracketing <- function(
   }
 
   # prepare variables
-  df <- df[c(id_col, values)] # make a dataframe with the ID of the samples and the measurements
+  df <- df[c(id_col, id_values, id_error)] # make a dataframe with the ID of the samples and the measurements
   nr <- nrow(df) # count number of rows in the dataframe
 
-  sample_names <- sample_results <- c()
+  sample_names <- sample_results <-error_sample_list<- c()
 
   # SSB calculation
 
   while (pos + 1 <= nr) {
     # iterates over the whole data frame, it starts with the cycles
     std_opening <- df[pos, 2]
+    error_std_opening<- df[pos, 3]
     cycle_end <- cycle_start <- pos + 1 # move the index to the first sample
 
-    while (df[cycle_end, 1] != id_std) { # Find the second (closing) standard bracket from the cycle
+    while (df[cycle_end, 1] != std) { # Find the second (closing) standard bracket from the cycle
       cycle_end <- cycle_end + 1
     }
 
     std_closing <- df[cycle_end, 2]
+    error_std_closing<- df[cycle_end, 3]
+
     std_mean_weighted <- (weight_std[1] * std_opening) + (weight_std[2] * std_closing) # calculate weighted mean
 
     while (cycle_start < cycle_end) { # run the samples within the cycle
       sample_current <- df[cycle_start, 1]
+      error_measurement<- df[cycle_start, 3]
+
+      total_error<-error_measurement*sqrt((weight_std[1] * error_std_opening)^2 + (weight_std[2] * error_std_closing)^2 )
 
       if (!is.na(sample_current) && sample_current != "") {
         sample_measurement <- df[cycle_start, 2]
@@ -126,6 +138,8 @@ standard_sample_bracketing <- function(
 
         sample_names <- append(sample_names, sample_current)
         sample_results <- append(sample_results, ssb)
+        error_sample_list<- append(error_sample_list, total_error)
+
       }
       cycle_start <- cycle_start + 1
     }
@@ -135,57 +149,28 @@ standard_sample_bracketing <- function(
   # for some reason, they are a list rather a vector, so turning them into vector
   sample_names <- unlist(sample_names)
   sample_results <- unlist(sample_results)
+  error_sample_list<- unlist(error_sample_list)
 
   # Combine calculated values into data frame and order them by sample name
-  results <- data.frame(description = sample_names, SSB = sample_results)
-  results <- results[order(results$description), , drop = FALSE]
+  results <- data.frame(ID = sample_names, SSB = sample_results, Error_err2SD=error_sample_list)
 
   # Calculate errors and averages for each sample
-  nr <- length(sample_names)
-  pos <- 2
-  counter <- 1
-  sample_current <- results[1, 1]
-  sample_mean <- results[1, 2]
-  average <- sd_dev <- c()
-
-
-  while (pos <= nr) {
-    # iterates over the results dataframe to calculate averages and standard error
-
-    if (is.na(results[pos, 1]) || sample_current == results[pos, 1]) {
-      counter <- counter + 1
-      sample_mean <- sample_mean + results[pos, 2]
-      sd_dev <- append(sd_dev, "")
-      average <- append(average, "")
-    } else {
-      sample_mean <- format(signif(sample_mean / counter, 4), nsmall = 4)
-      array <- sample_results[(pos - counter):(pos - 1)]
-      sdev <- format(signif(sd_input * stats::sd(array), 4), nsmall = 4)
-      sd_dev <- append(sd_dev, sdev)
-      average <- append(average, sample_mean)
-      sample_current <- results[pos, 1]
-      sample_mean <- results[pos, 2]
-      counter <- 1
-    }
-    pos <- pos + 1
-  }
-
-  sample_mean <- format(signif(sample_mean / counter, 4), nsmall = 4)
-  array <- sample_results[(pos - counter):(pos - 1)]
-  sdev <- format(signif(sd_input * sd(array), 4), nsmall = 4)
-  sd_dev <- append(sd_dev, sdev)
-  average <- append(average, sample_mean)
-
-
-  output <- data.frame(
-    description = sample_names,
-    SSB = format(signif(sample_results, 4), nsmall = 4),
-    # add weighted values to the array
-    Mean = average,
-    SD = sd_dev
+  library(dplyr)
+  summary<-results %>% group_by(ID) %>% summarise(
+    Mean=format(signif(mean(SSB), 4), nsmall = 4),
+    SD=format(signif(sd_input*sd(SSB), 4), nsmall=4)
   )
-  colnames(output)[2] <- notation
-  colnames(output)[4] <- paste0(sd_input, "SD")
+  colnames(results)[2] <- paste0(notation)
+  colnames(summary)[2] <- paste0(notation)
+  if(sd_input!=1)
+    colnames(summary)[3] <- paste0("Error_err",sd_input, "SD")
+  else
+    colnames(summary)[3] <- paste0("Error_errSD")
 
-  output
+  if (display_details==TRUE)
+    result <- list(results, summary)
+  else
+    result<- summary
+  result
+
 }
