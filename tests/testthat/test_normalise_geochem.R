@@ -11,7 +11,9 @@ test_that("normalise_geochem handles all cases", {
   )
 
   # Run normalisation using internal reference data
-  result <- normalise_geochem(df, reference = "chondrite")
+  result <- suppressWarnings(
+    normalise_geochem(df, reference = "chondrite")
+  )
 
   # Check normalization math (using real reference values)
   ref <- references_geochem$chondrite
