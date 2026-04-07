@@ -44,3 +44,20 @@ test_that("copper_group_bray: function arguments", {
     6
   )
 })
+
+test_that("copper_alloy_pollard: Handling ASTR object", {
+  test_data_ASTR <- as_ASTR(
+    data.frame(
+      ID = 1,
+      As_atP = 0.3,
+      Sb_atP = 0.2,
+      Ag_atP = 0.0,
+      Ni_atP = 0.0
+    )
+  )
+  test_result_ASTR <- copper_group_bray(test_data_ASTR)
+
+  expect_equal(units(test_result_ASTR[["As"]])[[1]], "wtP")
+  expect_equal(attributes(test_result_ASTR[["copper_group_bray"]])[[1]], "ASTR_context")
+  expect_true(inherits(test_result_ASTR, "ASTR"))
+})

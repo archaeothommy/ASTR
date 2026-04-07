@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ASTR (Archaemetric Standards and Tools in R)
+# ASTR (Archaeometric Standards and Tools in R)
 
 <!-- badges: start -->
 

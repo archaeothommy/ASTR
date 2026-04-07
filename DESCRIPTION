@@ -1,9 +1,11 @@
 Package: ASTR
 Title: Archaeometric Standards and Tools in R
 Version: 0.0.0.9000
-URL: https://archaeothommy.github.io/ASTR/index.html
+URL: https://archaeothommy.github.io/ASTR/, https://github.com/archaeothommy/ASTR
+BugReports: https://github.com/archaeothommy/ASTR/issues
 Authors@R: c(
     person("Thomas", "Rose", comment = c(ORCID = "0000-0002-8186-3566"), role = c("cre", "aut"), email = "roseth@posteo.com"),
+    person("Mathias Ayine", "Abagna", role = "aut"),    
     person("Andrea", "Acevedo Mejia", comment = c(ORCID = "0009-0002-7441-1737"), role = "aut"),
     person("Gilberto", "Artioli", comment = c(ORCID = "0000-0002-8693-7392"), role = "aut"),
     person("María Florencia", "Becerra", comment = c(ORCID = "0000-0001-6302-7452"), role = "aut"),
@@ -25,7 +27,9 @@ Authors@R: c(
     person("Clemens", "Schmid", comment = c(ORCID = "0000-0003-3448-5715"), role = "aut"),
     person("Berber", "van der Meulen-van der Veen", comment = c(ORCID = "0000-0001-5297-0269"), role = "aut"),
     person("Chen", "Wang", comment = c(ORCID = "0009-0007-1851-2388"), role = "aut"),
-    person("Katrin Julia", "Westner", comment = c(ORCID = "0000-0001-5529-1165"), role = "aut")
+    person("Katrin Julia", "Westner", comment = c(ORCID = "0000-0001-5529-1165"), role = "aut"), 
+    person("Deutsche Forschungsgemeinschaft", comment = c(ROR = "018mejw64"), role = c("fnd")), 
+    person("Lorentz Center", comment = c(ROR = "00d503m77"), role = c("fnd"))
     )
 Description: ASTR defines and implements a community reporting standard for archaeometric datasets. 
     It also provides easy-to-use functions for common plots, statistical analyses, data processing 
@@ -42,7 +46,7 @@ Suggests:
     vdiffr
 Imports:
     checkmate,
-    dplyr,
+    dplyr  (>= 1.2.0),
     geometry,
     magrittr,
     purrr,
@@ -53,7 +57,7 @@ Imports:
     tibble,
     tidyselect,
     units,
-    robCompositions,
+    vctrs,
     ggplot2,
     ks,
     units, 

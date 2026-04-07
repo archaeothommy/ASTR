@@ -8,7 +8,7 @@ geom_spider(
   mapping = NULL,
   data = NULL,
   inherit.aes = TRUE,
-  reference = names(references_geochem),
+  reference = NULL,
   na.rm = FALSE,
   show.legend = NA,
   ...
@@ -40,7 +40,9 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:annotation_borders]{annotation_borders()}}.}
 
-\item{reference}{Normalisation reference: "chondrite" or "MORB"}
+\item{reference}{\code{NULL}, the default, if data should not be normalised or
+name of the geochemical reference composition to which data should be
+normalised. See \link{references_geochem} for a list of names.}
 
 \item{na.rm}{Logical: remove NA values}
 
@@ -52,10 +54,43 @@ display. To include legend keys for all levels, even
 when no data exists, use \code{TRUE}.  If \code{NA}, all levels are shown in legend,
 but unobserved levels are omitted.}
 
-\item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{ggplot2::layer()}}. These are
-often aesthetics used to set a fixed value, such as \code{colour = "red"} or
-\code{alpha = 0.5}.}
+\item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{ggplot2::layer()}}. These are often
+aesthetics used to set a fixed value, such as \code{colour = "red"} or \code{alpha = 0.5}.}
 }
 \description{
-Spidergram geom for ggplot2
+Descriptions goes here ###################
+\subsection{This will likely only work with ASTR objects or similarly wide data frame!?}{
+}
+
+\subsection{Or is there a way to identify short vs. long form!?}{
+}
+
+\subsection{e.g. single value to x and col content = character: long format, x = character vector length > 1 and column content of x = numeric: wide format}{
+}
+
+\subsection{y = single value and numeric: long format, concentration, y is not provided: wide format}{
+}
+
+\subsection{long format values do not need to be transformed (but normalised!?), wide format must be transformed to long format}{
+}
+}
+\details{
+Normalisation is done with \code{\link[=normalise_geochem]{normalise_geochem()}}. If data are geochemically
+normalised, only normalised elements are plotted. Otherwise, all elements
+are plotted.
+}
+\examples{
+# include example with data[[standard_groups$REE]]
+
+library(ggplot2)
+
+test <- data.frame(
+  Sample = c("A","B"),
+  Yb = c(8,9),
+  La = c(10,5),
+  Ce = c(20,8)
+)
+
+ggplot(test) + geom_spider(mapping = aes(x = standard_groups$REE, color = Sample))
+
 }

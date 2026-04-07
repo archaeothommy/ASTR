@@ -38,7 +38,8 @@ albarede_juteau_1984(
 )
 }
 \arguments{
-\item{df}{The data frame from which the age model should be calculated.}
+\item{df}{The data frame from which the age model parameters should be
+calculated.}
 
 \item{ratio_206_204}{Name of the column with the 206Pb/204Pb ratio as
 character string. Default is \verb{206Pb/204Pb}.}
@@ -59,9 +60,16 @@ calculate:
 }}
 }
 \value{
-The data frame provided as input with columns added for the model
-age, mu, and kappa value(s) of the respective age models. The used model is
-indicated in the column names of the output by the abbreviations given above.
+If \code{df} is an \link[=ASTR]{ASTR object}, the output is an object of the
+same type including the ID column, the contextual columns, the lead isotope
+ratios used for calculation of the age model parameters, and the calculated
+age model parameters. In all other cases, the data frame provided as input
+with columns added for the calculated age model parameters.
+
+The used age model is indicated in the column names of the output by the
+abbreviations for the models given above. They represent the initials of
+the author's last names and the publication year (e. g. \code{SK75} for Stacey &
+Kramers 1975).
 }
 \description{
 The functions calculate the age model and their respective mu and kappa
@@ -70,26 +78,15 @@ values according to the publications they are named after (see
 to calculate all age models simultaneously.
 }
 \details{
-The implemented age models are:
-\itemize{
-\item Stacey & Kramers (1975): \code{\link[=stacey_kramers_1975]{stacey_kramers_1975()}}
-\item Cumming & Richards (1975): \code{\link[=cumming_richards_1975]{cumming_richards_1975()}}
-\item Albarède & Juteau (1984): \code{\link[=albarede_juteau_1984]{albarede_juteau_1984()}}
-}
-
-The used model is indicated in the column names of the output by the initials
-of the author's last names and the publication year (e. g.\code{SK75} for Stacey
-& Kramers 1975).
-
 See the references for the respective publications of the age models. The
 function for the age model of Albarède & Juteau (1984) is based on the
-MATLAB-script of F. Albarède (version 2020-11-06). The age model published
-in Albarède et al. (2012) should not be used according to F. Albarède and is
+MATLAB-script of F. Albarède (version 2020-11-06). The age model published in
+Albarède et al. (2012) should not be used according to F. Albarède and is
 therefore not implemented. Instead, he recommends to use the age model
 published in Albarède & Juteau (1984).
 
-The ratio of 208Pb/204Pb is not necessary for \link{cumming_richards_1975}.
-The function takes it as argument only to be consistent with the input of the
+The ratio of 208Pb/204Pb is not necessary for \link{cumming_richards_1975}. The
+function takes it as argument only to be consistent with the input of the
 other age model functions. If provided, it will be ignored.
 }
 \examples{
@@ -110,7 +107,7 @@ stacey_kramers_1975(df)
 }
 \references{
 Albarède, F. and Juteau, M. (1984) Unscrambling the lead model
-ages. Geochimica et Cosmochimica Acta 48(1), pp. 207–212.
+ages. Geochimica et Cosmochimica Acta 48(1), pp. 207-212.
 \url{https://dx.doi.org/10.1016/0016-7037(84)90364-8}.
 
 Albarède, F., Desaulty, A.-M. and Blichert-Toft, J. (2012) A geological
@@ -123,5 +120,10 @@ continuously changing earth. Earth and Planetary Science Letters 28(2), pp.
 
 Stacey, J.S. and Kramers, J.D. (1975) Approximation of terrestrial lead
 isotope evolution by a two-stage model. Earth and Planetary Science Letters
-26(2), pp. 207–221. <https://dx.doi.org/10.1016/0012-821X(75)90088-6<.
+26(2), pp. 207–221. \url{https://dx.doi.org/10.1016/0012-821X(75)90088-6}.
 }
+\seealso{
+Other Pb isotope functions: 
+\code{\link{geom_sk_lines}()}
+}
+\concept{Pb isotope functions}

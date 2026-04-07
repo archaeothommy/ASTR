@@ -13,14 +13,18 @@ normalise_geochem(df, reference = names(references_geochem))
 further information.}
 }
 \value{
-A data frame with selected elements normalised.
+The data frame with the selected elements normalised.
 }
 \description{
 Normalises selected elemental concentrations to a reference composition such
 as chondrite or MORB.
 }
 \details{
-The function converts all elements All reference values are in ppm.
+See \link{references_geochem} for supported geochemical reference compositions and
+which elements are covered by which reference composition. The function
+converts all elements in the dataframe for which a reference composition is
+available. A warning informs if not all elements in the reference composition
+are included in the data frame, and an error if none is included.
 }
 \examples{
 df <- data.frame(

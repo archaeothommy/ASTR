@@ -7,8 +7,9 @@
 copper_group_bray(
   df,
   elements = c(As = "As", Sb = "Sb", Ag = "Ag", Ni = "Ni"),
-  id_sample = "ID",
-  group_as_number = FALSE
+  id_column = "ID",
+  group_as_number = FALSE,
+  ...
 )
 }
 \arguments{
@@ -17,21 +18,26 @@ copper_group_bray(
 \item{elements}{named character vector with the column names of the As, Sb,
 Ag, and Ni concentrations.}
 
-\item{id_sample}{name of the column in \code{df} with the identifiers of each row.
+\item{id_column}{name of the column in \code{df} with the identifiers of each row.
 Default to \code{ID}.}
 
 \item{group_as_number}{logical. If \code{FALSE}, the default, copper groups are
 reported as their label. Otherwise, copper groups are reported by their
 number.}
+
+\item{...}{Additional arguments for unit conversion, see \link{atomic_conversion}
+and \link{oxide_conversion} for details.}
 }
 \value{
-The original data frame with the added column \code{copper_group_bray}.
+If \code{df} is an \link[=ASTR]{ASTR object}, the output is an object of the
+same type including the ID column, the contextual columns, the elements
+used for classification and the alloy type. In all other cases, the data
+frame provided as input with the column for the alloy type.
 }
 \description{
 Classification of copper artefacts according to Bray et al.
 (2015) into one of 16 trace element compositional groups based on As, Sb,
-Ag, or Ni being below or above 0.1 wt\%. Concentrations must be given in
-wt\%.
+Ag, or Ni being below or above 0.1 wt\%.
 }
 \examples{
 # create dataset
@@ -48,6 +54,18 @@ copper_group_bray(sample_df)
 # classification with group number as output
 copper_group_bray(sample_df, group_as_number = TRUE)
 
+# For ASTR objects, units and oxides are automatically converted
+sample_df2 <- as_ASTR(
+  data.frame(
+    ID = 1:3,
+    As2O3_wtP = c(0.2, 0.01, 0.15),
+    Sb2O3_wtP = c(0.00, 0.2, 0.11),
+    Ag2O_wtP = c(0.00, 0.00, 0.12),
+    NiO_wtP = c(0.00, 50, 0.20)
+  )
+)
+copper_group_bray(sample_df2, elements = c(As = "As2O3", Sb = "Sb2O3", Ag = "Ag2O", Ni = "NiO"))
+
 }
 \references{
 Bray, P., Cuénod, A., Gosden, C., Hommel, P., Liu, P. and
@@ -55,3 +73,9 @@ Pollard, A. M. (2015), Form and flow: the ‘karmic cycle’ of copper. Journal
 of Archaeological Science 56, pp. 202-209.
 \url{https://doi.org/10.1016/j.jas.2014.12.013}.
 }
+\seealso{
+Other copper alloy classifications: 
+\code{\link{copper_alloy_bb}()},
+\code{\link{copper_alloy_pollard}()}
+}
+\concept{copper alloy classifications}

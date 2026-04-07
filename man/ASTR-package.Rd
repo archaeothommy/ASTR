@@ -2,7 +2,6 @@
 % Please edit documentation in R/ASTR-package.R
 \docType{package}
 \name{ASTR-package}
-\alias{ASTR}
 \alias{ASTR-package}
 \title{ASTR: Archaeometric Standards and Tools in R}
 \description{
@@ -11,7 +10,9 @@ ASTR defines and implements a community reporting standard for archaeometric dat
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://archaeothommy.github.io/ASTR/index.html}
+  \item \url{https://archaeothommy.github.io/ASTR/}
+  \item \url{https://github.com/archaeothommy/ASTR}
+  \item Report bugs at \url{https://github.com/archaeothommy/ASTR/issues}
 }
 
 }
@@ -20,6 +21,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Mathias Ayine Abagna
   \item Andrea Acevedo Mejia (\href{https://orcid.org/0009-0002-7441-1737}{ORCID})
   \item Gilberto Artioli (\href{https://orcid.org/0000-0002-8693-7392}{ORCID})
   \item María Florencia Becerra (\href{https://orcid.org/0000-0001-6302-7452}{ORCID})
@@ -42,6 +44,12 @@ Authors:
   \item Berber van der Meulen-van der Veen (\href{https://orcid.org/0000-0001-5297-0269}{ORCID})
   \item Chen Wang (\href{https://orcid.org/0009-0007-1851-2388}{ORCID})
   \item Katrin Julia Westner (\href{https://orcid.org/0000-0001-5529-1165}{ORCID})
+}
+
+Other contributors:
+\itemize{
+  \item Deutsche Forschungsgemeinschaft (\href{https://ror.org/018mejw64}{ROR}) [funder]
+  \item Lorentz Center (\href{https://ror.org/00d503m77}{ROR}) [funder]
 }
 
 }
