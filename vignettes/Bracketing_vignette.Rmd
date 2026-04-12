@@ -234,20 +234,23 @@ Below is an example of the input data structure:
 #### Running the function
 
 ```{r example, echo=TRUE}
-# Load the package (if your package is not installed, use devtools::load_all("."))
+# Load the package
 # library(ASTR)
 
 # Example data frame
 data <- data.frame(
   ID = c("Std", "Sample_A", "Std", "Sample_A", "Std", "Sample_A", "Std"),
-  Isotope_data = c(16.928, 18.641, 16.932, 18.643, 16.935, 18.642, 16.938)
+  Isotope_data = c(16.928, 18.641, 16.932, 18.643, 16.935, 18.642, 16.938), 
+  Error = c(16.928, 18.641, 16.932, 18.643, 16.935, 18.642, 16.938)
 )
 
 # Run the function
 result <- ASTR::standard_sample_bracketing(
   df = data,
-  id_std = "Std",
-  values = "Isotope_data",
+  id_col = "ID", 
+  id_values = "Isotope_data", 
+  id_error = "Error",
+  std = "Std",
   pos = 1,
   notation = "delta"
 )

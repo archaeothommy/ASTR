@@ -6,48 +6,59 @@
 \usage{
 standard_sample_bracketing(
   df,
-  values = "values",
   id_col = "ID",
-  id_std = "Std",
+  id_values = "values",
+  id_error = "error",
+  std = "Std",
   pos = 1,
   notation = c("ratio", "delta", "epsilon"),
   sd_input = 1,
-  weight_std = c(0.5, 0.5)
+  weight_std = c(0.5, 0.5),
+  display_details = FALSE
 )
 }
 \arguments{
-\item{df}{data frame including at least a column with the analysis results
-from the machine and a column with the labels for the standard
-measurements.}
+\item{df}{data frame including at least a column with the label, analysis
+results, and analytical precisions of the measurements.}
 
-\item{values}{String with the name of the column in \code{df} with the numeric
+\item{id_col}{String with the name of the column in \code{df} with the identifiers
+of each row. Default is \code{ID}.}
+
+\item{id_values}{String with the name of the column in \code{df} with the numeric
 results. Default is ´values´.}
 
-\item{id_col}{String with the name of the column in \code{df}with the identifiers
-of each row.}
+\item{id_error}{string with the name of the column in \code{df} with the
+analytical uncertainties of each measurement. Default is \code{error}.}
 
-\item{id_std}{String identifying the standard used for bracketing. Default is
+\item{std}{String identifying the standard used for bracketing. Default is
 "Std".}
 
 \item{pos}{Integer giving the line of the first standard measurement that
 opens the first bracket.}
 
-\item{notation}{String that describes the calculation the user wants to be performed:
+\item{notation}{String that describes the calculation the user wants to be
+performed:
 \itemize{
 \item ratio calculates the ratio between the sample and the standard mean
 \item delta calculates the delta value of the sample per mille.
 \item epsilon calculates the epsilon value of the sample per ten thousand.
 }}
 
-\item{sd_input}{integer that gives the number the standard deviation will be multiplied for.}
+\item{sd_input}{integer that gives the number the standard deviation will be
+multiplied for.}
 
 \item{weight_std}{A vector of length 2 with numeric value giving the weight
 assigned to the opening and closing standard of a bracket, respectively.
 The sum of both weights must be one. The default \code{0.5} gives the mean of
 both standards.}
+
+\item{display_details}{boolean to indicate if the user wants to get the
+detailed list of each measurement with their respective error calculation.
+Default to \code{FALSE}.}
 }
 \value{
-A data frame with the SSB values plus Standard Error (SE)
+If \code{display_details = FALSE}, a data frame with the average values
+plus standard deviation (SD). Otherwise a list with two data frames.
 }
 \description{
 Performs Standard Sample Bracketing (SSB) correction for isotope
@@ -63,14 +74,20 @@ and after the sample measurement.
 \examples{
 data <- data.frame(
   ID = c("Std", "Sample_A", "Std", "Sample_A", "Std", "Sample_A", "Std"),
-  values = c(16.928, 18.641, 16.932, 18.643, 16.935, 18.642, 16.938)
+  values = c(16.928, 18.641, 16.932, 18.643, 16.935, 18.642, 16.938),
+  error = c(0.05, 0.02, 0.05, 0.06, 0.03, 0.04, 0.02)
 )
 
 result <- ASTR::standard_sample_bracketing(
- df = data,
- pos = 1,
- notation = "delta"
+  df = data,
+  id_values = "values",
+  id_error = "error",
+  sd_input = 2,
+  pos = 1,
+  notation = "delta",
+  display_details = TRUE
 )
+
 }
 \references{
 Mason, T. F.D., Weiss, D. J., Horstwood, M., Parrish, R. R.,

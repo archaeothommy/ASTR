@@ -2,7 +2,12 @@
 
 # Additional packages to load for testing or setting up the test environment
 
+library(tibble)
+library(dplyr)
+library(ggplot2)
 library(vdiffr)
+library(readxl)
+library(units)
 
 # reference data sets
 
