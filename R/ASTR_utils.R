@@ -87,3 +87,25 @@ transform_notation <- function(unit) {
   }
   unit
 }
+
+#' Transforms ASTR format into long format for plotting with ggplot2
+#'
+#' The function expects that a data frame is passed as aesthetic to ggplot,
+#' resulting in a tibble with a nested dataframe with the name of the aesthtic.
+#'
+#' @param df the data frame to be transformed into long format
+#' @param aesthetic the aesthetic that contains the values from ASTR
+#' @param value the name of the column with the values after transformation into
+#'   long format
+#' @keywords internal
+#'
+ASTR_to_long <- function(df, aesthetic, value) {
+  colnames(df[[aesthetic]]) <- paste(aesthetic, colnames(df[[aesthetic]]), sep = ".")
+  tidyr::unnest(df, tidyselect::all_of(aesthetic)) %>%
+    tidyr::pivot_longer(
+    cols = tidyselect::starts_with(aesthetic),
+    names_to = aesthetic,
+    values_to = value,
+    names_prefix = paste0(aesthetic, ".")
+  )
+}

@@ -65,7 +65,7 @@ GeomSpider <- ggplot2::ggproto(
   "GeomSpider",
   ggplot2::Geom,
 
-  required_aes = character(0), # one grouping aes (group, colour, ...)
+  required_aes = c("elements"), # one grouping aes (group, colour, ...)
 
   default_aes = ggplot2::aes(
     colour = "black",
@@ -82,23 +82,19 @@ GeomSpider <- ggplot2::ggproto(
 
     # Normalisation
     if (!is.null(params$reference)) {
-      data <- normalise_geochem(data, reference = params$reference)
+      data[["elements"]] <- normalise_geochem(data[["elements"]], reference = params$reference)
     }
 
-
     # Pivot wide -> long
-    data_long <- tidyr::pivot_longer(
-      norm_data,
-      cols = dplyr::all_of(elements),
-      names_to = "element",
-      values_to = "value"
-    )
+    data_long <- ASTR_to_long(data, "elements", "value")
+
+    str(data_long)
 
     # Maintain order of elements
-    data_long$element <- factor(data_long$element, levels = elements)
+    data_long$elements <- factor(data_long$elements, levels = elements)
 
     # Numeric x
-    data_long$x <- as.numeric(data_long$element)
+    data_long$x <- as.numeric(data_long$elements)
     data_long$y <- data_long$value
 
     # Grouping
