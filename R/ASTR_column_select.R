@@ -110,3 +110,13 @@ get_unit_columns <- function(x, units, ...) {
 get_unit_columns.ASTR <- function(x, units, ...) {
   get_cols_with_unit(x, units)
 }
+
+#' @rdname ASTR
+#' @export
+get_error_columns <- function(x, ...) {
+  UseMethod("get_error_columns")
+}
+#' @export
+get_error_columns.ASTR <- function(x, ...) {
+  get_cols_with_ac_class(x, c("ASTR_id", "ASTR_error"))
+}
