@@ -351,6 +351,8 @@ err_percent <- function() {
 }
 err_2sd_percent <- function() "\\_err2SD%"
 err_sd_percent <- function() "\\_errSD%"
+err_2se_percent <- function() "\\_err2SE%"
+err_se_percent <- function() "\\_errSE%"
 
 err_abs <- function() {
   paste0(c(

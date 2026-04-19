@@ -8,19 +8,14 @@
 #' @export
 #'
 #' @examples
-#' arch_abs <- rel_to_abs(arch)
+#'
 rel_to_abs <- function(df) {
-  UseMethod("rel_to_abs")
-}
-
-#' @export
-rel_to_abs.ASTR <- function(df) {
 
   # Basic checks
   checkmate::assert_class(df, "ASTR")
 
   # Find all error columns
-  error_cols <- get_cols_with_ac_class(df, "ASTR_error")
+  error_cols <- get_error_columns(df)
 
   if (length(error_cols) == 0) {
     warning("No error columns found. Returning unchanged.")
@@ -69,19 +64,14 @@ rel_to_abs.ASTR <- function(df) {
 #' @export
 #'
 #' @examples
-#' arch_rel <- abs_to_rel(arch)
+#'
 abs_to_rel <- function(df) {
-  UseMethod("abs_to_rel")
-}
-
-#' @export
-abs_to_rel.ASTR <- function(df) {
 
   # Basic checks
   checkmate::assert_class(df, "ASTR")
 
   # Find all error columns (both regular and absolute-marked)
-  error_cols <- get_cols_with_ac_class(df, "ASTR_error")
+  error_cols <- get_error_columns(df, "ASTR_error")
   abs_error_cols <- get_cols_with_ac_class(df, "ASTR_error_absolute")
 
   all_error_cols <- unique(c(names(error_cols), names(abs_error_cols)))

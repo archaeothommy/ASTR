@@ -33,6 +33,12 @@ test_that("column selection based on ASTR column types", {
       )
   )
   expect_all_true(
+    colnames(get_error_columns(test_input)) ==
+      c("ID", "d65Cu_err2SD", "SiO2_errSD%", "FeOtot_err2SD", "206Pb/204Pb_err2SD",
+        "207Pb/204Pb_err2SD", "208Pb/204Pb_err2SD", "207Pb/206Pb_err2SD", "208Pb/206Pb_err2SD"
+      )
+  )
+  expect_all_true(
     colnames(get_unit_columns(test_input, c("ng/g", "µg/ml", "%"))) ==
       c("ID", "SiO2_errSD%", "ZnO", "Ag", "Sn")
   )

@@ -14,6 +14,7 @@
 \alias{get_element_columns}
 \alias{get_ratio_columns}
 \alias{get_concentration_columns}
+\alias{get_error_columns}
 \alias{get_unit_columns}
 \alias{remove_units}
 \alias{unify_concentration_unit}
@@ -65,6 +66,8 @@ get_element_columns(x, ...)
 get_ratio_columns(x, ...)
 
 get_concentration_columns(x, ...)
+
+get_error_columns(x, ...)
 
 get_unit_columns(x, units, ...)
 
