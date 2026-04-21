@@ -1,14 +1,28 @@
-#' Convert relative errors to absolute errors in ASTR object
+#' Convert between relative and absolute errors
 #'
-#' Converts all relative error columns to absolute errors using their
-#' corresponding measured value columns.
+#' Convert relative error columns (e.g., those ending with _errSD%) to absolute
+#' errors, or vice versa. Relative errors are percentages. Absolute errors have
+#' the same units as the measured values.
 #'
 #' @param df An ASTR object
-#' @return An ASTR object with errors converted to absolute
-#' @export
+#' @return An ASTR object with converted error columns.
 #'
 #' @examples
+#' # rel_to_abs: absolute = (relative / 100) * value
+#' # When SiO2 = 31.6 wt%, relative error = 4.3%
+#' # absolute error = (4.3 / 100) * 31.6 = 1.36 wt%
+#' arch_abs <- rel_to_abs(arch)
 #'
+#' # abs_to_rel: relative = (absolute / value) * 100
+#' # When SiO2 = 31.6 wt%, absolute error = 1.36 wt%
+#' # relative error = (1.36 / 31.6) * 100 = 4.3%
+#' arch_rel <- abs_to_rel(arch)
+#'
+#' @name error_conversion
+NULL
+
+#' @rdname error_conversion
+#' @export
 rel_to_abs <- function(df) {
 
   # Basic checks
@@ -25,81 +39,57 @@ rel_to_abs <- function(df) {
   # Process each error column
   for (err_col in names(error_cols)) {
 
+    # Only process relative errors
+    if (!is_err_percent(err_col)) {
+      next
+    }
+
     # Find matching concentration column
-    base_name <- gsub("_err.*$", "", err_col)
+    base_name <- gsub("_err(2)?(SD|SE)(%)?$", "", err_col)
 
     if (!base_name %in% names(df)) {
       warning("No matching concentration column for: ", err_col, ". Skipping.")
       next
     }
 
-    # Check if error is relative (has % units)
-    err_unit <- units::deparse_unit(df[[err_col]])
-
-    if (!err_unit %in% c("%", "atP", "wtP")) {
-      warning("Error column ", err_col, " has unit ", err_unit,
-              " which is not recognized as relative. Skipping.")
-      next
-    }
-
-    # absolute = (relative / 100) * measured_value
+    # Absolute = (relative / 100) * measured_value
     df[[err_col]] <- (df[[err_col]] / 100) * df[[base_name]]
 
     # Set units to match the concentration column
     units(df[[err_col]]) <- units(df[[base_name]])
-
-    # Update ASTR_class to mark as absolute error
-    attr(df[[err_col]], "ASTR_class") <- "ASTR_error_absolute"
   }
 
   return(df)
 }
 
-#' Convert absolute errors to relative errors in ASTR object
-#'
-#' Converts all absolute error columns to relative errors (%).
-#'
-#' @param df An ASTR object
-#' @return An ASTR object with errors converted to relative
+#' @rdname error_conversion
 #' @export
-#'
-#' @examples
-#'
 abs_to_rel <- function(df) {
 
   # Basic checks
   checkmate::assert_class(df, "ASTR")
 
-  # Find all error columns (both regular and absolute-marked)
-  error_cols <- get_error_columns(df, "ASTR_error")
-  abs_error_cols <- get_cols_with_ac_class(df, "ASTR_error_absolute")
+  # Find all error columns
+  error_cols <- get_error_columns(df)
 
-  all_error_cols <- unique(c(names(error_cols), names(abs_error_cols)))
-
-  if (length(all_error_cols) == 0) {
+  if (length(error_cols) == 0) {
     warning("No error columns found. Returning unchanged.")
     return(df)
   }
 
   # Process each error column
-  for (err_col in all_error_cols) {
+  for (err_col in names(error_cols)) {
 
-    # Find matching concentration column
-    base_name <- gsub("_err.*$", "", err_col)
-
-    if (!base_name %in% names(df)) {
-      warning("No matching concentration column for: ", err_col, ". Skipping.")
+    # Only process absolute errors
+    if (!is_err_abs(err_col)) {
       next
     }
 
-    # Check if error is absolute (same unit as concentration)
-    err_unit <- units::deparse_unit(df[[err_col]])
-    conc_unit <- units::deparse_unit(df[[base_name]])
+    # Find matching concentration column
+    base_name <- gsub("_err(2)?(SD|SE)(%)?$", "", err_col)
 
-    if (err_unit != conc_unit) {
-      warning("Error column ", err_col, " does not share units with its concentration column.",
-              "\n  Error unit: ", err_unit, " | Concentration unit: ", conc_unit,
-              "\n  Skipping conversion.")
+    if (!base_name %in% names(df)) {
+      warning("No matching concentration column for: ", err_col, ". Skipping.")
       next
     }
 
@@ -108,9 +98,6 @@ abs_to_rel <- function(df) {
 
     # Set units to percent
     units(df[[err_col]]) <- units::as_units("%")
-
-    # Update ASTR_class
-    attr(df[[err_col]], "ASTR_class") <- "ASTR_error"
   }
 
   return(df)
