@@ -39,25 +39,68 @@
 geom_spider <- function(mapping = NULL,
                         data = NULL,
                         inherit.aes = TRUE,
+                        elements = NULL,
                         reference = NULL,
                         na.rm = FALSE,
                         show.legend = NA,
                         ...) {
 
-  # Check required arguments
-  ggplot2::layer(
-    geom = GeomSpider,
-    mapping = mapping,   # empty mapping keeps raw columns
-    data = data,
-    stat = "identity",
-    position = "identity",
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-    params = list(
-      reference = reference,
-      na.rm = na.rm,
-      ...
-    )
+  .data      <- data
+  .elements  <- elements
+  .reference <- reference
+
+  mapping <- utils::modifyList(
+    ggplot2::aes(x = x, y = y),
+    if (!is.null(mapping)) mapping else ggplot2::aes()
+  )
+
+  list(
+    suppressWarnings(
+      ggplot2::layer(
+        geom = GeomSpider,
+        mapping = mapping,
+        data = function(x) {
+          d <- if (!is.null(.data)) .data else x
+
+          if (!is.null(.reference)) {
+            d <- normalise_geochem(d, reference = .reference)
+          }
+
+          elements_present <- intersect(.elements, colnames(d))
+          if (length(elements_present) == 0) {
+            stop("None of the requested elements are present as columns in the data.")
+          }
+          if (length(elements_present) < length(.elements)) {
+            warning("Some requested elements are absent and will be skipped: ",
+                    paste(setdiff(.elements, elements_present), collapse = ", "))
+          }
+
+          meta_cols <- setdiff(colnames(d), elements_present)
+
+          data_long <- do.call(rbind, lapply(elements_present, function(el) {
+            row          <- d[meta_cols]
+            row$elements <- el
+            row$y        <- d[[el]]
+            row
+          }))
+
+          data_long$elements <- factor(data_long$elements, levels = elements_present)
+          data_long$x        <- as.numeric(data_long$elements)
+
+          data_long
+        },
+        stat = "identity",
+        position = "identity",
+        show.legend = show.legend,
+        inherit.aes = inherit.aes,
+        params = list(na.rm = na.rm, ...)
+      )
+    ),
+    ggplot2::scale_x_continuous(
+      breaks = seq_along(.elements),
+      labels = .elements
+    ),
+    ggplot2::labs(x = NULL, y = "Concentration")
   )
 }
 
@@ -65,96 +108,70 @@ GeomSpider <- ggplot2::ggproto(
   "GeomSpider",
   ggplot2::Geom,
 
-  required_aes = c("elements"), # one grouping aes (group, colour, ...)
+  required_aes = character(0),
 
   default_aes = ggplot2::aes(
-    colour = "black",
+    colour    = "black",
     linewidth = 0.6,
-    linetype = 1,
-    alpha = NA
+    linetype  = 1,
+    alpha     = NA
   ),
 
-  extra_params = c("na.rm", "reference"),
+  extra_params = c("na.rm"),
 
   draw_key = ggplot2::draw_key_path,
 
   setup_data = function(data, params) {
-
-    # Normalisation
-    if (!is.null(params$reference)) {
-      data[["elements"]] <- normalise_geochem(data[["elements"]], reference = params$reference)
-    }
-
-    # Pivot wide -> long
-    data_long <- ASTR_to_long(data, "elements", "value")
-
-    str(data_long)
-
-    # Maintain order of elements
-    data_long$elements <- factor(data_long$elements, levels = elements)
-
-    # Numeric x
-    data_long$x <- as.numeric(data_long$elements)
-    data_long$y <- data_long$value
-
-    # Grouping
-    if (!is.null(params$sample_id) && params$sample_id %in% names(data_long)) {
-      data_long$group <- data_long[[params$sample_id]]
-    } else {
-      data_long$group <- seq_len(nrow(norm_data))
-    }
-
-    data_long
+    data
   },
 
   draw_group = function(data, panel_params, coord) {
-    # Handle missing values by breaking lines
-    if (any(is.na(data$y))) {
-      not_na <- !is.na(data$y)
-      rle_not_na <- rle(not_na)
-      ends <- cumsum(rle_not_na$lengths)
-      starts <- c(1, ends[-length(ends)] + 1)
-      grobs <- list()
 
-      for (i in seq_along(rle_not_na$lengths)) {
-        if (rle_not_na$values[i]) {
-          idx <- starts[i]:ends[i]
-          segment <- data[idx, , drop = FALSE]
-          if (nrow(segment) >= 2) {
-            coords <- coord$transform(segment, panel_params)
-            grobs[[length(grobs) + 1]] <- grid::polylineGrob(
-              coords$x, coords$y,
-              gp = grid::gpar(
-                col = coords$colour[1],
-                lwd = coords$linewidth[1] * .pt,
-                lty = coords$linetype[1],
-                alpha = coords$alpha[1]
-              )
-            )
-          }
-        }
-      }
+    if (nrow(data) < 2) return(grid::nullGrob())
 
-      if (length(grobs) == 0) {
-        return(grid::nullGrob())
-      }
-      return(do.call(grid::grobTree, grobs))
-    }
+    # Replace NA alpha with 1
+    data$alpha[is.na(data$alpha)] <- 1
 
-    # No missing values
-    if (nrow(data) < 2) {
-      return(grid::nullGrob())
-    }
+    data <- data[order(data$x), ]
 
-    coords <- coord$transform(data, panel_params)
-    grid::polylineGrob(
-      coords$x, coords$y, id = coords$group,
-      gp = grid::gpar(
-        col = coords$colour,
-        lwd = coords$linewidth * .pt,
-        lty = coords$linetype,
-        alpha = coords$alpha
+    # Fast path — no NAs
+    if (!any(is.na(data$y))) {
+      coords <- coord$transform(data, panel_params)
+      return(
+        grid::polylineGrob(
+          coords$x, coords$y,
+          gp = grid::gpar(
+            col   = coords$colour[1],
+            lwd   = coords$linewidth[1] * ggplot2::.pt,
+            lty   = coords$linetype[1],
+            alpha = coords$alpha[1]
+          )
+        )
       )
-    )
+    }
+
+    # NA handling — breaks in line at missing elements
+    not_na  <- !is.na(data$y)
+    run_ids <- cumsum(c(TRUE, diff(not_na) != 0))
+
+    grobs <- lapply(unique(run_ids[not_na]), function(run) {
+      segment <- data[not_na & run_ids == run, , drop = FALSE]
+      if (nrow(segment) < 2) return(NULL)
+
+      coords <- coord$transform(segment, panel_params)
+      grid::polylineGrob(
+        coords$x, coords$y,
+        gp = grid::gpar(
+          col   = coords$colour[1],
+          lwd   = coords$linewidth[1] * ggplot2::.pt,
+          lty   = coords$linetype[1],
+          alpha = coords$alpha[1]
+        )
+      )
+    })
+
+    grobs <- Filter(Negate(is.null), grobs)
+    if (length(grobs) == 0) return(grid::nullGrob())
+    do.call(grid::grobTree, grobs)
   }
 )
