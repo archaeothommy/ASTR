@@ -1,11 +1,13 @@
 #' Spidergram geom for ggplot2
 #'
-#' Descriptions goes here ###################
+#'Descriptions goes here ###################
 #' #### This will likely only work with ASTR objects or similarly wide data frame!?
 #' #### Or is there a way to identify short vs. long form!?
-#' #### e.g. single value to x and col content = character: long format, x = character vector length > 1 and column content of x = numeric: wide format
+#' #### e.g. single value to x and col content = character: long format,
+#' x = character vector length > 1 and column content of x = numeric: wide format
 #' #### y = single value and numeric: long format, concentration, y is not provided: wide format
-#' #### long format values do not need to be transformed (but normalised!?), wide format must be transformed to long format
+#' #### long format values do not need to be transformed (but normalised!?),
+#' wide format must be transformed to long format
 #'
 #' Normalisation is done with [normalise_geochem()]. If data are geochemically
 #' normalised, only normalised elements are plotted. Otherwise, all elements
@@ -50,7 +52,7 @@ geom_spider <- function(mapping = NULL,
   .reference <- reference
 
   mapping <- utils::modifyList(
-    ggplot2::aes(x = x, y = y),
+    ggplot2::aes(x = .data$x, y = .data$y),
     if (!is.null(mapping)) mapping else ggplot2::aes()
   )
 
