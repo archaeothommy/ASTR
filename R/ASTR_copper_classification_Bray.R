@@ -57,6 +57,12 @@ copper_group_bray <- function(
   )
 
   # Convert flags into a pattern string
+  flags$has_na <- apply(
+    flags[, c("As_flag", "Sb_flag", "Ag_flag", "Ni_flag")],
+    1,
+    function(row) any(is.na(row))
+  )
+
   flags$pattern <- apply(
     flags[, c("As_flag", "Sb_flag", "Ag_flag", "Ni_flag")],
     1,
@@ -107,14 +113,21 @@ copper_group_bray <- function(
   )
 
   # Join with lookup table, preserving row order
-  out <- merge(flags[, c("ID_sample", "pattern")], lookup, by = "pattern", all.x = TRUE, sort = TRUE)
+  out <- merge(flags[, c("ID_sample", "pattern", "has_na")], lookup, by = "pattern", all.x = TRUE, sort = TRUE)
 
-  # Add correct output column
+  # Add correct output column — NA in any element = Unclassified
   if (!group_as_number) {
-    df$copper_group_bray <- out$group_name[match(df[[id_sample]], out$ID_sample)]
+    df$copper_group_bray <- ifelse(
+      out$has_na[match(df[[id_sample]], out$ID_sample)],
+      "Unclassified",
+      out$group_name[match(df[[id_sample]], out$ID_sample)]
+    )
   } else {
-    df$copper_group_bray <- out$group_number[match(df[[id_sample]], out$ID_sample)]
+    df$copper_group_bray <- ifelse(
+      out$has_na[match(df[[id_sample]], out$ID_sample)],
+      NA_integer_,
+      out$group_number[match(df[[id_sample]], out$ID_sample)]
+    )
   }
-
   return(df)
 }
