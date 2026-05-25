@@ -41,7 +41,7 @@ wt\%.
 \examples{
 sample_df <- data.frame(
   ID = 1:8,
-  Sn = c(0.5, 0.5, 5, 5, 0.5, 5, 5, 5),
+  Sn = c(0.5, NA, 5, 5, 0.5, 5, 5, 5),
   Zn = c(0.5, 0.5, 0.5, 0.5, 5, 5, 0.5, 5),
   Pb = c(0.5, 5, 0.5, 5, 0.5, 0.5, 5, 5)
 )
@@ -53,7 +53,7 @@ sample_df <- as_ASTR(
     ID = 1:8,
     SnO_wtP = c(0.5, 0.5, 5, 5, 0.5, 5, 5, 5),
     ZnO_wtP = c(0.5, 0.5, 0.5, 0.5, 5, 5, 0.5, 5),
-    PbO_wtP = c(0.5, 5, 0.5, 5, 0.5, 0.5, 5, 5)
+    PbO_wtP = c(0.5, 5, 0.5, 5, 0.5, NA, 5, 5)
   )
 )
 copper_alloy_pollard(sample_df, elements = c(Sn = "SnO", Zn = "ZnO", Pb = "PbO"))

@@ -27,7 +27,7 @@
 #' @examples
 #' sample_df <- data.frame(
 #'   ID = 1:8,
-#'   Sn = c(0.5, 0.5, 5, 5, 0.5, 5, 5, 5),
+#'   Sn = c(0.5, NA, 5, 5, 0.5, 5, 5, 5),
 #'   Zn = c(0.5, 0.5, 0.5, 0.5, 5, 5, 0.5, 5),
 #'   Pb = c(0.5, 5, 0.5, 5, 0.5, 0.5, 5, 5)
 #' )
@@ -39,7 +39,7 @@
 #'     ID = 1:8,
 #'     SnO_wtP = c(0.5, 0.5, 5, 5, 0.5, 5, 5, 5),
 #'     ZnO_wtP = c(0.5, 0.5, 0.5, 0.5, 5, 5, 0.5, 5),
-#'     PbO_wtP = c(0.5, 5, 0.5, 5, 0.5, 0.5, 5, 5)
+#'     PbO_wtP = c(0.5, 5, 0.5, 5, 0.5, NA, 5, 5)
 #'   )
 #' )
 #' copper_alloy_pollard(sample_df, elements = c(Sn = "SnO", Zn = "ZnO", Pb = "PbO"))
@@ -54,11 +54,9 @@ copper_alloy_pollard <- function(
     group_as_symbol = FALSE,
     ...) {
 
-  # convert units to wt%
-
   if (inherits(df, "ASTR")) {
     df <- convert_concentration_units(df, elements, "wtP", ...)
-    elements <- c(Sn = "Sn", Zn = "Zn", Pb = "Pb") # rename in case input was in oxides
+    elements <- c(Sn = "Sn", Zn = "Zn", Pb = "Pb")
     threshold <- units::set_units(1, "wtP")
   } else {
     threshold <- 1 # wt%, set in Pollard et al. (2015)
@@ -70,6 +68,13 @@ copper_alloy_pollard <- function(
     Sn_flag = df[[elements["Sn"]]] >= threshold,
     Zn_flag = df[[elements["Zn"]]] >= threshold,
     Pb_flag = df[[elements["Pb"]]] >= threshold
+  )
+
+  # Identify rows where any element is NA — these stay Unclassified
+  flags$has_na <- apply(
+    flags[, c("Sn_flag", "Zn_flag", "Pb_flag")],
+    1,
+    function(row) any(is.na(row))
   )
 
   # Convert flags into a pattern string
@@ -107,26 +112,34 @@ copper_alloy_pollard <- function(
   )
 
   # Join with lookup table, preserving row order
-  out <- merge(flags[, c("ID_sample", "pattern")],
-               lookup,
-               by = "pattern",
-               all.x = TRUE)
+  out <- merge(
+    flags[, c("ID_sample", "pattern", "has_na")],
+    lookup,
+    by = "pattern",
+    all.x = TRUE
+  )
 
-  # Ensure "Unclassified" for any missing matches
-  out$alloy_name[is.na(out$alloy_name)] <- "Unclassified"
-  out$alloy_symbol[is.na(out$alloy_symbol)] <- "Unclassified"
-
-  # Add correct output column
+  # Add correct output column — NA in any element = Unclassified
   if (!group_as_symbol) {
-    copper_alloy_pollard <- out$alloy_name[match(df[[id_column]], out$ID_sample)]
+    copper_alloy_pollard <- ifelse(
+      out$has_na[match(df[[id_column]], out$ID_sample)],
+      "Unclassified",
+      out$alloy_name[match(df[[id_column]], out$ID_sample)]
+    )
   } else {
-    copper_alloy_pollard <- out$alloy_symbol[match(df[[id_column]], out$ID_sample)]
+    copper_alloy_pollard <- ifelse(
+      out$has_na[match(df[[id_column]], out$ID_sample)],
+      "Unclassified",
+      out$alloy_symbol[match(df[[id_column]], out$ID_sample)]
+    )
   }
 
   if (inherits(df, "ASTR")) {
     df_out <- df[c(colnames(get_contextual_columns(df)), elements)]
     df_out[["copper_alloy_pollard"]] <- copper_alloy_pollard
-    df_out[["copper_alloy_pollard"]] <- add_ASTR_class(df_out[["copper_alloy_pollard"]], "ASTR_context")
+    df_out[["copper_alloy_pollard"]] <- add_ASTR_class(
+      df_out[["copper_alloy_pollard"]], "ASTR_context"
+    )
   } else {
     df_out <- df
     df_out[["copper_alloy_pollard"]] <- copper_alloy_pollard

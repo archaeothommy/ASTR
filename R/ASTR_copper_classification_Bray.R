@@ -30,7 +30,7 @@
 #' sample_df <- data.frame(
 #'   ID = 1:3,
 #'   As = c(0.2, 0.01, 0.15),
-#'   Sb = c(0.00, 0.2, 0.11),
+#'   Sb = c(0.00, NA, 0.11),
 #'   Ag = c(0.00, 0.00, 0.12),
 #'   Ni = c(0.00, 0.05, 0.20)
 #' )
@@ -43,11 +43,11 @@
 #' # For ASTR objects, units and oxides are automatically converted
 #' sample_df2 <- as_ASTR(
 #'   data.frame(
-#'     ID = 1:3,
-#'     As2O3_wtP = c(0.2, 0.01, 0.15),
-#'     Sb2O3_wtP = c(0.00, 0.2, 0.11),
-#'     Ag2O_wtP = c(0.00, 0.00, 0.12),
-#'     NiO_wtP = c(0.00, 50, 0.20)
+#'     ID = 1:4,
+#'     As2O3_wtP = c(0.2, 0.01, 0.15, 2),
+#'     Sb2O3_wtP = c(0.00, 0.2, 0.11, 0.5),
+#'     Ag2O_wtP = c(0.00, 0.00, 0.12, NA),
+#'     NiO_wtP = c(0.00, 5, 0.20, 0.5)
 #'   )
 #' )
 #' copper_group_bray(sample_df2, elements = c(As = "As2O3", Sb = "Sb2O3", Ag = "Ag2O", Ni = "NiO"))
@@ -80,6 +80,12 @@ copper_group_bray <- function(
   )
 
   # Convert flags into a pattern string
+  flags$has_na <- apply(
+    flags[, c("As_flag", "Sb_flag", "Ag_flag", "Ni_flag")],
+    1,
+    function(row) any(is.na(row))
+  )
+
   flags$pattern <- apply(
     flags[, c("As_flag", "Sb_flag", "Ag_flag", "Ni_flag")],
     1,
@@ -130,15 +136,30 @@ copper_group_bray <- function(
   )
 
   # Join with lookup table, preserving row order
-  out <- merge(flags[, c("ID_sample", "pattern")], lookup, by = "pattern", all.x = TRUE, sort = TRUE)
+  out <- merge(
+    flags[, c("ID_sample", "pattern", "has_na")],
+    lookup,
+    by = "pattern",
+    all.x = TRUE,
+    sort = TRUE
+  )
 
-  # Add correct output column
+  # Add correct output column — NA in any element = Unclassified
   if (!group_as_number) {
-    copper_group_bray <- out$group_name[match(df[[id_column]], out$ID_sample)]
+    copper_group_bray <- ifelse(
+      out$has_na[match(df[[id_column]], out$ID_sample)],
+      "Unclassified",
+      out$group_name[match(df[[id_column]], out$ID_sample)]
+    )
   } else {
-    copper_group_bray <- out$group_number[match(df[[id_column]], out$ID_sample)]
+    copper_group_bray <- ifelse(
+      out$has_na[match(df[[id_column]], out$ID_sample)],
+      NA_integer_,
+      out$group_number[match(df[[id_column]], out$ID_sample)]
+    )
   }
 
+  # Return ASTR object or plain data frame
   if (inherits(df, "ASTR")) {
     df_out <- df[c(colnames(get_contextual_columns(df)), elements)]
     df_out[["copper_group_bray"]] <- copper_group_bray
