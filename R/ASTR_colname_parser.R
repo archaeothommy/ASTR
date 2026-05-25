@@ -282,7 +282,7 @@ is_err_percent <- function(colname) {
   grepl(err_percent(), colname, perl = TRUE)
 }
 is_err_abs <- function(colname) {
-  grepl(err_abs(), colname, perl = TRUE)
+  grepl(paste0("(", err_abs(), ")(?!%)"), colname, perl = TRUE)
 }
 is_isotope_ratio <- function(colname) {
   grepl(isotope_ratio(), colname, perl = TRUE)
