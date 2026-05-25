@@ -122,7 +122,7 @@ of Archaeological Science 56, pp. 202-209.
 <span class="r-in"><span><span class="va">sample_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  ID <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>,</span></span>
 <span class="r-in"><span>  As <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.01</span>, <span class="fl">0.15</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  Sb <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.00</span>, <span class="fl">0.2</span>, <span class="fl">0.11</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  Sb <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.00</span>, <span class="cn">NA</span>, <span class="fl">0.11</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  Ag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.00</span>, <span class="fl">0.00</span>, <span class="fl">0.12</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  Ni <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.00</span>, <span class="fl">0.05</span>, <span class="fl">0.20</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
@@ -130,36 +130,39 @@ of Archaeological Science 56, pp. 202-209.
 <span class="r-in"><span><span class="fu">copper_group_bray</span><span class="op">(</span><span class="va">sample_df</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ID   As   Sb   Ag   Ni copper_group_bray</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  1 0.20 0.00 0.00 0.00                As</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  2 0.01 0.20 0.00 0.05                Sb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  2 0.01   NA 0.00 0.05      Unclassified</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3  3 0.15 0.11 0.12 0.20       As+Sb+Ag+Ni</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># classification with group number as output</span></span></span>
 <span class="r-in"><span><span class="fu">copper_group_bray</span><span class="op">(</span><span class="va">sample_df</span>, group_as_number <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ID   As   Sb   Ag   Ni copper_group_bray</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  1 0.20 0.00 0.00 0.00                 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  2 0.01 0.20 0.00 0.05                 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  2 0.01   NA 0.00 0.05                NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3  3 0.15 0.11 0.12 0.20                16</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># For ASTR objects, units and oxides are automatically converted</span></span></span>
 <span class="r-in"><span><span class="va">sample_df2</span> <span class="op">&lt;-</span> <span class="fu"><a href="ASTR.html">as_ASTR</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    ID <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>,</span></span>
-<span class="r-in"><span>    As2O3_wtP <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.01</span>, <span class="fl">0.15</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    Sb2O3_wtP <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.00</span>, <span class="fl">0.2</span>, <span class="fl">0.11</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    Ag2O_wtP <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.00</span>, <span class="fl">0.00</span>, <span class="fl">0.12</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    NiO_wtP <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.00</span>, <span class="fl">50</span>, <span class="fl">0.20</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    ID <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>,</span></span>
+<span class="r-in"><span>    As2O3_wtP <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.01</span>, <span class="fl">0.15</span>, <span class="fl">2</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    Sb2O3_wtP <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.00</span>, <span class="fl">0.2</span>, <span class="fl">0.11</span>, <span class="fl">0.5</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    Ag2O_wtP <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.00</span>, <span class="fl">0.00</span>, <span class="fl">0.12</span>, <span class="cn">NA</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    NiO_wtP <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.00</span>, <span class="fl">5</span>, <span class="fl">0.20</span>, <span class="fl">0.5</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>1 missing values across 1 analytical columns</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>See the full list of validation output with: ASTR::validate(&lt;your ASTR object&gt;).</span>
 <span class="r-in"><span><span class="fu">copper_group_bray</span><span class="op">(</span><span class="va">sample_df2</span>, elements <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>As <span class="op">=</span> <span class="st">"As2O3"</span>, Sb <span class="op">=</span> <span class="st">"Sb2O3"</span>, Ag <span class="op">=</span> <span class="st">"Ag2O"</span>, Ni <span class="op">=</span> <span class="st">"NiO"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">ASTR table</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Analytical columns: <span style="color: #00BB00;">As</span>, <span style="color: #00BB00;">Sb</span>, <span style="color: #00BB00;">Ag</span>, <span style="color: #00BB00;">Ni</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Contextual columns: <span style="color: #BB00BB;">copper_group_bray</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A data frame: 3 × 6</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      ID      As     Sb    Ag     Ni copper_group_bray</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494;">[wtP]</span>  <span style="color: #949494;">[wtP]</span> <span style="color: #949494;">[wtP]</span>  <span style="color: #949494;">[wtP]</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     1 0.151   0      0      0     As               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     2 0.007<span style="text-decoration: underline;">57</span> 0.167  0     39.3   Sb+Ni            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     3 0.114   0.091<span style="text-decoration: underline;">9</span> 0.112  0.157 As+Ag+Ni         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A data frame: 4 × 6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      ID      As     Sb     Ag    Ni copper_group_bray</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494;">[wtP]</span>  <span style="color: #949494;">[wtP]</span>  <span style="color: #949494;">[wtP]</span> <span style="color: #949494;">[wtP]</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     1 0.151   0       0     0     As               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     2 0.007<span style="text-decoration: underline;">57</span> 0.167   0     3.93  Sb+Ni            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     3 0.114   0.091<span style="text-decoration: underline;">9</span>  0.112 0.157 As+Ag+Ni         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>     4 1.51    0.418  <span style="color: #BB0000;">NA</span>     0.393 Unclassified     </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

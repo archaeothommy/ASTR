@@ -66,40 +66,42 @@ Other copper alloy classifications:
 ``` r
 sample_df <- data.frame(
   ID = 1:5,
-  Sn = c(5, 1, 4, 0.5, 2),
+  Sn = c(5, 1, 4, NA, 2),
   Zn = c(12, 20, 6, 2, 10),
   Pb = c(1, 0.5, 5, 9, 12)
 )
 copper_alloy_bb(sample_df)
-#>   ID  Sn Zn   Pb   copper_alloy_bb
-#> 1  1 5.0 12  1.0          Gunmetal
-#> 2  2 1.0 20  0.5             Brass
-#> 3  3 4.0  6  5.0 (Leaded) Gunmetal
-#> 4  4 0.5  2  9.0     Leaded Copper
-#> 5  5 2.0 10 12.0      Leaded Brass
+#>   ID Sn Zn   Pb   copper_alloy_bb
+#> 1  1  5 12  1.0          Gunmetal
+#> 2  2  1 20  0.5             Brass
+#> 3  3  4  6  5.0 (Leaded) Gunmetal
+#> 4  4 NA  2  9.0      Unclassified
+#> 5  5  2 10 12.0      Leaded Brass
 
 # For ASTR objects, units and oxides are automatically converted
 sample_df <- as_ASTR(
   data.frame(
     ID = 1:8,
-    SnO_wtP = c(0.5, 0.5, 5, 5, 0.5, 5, 5, 5),
+    SnO_wtP = c(0.5, 0.5, 5, 5, 0.5, 5, 5, NA),
     ZnO_wtP = c(0.5, 0.5, 0.5, 0.5, 5, 5, 0.5, 5),
     PbO_wtP = c(0.5, 5, 0.5, 5, 0.5, 0.5, 5, 5)
   )
 )
+#> Warning: 1 missing values across 1 analytical columns
+#> Warning: See the full list of validation output with: ASTR::validate(<your ASTR object>).
 copper_alloy_bb(sample_df, elements = c(Sn = "SnO", Zn = "ZnO", Pb = "PbO"))
 #> ASTR table
 #> Analytical columns: Sn, Zn, Pb
 #> Contextual columns: copper_alloy_bb 
 #> # A data frame: 8 × 5
-#>      ID    Sn    Zn    Pb copper_alloy_bb  
-#>   <int> [wtP] [wtP] [wtP] <chr>            
-#> 1     1 0.441 0.402 0.464 Copper           
-#> 2     2 0.441 0.402 4.64  (Leaded) Copper  
-#> 3     3 4.41  0.402 0.464 Bronze           
-#> 4     4 4.41  0.402 4.64  (Leaded) Bronze  
-#> 5     5 0.441 4.02  0.464 Copper/brass     
-#> 6     6 4.41  4.02  0.464 Gunmetal         
-#> 7     7 4.41  0.402 4.64  (Leaded) Bronze  
-#> 8     8 4.41  4.02  4.64  (Leaded) Gunmetal
+#>      ID     Sn    Zn    Pb copper_alloy_bb
+#>   <int>  [wtP] [wtP] [wtP] <chr>          
+#> 1     1  0.441 0.402 0.464 Copper         
+#> 2     2  0.441 0.402 4.64  (Leaded) Copper
+#> 3     3  4.41  0.402 0.464 Bronze         
+#> 4     4  4.41  0.402 4.64  (Leaded) Bronze
+#> 5     5  0.441 4.02  0.464 Copper/brass   
+#> 6     6  4.41  4.02  0.464 Gunmetal       
+#> 7     7  4.41  0.402 4.64  (Leaded) Bronze
+#> 8     8 NA     4.02  4.64  Unclassified   
 ```

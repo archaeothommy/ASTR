@@ -70,14 +70,14 @@ Other copper alloy classifications:
 ``` r
 sample_df <- data.frame(
   ID = 1:8,
-  Sn = c(0.5, 0.5, 5, 5, 0.5, 5, 5, 5),
+  Sn = c(0.5, NA, 5, 5, 0.5, 5, 5, 5),
   Zn = c(0.5, 0.5, 0.5, 0.5, 5, 5, 0.5, 5),
   Pb = c(0.5, 5, 0.5, 5, 0.5, 0.5, 5, 5)
 )
 copper_alloy_pollard(sample_df)
 #>   ID  Sn  Zn  Pb copper_alloy_pollard
 #> 1  1 0.5 0.5 0.5               Copper
-#> 2  2 0.5 0.5 5.0        Leaded copper
+#> 2  2  NA 0.5 5.0         Unclassified
 #> 3  3 5.0 0.5 0.5               Bronze
 #> 4  4 5.0 0.5 5.0        Leaded bronze
 #> 5  5 0.5 5.0 0.5                Brass
@@ -91,22 +91,24 @@ sample_df <- as_ASTR(
     ID = 1:8,
     SnO_wtP = c(0.5, 0.5, 5, 5, 0.5, 5, 5, 5),
     ZnO_wtP = c(0.5, 0.5, 0.5, 0.5, 5, 5, 0.5, 5),
-    PbO_wtP = c(0.5, 5, 0.5, 5, 0.5, 0.5, 5, 5)
+    PbO_wtP = c(0.5, 5, 0.5, 5, 0.5, NA, 5, 5)
   )
 )
+#> Warning: 1 missing values across 1 analytical columns
+#> Warning: See the full list of validation output with: ASTR::validate(<your ASTR object>).
 copper_alloy_pollard(sample_df, elements = c(Sn = "SnO", Zn = "ZnO", Pb = "PbO"))
 #> ASTR table
 #> Analytical columns: Sn, Zn, Pb
 #> Contextual columns: copper_alloy_pollard 
 #> # A data frame: 8 × 5
-#>      ID    Sn    Zn    Pb copper_alloy_pollard
-#>   <int> [wtP] [wtP] [wtP] <chr>               
-#> 1     1 0.441 0.402 0.464 Copper              
-#> 2     2 0.441 0.402 4.64  Leaded copper       
-#> 3     3 4.41  0.402 0.464 Bronze              
-#> 4     4 4.41  0.402 4.64  Leaded bronze       
-#> 5     5 0.441 4.02  0.464 Brass               
-#> 6     6 4.41  4.02  0.464 Gunmetal            
-#> 7     7 4.41  0.402 4.64  Leaded bronze       
-#> 8     8 4.41  4.02  4.64  Leaded gunmetal     
+#>      ID    Sn    Zn     Pb copper_alloy_pollard
+#>   <int> [wtP] [wtP]  [wtP] <chr>               
+#> 1     1 0.441 0.402  0.464 Copper              
+#> 2     2 0.441 0.402  4.64  Leaded copper       
+#> 3     3 4.41  0.402  0.464 Bronze              
+#> 4     4 4.41  0.402  4.64  Leaded bronze       
+#> 5     5 0.441 4.02   0.464 Brass               
+#> 6     6 4.41  4.02  NA     Unclassified        
+#> 7     7 4.41  0.402  4.64  Leaded bronze       
+#> 8     8 4.41  4.02   4.64  Leaded gunmetal     
 ```
