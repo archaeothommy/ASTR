@@ -37,7 +37,7 @@ Classification uses specific thresholds and ratios to define alloy types.
 \examples{
 sample_df <- data.frame(
   ID = 1:5,
-  Sn = c(5, 1, 4, 0.5, 2),
+  Sn = c(5, 1, 4, NA, 2),
   Zn = c(12, 20, 6, 2, 10),
   Pb = c(1, 0.5, 5, 9, 12)
 )
@@ -47,7 +47,7 @@ copper_alloy_bb(sample_df)
 sample_df <- as_ASTR(
   data.frame(
     ID = 1:8,
-    SnO_wtP = c(0.5, 0.5, 5, 5, 0.5, 5, 5, 5),
+    SnO_wtP = c(0.5, 0.5, 5, 5, 0.5, 5, 5, NA),
     ZnO_wtP = c(0.5, 0.5, 0.5, 0.5, 5, 5, 0.5, 5),
     PbO_wtP = c(0.5, 5, 0.5, 5, 0.5, 0.5, 5, 5)
   )

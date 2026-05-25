@@ -44,7 +44,7 @@ Ag, or Ni being below or above 0.1 wt\%.
 sample_df <- data.frame(
   ID = 1:3,
   As = c(0.2, 0.01, 0.15),
-  Sb = c(0.00, 0.2, 0.11),
+  Sb = c(0.00, NA, 0.11),
   Ag = c(0.00, 0.00, 0.12),
   Ni = c(0.00, 0.05, 0.20)
 )
@@ -57,11 +57,11 @@ copper_group_bray(sample_df, group_as_number = TRUE)
 # For ASTR objects, units and oxides are automatically converted
 sample_df2 <- as_ASTR(
   data.frame(
-    ID = 1:3,
-    As2O3_wtP = c(0.2, 0.01, 0.15),
-    Sb2O3_wtP = c(0.00, 0.2, 0.11),
-    Ag2O_wtP = c(0.00, 0.00, 0.12),
-    NiO_wtP = c(0.00, 50, 0.20)
+    ID = 1:4,
+    As2O3_wtP = c(0.2, 0.01, 0.15, 2),
+    Sb2O3_wtP = c(0.00, 0.2, 0.11, 0.5),
+    Ag2O_wtP = c(0.00, 0.00, 0.12, NA),
+    NiO_wtP = c(0.00, 5, 0.20, 0.5)
   )
 )
 copper_group_bray(sample_df2, elements = c(As = "As2O3", Sb = "Sb2O3", Ag = "Ag2O", Ni = "NiO"))
