@@ -37,33 +37,41 @@ of a continuous variable ([Węglarczyk, Stanisław,
 
 ### Kernel density estimation calculation
 
-Let the series $\{ x_{1},x_{2},\ldots,x_{n}\}$ be an independent and
-identically distributed (i.i.d.) sample of $n$ observations taken from a
-population $X$ with an unknown probability distribution function $f(x)$.
+Let the series $`\{x_1, x_2, \ldots, x_n\}`$ be an independent and
+identically distributed (i.i.d.) sample of $`n`$ observations taken from
+a population $`X`$ with an unknown probability distribution function
+$`f(x)`$.
 
-The kernel estimate $\widehat{f}(x)$ of the original $f(x)$ assigns each
-$i$-th sample data point $x_{i}$ a function $K\left( x_{i},t \right)$,
-called a *kernel function*, in the following way:
+The kernel estimate $`\hat{f}(x)`$ of the original $`f(x)`$ assigns each
+$`i`$-th sample data point $`x_i`$ a function $`K(x_i, t)`$, called a
+*kernel function*, in the following way:
 
-$$\widehat{f}(t) = \frac{1}{n}\sum\limits_{i = 1}^{n}K\left( x_{i},t \right)$$
+``` math
+ \hat{f}(t) = \frac{1}{n} \sum_{i=1}^{n} K(x_i, t) \tag{1} 
+```
 
-The kernel function $K(x,t)$ is non-negative and bounded for all $x$ and
-$t$:
+The kernel function $`K(x, t)`$ is non-negative and bounded for all
+$`x`$ and $`t`$:
 
-$$0 \leq K(x,t) < \infty\quad{\text{for all real}\mspace{6mu}}x,t$$
+\$\$ 0 \leq K(x, t) \< \infty \quad \text{for all real } x, t \tag{2}
+\$\$
 
-and, for all real $x$,
+and, for all real $`x`$,
 
-$$\int_{- \infty}^{\infty}K(x,t)\, dt = 1.$$
+``` math
+ \int_{-\infty}^{\infty} K(x, t) \, dt = 1. \tag{3} 
+```
 
 Property (3) ensures the required normalisation of the kernel density
 estimate given in (1):
 
-$$\int_{- \infty}^{\infty}\widehat{f}(t)\, dt = \frac{1}{n}\sum\limits_{i = 1}^{n}\int_{- \infty}^{\infty}K\left( x_{i},t \right)\, dt = 1.$$
+``` math
+ \int_{-\infty}^{\infty} \hat{f}(t) \, dt = \frac{1}{n} \sum_{i=1}^{n} \int_{-\infty}^{\infty} K(x_i, t) \, dt = 1. \tag{4} 
+```
 
 In other words, the kernel transforms the “*sharp*” (point) location of
-$x_{i}$ into an interval centred (symmetrically or not) around
-$x_{i}$([Węglarczyk, Stanisław, 2018](#ref-Weglarczyk2018)).
+$`x_i`$ into an interval centred (symmetrically or not) around
+$`x_i`$([Węglarczyk, Stanisław, 2018](#ref-Weglarczyk2018)).
 
 ## Function workflow
 
@@ -72,7 +80,8 @@ from the ks package ([Duong, 2007](#ref-Duong2007),
 [2025](#ref-Duong2025)), while handling the contours manually
 (`compute.cont = FALSE`). It then calculates the actual density values
 (the contour levels) corresponding to the probability levels (probs)
-using [`ks::contourLevels()`](https://rdrr.io/pkg/ks/man/contour.html).
+using
+[`ks::contourLevels()`](https://mvstat.net/ks/reference/contour.html).
 
 Using the base R function
 [`grDevices::contourLines()`](https://rdrr.io/r/grDevices/contourLines.html),
@@ -101,6 +110,7 @@ estimate calculations for
 ### Basic biplot
 
 ``` r
+
 
 library(ASTR)
 
@@ -162,6 +172,7 @@ the quantiles set to 10 to show deciles. It also sets the transparency
 to 0.5 (`alpha`).
 
 ``` r
+
 ggplot(
   ArgentinaDatabase,
   aes(
@@ -203,6 +214,7 @@ ggplot(
 ### Biplot with the minimum probability argument added to show only density regions above the median
 
 ``` r
+
 ggplot(
   ArgentinaDatabase,
   aes(
@@ -246,6 +258,7 @@ ggplot(
 For this effect the fill argument is set to `NA`
 
 ``` r
+
 ggplot(
   ArgentinaDatabase,
   aes(
@@ -295,6 +308,7 @@ density regions are shown without clipping. The limits are set for the
 axes using the `xlim` and `ylim` arguments.
 
 ``` r
+
 ggplot(
   ArgentinaDatabase,
   aes(

@@ -63,11 +63,11 @@ values, or ratios derived therefrom as well as analytical uncertainties
   strongly recommend that the uncertainty is included in the data table,
   and properly noted following the conventions described.
 
-| Components           | Accepted formats                                                    |
-|----------------------|---------------------------------------------------------------------|
-| Oxides and elements  | `SiO2` ; `Si`                                                       |
-| Total iron           | `FeOtot` ; `Fe2O3tot`                                               |
-| Loss on ignition     | `LOI`                                                               |
-| Isotopic ratios      | `206Pb/204Pb` ; `87Sr/86Sr` ; `147Sm/144Nd` ; `d18O`                |
-| Units for value      | `_wt%` ; `_at%`                                                     |
+| Components | Accepted formats |
+|----|----|
+| Oxides and elements | `SiO2` ; `Si` |
+| Total iron | `FeOtot` ; `Fe2O3tot` |
+| Loss on ignition | `LOI` |
+| Isotopic ratios | `206Pb/204Pb` ; `87Sr/86Sr` ; `147Sm/144Nd` ; `d18O` |
+| Units for value | `_wt%` ; `_at%` |
 | Analytical precision | `_err2SD` ; `_errSD` ; `_errSD%` ; `_errSD%` ; `_errSE` ; `_err2SE` |

@@ -57,6 +57,7 @@ You can install the development version of ASTR from
 [GitHub](https://github.com/) with:
 
 ``` r
+
  install.packages("pak")
  pak::pak("archaeothommy/ASTR")
 ```
@@ -109,10 +110,14 @@ Functions for creating and handling ASTR objects.
   [`get_element_columns()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
   [`get_ratio_columns()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
   [`get_concentration_columns()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
+  [`get_error_columns()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
   [`get_unit_columns()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
   [`remove_units()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
   [`unify_concentration_unit()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
   : ASTR Schema implementation
+- [`rel_to_abs()`](https://archaeothommy.github.io/ASTR/reference/error_conversion.md)
+  [`abs_to_rel()`](https://archaeothommy.github.io/ASTR/reference/error_conversion.md)
+  : Convert between relative and absolute analytical uncertainties
 
 ## Data subsetting
 

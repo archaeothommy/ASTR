@@ -57,6 +57,12 @@ were implemented in the ASTR package.
   common excel error messages (*\#DIV/0!*, *\#VALUE!*, *\#REF!*,
   *\#NAME?*, *\#NUM!*, *\#N/A*, and *\#NULL!*) are also replaced with
   `NA` by default.
+- Relative analytical precisions will be converted into absolute
+  analytical precisions. If relative analytical precisions are required,
+  conversion is possible with
+  [`abs_to_rel()`](https://archaeothommy.github.io/ASTR/reference/error_conversion.md).
+  This avoids potential conflicts in handling element concentrations in
+  per cent.
 - Units will be removed from column names because {units} stores them in
   the column attributes. This allows for clean column names and
   therefore of e.g. axis labels in plots. They can be “shifted” from the

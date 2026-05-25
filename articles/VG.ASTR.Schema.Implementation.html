@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>ASTR schema: Implementation • ASTR</title>
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="ASTR schema: Implementation">
 </head>
@@ -204,6 +204,10 @@ in <code><a href="../reference/ASTR.html">read_ASTR()</a></code>: <code>NA</code
 (<em>#DIV/0!</em>, <em>#VALUE!</em>, <em>#REF!</em>, <em>#NAME?</em>,
 <em>#NUM!</em>, <em>#N/A</em>, and <em>#NULL!</em>) are also replaced
 with <code>NA</code> by default.</li>
+<li>Relative analytical precisions will be converted into absolute
+analytical precisions. If relative analytical precisions are required,
+conversion is possible with <code><a href="../reference/error_conversion.html">abs_to_rel()</a></code>. This avoids
+potential conflicts in handling element concentrations in per cent.</li>
 <li>Units will be removed from column names because {units} stores them
 in the column attributes. This allows for clean column names and
 therefore of e.g. axis labels in plots. They can be “shifted” from the
@@ -267,8 +271,9 @@ are requested to implement their own lambda function redefining the
 by replacing it by <code>NA</code> or 0, calculating LOD/2 or LOD/√2,
 skipping &lt; of the left-censored value, or using regression models,
 enhanced censoring calculations, or maximum likelihood estimates <span class="citation">(<a href="#ref-croghan2003f">Croghan &amp; Egeghy,
-2003</a>; <a href="#ref-giske%C3%B8deg%C3%A5rd2022">Giskeødegård &amp; Lydersen,
-2022</a>; <a href="#ref-helsel2006">Helsel, 2006</a>)</span></p>
+2003</a>; <a href="#ref-giske%C3%B8deg%C3%A5rd2022">Giskeødegård &amp;
+Lydersen, 2022</a>; <a href="#ref-helsel2006">Helsel,
+2006</a>)</span></p>
 </div>
 <div class="section level2">
 <h2 id="output">Output<a class="anchor" aria-label="anchor" href="#output"></a>

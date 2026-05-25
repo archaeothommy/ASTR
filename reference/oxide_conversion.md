@@ -113,6 +113,7 @@ GitHub repo](https://github.com/archaeothommy/ASTR) to add it.
 ## Examples
 
 ``` r
+
 library(magrittr)
 
 # Example data frame with element weight percents

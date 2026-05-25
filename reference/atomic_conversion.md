@@ -55,6 +55,7 @@ convert to *wt%* first.
 ## Examples
 
 ``` r
+
 library(magrittr)
 
 # Convert weight percent to atomic percent and to weight percent

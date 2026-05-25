@@ -83,6 +83,8 @@ get_ratio_columns(x, ...)
 
 get_concentration_columns(x, ...)
 
+get_error_columns(x, ...)
+
 get_unit_columns(x, units, ...)
 
 remove_units(x, ...)
@@ -278,7 +280,7 @@ conc$Sb <- units::set_units(arch$Sb, "ppb") %>%
 # removing all units from ASTR tables
 remove_units(arch)
 #> ASTR table
-#> Analytical columns: 143Nd/144Nd, d65Cu, d65Cu_err2SD, Na2O, BaO, Pb, MgO, Al2O3, SiO2, SiO2_errSD%, P2O5, S, CaO, TiO2, MnO, FeOtot, FeOtot_err2SD, ZnO, K2O, Cu, As, LOI, Ag, Sn, Sb, Te, Bi, U, V, Cr, Co, Ni, Sr, Se, FeOtot/SiO2, (Na2O+K2O)/SiO2, 206Pb/204Pb, 206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD, 208Pb/204Pb, 208Pb/204Pb_err2SD, 207Pb/206Pb, 207Pb/206Pb_err2SD, 208Pb/206Pb, 208Pb/206Pb_err2SD
+#> Analytical columns: 143Nd/144Nd, d65Cu, d65Cu_err2SD, Na2O, BaO, Pb, MgO, Al2O3, SiO2, SiO2_errSD, P2O5, S, CaO, TiO2, MnO, FeOtot, FeOtot_err2SD, ZnO, K2O, Cu, As, LOI, Ag, Sn, Sb, Te, Bi, U, V, Cr, Co, Ni, Sr, Se, FeOtot/SiO2, (Na2O+K2O)/SiO2, 206Pb/204Pb, 206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD, 208Pb/204Pb, 208Pb/204Pb_err2SD, 207Pb/206Pb, 207Pb/206Pb_err2SD, 208Pb/206Pb, 208Pb/206Pb_err2SD
 #> Contextual columns: Sample, Lab no., Site, latitude, longitude, Type, method_comp 
 #> # A data frame: 14 × 54
 #>    ID       Sample   `Lab no.` Site         latitude longitude  Type method_comp
@@ -299,7 +301,7 @@ remove_units(arch)
 #> 14 8896     8896     3428/19   Σπαρτη           37.1     22.4      1 ICP-MS     
 #> # ℹ 46 more variables: `143Nd/144Nd` <dbl>, d65Cu <dbl>, d65Cu_err2SD <dbl>,
 #> #   Na2O <dbl>, BaO <dbl>, Pb <dbl>, MgO <dbl>, Al2O3 <dbl>, SiO2 <dbl>,
-#> #   `SiO2_errSD%` <dbl>, P2O5 <dbl>, S <dbl>, CaO <dbl>, TiO2 <dbl>, MnO <dbl>,
+#> #   SiO2_errSD <dbl>, P2O5 <dbl>, S <dbl>, CaO <dbl>, TiO2 <dbl>, MnO <dbl>,
 #> #   FeOtot <dbl>, FeOtot_err2SD <dbl>, ZnO <dbl>, K2O <dbl>, Cu <dbl>,
 #> #   As <dbl>, LOI <dbl>, Ag <dbl>, Sn <dbl>, Sb <dbl>, Te <dbl>, Bi <dbl>,
 #> #   U <dbl>, V <dbl>, Cr <dbl>, Co <dbl>, Ni <dbl>, Sr <dbl>, Se <dbl>,

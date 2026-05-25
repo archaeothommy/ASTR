@@ -2,8 +2,8 @@
 
 This geom creates polygons based on a 2D kernel density estimate, which
 is calculated using the
-[`ks::kde()`](https://rdrr.io/pkg/ks/man/kde.html) function. It serves
-as an alternative to
+[`ks::kde()`](https://mvstat.net/ks/reference/kde.html) function. It
+serves as an alternative to
 [`ggplot2::geom_density_2d()`](https://ggplot2.tidyverse.org/reference/geom_density_2d.html),
 displaying the results as filled polygons corresponding to specified
 quantiles.
@@ -134,7 +134,7 @@ Learn more about setting these aesthetics in
 
 [`ggplot2::geom_density_2d()`](https://ggplot2.tidyverse.org/reference/geom_density_2d.html),
 [`ggplot2::geom_point()`](https://ggplot2.tidyverse.org/reference/geom_point.html),
-[`ks::kde()`](https://rdrr.io/pkg/ks/man/kde.html)
+[`ks::kde()`](https://mvstat.net/ks/reference/kde.html)
 
 ## Examples
 

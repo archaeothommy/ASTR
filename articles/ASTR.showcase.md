@@ -16,6 +16,7 @@ these functionalities.
 Before we start, we want to load the ASTR package:
 
 ``` r
+
 library(ASTR)
 ```
 
@@ -26,39 +27,39 @@ To work with an `ASTR` object, we have to create one. The function
 imports spreadsheets in a variety of formats, including Excel files. For
 this article, we use mock-up data:
 
-    #>    Group Cu_wt% Sn_wt% As_wt% Sb_wt% Ag_ppm Ni_ppm d65Cu 206Pb/204Pb
-    #> 1      A   87.9    9.8   2.39   0.98    136    316  0.17          NA
-    #> 2      A   92.9    7.3   2.19   0.95    204    455 -0.41          NA
-    #> 3      A   89.1    8.4   2.14   0.85    203    580 -0.12          NA
-    #> 4      A   93.8    7.9   2.49   0.90    192    343 -0.23          NA
-    #> 5      A   94.4    5.5   2.16   0.51    138    496  0.31          NA
-    #> 6      B   85.5    9.5   2.21   0.74    135    372 -0.05     18.7050
-    #> 7      B   90.3    6.2   2.04   0.88    158    345 #REF!     18.7062
-    #> 8      B   93.9    5.2   2.09   0.61    216    564 #REF!     18.6972
-    #> 9      B   90.5    6.6   1.79   0.66    166    613 #REF!     18.5199
-    #> 10     B   89.6    9.8   1.65   0.62    314    431 #REF!     18.6772
+    #>    Group Cu_wt% Cu_err2SD% Sn_wt% As_wt% Sb_wt% Ag_ppm Ni_ppm d65Cu 206Pb/204Pb
+    #> 1      A   87.9       0.30    9.4   2.46   0.57    111    533  0.25          NA
+    #> 2      A   92.9       0.25    8.5   2.40   0.71    211    333  0.13          NA
+    #> 3      A   89.1       0.27    8.2   2.19   0.71    300    434  0.21          NA
+    #> 4      A   93.8       0.26   10.0   2.30   0.68    130    396  -0.5          NA
+    #> 5      A   94.4       0.21    8.3   1.52   0.58    240    585 -0.02          NA
+    #> 6      B   85.5       0.29    8.5   1.98   0.57    152    457 -0.28     18.4899
+    #> 7      B   90.3       0.22    7.7   2.26   0.62    132    584 #REF!     18.6064
+    #> 8      B   93.9       0.20    8.0   1.72   0.73    288    584 #REF!     18.4759
+    #> 9      B   90.5       0.23    6.4   1.82   0.63    324    578 #REF!     18.3556
+    #> 10     B   89.6       0.30    5.7   1.73   0.93    194    454 #REF!     18.4218
     #>    206Pb/204Pb_err2SD 207Pb/204Pb 207Pb/204Pb_err2SD 208Pb/204Pb
     #> 1                  NA          NA                 NA          NA
     #> 2                  NA          NA                 NA          NA
     #> 3                  NA          NA                 NA          NA
     #> 4                  NA          NA                 NA          NA
     #> 5                  NA          NA                 NA          NA
-    #> 6             0.00095     15.6380            0.00080      38.492
-    #> 7             0.00098     15.6613            0.00073      38.447
-    #> 8             0.00070     15.6352            0.00084      38.443
-    #> 9             0.00089     15.6111            0.00063      38.088
-    #> 10            0.00079     15.6244            0.00073      38.065
+    #> 6             0.00097     15.6985            0.00080      38.391
+    #> 7             0.00087     15.6893            0.00070      38.047
+    #> 8             0.00102     15.6886            0.00080      38.233
+    #> 9             0.00074     15.6175            0.00070      38.256
+    #> 10            0.00087     15.6131            0.00066      38.300
     #>    208Pb/204Pb_err2SD
     #> 1                  NA
     #> 2                  NA
     #> 3                  NA
     #> 4                  NA
     #> 5                  NA
-    #> 6              0.0017
-    #> 7              0.0013
-    #> 8              0.0017
-    #> 9              0.0013
-    #> 10             0.0012
+    #> 6              0.0013
+    #> 7              0.0015
+    #> 8              0.0020
+    #> 9              0.0015
+    #> 10             0.0019
 
 Note how the column headers are organised according to the ASTR
 conventions. This allows the package to *understand* some of the
@@ -85,7 +86,7 @@ Excel file we would call
 [`read_ASTR()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
 instead.
 
-To do this in practice we not only have to submit our `data` to
+To do this in practice, we not only have to submit our `data` to
 [`as_ASTR()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md),
 but also set two other arguments: 1. We have to define one of the
 columns as the ID column with `id_column`, and 2. we explicitly have to
@@ -94,13 +95,14 @@ analytical values, cf. [ASTR schema:
 Implementation](https://archaeothommy.github.io/ASTR/articles/VG.ASTR.Schema.Implementation.md)).
 
 ``` r
+
 data <- as_ASTR(data, id_column = "Group", context = c("Group"))
 #> Warning in as_ASTR(data, id_column = "Group", context = c("Group")): Detected
 #> multiple data rows with the same ID. They will be renamed consecutively using
 #> the following convention: _1, _2, ... _n
 #> Warning: Issue when transforming column "d65Cu" to numeric values: NAs
 #> introduced by coercion
-#> Warning in validate.ASTR(df5, quiet = FALSE): 34 missing values across 7
+#> Warning in validate.ASTR(df6, quiet = FALSE): 34 missing values across 7
 #> analytical columns
 #> Warning in as_ASTR(data, id_column = "Group", context = c("Group")): See the
 #> full list of validation output with: ASTR::validate(<your ASTR object>).
@@ -126,6 +128,7 @@ to run
 [`validate()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md):
 
 ``` r
+
 validate(data)
 #> # A tibble: 7 × 3
 #>   column             count warning       
@@ -147,36 +150,40 @@ values in the copper isotope data because apparently there was something
 wrong with the Excel file. In case of the lead isotope data, however,
 they are intentional (they were not measured for samples from group A).
 
-Having a closer look on the imported data set shows, that ASTR did one
-more thing:
+Having a closer look on the imported data set shows, that ASTR did two
+more things:
 
 ``` r
+
 data
 #> ASTR table
-#> Analytical columns: Cu, Sn, As, Sb, Ag, Ni, d65Cu, 206Pb/204Pb, 206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD, 208Pb/204Pb, 208Pb/204Pb_err2SD
+#> Analytical columns: Cu, Cu_err2SD, Sn, As, Sb, Ag, Ni, d65Cu, 206Pb/204Pb, 206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD, 208Pb/204Pb, 208Pb/204Pb_err2SD
 #> Contextual columns: Group 
-#> # A data frame: 10 × 15
-#>    ID    Group    Cu    Sn    As    Sb      Ag      Ni d65Cu `206Pb/204Pb`
-#>    <chr> <chr> [wtP] [wtP] [wtP] [wtP] [mg/kg] [mg/kg] <dbl>         <dbl>
-#>  1 A_1   A      87.9   9.8  2.39  0.98     136     316  0.17          NA  
-#>  2 A_2   A      92.9   7.3  2.19  0.95     204     455 -0.41          NA  
-#>  3 A_3   A      89.1   8.4  2.14  0.85     203     580 -0.12          NA  
-#>  4 A_4   A      93.8   7.9  2.49  0.9      192     343 -0.23          NA  
-#>  5 A_5   A      94.4   5.5  2.16  0.51     138     496  0.31          NA  
-#>  6 B_1   B      85.5   9.5  2.21  0.74     135     372 -0.05          18.7
-#>  7 B_2   B      90.3   6.2  2.04  0.88     158     345 NA             18.7
-#>  8 B_3   B      93.9   5.2  2.09  0.61     216     564 NA             18.7
-#>  9 B_4   B      90.5   6.6  1.79  0.66     166     613 NA             18.5
-#> 10 B_5   B      89.6   9.8  1.65  0.62     314     431 NA             18.7
+#> # A data frame: 10 × 16
+#>    ID    Group    Cu Cu_err2SD    Sn    As    Sb    Ag    Ni d65Cu `206Pb/204Pb`
+#>    <chr> <chr> [wtP]     [wtP] [wtP] [wtP] [wtP] [mg/… [mg/… <dbl>         <dbl>
+#>  1 A_1   A      87.9     0.264   9.4  2.46  0.57   111   533  0.25          NA  
+#>  2 A_2   A      92.9     0.232   8.5  2.4   0.71   211   333  0.13          NA  
+#>  3 A_3   A      89.1     0.241   8.2  2.19  0.71   300   434  0.21          NA  
+#>  4 A_4   A      93.8     0.244  10    2.3   0.68   130   396 -0.5           NA  
+#>  5 A_5   A      94.4     0.198   8.3  1.52  0.58   240   585 -0.02          NA  
+#>  6 B_1   B      85.5     0.248   8.5  1.98  0.57   152   457 -0.28          18.5
+#>  7 B_2   B      90.3     0.199   7.7  2.26  0.62   132   584 NA             18.6
+#>  8 B_3   B      93.9     0.188   8    1.72  0.73   288   584 NA             18.5
+#>  9 B_4   B      90.5     0.208   6.4  1.82  0.63   324   578 NA             18.4
+#> 10 B_5   B      89.6     0.269   5.7  1.73  0.93   194   454 NA             18.4
 #> # ℹ 5 more variables: `206Pb/204Pb_err2SD` <dbl>, `207Pb/204Pb` <dbl>,
 #> #   `207Pb/204Pb_err2SD` <dbl>, `208Pb/204Pb` <dbl>, `208Pb/204Pb_err2SD` <dbl>
 ```
 
-Our relative unit “ppm” was converted into SI-units and the values now
-have a measurement unit R can understand (note that the unit `wt%` is
-written as `wtP`)[¹](#fn1):
+The relative analytical precisions of the copper concentrations were
+automatically converted to absolute analytical precisions, facilitating,
+e.g., calculations and plotting. And our relative unit “ppm” was
+converted into SI-units; the values now have a measurement unit R can
+understand (note that the unit `wt%` is written as `wtP`)[^1]:
 
 ``` r
+
 units(data$Ag[1])
 #> $numerator
 #> [1] "mg"
@@ -192,37 +199,40 @@ When looking into the data structure, we also see that it also labelled
 the different columns as e.g. concentration or isotope ratio:
 
 ``` r
+
 str(data)
-#> ASTR [10 × 15] (S3: ASTR/tbl_df/tbl/data.frame)
+#> ASTR [10 × 16] (S3: ASTR/tbl_df/tbl/data.frame)
 #>  $ ID                : chr [1:10] "A_1" "A_2" "A_3" "A_4" ...
 #>   ..- attr(*, "ASTR_class")= chr "ASTR_id"
 #>  $ Group             : chr [1:10] "A" "A" "A" "A" ...
 #>   ..- attr(*, "ASTR_class")= chr "ASTR_context"
 #>  $ Cu                : Units: [wtP] num [1:10] 87.9 92.9 89.1 93.8 94.4 85.5 90.3 93.9 90.5 89.6
 #>   ..- attr(*, "ASTR_class")= chr "ASTR_concentration"
-#>  $ Sn                : Units: [wtP] num [1:10] 9.8 7.3 8.4 7.9 5.5 9.5 6.2 5.2 6.6 9.8
+#>  $ Cu_err2SD         : Units: [wtP] num [1:10] 0.264 0.232 0.241 0.244 0.198 ...
+#>   ..- attr(*, "ASTR_class")= chr "ASTR_error"
+#>  $ Sn                : Units: [wtP] num [1:10] 9.4 8.5 8.2 10 8.3 8.5 7.7 8 6.4 5.7
 #>   ..- attr(*, "ASTR_class")= chr "ASTR_concentration"
-#>  $ As                : Units: [wtP] num [1:10] 2.39 2.19 2.14 2.49 2.16 2.21 2.04 2.09 1.79 1.65
+#>  $ As                : Units: [wtP] num [1:10] 2.46 2.4 2.19 2.3 1.52 1.98 2.26 1.72 1.82 1.73
 #>   ..- attr(*, "ASTR_class")= chr "ASTR_concentration"
-#>  $ Sb                : Units: [wtP] num [1:10] 0.98 0.95 0.85 0.9 0.51 0.74 0.88 0.61 0.66 0.62
+#>  $ Sb                : Units: [wtP] num [1:10] 0.57 0.71 0.71 0.68 0.58 0.57 0.62 0.73 0.63 0.93
 #>   ..- attr(*, "ASTR_class")= chr "ASTR_concentration"
-#>  $ Ag                : Units: [mg/kg] num [1:10] 136 204 203 192 138 135 158 216 166 314
+#>  $ Ag                : Units: [mg/kg] num [1:10] 111 211 300 130 240 152 132 288 324 194
 #>   ..- attr(*, "ASTR_class")= chr "ASTR_concentration"
-#>  $ Ni                : Units: [mg/kg] num [1:10] 316 455 580 343 496 372 345 564 613 431
+#>  $ Ni                : Units: [mg/kg] num [1:10] 533 333 434 396 585 457 584 584 578 454
 #>   ..- attr(*, "ASTR_class")= chr "ASTR_concentration"
-#>  $ d65Cu             : num [1:10] 0.17 -0.41 -0.12 -0.23 0.31 -0.05 NA NA NA NA
+#>  $ d65Cu             : num [1:10] 0.25 0.13 0.21 -0.5 -0.02 -0.28 NA NA NA NA
 #>   ..- attr(*, "ASTR_class")= chr [1:2] "ASTR_isotope" "ASTR_ratio"
 #>  $ 206Pb/204Pb       : num [1:10] NA NA NA NA NA ...
 #>   ..- attr(*, "ASTR_class")= chr [1:2] "ASTR_isotope" "ASTR_ratio"
-#>  $ 206Pb/204Pb_err2SD: num [1:10] NA NA NA NA NA 0.00095 0.00098 0.0007 0.00089 0.00079
+#>  $ 206Pb/204Pb_err2SD: num [1:10] NA NA NA NA NA 0.00097 0.00087 0.00102 0.00074 0.00087
 #>   ..- attr(*, "ASTR_class")= chr "ASTR_error"
 #>  $ 207Pb/204Pb       : num [1:10] NA NA NA NA NA ...
 #>   ..- attr(*, "ASTR_class")= chr [1:2] "ASTR_isotope" "ASTR_ratio"
-#>  $ 207Pb/204Pb_err2SD: num [1:10] NA NA NA NA NA 0.0008 0.00073 0.00084 0.00063 0.00073
+#>  $ 207Pb/204Pb_err2SD: num [1:10] NA NA NA NA NA 0.0008 0.0007 0.0008 0.0007 0.00066
 #>   ..- attr(*, "ASTR_class")= chr "ASTR_error"
 #>  $ 208Pb/204Pb       : num [1:10] NA NA NA NA NA ...
 #>   ..- attr(*, "ASTR_class")= chr [1:2] "ASTR_isotope" "ASTR_ratio"
-#>  $ 208Pb/204Pb_err2SD: num [1:10] NA NA NA NA NA 0.0017 0.0013 0.0017 0.0013 0.0012
+#>  $ 208Pb/204Pb_err2SD: num [1:10] NA NA NA NA NA 0.0013 0.0015 0.002 0.0015 0.0019
 #>   ..- attr(*, "ASTR_class")= chr "ASTR_error"
 ```
 
@@ -235,6 +245,7 @@ biplots of all possible combinations. The `get_ ... _columns()`-family
 comes in very handy here:
 
 ``` r
+
 pairs(get_concentration_columns(data)[-1])
 ```
 
@@ -247,6 +258,7 @@ we might only be interested in the main elements of the metal. In this
 case, we can take advantage that these are the only values in `wtP`:
 
 ``` r
+
 pairs(get_unit_columns(data, units = "wtP")[-1])
 ```
 
@@ -259,31 +271,33 @@ approximate melting temperature and remember that we can get this
 information from a phase diagram. While our values for copper and tin
 are in `wt%`, the phase diagram in front of us is in `at%`. Converting
 from `wt%` to `at%` is probably faster than searching for a version of
-the phase diagram in `wt%`[²](#fn2):
+the phase diagram in `wt%`[^2]:
 
 ``` r
+
 library(magrittr) # import of pipe operator `%>%`
 
 unify_concentration_unit(data, unit = "wtP") %>%
   wt_to_at()
 #> ASTR table
-#> Analytical columns: Cu, Sn, As, Sb, Ag, Ni, d65Cu, 206Pb/204Pb, 206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD, 208Pb/204Pb, 208Pb/204Pb_err2SD
+#> Analytical columns: Cu, Cu_err2SD, Sn, As, Sb, Ag, Ni, d65Cu, 206Pb/204Pb, 206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD, 208Pb/204Pb, 208Pb/204Pb_err2SD
 #> Contextual columns: Group 
-#> # A data frame: 10 × 15
-#>    ID    Group    Cu    Sn    As    Sb      Ag     Ni d65Cu `206Pb/204Pb`
-#>    <chr> <chr> [atP] [atP] [atP] [atP]   [atP]  [atP] <dbl>         <dbl>
-#>  1 A_1   A      91.8  5.48  2.12 0.534 0.00837 0.0357  0.17          NA  
-#>  2 A_2   A      93.6  3.94  1.87 0.500 0.0121  0.0496 -0.41          NA  
-#>  3 A_3   A      92.9  4.69  1.89 0.462 0.0125  0.0655 -0.12          NA  
-#>  4 A_4   A      93.2  4.20  2.10 0.467 0.0112  0.0369 -0.23          NA  
-#>  5 A_5   A      94.9  2.96  1.84 0.267 0.00817 0.0540  0.31          NA  
-#>  6 B_1   B      92.0  5.47  2.02 0.416 0.00856 0.0434 -0.05          18.7
-#>  7 B_2   B      94.2  3.46  1.81 0.479 0.00971 0.0390 NA             18.7
-#>  8 B_3   B      95.0  2.82  1.79 0.322 0.0129  0.0618 NA             18.7
-#>  9 B_4   B      94.3  3.68  1.58 0.359 0.0102  0.0692 NA             18.5
-#> 10 B_5   B      92.7  5.43  1.45 0.335 0.0191  0.0483 NA             18.7
-#> # ℹ 5 more variables: `206Pb/204Pb_err2SD` <dbl>, `207Pb/204Pb` <dbl>,
-#> #   `207Pb/204Pb_err2SD` <dbl>, `208Pb/204Pb` <dbl>, `208Pb/204Pb_err2SD` <dbl>
+#> # A data frame: 10 × 16
+#>    ID    Group    Cu Cu_err2SD    Sn    As    Sb      Ag     Ni d65Cu
+#>    <chr> <chr> [atP]     [wtP] [atP] [atP] [atP]   [atP]  [atP] <dbl>
+#>  1 A_1   A      92.2     0.264  5.28  2.19 0.312 0.00686 0.0605  0.25
+#>  2 A_2   A      93.0     0.232  4.55  2.04 0.371 0.0124  0.0361  0.13
+#>  3 A_3   A      93.0     0.241  4.58  1.94 0.387 0.0185  0.0491  0.21
+#>  4 A_4   A      92.4     0.244  5.27  1.92 0.350 0.00754 0.0422 -0.5 
+#>  5 A_5   A      93.9     0.198  4.42  1.28 0.301 0.0141  0.0630 -0.02
+#>  6 B_1   B      92.8     0.248  4.94  1.82 0.323 0.00972 0.0537 -0.28
+#>  7 B_2   B      93.3     0.199  4.26  1.98 0.335 0.00804 0.0654 NA   
+#>  8 B_3   B      93.8     0.188  4.28  1.46 0.381 0.0169  0.0632 NA   
+#>  9 B_4   B      94.4     0.208  3.57  1.61 0.343 0.0199  0.0653 NA   
+#> 10 B_5   B      94.7     0.269  3.22  1.55 0.513 0.0121  0.0519 NA   
+#> # ℹ 6 more variables: `206Pb/204Pb` <dbl>, `206Pb/204Pb_err2SD` <dbl>,
+#> #   `207Pb/204Pb` <dbl>, `207Pb/204Pb_err2SD` <dbl>, `208Pb/204Pb` <dbl>,
+#> #   `208Pb/204Pb_err2SD` <dbl>
 ```
 
 We use a two-step approach here to be more accurate: The actual
@@ -299,23 +313,24 @@ because of the significant amounts of arsenic and antimony in the metal.
 Therefore, converting only copper and tin would be sufficient:
 
 ``` r
+
 wt_to_at(data, elements = c("Cu", "Sn"))
 #> ASTR table
-#> Analytical columns: Cu, Sn, As, Sb, Ag, Ni, d65Cu, 206Pb/204Pb, 206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD, 208Pb/204Pb, 208Pb/204Pb_err2SD
+#> Analytical columns: Cu, Cu_err2SD, Sn, As, Sb, Ag, Ni, d65Cu, 206Pb/204Pb, 206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD, 208Pb/204Pb, 208Pb/204Pb_err2SD
 #> Contextual columns: Group 
-#> # A data frame: 10 × 15
-#>    ID    Group    Cu    Sn    As    Sb      Ag      Ni d65Cu `206Pb/204Pb`
-#>    <chr> <chr> [atP] [atP] [wtP] [wtP] [mg/kg] [mg/kg] <dbl>         <dbl>
-#>  1 A_1   A      94.4  5.63  2.39  0.98     136     316  0.17          NA  
-#>  2 A_2   A      96.0  4.04  2.19  0.95     204     455 -0.41          NA  
-#>  3 A_3   A      95.2  4.80  2.14  0.85     203     580 -0.12          NA  
-#>  4 A_4   A      95.7  4.31  2.49  0.9      192     343 -0.23          NA  
-#>  5 A_5   A      97.0  3.02  2.16  0.51     138     496  0.31          NA  
-#>  6 B_1   B      94.4  5.61  2.21  0.74     135     372 -0.05          18.7
-#>  7 B_2   B      96.5  3.55  2.04  0.88     158     345 NA             18.7
-#>  8 B_3   B      97.1  2.88  2.09  0.61     216     564 NA             18.7
-#>  9 B_4   B      96.2  3.76  1.79  0.66     166     613 NA             18.5
-#> 10 B_5   B      94.5  5.53  1.65  0.62     314     431 NA             18.7
+#> # A data frame: 10 × 16
+#>    ID    Group    Cu Cu_err2SD    Sn    As    Sb    Ag    Ni d65Cu `206Pb/204Pb`
+#>    <chr> <chr> [atP]     [wtP] [atP] [wtP] [wtP] [mg/… [mg/… <dbl>         <dbl>
+#>  1 A_1   A      94.6     0.264  5.41  2.46  0.57   111   533  0.25          NA  
+#>  2 A_2   A      95.3     0.232  4.67  2.4   0.71   211   333  0.13          NA  
+#>  3 A_3   A      95.3     0.241  4.70  2.19  0.71   300   434  0.21          NA  
+#>  4 A_4   A      94.6     0.244  5.40  2.3   0.68   130   396 -0.5           NA  
+#>  5 A_5   A      95.5     0.198  4.50  1.52  0.58   240   585 -0.02          NA  
+#>  6 B_1   B      94.9     0.248  5.05  1.98  0.57   152   457 -0.28          18.5
+#>  7 B_2   B      95.6     0.199  4.37  2.26  0.62   132   584 NA             18.6
+#>  8 B_3   B      95.6     0.188  4.36  1.72  0.73   288   584 NA             18.5
+#>  9 B_4   B      96.4     0.208  3.65  1.82  0.63   324   578 NA             18.4
+#> 10 B_5   B      96.7     0.269  3.29  1.73  0.93   194   454 NA             18.4
 #> # ℹ 5 more variables: `206Pb/204Pb_err2SD` <dbl>, `207Pb/204Pb` <dbl>,
 #> #   `207Pb/204Pb_err2SD` <dbl>, `208Pb/204Pb` <dbl>, `208Pb/204Pb_err2SD` <dbl>
 ```
@@ -329,6 +344,7 @@ be to use the classification suggested by Bray et al.
 the group “As+Sb”:
 
 ``` r
+
 copper_group <- copper_group_bray(data)
 copper_group
 #> ASTR table
@@ -337,16 +353,16 @@ copper_group
 #> # A data frame: 10 × 7
 #>    ID    Group    As    Sb     Ag     Ni copper_group_bray
 #>    <chr> <chr> [wtP] [wtP]  [wtP]  [wtP] <chr>            
-#>  1 A_1   A      2.39  0.98 0.0136 0.0316 As+Sb            
-#>  2 A_2   A      2.19  0.95 0.0204 0.0455 As+Sb            
-#>  3 A_3   A      2.14  0.85 0.0203 0.058  As+Sb            
-#>  4 A_4   A      2.49  0.9  0.0192 0.0343 As+Sb            
-#>  5 A_5   A      2.16  0.51 0.0138 0.0496 As+Sb            
-#>  6 B_1   B      2.21  0.74 0.0135 0.0372 As+Sb            
-#>  7 B_2   B      2.04  0.88 0.0158 0.0345 As+Sb            
-#>  8 B_3   B      2.09  0.61 0.0216 0.0564 As+Sb            
-#>  9 B_4   B      1.79  0.66 0.0166 0.0613 As+Sb            
-#> 10 B_5   B      1.65  0.62 0.0314 0.0431 As+Sb
+#>  1 A_1   A      2.46  0.57 0.0111 0.0533 As+Sb            
+#>  2 A_2   A      2.4   0.71 0.0211 0.0333 As+Sb            
+#>  3 A_3   A      2.19  0.71 0.03   0.0434 As+Sb            
+#>  4 A_4   A      2.3   0.68 0.013  0.0396 As+Sb            
+#>  5 A_5   A      1.52  0.58 0.024  0.0585 As+Sb            
+#>  6 B_1   B      1.98  0.57 0.0152 0.0457 As+Sb            
+#>  7 B_2   B      2.26  0.62 0.0132 0.0584 As+Sb            
+#>  8 B_3   B      1.72  0.73 0.0288 0.0584 As+Sb            
+#>  9 B_4   B      1.82  0.63 0.0324 0.0578 As+Sb            
+#> 10 B_5   B      1.73  0.93 0.0194 0.0454 As+Sb
 ```
 
 After we look into the chemical compositions, it is time to turn to the
@@ -357,6 +373,7 @@ still the most commonly used one. Because we have lead isotope data only
 for group B, we exclude data from group A:
 
 ``` r
+
 data_pb_iso <- data[data$Group == "B", ]
 age_model_params <- pb_iso_age_model(data_pb_iso, model = "SK75")
 age_model_params
@@ -366,11 +383,11 @@ age_model_params
 #> # A data frame: 5 × 8
 #>   ID    Group `206Pb/204Pb` `207Pb/204Pb` `208Pb/204Pb` model_age_SK75 mu_SK75
 #>   <chr> <chr>         <dbl>         <dbl>         <dbl>          <dbl>   <dbl>
-#> 1 B_1   B              18.7          15.6          38.5           18.7    9.78
-#> 2 B_2   B              18.7          15.7          38.4           67.8    9.88
-#> 3 B_3   B              18.7          15.6          38.4           18.5    9.77
-#> 4 B_4   B              18.5          15.6          38.1          101.     9.70
-#> 5 B_5   B              18.7          15.6          38.1           10.2    9.73
+#> 1 B_1   B              18.5          15.7          38.4           304.   10.1 
+#> 2 B_2   B              18.6          15.7          38.0           200.   10.0 
+#> 3 B_3   B              18.5          15.7          38.2           294.   10.1 
+#> 4 B_4   B              18.4          15.6          38.3           239.    9.77
+#> 5 B_5   B              18.4          15.6          38.3           180.    9.73
 #> # ℹ 1 more variable: kappa_SK75 <dbl>
 ```
 
@@ -385,27 +402,28 @@ Before export, we have to make sure that the information about the units
 of the values is preserved by including it back in the column name:
 
 ``` r
+
 data_unitless <- remove_units(data, recover_unit_names = TRUE)
 data_unitless
 #> ASTR table
-#> Analytical columns: Cu_wt%, Sn_wt%, As_wt%, Sb_wt%, Ag_mg/kg, Ni_mg/kg, d65Cu, 206Pb/204Pb, 206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD, 208Pb/204Pb, 208Pb/204Pb_err2SD
+#> Analytical columns: Cu_wt%, Cu_err2SD, Sn_wt%, As_wt%, Sb_wt%, Ag_mg/kg, Ni_mg/kg, d65Cu, 206Pb/204Pb, 206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD, 208Pb/204Pb, 208Pb/204Pb_err2SD
 #> Contextual columns: Group 
-#> # A data frame: 10 × 15
-#>    ID    Group `Cu_wt%` `Sn_wt%` `As_wt%` `Sb_wt%` `Ag_mg/kg` `Ni_mg/kg` d65Cu
-#>    <chr> <chr>    <dbl>    <dbl>    <dbl>    <dbl>      <dbl>      <dbl> <dbl>
-#>  1 A_1   A         87.9      9.8     2.39     0.98        136        316  0.17
-#>  2 A_2   A         92.9      7.3     2.19     0.95        204        455 -0.41
-#>  3 A_3   A         89.1      8.4     2.14     0.85        203        580 -0.12
-#>  4 A_4   A         93.8      7.9     2.49     0.9         192        343 -0.23
-#>  5 A_5   A         94.4      5.5     2.16     0.51        138        496  0.31
-#>  6 B_1   B         85.5      9.5     2.21     0.74        135        372 -0.05
-#>  7 B_2   B         90.3      6.2     2.04     0.88        158        345 NA   
-#>  8 B_3   B         93.9      5.2     2.09     0.61        216        564 NA   
-#>  9 B_4   B         90.5      6.6     1.79     0.66        166        613 NA   
-#> 10 B_5   B         89.6      9.8     1.65     0.62        314        431 NA   
-#> # ℹ 6 more variables: `206Pb/204Pb` <dbl>, `206Pb/204Pb_err2SD` <dbl>,
-#> #   `207Pb/204Pb` <dbl>, `207Pb/204Pb_err2SD` <dbl>, `208Pb/204Pb` <dbl>,
-#> #   `208Pb/204Pb_err2SD` <dbl>
+#> # A data frame: 10 × 16
+#>    ID    Group `Cu_wt%` Cu_err2SD `Sn_wt%` `As_wt%` `Sb_wt%` `Ag_mg/kg`
+#>    <chr> <chr>    <dbl>     <dbl>    <dbl>    <dbl>    <dbl>      <dbl>
+#>  1 A_1   A         87.9     0.264      9.4     2.46     0.57        111
+#>  2 A_2   A         92.9     0.232      8.5     2.4      0.71        211
+#>  3 A_3   A         89.1     0.241      8.2     2.19     0.71        300
+#>  4 A_4   A         93.8     0.244     10       2.3      0.68        130
+#>  5 A_5   A         94.4     0.198      8.3     1.52     0.58        240
+#>  6 B_1   B         85.5     0.248      8.5     1.98     0.57        152
+#>  7 B_2   B         90.3     0.199      7.7     2.26     0.62        132
+#>  8 B_3   B         93.9     0.188      8       1.72     0.73        288
+#>  9 B_4   B         90.5     0.208      6.4     1.82     0.63        324
+#> 10 B_5   B         89.6     0.269      5.7     1.73     0.93        194
+#> # ℹ 8 more variables: `Ni_mg/kg` <dbl>, d65Cu <dbl>, `206Pb/204Pb` <dbl>,
+#> #   `206Pb/204Pb_err2SD` <dbl>, `207Pb/204Pb` <dbl>,
+#> #   `207Pb/204Pb_err2SD` <dbl>, `208Pb/204Pb` <dbl>, `208Pb/204Pb_err2SD` <dbl>
 ```
 
 ## References
@@ -420,9 +438,7 @@ lead isotope evolution by a two-stage model. *Earth and Planetary
 Science Letters*, *26*(2), 207–221.
 <https://doi.org/10.1016/0012-821X(75)90088-6>
 
-------------------------------------------------------------------------
+[^1]: The %-sign can not be used in custom units
 
-1.  The %-sign can not be used in custom units
-
-2.  While ASTR fully supports use the native pipe operator `|>`, it
+[^2]: While ASTR fully supports use the native pipe operator `|>`, it
     maintains backward compatibility to older R versions by using `%>%`
