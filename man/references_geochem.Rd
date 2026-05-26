@@ -6,9 +6,10 @@
 \title{Reference compositions}
 \format{
 A list including sets of chemical compositions often used as
-reference composition for e.g. normalisation. Values are stored as names
-vectors. To retrieve the list of elements and their concentrations for
-e.g. the PM, run \code{references_geochem$PM}.
+reference composition for e.g. normalisation. Values are stored as named
+vectors of their concentration with assigned units (using
+\link[units]{set_units}). To retrieve the list of elements and their
+concentrations for e.g. the PM, run \code{references_geochem$PM}.
 \describe{
 \item{chondrite}{CI chondrite composition in ppm, as defined by Sun &
 McDonough (1989)}

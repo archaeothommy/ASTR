@@ -12,7 +12,7 @@
 #' the [package's GitHub repo](https://github.com/archaeothommy/ASTR) with the
 #' values to be included and a literature reference.
 #'
-#' The function converts all elements in the dataframe for which a reference
+#' The function converts all elements in the data frame for which a reference
 #' composition is available. For [ASTR objects][ASTR], unit conversion is
 #' handled by the function. For all other objects, the user must ensure that
 #' values and reference composition have the same unit.
@@ -43,7 +43,7 @@
 #'   reference = "chondrite"
 #' )
 #'
-#' For ASTR objects, units and oxides are automatically converted
+#' # For ASTR objects, units are automatically converted
 #' test_file <- system.file("extdata", "test_data_input_good.csv", package = "ASTR")
 #' arch <- read_ASTR(test_file, id_column = "Sample", context = 1:7)
 #'
