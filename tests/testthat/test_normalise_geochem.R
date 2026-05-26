@@ -1,5 +1,3 @@
-# tests/testthat/test-normalise_geochem.R
-
 test_that("normalise_geochem handles all cases", {
 
   df <- data.frame(
@@ -11,16 +9,12 @@ test_that("normalise_geochem handles all cases", {
   )
 
   # Run normalisation using internal reference data
-  result <- suppressWarnings(
-    normalise_geochem(df, reference = "chondrite")
-  )
+  result <- normalise_geochem(df, reference = "chondrite")
 
   # Check normalization math (using real reference values)
-  ref <- references_geochem$chondrite
-
-  expect_equal(result$La, df$La / ref["La"])
-  expect_equal(result$Ce, df$Ce / ref["Ce"])
-  expect_equal(result$Nd, df$Nd / ref["Nd"])
+  expect_equal(result$La_chondrite, units::drop_units(df$La / references_geochem$chondrite["La"]))
+  expect_equal(result$Ce_chondrite, units::drop_units(df$Ce / references_geochem$chondrite["Ce"]))
+  expect_equal(result$Nd_chondrite, units::drop_units(df$Nd / references_geochem$chondrite["Nd"]))
 
   # Check non-element columns unchanged
   expect_equal(result$X, df$X)
@@ -29,13 +23,6 @@ test_that("normalise_geochem handles all cases", {
   # Check NA values preserved
   expect_true(is.na(result$La[2]))
   expect_true(is.na(result$Ce[3]))
-
-  # Warning when some elements missing
-  df_partial <- df[, c("Sample", "La")]
-  expect_warning(
-    normalise_geochem(df_partial, reference = "chondrite"),
-    regexp = "does not include all elements"
-  )
 
   # Error when no matching elements
   df_none <- data.frame(Sample = c("A", "B"), X = c(1, 2))
@@ -47,5 +34,28 @@ test_that("normalise_geochem handles all cases", {
   # Structure checks
   expect_s3_class(result, "data.frame")
   expect_equal(nrow(result), nrow(df))
-  expect_equal(names(result), names(df))
+  expect_equal(names(result), c(names(df), "La_chondrite", "Ce_chondrite", "Nd_chondrite"))
 })
+
+test_that("ASTR objects handled as intended", {
+
+  suppressWarnings(
+    test_input <- read_ASTR(
+      system.file("extdata", "test_data_input_good.csv", package = "ASTR"),
+      id_column = "Sample",
+      context = 1:7
+    )
+  )
+
+  normalised <- normalise_geochem(test_input, "chondrite")
+
+  expect_true("ASTR" %in% class(normalised))
+  expect_equal(get_contextual_columns(normalised[1:8]), get_contextual_columns(test_input))
+  expect_equal(
+    attributes(normalised[["Sb_chondrite"]]),
+    attributes(test_input[["Sample"]])
+  )
+
+})
+
+
