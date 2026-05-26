@@ -282,7 +282,7 @@ is_err_percent <- function(colname) {
   grepl(err_percent(), colname, perl = TRUE)
 }
 is_err_abs <- function(colname) {
-  grepl(err_abs(), colname, perl = TRUE)
+  grepl(paste0("(", err_abs(), ")(?!%)"), colname, perl = TRUE)
 }
 is_isotope_ratio <- function(colname) {
   grepl(isotope_ratio(), colname, perl = TRUE)
@@ -351,6 +351,8 @@ err_percent <- function() {
 }
 err_2sd_percent <- function() "\\_err2SD%"
 err_sd_percent <- function() "\\_errSD%"
+err_2se_percent <- function() "\\_err2SE%"
+err_se_percent <- function() "\\_errSE%"
 
 err_abs <- function() {
   paste0(c(

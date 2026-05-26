@@ -23,6 +23,7 @@ set.seed(123)
 data <- data.frame(
   "Group" = c(rep("A", 5), rep("B", 5)),
   "Cu_wt%" = round(runif(10, 85, 95), 1),
+  "Cu_err2SD%" = round(runif(10, 0.2, 0.3), 2),
   "Sn_wt%" = round(runif(10, 5, 10), 1),
   "As_wt%" = round(runif(10, 1.5, 2.5), 2),
   "Sb_wt%" = round(runif(10, 0.5, 1), 2),
@@ -58,7 +59,7 @@ Note how the column headers are organised according to the ASTR conventions. Thi
 
 We can now perform the reading process. As we are working with mock-up data in an R vignette, we do not read from the file system. We only need to call an essential internal function of `read_ASTR()`: `as_ASTR()`. It turns R data.frames to `ASTR` objects. If we would start from an Excel file we would call `read_ASTR()` instead.
 
-To do this in practice we not only have to submit our `data` to `as_ASTR()`, but also set two other arguments: 1. We have to define one of the columns as the ID column with `id_column`, and 2. we explicitly have to mark any column providing contextual information with `context` (i.e. no analytical values, cf. [ASTR schema: Implementation](VG.ASTR.Schema.Implementation.html)).
+To do this in practice, we not only have to submit our `data` to `as_ASTR()`, but also set two other arguments: 1. We have to define one of the columns as the ID column with `id_column`, and 2. we explicitly have to mark any column providing contextual information with `context` (i.e. no analytical values, cf. [ASTR schema: Implementation](VG.ASTR.Schema.Implementation.html)).
 
 ```{r echo=TRUE}
 data <- as_ASTR(data, id_column = "Group", context = c("Group"))
@@ -80,13 +81,13 @@ This summary of where to find the missing values comes in handy for large datase
 
 In our case, the dataset is fine. We might want to check on the missing values in the copper isotope data because apparently there was something wrong with the Excel file. In case of the lead isotope data, however, they are intentional (they were not measured for samples from group A).
 
-Having a closer look on the imported data set shows, that ASTR did one more thing: 
+Having a closer look on the imported data set shows, that ASTR did two more things: 
 
 ```{r echo=TRUE}
 data
 ```
 
-Our relative unit "ppm" was converted into SI-units and the values now have a measurement unit R can understand (note that the unit `wt%` is written as `wtP`)^[The %-sign can not be used in custom units]: 
+The relative analytical precisions of the copper concentrations were automatically converted to absolute analytical precisions, facilitating, e.g., calculations and plotting. And our relative unit "ppm" was converted into SI-units; the values now have a measurement unit R can understand (note that the unit `wt%` is written as `wtP`)^[The %-sign can not be used in custom units]: 
 
 ``` {r}
 units(data$Ag[1])

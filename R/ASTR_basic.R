@@ -174,9 +174,11 @@ as_ASTR <- function(
   df4 <- remove_unit_substrings(df3)
   # turn into tibble-derived object
   df5 <- tibble::new_tibble(df4, nrow = nrow(df4), class = "ASTR")
+  # convert relative to absolute errors
+  df6 <- rel_to_abs(df5)
   # post-reading validation
   if (validate) {
-    validation_output <- validate(df5, quiet = FALSE)
+    validation_output <- validate(df6, quiet = FALSE)
     if (nrow(validation_output) > 0) {
       warning(
         "See the full list of validation output with: ",
@@ -184,7 +186,7 @@ as_ASTR <- function(
       )
     }
   }
-  return(df5)
+  return(df6)
 }
 
 # helper function to rename column names

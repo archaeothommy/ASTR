@@ -23,6 +23,7 @@ reference:
     Functions for creating and handling ASTR objects.
   contents:
   - ASTR
+  - error_conversion
 - title: Data subsetting
   desc: >
     Pre-compiled lists for easier subsetting of data
