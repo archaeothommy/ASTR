@@ -30,6 +30,8 @@
 #'   The used reference composition is indicated in the column names of the
 #'   output by the value of `reference`.
 #'
+#' @family Data normalisation
+#'
 #' @examples
 #' df <- data.frame(
 #'   Sample = c("A","B"),
