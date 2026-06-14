@@ -72,3 +72,8 @@ references_geochem$"31X 7835.8A" <- units::set_units(
 references_geochem$"31X 7835.8A"
 
 }
+\seealso{
+Other Data normalisation: 
+\code{\link{normalise_data}()}
+}
+\concept{Data normalisation}

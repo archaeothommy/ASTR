@@ -1,26 +1,38 @@
 #' Spidergram geom for ggplot2
 #'
-#'Descriptions goes here ###################
-#' #### This will likely only work with ASTR objects or similarly wide data frame!?
-#' #### Or is there a way to identify short vs. long form!?
-#' #### e.g. single value to x and col content = character: long format,
-#' x = character vector length > 1 and column content of x = numeric: wide format
-#' #### y = single value and numeric: long format, concentration, y is not provided: wide format
-#' #### long format values do not need to be transformed (but normalised!?),
-#' wide format must be transformed to long format
+#' This geom creates spidergrams, line graphs of element concentrations. The
+#' geom supports data normalisation, which is commonly done before plotting.
 #'
-#' Normalisation is done with [normalise_geochem()]. If data are geochemically
-#' normalised, only normalised elements are plotted. Otherwise, all elements
-#' are plotted.
+#' This geom is special because no x and y coordinates are provided in the
+#' input. Instead, the aesthetic `elements` must be provided only in the
+#' [ggplot2:aes()] function.
+#'
+#' The elements can be supplied either as user-defined character vector or
+#' pre-made sets. See [standard_groups] for a list of available sets and the
+#' examples below for how to include them. The examples below also show how to
+#' avoid the default sorting into alphabetical order. The geom will throw an
+#' error if any of the supplied elements is not matched by a column name in the
+#' supplied data.
 #'
 #' @inheritParams ggplot2::layer
-#' @param reference `NULL`, the default, if data should not be normalised or
-#'   name of the geochemical reference composition to which data should be
-#'   normalised. See [references_geochem] for a list of names.
-#' @param na.rm Logical: remove NA values
+#' @param elements Character vector with the list of elements to be plotted. If
+#'   data supplied to the geom are in an [ASTR object][ASTR], the default is
+#'   plotting all chemical elements present in the data.
+#' @param reference Character string with what the data should be normalised to;
+#'   see [normalise_data] fur further details. If `NULL`, the default, data will
+#'   not be normalised.
+#' @param na.rm Logical value to indicate whether `NA` should be removed from
+#'   the data. The default `FALSE` will supply all data.
 #' @param ... Other arguments passed on to [ggplot2::layer()]. These are often
 #'   aesthetics used to set a fixed value, such as `colour = "red"` or `alpha =
 #'   0.5`.
+#'
+#' @section Aesthetics: ### update as needed `geom_spidergram()` understands the
+#'   following aesthetic values (required aesthetics are in bold):
+#' * **`elements`** (the list of elements to be plotted)
+#' * ...
+#'
+#'   Learn more about setting these aesthetics in `vignette("ggplot2-specs")`.
 #'
 #' @export
 #'
@@ -41,7 +53,7 @@
 geom_spider <- function(mapping = NULL,
                         data = NULL,
                         inherit.aes = TRUE,
-                        elements = NULL,
+                        elements = ifelse(inherits(data, "ASTR"), get_concentration_columns(data), NULL),
                         reference = NULL,
                         na.rm = FALSE,
                         show.legend = NA,
