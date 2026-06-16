@@ -56,7 +56,6 @@ Imports:
     stats,
     tibble,
     tidyselect,
-    tidyr, 
     units,
     vctrs,
     ggplot2,
