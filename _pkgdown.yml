@@ -32,8 +32,6 @@ reference:
   - elements_data
   - oxides_data
   - special_oxide_states
-  - standard_groups
-  - references_geochem
 - title: Unit conversions
   desc: >
     Functions and data tables for conversions between untis not covered in
@@ -46,7 +44,6 @@ reference:
   desc: >
     Functions for data transformation
   contents:
-  - normalise_geochem
   - copper_alloy_bb
   - copper_alloy_pollard
   - copper_group_bray
