@@ -120,10 +120,11 @@ amalia <- function(
   checkmate::assert_string(id_ref)
 
   if (!(id_sample %in% names(df))) {
-    stop("Sample ID column '", id_sample, "' not found in sample data.")
+    stop("Sample ID column(s) '", id_sample, "' not found in sample data.")
   }
+
   if (!(id_ref %in% names(ref))) {
-    stop("Reference ID column '", id_ref, "' not found in reference data.")
+    stop("Reference ID column(s) '", id_ref, "' not found in reference data.")
   }
 
   # Validate only the columns required by the selected triplet
@@ -146,16 +147,20 @@ amalia <- function(
   }
 
   # Select ratios and errors based on triplet
-  if (triplet == "204Pb") {
-    ratios <- ratios_204
-    errors <- error_204
-  } else if (triplet == "206Pb") {
-    ratios <- ratios_206
-    errors <- error_206
-  } else { # "both"
-    ratios <- c(ratios_204, ratios_206)
-    errors <- c(error_204, error_206)
-  }
+  switch(triplet,
+    "204Pb" = {
+      ratios <- ratios_204
+      errors <- error_204
+    },
+    "206Pb" = {
+      ratios <- ratios_206
+      errors <- error_206
+    },
+    both = {
+      ratios <- c(ratios_204, ratios_206)
+      errors <- c(error_204, error_206)
+    }
+  )
 
   # Run matching
   matches <- amalia_match_pairs(
@@ -209,7 +214,7 @@ amalia <- function(
 #' @param df Data frame with sample data.
 #' @param ref Data frame with reference data.
 #' @param ratios Character vector of isotope ratio column names to check.
-#' @param errors Character vector of analytical error column names corresponding
+#' @param errors Character vector of analytical uncertainty column names corresponding
 #'   to `ratios`.
 #' @param id_sample String with the column name of the sample IDs in `df`.
 #' @param id_ref String with the column name of the reference groups in `ref`.
@@ -244,7 +249,9 @@ amalia_match_pairs <- function(df, ref, ratios, errors, id_sample, id_ref) {
 
   matched <- pairs[is_match, ]
 
-  if (nrow(matched) == 0) return(data.frame())
+  if (nrow(matched) == 0) {
+    return(data.frame())
+  }
 
   data.frame(
     sample_id = df[[id_sample]][matched$i],
