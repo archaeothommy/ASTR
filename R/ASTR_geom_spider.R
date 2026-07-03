@@ -4,8 +4,9 @@
 #' geom supports data normalisation, which is commonly done before plotting.
 #'
 #' This geom is special because no x and y coordinates are provided in the
-#' input. Instead, the aesthetic `elements` must be provided only in the
-#' [ggplot2:aes()] function.
+#' input. Instead, the aesthetic `elements` must be provided in [ggplot2::aes()]
+#' and it must be provided in the call to this geom, and not in
+#' [ggplot2::ggplot()] (see Examples).
 #'
 #' The elements can be supplied either as user-defined character vector or
 #' pre-made sets. See [standard_groups] for a list of available sets and the
@@ -15,21 +16,16 @@
 #' supplied data.
 #'
 #' @inheritParams ggplot2::layer
-#' @param elements Character vector with the list of elements to be plotted. If
-#'   data supplied to the geom are in an [ASTR object][ASTR], the default is
-#'   plotting all chemical elements present in the data.
 #' @param reference Character string with what the data should be normalised to;
 #'   see [normalise_data] fur further details. If `NULL`, the default, data will
 #'   not be normalised.
-#' @param na.rm Logical value to indicate whether `NA` should be removed from
-#'   the data. The default `FALSE` will supply all data.
 #' @param ... Other arguments passed on to [ggplot2::layer()]. These are often
 #'   aesthetics used to set a fixed value, such as `colour = "red"` or `alpha =
 #'   0.5`.
 #'
 #' @section Aesthetics: ### update as needed `geom_spidergram()` understands the
 #'   following aesthetic values (required aesthetics are in bold):
-#' * **`elements`** (the list of elements to be plotted)
+#' * **`elements`** (character vector with the list of elements to be plotted)
 #' * ...
 #'
 #'   Learn more about setting these aesthetics in `vignette("ggplot2-specs")`.
@@ -38,6 +34,7 @@
 #'
 #' @examples
 #' # include example with data[[standard_groups$REE]]
+#' # include example demonstrating that aes(elements = c()) must be called in the geom and not ggplot()
 #'
 #' library(ggplot2)
 #'
@@ -50,71 +47,38 @@
 #'
 #' ggplot(test) + geom_spider(mapping = aes(x = standard_groups$REE, color = Sample))
 #'
-geom_spider <- function(mapping = NULL,
-                        data = NULL,
-                        inherit.aes = TRUE,
-                        elements = ifelse(inherits(data, "ASTR"), get_concentration_columns(data), NULL),
-                        reference = NULL,
-                        na.rm = FALSE,
-                        show.legend = NA,
+geom_spider <- function(mapping = NULL, data = NULL, stat = "identity",
+                        position = "identity", na.rm = FALSE, reference = NULL,
+                        show.legend = NA, inherit.aes = TRUE,
                         ...) {
 
-  .data      <- data
-  .elements  <- elements
-  .reference <- reference
+  # extract elements from aesthetic `elements`
+  elements <- as.character(rlang::get_expr(mapping$elements))[-1]
 
-  mapping <- utils::modifyList(
-    ggplot2::aes(x = .data$x, y = .data$y),
-    if (!is.null(mapping)) mapping else ggplot2::aes()
-  )
+  if (length(elements) <= 1) {
+    stop("At least two elements must be provided to draw a spidergram.")
+  }
 
-  list(
-    suppressWarnings(
-      ggplot2::layer(
-        geom = GeomSpider,
-        mapping = mapping,
-        data = function(x) {
-          d <- if (!is.null(.data)) .data else x
+  # re-mapping elements to single columns
+  for (i in elements) {
+    mapping[[i]] <- rlang::set_expr(mapping$elements, str2lang(i))
+  }
 
-          if (!is.null(.reference)) {
-            d <- normalise_geochem(d, reference = .reference)
-          }
+  mapping$elements <- NA # avoid error of not finding required aesthetic
 
-          elements_present <- intersect(.elements, colnames(d))
-          if (length(elements_present) == 0) {
-            stop("None of the requested elements are present as columns in the data.")
-          }
-          if (length(elements_present) < length(.elements)) {
-            warning("Some requested elements are absent and will be skipped: ",
-                    paste(setdiff(.elements, elements_present), collapse = ", "))
-          }
-
-          meta_cols <- setdiff(colnames(d), elements_present)
-
-          data_long <- do.call(rbind, lapply(elements_present, function(el) {
-            row          <- d[meta_cols]
-            row$elements <- el
-            row$y        <- d[[el]]
-            row
-          }))
-
-          data_long$elements <- factor(data_long$elements, levels = elements_present)
-          data_long$x        <- as.numeric(data_long$elements)
-
-          data_long
-        },
-        stat = "identity",
-        position = "identity",
-        show.legend = show.legend,
-        inherit.aes = inherit.aes,
-        params = list(na.rm = na.rm, ...)
-      )
-    ),
-    ggplot2::scale_x_continuous(
-      breaks = seq_along(.elements),
-      labels = .elements
-    ),
-    ggplot2::labs(x = NULL, y = "Concentration")
+  ggplot2::layer(
+    geom = GeomSpider,
+    data = data,
+    mapping = mapping,
+    stat = stat,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(
+      reference = reference,
+      elements = elements,
+      na.rm = na.rm, ...
+    )
   )
 }
 
@@ -122,29 +86,35 @@ GeomSpider <- ggplot2::ggproto(
   "GeomSpider",
   ggplot2::Geom,
 
-  required_aes = character(0),
+  required_aes = c("elements"),
 
   default_aes = ggplot2::aes(
     colour    = "black",
-    linewidth = 0.6,
+    linewidth = 0.5,
     linetype  = 1,
     alpha     = NA
   ),
 
-  extra_params = c("na.rm"),
-
   draw_key = ggplot2::draw_key_path,
 
+  extra_params = c("na.rm", "reference"),
+
   setup_data = function(data, params) {
-    data
+
+    # data normalisation goes here #########################################
+
+    data_long <- tidyr::pivot_longer(data, params$elements, names_to = "x", values_to = "y")
+
+    data_long
   },
 
   draw_group = function(data, panel_params, coord) {
 
-    if (nrow(data) < 2) return(grid::nullGrob())
+    coords <- coord$transform(data, panel_params)
 
-    # Replace NA alpha with 1
-    data$alpha[is.na(data$alpha)] <- 1
+
+
+    if (nrow(data) < 2) return(grid::nullGrob())
 
     data <- data[order(data$x), ]
 
@@ -187,5 +157,37 @@ GeomSpider <- ggplot2::ggproto(
     grobs <- Filter(Negate(is.null), grobs)
     if (length(grobs) == 0) return(grid::nullGrob())
     do.call(grid::grobTree, grobs)
-  }
+   }
 )
+
+# previous data treatment
+# data = function(x) {
+#   d <- if (!is.null(.data)) .data else x
+#
+#   if (!is.null(.reference)) {
+#     d <- normalise_geochem(d, reference = .reference)
+#   }
+#
+#   elements_present <- intersect(.elements, colnames(d))
+#   if (length(elements_present) == 0) {
+#     stop("None of the requested elements are present as columns in the data.")
+#   }
+#   if (length(elements_present) < length(.elements)) {
+#     warning("Some requested elements are absent and will be skipped: ",
+#             paste(setdiff(.elements, elements_present), collapse = ", "))
+#   }
+#
+#   meta_cols <- setdiff(colnames(d), elements_present)
+#
+#   data_long <- do.call(rbind, lapply(elements_present, function(el) {
+#     row          <- d[meta_cols]
+#     row$elements <- el
+#     row$y        <- d[[el]]
+#     row
+#   }))
+#
+#   data_long$elements <- factor(data_long$elements, levels = elements_present)
+#   data_long$x        <- as.numeric(data_long$elements)
+#
+#   data_long
+# }

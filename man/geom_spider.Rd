@@ -7,11 +7,12 @@
 geom_spider(
   mapping = NULL,
   data = NULL,
-  inherit.aes = TRUE,
-  elements = ifelse(inherits(data, "ASTR"), get_concentration_columns(data), NULL),
-  reference = NULL,
+  stat = "identity",
+  position = "identity",
   na.rm = FALSE,
+  reference = NULL,
   show.legend = NA,
+  inherit.aes = TRUE,
   ...
 )
 }
@@ -36,21 +37,35 @@ the plot data. The return value must be a \code{data.frame}, and
 will be used as the layer data. A \code{function} can be created
 from a \code{formula} (e.g. \code{~ head(.x, 10)}).}
 
-\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
-rather than combining with them. This is most useful for helper functions
-that define both data and aesthetics and shouldn't inherit behaviour from
-the default plot specification, e.g. \code{\link[ggplot2:annotation_borders]{annotation_borders()}}.}
+\item{stat}{The statistical transformation to use on the data for this layer.
+When using a \verb{geom_*()} function to construct a layer, the \code{stat}
+argument can be used to override the default coupling between geoms and
+stats. The \code{stat} argument accepts the following:
+\itemize{
+\item A \code{Stat} ggproto subclass, for example \code{StatCount}.
+\item A string naming the stat. To give the stat as a string, strip the
+function name of the \code{stat_} prefix. For example, to use \code{stat_count()},
+give the stat as \code{"count"}.
+\item For more information and other ways to specify the stat, see the
+\link[ggplot2:layer_stats]{layer stat} documentation.
+}}
 
-\item{elements}{Character vector with the list of elements to be plotted. If
-data supplied to the geom are in an \link[=ASTR]{ASTR object}, the default value
-plots all chemical elements.}
+\item{position}{A position adjustment to use on the data for this layer. This
+can be used in various ways, including to prevent overplotting and
+improving the display. The \code{position} argument accepts the following:
+\itemize{
+\item The result of calling a position function, such as \code{position_jitter()}.
+This method allows for passing extra arguments to the position.
+\item A string naming the position adjustment. To give the position as a
+string, strip the function name of the \code{position_} prefix. For example,
+to use \code{position_jitter()}, give the position as \code{"jitter"}.
+\item For more information and other ways to specify the position, see the
+\link[ggplot2:layer_positions]{layer position} documentation.
+}}
 
 \item{reference}{Character string with what the data should be normalised to;
 see \link{normalise_data} fur further details. If \code{NULL}, the default, data will
 not be normalised.}
-
-\item{na.rm}{Logical value to indicate whether \code{NA} should be removed from
-the data. The default \code{FALSE} will supply all data.}
 
 \item{show.legend}{logical. Should this layer be included in the legends?
 \code{NA}, the default, includes if any aesthetics are mapped.
@@ -59,6 +74,11 @@ It can also be a named logical vector to finely select the aesthetics to
 display. To include legend keys for all levels, even
 when no data exists, use \code{TRUE}.  If \code{NA}, all levels are shown in legend,
 but unobserved levels are omitted.}
+
+\item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics,
+rather than combining with them. This is most useful for helper functions
+that define both data and aesthetics and shouldn't inherit behaviour from
+the default plot specification, e.g. \code{\link[ggplot2:annotation_borders]{annotation_borders()}}.}
 
 \item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{ggplot2::layer()}}. These are often
 aesthetics used to set a fixed value, such as \code{colour = "red"} or \code{alpha = 0.5}.}
@@ -69,28 +89,23 @@ geom supports data normalisation, which is commonly done before plotting.
 }
 \details{
 This geom is special because no x and y coordinates are provided in the
-input. Instead, the aesthetic \code{elements} must be provided only in
-the\link[ggplot2:aes]{ggplot2} function.
+input. Instead, the aesthetic \code{elements} must be provided in \code{\link[ggplot2:aes]{ggplot2::aes()}}
+and it must be provided in the call to this geom, and not in
+\code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} (see Examples).
 
 The elements can be supplied either as user-defined character vector or
 pre-made sets. See \link{standard_groups} for a list of available sets and the
 examples below for how to include them. The examples below also show how to
-avoid the default sorting into alphabetical order. The geom will
-throw an error if any of the supplied elements is not matched by a column
-name in the supplied data.
+avoid the default sorting into alphabetical order. The geom will throw an
+error if any of the supplied elements is not matched by a column name in the
+supplied data.
 }
 \section{Aesthetics}{
- \code{geom_spidergram()} understands the following aesthetic
-values (required aesthetics are in bold): ### update as needed
+ ### update as needed \code{geom_spidergram()} understands the
+following aesthetic values (required aesthetics are in bold):
 \itemize{
-\item \strong{\code{elements}} (the list of elements to be plotted)
-\item \code{alpha}
-\item \code{colour} (controls the polygon outline)
-\item \code{fill} (controls the polygon fill)
-\item \code{linetype}
-\item \code{linewidth} (controls the outline thickness)
-\item \code{text.colour} (controls colour of the text)
-\item \code{size.unit} (controls size aesthetic in "mm", "pt", "cm", "in" or "pc")
+\item \strong{\code{elements}} (character vector with the list of elements to be plotted)
+\item ...
 
 Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 }
@@ -98,6 +113,7 @@ Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 
 \examples{
 # include example with data[[standard_groups$REE]]
+# include example demonstrating that aes(elements = c()) must be called in the geom and not ggplot()
 
 library(ggplot2)
 
