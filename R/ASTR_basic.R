@@ -12,8 +12,8 @@
 #' \itemize{
 #'   \item **as_ASTR**: Transforms an R `data.frame` to an object of class
 #'   `ASTR`.
-#'   \item **read_ASTR**: Reads data from a file (.csv, .xls, .xlsx) into
-#'   an object of class `ASTR`.
+#'   \item **read_ASTR**: Reads data from a file (.csv, .xls, .xlsx) and
+#'   converts it into an object of class `ASTR`.
 #'   \item **validate**: Performs additional validation on `ASTR` and returns
 #'   a `data.frame` as a workable list of potential issues.
 #'   \item **get_..._columns**: Subsets `ASTR` tables to columns of a certain
