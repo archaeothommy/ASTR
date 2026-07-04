@@ -84,7 +84,9 @@ to call an essential internal function of
 It turns R data.frames to `ASTR` objects. If we would start from an
 Excel file we would call
 [`read_ASTR()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
-instead.
+instead, which internally calls
+[`as_ASTR()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md) to
+convert the data into an ASTR object after reading the file.
 
 To do this in practice, we not only have to submit our `data` to
 [`as_ASTR()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md),

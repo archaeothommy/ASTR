@@ -11,8 +11,8 @@ interact with them.
 - **as_ASTR**: Transforms an R `data.frame` to an object of class
   `ASTR`.
 
-- **read_ASTR**: Reads data from a file (.csv, .xls, .xlsx) into an
-  object of class `ASTR`.
+- **read_ASTR**: Reads data from a file (.csv, .xls, .xlsx) and converts
+  it into an object of class `ASTR`.
 
 - **validate**: Performs additional validation on `ASTR` and returns a
   `data.frame` as a workable list of potential issues.

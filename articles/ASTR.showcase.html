@@ -144,7 +144,9 @@ mock-up data in an R vignette, we do not read from the file system. We
 only need to call an essential internal function of
 <code><a href="../reference/ASTR.html">read_ASTR()</a></code>: <code><a href="../reference/ASTR.html">as_ASTR()</a></code>. It turns R data.frames
 to <code>ASTR</code> objects. If we would start from an Excel file we
-would call <code><a href="../reference/ASTR.html">read_ASTR()</a></code> instead.</p>
+would call <code><a href="../reference/ASTR.html">read_ASTR()</a></code> instead, which internally calls
+<code><a href="../reference/ASTR.html">as_ASTR()</a></code> to convert the data into an ASTR object after
+reading the file.</p>
 <p>To do this in practice, we not only have to submit our
 <code>data</code> to <code><a href="../reference/ASTR.html">as_ASTR()</a></code>, but also set two other
 arguments: 1. We have to define one of the columns as the ID column with
