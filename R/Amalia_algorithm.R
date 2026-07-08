@@ -226,15 +226,16 @@ amalia <- function(
 #'
 amalia_match_pairs <- function(df, ref, ratios, errors, id_sample, id_ref) {
 
-  # Generate all possible sample-reference index combinations
   pairs <- expand.grid(
     i = seq_len(nrow(df)),
     j = seq_len(nrow(ref))
   )
 
-  # Check all ratios for every pair simultaneously
-  is_match <- mapply(
-    function(i, j) {
+  is_match <- vapply(
+    seq_len(nrow(pairs)),
+    function(k) {
+      i <- pairs$i[k]
+      j <- pairs$j[k]
       s_ratios <- as.numeric(df[i, ratios])
       s_errors <- as.numeric(df[i, errors])
       r_ratios <- as.numeric(ref[j, ratios])
@@ -243,8 +244,7 @@ amalia_match_pairs <- function(df, ref, ratios, errors, id_sample, id_ref) {
       diff <- abs(s_ratios - r_ratios)
       all(diff <= au)
     },
-    pairs$i,
-    pairs$j
+    FUN.VALUE = logical(1)
   )
 
   matched <- pairs[is_match, ]
