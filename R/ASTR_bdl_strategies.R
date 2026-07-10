@@ -1,20 +1,40 @@
-#' Replace negative values with a uniform value
+#' @name bdl_strategies
 #'
-#' This function generates a function for the argument `bdl_strategy` in [ASTR]
-#' that replaces negative values in specified columns with a uniform value,
-#' usually `NA` or `0`.
+#' @title Strategies to replace "below detection limit" values
 #'
-#' @param cols The names of the columns to be checked according to the ASTR
-#'   conventions.
-#' @param value The replacement value. Default is to `NA_real_`.
+#' @description ...
 #'
-#' @returns A function
+#' @param x a vector, derived from a data.frame column
+#' @param colname name of the respective data.frame column
+#' @param ... further arguments passed to or from other methods
+#'
+#' @rdname bdl_strategies
+#'
+#' @examples
+#' plot(1,1)
+#'
+NULL
+
+#' @rdname bdl_strategies
 #' @export
-#'
-bdl_strategy_negative <- function(cols, value = NA_real_) {
+bdl_strategy_default <- function(x, colname, ...) {
+  bdl_strings <- c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<")
+  bdl_indices <- which(grepl(paste(bdl_strings, collapse = "|"), x, perl = FALSE))
+  x[bdl_indices] <- NA_character_
+  return(x)
+}
 
-  function(x = x, colname = cols) {
-    x[, cols][x[, cols] < 0]  <- value
-  }
+#' @rdname bdl_strategies
+#' @export
+bdl_strategy_none <- function(x, colname, ...) {
+  return(x)
+}
 
+#' @rdname bdl_strategies
+#' @export
+bdl_strategy_negative <- function(x, colname, ...) {
+  y <- suppressWarnings(as.numeric(x))
+  bdl_indices <- which(y < 0)
+  x[bdl_indices] <- NA_character_
+  return(x)
 }

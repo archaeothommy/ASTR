@@ -33,10 +33,9 @@
 #' @param id_column name of the ID column. Defaults to "ID"
 #' @param context columns that provide contextual (non-measurement) information;
 #'   may be column names, integer positions, or a logical inclusion vector
-#' @param bdl strings representing “below detection limit” values. By default,
-#'   the following are recognized: "b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"
-#' @param bdl_strategy function used to replace BDL strings. Defaults to a
-#'   static function returning `NA`
+#' @param bdl_strategy function used to replace "below detection limit" strings.
+#'   See [bdl_strategies] for the different available strategies and on how to implement
+#'   a custom one.
 #' @param guess_context_type should appropriate data types for contextual
 #'   columns be guessed automatically? Defaults to `TRUE`
 #' @param na character vector of strings to be interpret as missing values. By
@@ -65,15 +64,6 @@
 #'   not recognised as an analytical column, this will result in an error,
 #'   unless `drop_columns = TRUE` (then it will result in warnings for the
 #'   respective columns).
-#'
-#'   Below detection limit notation (i.e. ‘b.d.’, ‘bd’, ‘b.d.l.’, ‘bdl’, ‘<LOD’,
-#'   or ‘<..’) for element and oxide concentrations is specified using the `bdl`
-#'   argument. One or more notations can be used as is appropriate for the
-#'   dataset, and can be notations not included in the list above. The argument
-#'   `bdl_strategy` is used to specify the value for handling detection limits.
-#'   This is to facilitate the different handling needs of the detection limit
-#'   for future statistical applications, as opposed to automatically assigning
-#'   such values as ‘NA’.
 #'
 #'   Missing values are allowed anywhere in the data file body, and will be
 #'   replaced by `NA` automatically.
@@ -120,12 +110,7 @@
 #' @export
 as_ASTR <- function(
   df, id_column = "ID", context = c(),
-  bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
-  bdl_strategy = function() NA_character_,
-  # this only allows static functions, essentially: bdl_replace = "NA"
-  # in case more sophisticated handling is desired:
-  # bdl_strategy = function(x, colname) { bdl_lookup_table[colname] / sqrt(2) }
-  # bdl_lookup_table = c("Fe_%" = 3)
+  bdl_strategy = bdl_strategy_default,
   guess_context_type = TRUE,
   na = c(
     "", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.",
@@ -166,7 +151,7 @@ as_ASTR <- function(
     dplyr::ungroup()
   # determine and apply column types
   column_table <- parse_colnames(df2, context, drop_columns)
-  constructors <- build_constructors(column_table, bdl, bdl_strategy, guess_context_type, na)
+  constructors <- build_constructors(column_table, bdl_strategy, guess_context_type, na)
   col_list <- purrr::map2(df2, constructors, function(col, f) f(col)) %>%
     purrr::discard(is.null)
   df3 <- as.data.frame(col_list, check.names = FALSE)
@@ -222,8 +207,7 @@ read_ASTR <- function(
     "", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.",
     "#DIV/0!", "#VALUE!", "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"
   ),
-  bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
-  bdl_strategy = function() NA_character_,
+  bdl_strategy = bdl_strategy_default,
   drop_columns = FALSE,
   validate = TRUE,
   ...
@@ -284,7 +268,7 @@ read_ASTR <- function(
   as_ASTR(
     input_file,
     id_column = id_column, context = context,
-    bdl = bdl, bdl_strategy = bdl_strategy,
+    bdl_strategy = bdl_strategy,
     guess_context_type = guess_context_type, na = na,
     drop_columns = drop_columns,
     validate = validate
