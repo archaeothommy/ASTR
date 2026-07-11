@@ -1,5 +1,5 @@
 pandoc: 3.8.3
-pkgdown: 2.2.0
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   ASTR.showcase: ASTR.showcase.html
@@ -7,7 +7,7 @@ articles:
   VG.ASTR.Conventions.explained: VG.ASTR.Conventions.explained.html
   VG.ASTR.Schema.0.0.2: VG.ASTR.Schema.0.0.2.html
   VG.ASTR.Schema.Implementation: VG.ASTR.Schema.Implementation.html
-last_built: 2026-07-04T20:23Z
+last_built: 2026-07-11T19:51Z
 urls:
   reference: https://archaeothommy.github.io/ASTR/reference
   article: https://archaeothommy.github.io/ASTR/articles

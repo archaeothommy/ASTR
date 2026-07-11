@@ -66,6 +66,9 @@ Functions for data transformation
   [`cumming_richards_1975()`](https://archaeothommy.github.io/ASTR/reference/age_models.md)
   [`albarede_juteau_1984()`](https://archaeothommy.github.io/ASTR/reference/age_models.md)
   : Calculate lead isotope age models
+- [`amalia()`](https://archaeothommy.github.io/ASTR/reference/amalia.md)
+  : AMALIA algorithm for matching of sample and reference lead isotope
+  data
 - [`pointcloud_distribution()`](https://archaeothommy.github.io/ASTR/reference/pointcloud_distribution.md)
   : Comparing isotope samples to reference data in 3D space
 
