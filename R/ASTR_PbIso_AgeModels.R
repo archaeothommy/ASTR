@@ -169,17 +169,20 @@ stacey_kramers_1975 <- function(df,
     is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]) | is.na(df[[ratio_208_204]]),
     NA_real_,
     mapply(model_age_func, df[[ratio_206_204]], df[[ratio_207_204]])
-    )
+  )
 
-  result$model_age_SK75 <- replace(result$model_age_SK75, result$model_age_SK75 <= -10001 * 10^6 | result$model_age_SK75 >= t0 - 1 * 10^6, NA)
+  result$model_age_SK75 <- replace(
+    result$model_age_SK75, result$model_age_SK75 <= -10001 * 10^6 | result$model_age_SK75 >= t0 - 1 * 10^6,
+    NA
+  )
 
-  result$mu_SK75 <-  ifelse(
+  result$mu_SK75 <- ifelse(
     is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]) | is.na(df[[ratio_208_204]]),
     NA_real_,
     (df[[ratio_206_204]] - a0) / (exp(l238 * t0) - exp(l238 * result$model_age_SK75))
   )
 
-  result$kappa_SK75 <-  ifelse(
+  result$kappa_SK75 <- ifelse(
     is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]) | is.na(df[[ratio_208_204]]),
     NA_real_,
     (df[[ratio_208_204]] - c0) / (result$mu_SK75 * (exp(l232 * t0) - exp(l232 * result$model_age_SK75)))
@@ -199,7 +202,6 @@ stacey_kramers_1975 <- function(df,
   } else {
     df_out <- cbind(df, result)
   }
-
 
 
   return(df_out)
@@ -232,9 +234,8 @@ cumming_richards_1975 <- function(df,
   model_age_func <- function(x, y) {
     stats::optimize(
       function(s, a, b) {
-        (a0 - a + 137.88 * vp *
-           ((exp(l238 * t0) * (1 - e1 * (t0 - 1 / l238))) -
-              (exp(l238 * s) * (1 - e1 * (s - 1 / l238)))))^2 +
+        (a0 - a + 137.88 * vp * ((exp(l238 * t0) * (1 - e1 * (t0 - 1 / l238))) -
+                                   (exp(l238 * s) * (1 - e1 * (s - 1 / l238)))))^2 +
           (b0 - b + vp * ((exp(l235 * t0) * (1 - e1 * (t0 - 1 / l235))) -
                             (exp(l235 * s) * (1 - e1 * (s - 1 / l235)))))^2
       },
@@ -254,14 +255,17 @@ cumming_richards_1975 <- function(df,
     mapply(model_age_func, df[[ratio_206_204]], df[[ratio_207_204]])
   )
 
-  result$model_age_CR75 <- replace(result$model_age_CR75, result$model_age_CR75 <= -10001 *10^6 | result$model_age_CR75 >= t0 - 1 * 10^6, NA)
+  result$model_age_CR75 <- replace(
+    result$model_age_CR75, result$model_age_CR75 <= -10001 * 10^6 | result$model_age_CR75 >= t0 - 1 * 10^6,
+    NA
+  )
 
-  result$mu_CR75 <-  ifelse(
+  result$mu_CR75 <- ifelse(
     is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]),
     NA_real_,
     137.88 * vp * (1 - e1 * result$model_age_CR75)
   )
-  result$kappa_CR75 <-  ifelse(
+  result$kappa_CR75 <- ifelse(
     is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]),
     NA_real_,
     wp * (1 - e2 * result$model_age_CR75) / result$mu_CR75
@@ -340,13 +344,13 @@ albarede_juteau_1984 <- function(df,
     roots[1, ] * 10^-6
   )
 
-  result$mu_AJ84 <-  ifelse(
+  result$mu_AJ84 <- ifelse(
     is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]) | is.na(df[[ratio_208_204]]),
     NA_real_,
     roots[2, ]
   )
 
-  result$kappa_AJ84 <-  ifelse(
+  result$kappa_AJ84 <- ifelse(
     is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]) | is.na(df[[ratio_208_204]]),
     NA_real_,
     (df[[ratio_208_204]] - zstar0) / (exp(l232 * t0) - exp(l232 * roots[1, ])) / roots[2, ]
