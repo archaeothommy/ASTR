@@ -161,16 +161,32 @@ stacey_kramers_1975 <- function(df,
     )$root
   }
 
+  result <- data.frame("model_age_SK75" = rep(NA, nrow(df)), "mu_SK75" = NA, "kappa_SK75" = NA)
+
   # Calculation and clean-up
 
-  model_age <- mapply(model_age_func, df[[ratio_206_204]], df[[ratio_207_204]])
-  model_age <- replace(model_age, model_age <= -10001 * 10^6 | model_age >= t0 - 1 * 10^6, NA)
+  result$model_age_SK75 <- ifelse(
+    is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]) | is.na(df[[ratio_208_204]]),
+    NA_real_,
+    mapply(model_age_func, df[[ratio_206_204]], df[[ratio_207_204]])
+    )
 
-  mu <- (df[[ratio_206_204]] - a0) / (exp(l238 * t0) - exp(l238 * model_age))
-  kappa <- (df[[ratio_208_204]] - c0) / (mu * (exp(l232 * t0) - exp(l232 * model_age)))
+  result$model_age_SK75 <- replace(result$model_age_SK75, result$model_age_SK75 <= -10001 * 10^6 | result$model_age_SK75 >= t0 - 1 * 10^6, NA)
 
-  result <- data.frame("model_age_SK75" = model_age * 10^-6, "mu_SK75" = mu, "kappa_SK75" = kappa) %>%
-    round(3)
+  result$mu_SK75 <-  ifelse(
+    is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]) | is.na(df[[ratio_208_204]]),
+    NA_real_,
+    (df[[ratio_206_204]] - a0) / (exp(l238 * t0) - exp(l238 * result$model_age_SK75))
+  )
+
+  result$kappa_SK75 <-  ifelse(
+    is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]) | is.na(df[[ratio_208_204]]),
+    NA_real_,
+    (df[[ratio_208_204]] - c0) / (result$mu_SK75 * (exp(l232 * t0) - exp(l232 * result$model_age_SK75)))
+  )
+
+  result$model_age_SK75 <- result$model_age_SK75 * 10^-6
+  result <- round(result, 3)
 
   if (inherits(df, "ASTR")) {
     df_out <- cbind(get_contextual_columns(df), df[c(ratio_206_204, ratio_207_204, ratio_208_204)], result)
@@ -183,6 +199,8 @@ stacey_kramers_1975 <- function(df,
   } else {
     df_out <- cbind(df, result)
   }
+
+
 
   return(df_out)
 }
@@ -226,17 +244,31 @@ cumming_richards_1975 <- function(df,
     )$minimum
   }
 
+  result <- data.frame("model_age_CR75" = rep(NA, nrow(df)), "mu_CR75" = NA, "kappa_CR75" = NA)
+
   # Calculation and clean-up
 
-  model_age <- mapply(model_age_func, df[[ratio_206_204]], df[[ratio_207_204]])
+  result$model_age_CR75 <- ifelse(
+    is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]),
+    NA_real_,
+    mapply(model_age_func, df[[ratio_206_204]], df[[ratio_207_204]])
+  )
 
-  model_age <- replace(model_age, model_age <= -10001 * 10^6 | model_age >= t0 - 1 * 10^6, NA)
+  result$model_age_CR75 <- replace(result$model_age_CR75, result$model_age_CR75 <= -10001 *10^6 | result$model_age_CR75 >= t0 - 1 * 10^6, NA)
 
-  mu <- 137.88 * vp * (1 - e1 * model_age)
-  kappa <- wp * (1 - e2 * model_age) / mu
+  result$mu_CR75 <-  ifelse(
+    is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]),
+    NA_real_,
+    137.88 * vp * (1 - e1 * result$model_age_CR75)
+  )
+  result$kappa_CR75 <-  ifelse(
+    is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]),
+    NA_real_,
+    wp * (1 - e2 * result$model_age_CR75) / result$mu_CR75
+  )
 
-  result <- data.frame("model_age_CR75" = model_age * 10^-6, "mu_CR75" = mu, "kappa_CR75" = kappa) %>%
-    round(3)
+  result$model_age_CR75 <- result$model_age_CR75 * 10^-6
+  result <- round(result, 3)
 
   if (inherits(df, "ASTR")) {
     df_out <- cbind(get_contextual_columns(df), df[c(ratio_206_204, ratio_207_204, ratio_208_204)], result)
@@ -296,14 +328,31 @@ albarede_juteau_1984 <- function(df,
     }
   }
 
+  result <- data.frame("model_age_AJ84" = rep(NA, nrow(df)), "mu_AJ84" = NA, "kappa_AJ84" = NA)
+
   # Calculation and clean-up
 
   roots <- mapply(model_age_func, df[[ratio_206_204]], df[[ratio_207_204]])
 
-  kappa <- (df[[ratio_208_204]] - zstar0) / (exp(l232 * t0) - exp(l232 * roots[1, ])) / roots[2, ]
+  result$model_age_AJ84 <- ifelse(
+    is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]) | is.na(df[[ratio_208_204]]),
+    NA_real_,
+    roots[1, ] * 10^-6
+  )
 
-  result <- data.frame("model_age_AJ84" = roots[1, ] * 10^-6, "mu_AJ84" = roots[2, ], "kappa_AJ84" = kappa) %>%
-    round(3)
+  result$mu_AJ84 <-  ifelse(
+    is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]) | is.na(df[[ratio_208_204]]),
+    NA_real_,
+    roots[2, ]
+  )
+
+  result$kappa_AJ84 <-  ifelse(
+    is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]) | is.na(df[[ratio_208_204]]),
+    NA_real_,
+    (df[[ratio_208_204]] - zstar0) / (exp(l232 * t0) - exp(l232 * roots[1, ])) / roots[2, ]
+  )
+
+  result <- round(result, 3)
 
   if (inherits(df, "ASTR")) {
     df_out <- cbind(get_contextual_columns(df), df[c(ratio_206_204, ratio_207_204, ratio_208_204)], result)
