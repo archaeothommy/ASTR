@@ -24,8 +24,7 @@ as_ASTR(
   df,
   id_column = "ID",
   context = c(),
-  bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
-  bdl_strategy = function() NA_character_,
+  bdl_strategy = bdl_strategy_default,
   guess_context_type = TRUE,
   na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.", "#DIV/0!", "#VALUE!",
     "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"),
@@ -42,8 +41,7 @@ read_ASTR(
   guess_context_type = TRUE,
   na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.", "#DIV/0!", "#VALUE!",
     "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"),
-  bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
-  bdl_strategy = function() NA_character_,
+  bdl_strategy = bdl_strategy_default,
   drop_columns = FALSE,
   validate = TRUE,
   ...
@@ -83,11 +81,10 @@ unify_concentration_unit(x, unit, ...)
 \item{context}{columns that provide contextual (non-measurement) information;
 may be column names, integer positions, or a logical inclusion vector}
 
-\item{bdl}{strings representing “below detection limit” values. By default,
-the following are recognized: "b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"}
-
-\item{bdl_strategy}{function used to replace BDL strings. Defaults to a
-static function returning \code{NA}}
+\item{bdl_strategy}{function used to replace "below detection limit" strings.
+See \link{bdl_strategies} for the different available strategies and on how to
+implement a custom one. Use \code{\link[purrr:compose]{purrr::compose()}} to combine different
+\link{bdl_strategies} (see examples).}
 
 \item{guess_context_type}{should appropriate data types for contextual
 columns be guessed automatically? Defaults to \code{TRUE}}
@@ -170,15 +167,6 @@ not recognised as an analytical column, this will result in an error,
 unless \code{drop_columns = TRUE} (then it will result in warnings for the
 respective columns).
 
-Below detection limit notation (i.e. ‘b.d.’, ‘bd’, ‘b.d.l.’, ‘bdl’, ‘<LOD’,
-or ‘<..’) for element and oxide concentrations is specified using the \code{bdl}
-argument. One or more notations can be used as is appropriate for the
-dataset, and can be notations not included in the list above. The argument
-\code{bdl_strategy} is used to specify the value for handling detection limits.
-This is to facilitate the different handling needs of the detection limit
-for future statistical applications, as opposed to automatically assigning
-such values as ‘NA’.
-
 Missing values are allowed anywhere in the data file body, and will be
 replaced by \code{NA} automatically.
 }
@@ -195,6 +183,11 @@ arch <- as_ASTR(test_df, id_column = "Sample", context = 1:7)
 
 # validating an ASTR table
 validate(arch)
+
+# combining bdl strategies
+arch2 <- as_ASTR(test_df, id_column = "Sample", context = 1:7,
+  bdl_strategy = purrr::compose(bdl_strategy_default, bdl_strategy_negative)
+)
 
 # extracting subsets of columns
 conc <- get_concentration_columns(arch) # see also other get_..._columns functions
