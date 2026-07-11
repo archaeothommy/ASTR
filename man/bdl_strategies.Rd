@@ -7,18 +7,27 @@
 \alias{bdl_strategy_negative}
 \title{Strategies to replace "below detection limit" values}
 \usage{
-bdl_strategy_default(x, colname, ...)
+bdl_strategy_default(
+  x,
+  colname,
+  marker = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
+  ...
+)
 
 bdl_strategy_none(x, colname, ...)
 
-bdl_strategy_negative(x, colname, ...)
+bdl_strategy_negative(x, colname, value = "99999", ...)
 }
 \arguments{
 \item{x}{a vector, derived from a data.frame column}
 
 \item{colname}{name of the respective data.frame column}
 
+\item{marker}{values indicating "below detection limit"}
+
 \item{...}{further arguments passed to or from other methods}
+
+\item{value}{value to replace values identified as "below detection limit"}
 }
 \description{
 ...

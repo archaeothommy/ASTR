@@ -34,8 +34,9 @@
 #' @param context columns that provide contextual (non-measurement) information;
 #'   may be column names, integer positions, or a logical inclusion vector
 #' @param bdl_strategy function used to replace "below detection limit" strings.
-#'   See [bdl_strategies] for the different available strategies and on how to implement
-#'   a custom one.
+#'   See [bdl_strategies] for the different available strategies and on how to
+#'   implement a custom one. Use [purrr::compose()] to combine different
+#'   [bdl_strategies] (see examples).
 #' @param guess_context_type should appropriate data types for contextual
 #'   columns be guessed automatically? Defaults to `TRUE`
 #' @param na character vector of strings to be interpret as missing values. By
@@ -68,6 +69,7 @@
 #'   Missing values are allowed anywhere in the data file body, and will be
 #'   replaced by `NA` automatically.
 #'
+#'
 #' @examples
 #' library(magrittr)
 #'
@@ -81,6 +83,11 @@
 #'
 #' # validating an ASTR table
 #' validate(arch)
+#'
+#' # combining bdl strategies
+#' arch2 <- as_ASTR(test_df, id_column = "Sample", context = 1:7,
+#'   bdl_strategy = purrr::compose(bdl_strategy_default, bdl_strategy_negative)
+#' )
 #'
 #' # extracting subsets of columns
 #' conc <- get_concentration_columns(arch) # see also other get_..._columns functions

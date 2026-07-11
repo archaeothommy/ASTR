@@ -82,8 +82,9 @@ unify_concentration_unit(x, unit, ...)
 may be column names, integer positions, or a logical inclusion vector}
 
 \item{bdl_strategy}{function used to replace "below detection limit" strings.
-See \link{bdl_strategies} for the different available strategies and on how to implement
-a custom one.}
+See \link{bdl_strategies} for the different available strategies and on how to
+implement a custom one. Use \code{\link[purrr:compose]{purrr::compose()}} to combine different
+\link{bdl_strategies} (see examples).}
 
 \item{guess_context_type}{should appropriate data types for contextual
 columns be guessed automatically? Defaults to \code{TRUE}}
@@ -182,6 +183,11 @@ arch <- as_ASTR(test_df, id_column = "Sample", context = 1:7)
 
 # validating an ASTR table
 validate(arch)
+
+# combining bdl strategies
+arch2 <- as_ASTR(test_df, id_column = "Sample", context = 1:7,
+  bdl_strategy = purrr::compose(bdl_strategy_default, bdl_strategy_negative)
+)
 
 # extracting subsets of columns
 conc <- get_concentration_columns(arch) # see also other get_..._columns functions
