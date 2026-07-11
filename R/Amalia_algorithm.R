@@ -6,10 +6,10 @@
 #'   comparing lead isotope ratios within their combined analytical
 #'   uncertainties across three independent isotope ratio dimensions.
 #'
-#' @details For each sample-reference pair, AMALIA checks whether the absolute
-#'   difference between their isotope ratios is smaller than or equal to the
-#'   combined analytical uncertainty (sum of both 2SD errors) for all three
-#'   ratios in the selected triplet simultaneously.
+#' @details For each sample-reference pair, the function checks whether the
+#'   absolute difference between their isotope ratios is smaller than or equal
+#'   to the combined analytical uncertainty (sum of both 2SD errors) for all
+#'   three ratios in the selected triplet simultaneously.
 #'
 #'   When `triplet = "both"`, only pairs that pass in both the 204Pb and 206Pb
 #'   triplet spaces are returned, following the strict application recommended
@@ -47,11 +47,11 @@
 #'
 #' @return A list of three elements:
 #'
-#' * `summary_matches`: Data frame with with the number of reference
+#' * `summary_matches`: Data frame with with the number of reference data
 #'   matches per sample.
 #' * `matches`: Data frame with every sample-reference pair that passed the
-#'   AMALIA matching criteria, with their absolute differences per ratio.
-#' * `unmatched`: character vector. IDs of samples with no matches in the
+#'   AMALIA matching criteria.
+#' * `unmatched`: Character vector with the IDs of samples with no matches in the
 #'   reference data.
 #'
 #' @references Rodríguez, J., Sinner, A.G., Martínez-Chico, D. and Santos
@@ -209,7 +209,7 @@ amalia <- function(
 #' @description Internal function used by [amalia()] to generate all possible
 #'   sample-reference combinations and check whether their isotope ratio
 #'   differences fall within the combined analytical uncertainty for all
-#'   supplied ratios simultaneously.
+#'   supplied ratios.
 #'
 #' @param df Data frame with sample data.
 #' @param ref Data frame with reference data.
