@@ -33,8 +33,7 @@ bdl_strategy_none <- function(x, colname, ...) {
 #' @rdname bdl_strategies
 #' @export
 bdl_strategy_negative <- function(x, colname, ...) {
-  y <- suppressWarnings(as.numeric(x))
-  bdl_indices <- which(y < 0)
+  bdl_indices <- which(grepl("^-\\d*\\.?\\d*\\*?\\d*\\^?\\-?\\d*$", x))
   x[bdl_indices] <- NA_character_
   return(x)
 }
