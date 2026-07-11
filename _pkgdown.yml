@@ -48,6 +48,7 @@ reference:
   - copper_alloy_pollard
   - copper_group_bray
   - age_models
+  - amalia
   - pointcloud_distribution
 - title: Visualisation
   desc: >
