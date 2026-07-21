@@ -26,26 +26,37 @@
 #' @section Aesthetics: ### update as needed `geom_spidergram()` understands the
 #'   following aesthetic values (required aesthetics are in bold):
 #' * **`elements`** (character vector with the list of elements to be plotted)
-#' * ...
+#' * `colour`
+#' * `linewidth`
+#' * `linetype`
+#' * `alpha`
 #'
 #'   Learn more about setting these aesthetics in `vignette("ggplot2-specs")`.
 #'
 #' @export
 #'
 #' @examples
-#' # include example with data[[standard_groups$REE]]
-#' # include example demonstrating that aes(elements = c()) must be called in the geom and not ggplot()
-#'
 #' library(ggplot2)
 #'
 #' test <- data.frame(
-#'   Sample = c("A","B"),
-#'   Yb = c(8,9),
-#'   La = c(10,5),
-#'   Ce = c(20,8)
+#'   Sample = c("A", "B"),
+#'   La = c(10, 5),
+#'   Ce = c(20, 8),
+#'   Nd = c(15, 6)
 #' )
 #'
-#' ggplot(test) + geom_spider(mapping = aes(x = standard_groups$REE, color = Sample))
+#' # elements must be supplied in the geom, not in ggplot()
+#' ggplot(test) +
+#'   geom_spider(aes(elements = c(La, Ce, Nd), colour = Sample))
+#'
+#' # using a pre-made element set
+#' ggplot(test) +
+#'   geom_spider(aes(elements = standard_groups$REE, colour = Sample))
+#'
+#' # with chondrite normalisation
+#' ggplot(test) +
+#'   geom_spider(aes(elements = c(La, Ce, Nd), colour = Sample),
+#'               reference = "chondrite")
 #'
 geom_spider <- function(mapping = NULL, data = NULL, stat = "identity",
                         position = "identity", na.rm = FALSE, reference = NULL,
@@ -54,6 +65,7 @@ geom_spider <- function(mapping = NULL, data = NULL, stat = "identity",
 
   # extract elements from aesthetic `elements`
   elements <- as.character(rlang::get_expr(mapping$elements))[-1]
+  print(elements)
 
   if (length(elements) <= 1) {
     stop("At least two elements must be provided to draw a spidergram.")
@@ -64,57 +76,110 @@ geom_spider <- function(mapping = NULL, data = NULL, stat = "identity",
     mapping[[i]] <- rlang::set_expr(mapping$elements, str2lang(i))
   }
 
-  mapping$elements <- NA # avoid error of not finding required aesthetic
-
-  ggplot2::layer(
-    geom = GeomSpider,
-    data = data,
-    mapping = mapping,
-    stat = stat,
-    position = position,
-    show.legend = show.legend,
-    inherit.aes = inherit.aes,
-    params = list(
-      reference = reference,
-      elements = elements,
-      na.rm = na.rm, ...
-    )
+  mapping$elements <- NULL # avoid error of not finding required aesthetic
+  list(
+    suppressWarnings(
+      ggplot2::layer(
+        geom = GeomSpider,
+        data = data,
+        mapping = mapping,
+        stat = stat,
+        position = position,
+        show.legend = show.legend,
+        inherit.aes = inherit.aes,
+        params = list(
+          reference = reference,
+          elements = elements,
+          na.rm = na.rm, ...
+        )
+      )
+    ),
+    # Discrete x scale so element names render correctly on x axis
+    ggplot2::scale_x_discrete()
   )
 }
 
+#' @format NULL
+#' @usage NULL
+#' @export
 GeomSpider <- ggplot2::ggproto(
   "GeomSpider",
   ggplot2::Geom,
 
-  required_aes = c("elements"),
+  required_aes = character(0),
 
   default_aes = ggplot2::aes(
-    colour    = "black",
+    colour = "black",
     linewidth = 0.5,
-    linetype  = 1,
-    alpha     = NA
+    linetype = 1,
+    alpha = NA
   ),
 
   draw_key = ggplot2::draw_key_path,
 
-  extra_params = c("na.rm", "reference"),
+  extra_params = c("na.rm", "reference", "elements"),
 
   setup_data = function(data, params) {
 
-    # data normalisation goes here #########################################
+    # Check all requested elements are present as columns before normalisation
+    missing_elements <- setdiff(params$elements, colnames(data))
+    if (length(missing_elements) > 0) {
+      stop(
+        "The following elements are not present as columns in the data: ",
+        paste(missing_elements, collapse = ", ")
+      )
+    }
 
-    data_long <- tidyr::pivot_longer(data, params$elements, names_to = "x", values_to = "y")
+    # Normalise data if reference is provided
+    # normalise_geochem renames columns to element_reference (e.g. La_chondrite)
+    elements <- params$elements
+
+    if (!is.null(params$reference)) {
+      data     <- normalise_data(data, reference = params$reference)
+      elements <- paste0(elements, "_", params$reference)
+
+      # verify normalised columns exist
+      missing_norm <- setdiff(elements, colnames(data))
+      if (length(missing_norm) > 0) {
+        stop(
+          "Normalised columns not found after normalisation: ",
+          paste(missing_norm, collapse = ", "),
+          ". This may indicate that the selected elements are not part of ",
+          "the reference composition '", params$reference, "'."
+        )
+      }
+    }
+
+    # Pivot wide -> long using element columns
+    data_long <- tidyr::pivot_longer(
+      data,
+      cols = tidyselect::all_of(elements),
+      names_to = "x",
+      values_to = "y"
+    )
+
+    # Strip the reference suffix from x labels so axis shows element names
+    # e.g. La_chondrite -> La
+    if (!is.null(params$reference)) {
+      data_long$x <- sub(
+        paste0("_", params$reference, "$"),
+        "",
+        data_long$x
+      )
+    }
+
+    # Preserve declared element order on x axis
+    data_long$x <- factor(data_long$x, levels = params$elements)
 
     data_long
   },
 
   draw_group = function(data, panel_params, coord) {
 
-    coords <- coord$transform(data, panel_params)
-
-
-
     if (nrow(data) < 2) return(grid::nullGrob())
+
+    # Replace NA alpha with 1
+    data$alpha[is.na(data$alpha)] <- 1
 
     data <- data[order(data$x), ]
 
@@ -146,9 +211,9 @@ GeomSpider <- ggplot2::ggproto(
       grid::polylineGrob(
         coords$x, coords$y,
         gp = grid::gpar(
-          col   = coords$colour[1],
-          lwd   = coords$linewidth[1] * ggplot2::.pt,
-          lty   = coords$linetype[1],
+          col = coords$colour[1],
+          lwd = coords$linewidth[1] * ggplot2::.pt,
+          lty = coords$linetype[1],
           alpha = coords$alpha[1]
         )
       )
@@ -157,37 +222,5 @@ GeomSpider <- ggplot2::ggproto(
     grobs <- Filter(Negate(is.null), grobs)
     if (length(grobs) == 0) return(grid::nullGrob())
     do.call(grid::grobTree, grobs)
-   }
+  }
 )
-
-# previous data treatment
-# data = function(x) {
-#   d <- if (!is.null(.data)) .data else x
-#
-#   if (!is.null(.reference)) {
-#     d <- normalise_geochem(d, reference = .reference)
-#   }
-#
-#   elements_present <- intersect(.elements, colnames(d))
-#   if (length(elements_present) == 0) {
-#     stop("None of the requested elements are present as columns in the data.")
-#   }
-#   if (length(elements_present) < length(.elements)) {
-#     warning("Some requested elements are absent and will be skipped: ",
-#             paste(setdiff(.elements, elements_present), collapse = ", "))
-#   }
-#
-#   meta_cols <- setdiff(colnames(d), elements_present)
-#
-#   data_long <- do.call(rbind, lapply(elements_present, function(el) {
-#     row          <- d[meta_cols]
-#     row$elements <- el
-#     row$y        <- d[[el]]
-#     row
-#   }))
-#
-#   data_long$elements <- factor(data_long$elements, levels = elements_present)
-#   data_long$x        <- as.numeric(data_long$elements)
-#
-#   data_long
-# }
