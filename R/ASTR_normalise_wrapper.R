@@ -68,48 +68,53 @@ normalise_data <- function(df, reference, id_column = "ID", ...) {
   checkmate::assert_data_frame(df)
   checkmate::assert_string(reference)
 
-  # 1. Geochemical reference composition
-  if (reference %in% names(references_geochem)) {
-    return(normalise_geochem(df, reference = reference, ...))
-  }
+  # Determine dispatch type
+  type <- dplyr::case_when(
+    reference %in% names(references_geochem) ~ "geochem",
+    reference == "100%" ~ "hundred",
+    reference %in% colnames(df) ~ "element",
+    id_column %in% colnames(df) && reference %in% df[[id_column]] ~ "sample",
+    .default = "unknown"
+  )
 
-  # Identify numeric columns for element and sample normalisation
-  numeric_cols <- names(df)[sapply(df, is.numeric)]
+  switch(type,
+    geochem = {
+      normalise_geochem(df, reference = reference, ...)
+    },
+    hundred = {
+      numeric_cols <- names(df)[sapply(df, is.numeric)]
+      df[numeric_cols] <- normalise_rows(df[numeric_cols])
+      df
+    },
+    element = {
+      if (!is.numeric(df[[reference]])) {
+        stop("Column '", reference, "' is not numeric and cannot be used for normalisation.")
+      }
+      numeric_cols <- names(df)[sapply(df, is.numeric)]
+      numeric_cols <- setdiff(numeric_cols, reference)
+      divisor <- df[[reference]]
+      df[numeric_cols] <- lapply(df[numeric_cols], function(x) x / divisor)
+      df
+    },
+    sample = {
+      numeric_cols <- names(df)[sapply(df, is.numeric)]
+      ref_row <- df[df[[id_column]] == reference, numeric_cols, drop = FALSE]
+      if (nrow(ref_row) > 1) {
+        stop("More than one row matches ID '", reference, "'. IDs must be unique.")
+      }
+      df[numeric_cols] <- sweep(df[numeric_cols], 2, as.numeric(ref_row), "/")
 
-  # 2. Element normalisation — reference matches a column name in df
-  if (reference %in% colnames(df)) {
-    if (!reference %in% numeric_cols) {
-      stop("Column '", reference, "' is not numeric and cannot be used for normalisation.")
+      df
+    },
+    unknown = {
+      stop(
+        "Unknown reference '", reference, "'. ",
+        "`reference` must be one of: ",
+        "a geochemical reference composition (see `references_geochem`), ",
+        "a column name in `df`, ",
+        "an ID value in `df`, ",
+        "or '100%'."
+      )
     }
-    divisor <- df[[reference]]
-    df[numeric_cols] <- lapply(df[numeric_cols], function(x) x / divisor)
-    return(df)
-  }
-
-  # 3. Sample normalisation — reference matches an ID value in df
-  if (id_column %in% colnames(df) && reference %in% df[[id_column]]) {
-    ref_row    <- df[df[[id_column]] == reference, numeric_cols, drop = FALSE]
-    if (nrow(ref_row) > 1) {
-      stop("More than one row matches ID '", reference, "'. IDs must be unique.")
-    }
-    divisor <- as.numeric(ref_row)
-    df[numeric_cols] <- sweep(df[numeric_cols], 2, divisor, "/")
-    return(df)
-  }
-
-  # 4. Normalisation to 100%
-  if (reference == "100%") {
-    row_sums <- rowSums(df[numeric_cols], na.rm = TRUE)
-    df[numeric_cols] <- (df[numeric_cols] / row_sums) * 100
-    return(df)
-  }
-
-  stop(
-    "Unknown reference '", reference, "'. ",
-    "`reference` must be one of: ",
-    "a geochemical reference composition (see `references_geochem`), ",
-    "a column name in `df`, ",
-    "an ID value in `df`, ",
-    "or '100%'."
   )
 }
