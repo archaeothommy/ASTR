@@ -2,17 +2,77 @@
 % Please edit documentation in R/ASTR_normalise_wrapper.R
 \name{normalise_data}
 \alias{normalise_data}
-\title{family
-Data normaliation}
+\title{Data normalisation}
 \usage{
-normalise_data(df, ...)
+normalise_data(df, reference, id_column = "ID", ...)
 }
 \arguments{
-\item{...}{}
+\item{df}{A data frame in wide format.}
+
+\item{reference}{Character string specifying the normalisation to apply.
+Must be one of the following:
+\itemize{
+\item A geochemical reference composition name — see \link{references_geochem}
+for available options (e.g. \code{"chondrite"}, \code{"MORB"}).
+\item A column name in \code{df} — normalises all numeric columns against that
+element.
+\item An ID value in \code{df} — normalises all numeric columns against that
+sample.
+\item \code{"100\%"} — rescales all numeric columns to sum to 100.
+}}
+
+\item{id_column}{String with the column name of the sample IDs in \code{df}.
+Only used when normalising against a sample. Default is \code{"ID"}.}
+
+\item{...}{Additional arguments passed to the underlying normalisation
+function.}
+}
+\value{
+The normalised data frame. The exact output depends on the
+normalisation applied — see the respective function for details.
 }
 \description{
-family
-Data normaliation
+Wrapper function for data normalisation. Dispatches to the appropriate
+normalisation function based on the value of \code{reference}.
+}
+\details{
+The following normalisations are currently supported:
+\itemize{
+\item Geochemical reference compositions — normalises elemental
+concentrations against a reference composition such as chondrite or MORB.
+Dispatch is triggered when \code{reference} matches a name in
+\link{references_geochem}. See \link{normalise_geochem} for details and
+\link{references_geochem} for the list of available reference compositions.
+\item Element normalisation — normalises all numeric columns against a
+single element in the data. Dispatch is triggered when \code{reference}
+matches a column name in \code{df}.
+\item Sample normalisation — normalises all numeric columns against a
+single sample or data point in the dataset. Dispatch is triggered when
+\code{reference} matches a value in the ID column of \code{df}.
+\item Normalisation to 100\% — rescales all numeric columns so that their
+sum equals 100. Triggered when \code{reference = "100\%"}.
+}
+}
+\examples{
+df <- data.frame(
+  ID  = c("A", "B", "C"),
+  La  = c(10,   5,   8),
+  Ce  = c(20,   8,  15),
+  Nd  = c(15,   6,  12)
+)
+
+# Geochemical reference normalisation
+normalise_data(df, reference = "chondrite")
+
+# Element normalisation — normalise against La
+normalise_data(df, reference = "La")
+
+# Sample normalisation — normalise against sample "A"
+normalise_data(df, reference = "A", id_column = "ID")
+
+# Normalisation to 100\%
+normalise_data(df, reference = "100\%")
+
 }
 \seealso{
 Other Data normalisation: 

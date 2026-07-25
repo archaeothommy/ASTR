@@ -56,7 +56,8 @@
 #' # with chondrite normalisation
 #' ggplot(test) +
 #'   geom_spider(aes(elements = c(La, Ce, Nd), colour = Sample),
-#'               reference = "chondrite")
+#'     reference = "chondrite"
+#'   )
 #'
 geom_spider <- function(mapping = NULL, data = NULL, stat = "identity",
                         position = "identity", na.rm = FALSE, reference = NULL,
@@ -64,7 +65,9 @@ geom_spider <- function(mapping = NULL, data = NULL, stat = "identity",
                         ...) {
 
   # rename aesthetic x to elements
-  if(!is.null(mapping$x)) {names(mapping)[names(mapping) == "x"] <- "elements"}
+  if (!is.null(mapping$x)) {
+    names(mapping)[names(mapping) == "x"] <- "elements"
+  }
 
   # extract elements from aesthetic `elements`
   elements <- rlang::eval_tidy(mapping$elements)
@@ -80,20 +83,23 @@ geom_spider <- function(mapping = NULL, data = NULL, stat = "identity",
 
   mapping$elements <- NULL # remove unnecessary aesthetic
 
-  ggplot2::layer(
-        geom = GeomSpider,
-        data = data,
-        mapping = mapping,
-        stat = stat,
-        position = position,
-        show.legend = show.legend,
-        inherit.aes = inherit.aes,
-        params = list(
-          reference = reference,
-          elements = elements,
-          na.rm = na.rm, ...
-        )
+  list(
+    ggplot2::layer(
+      geom = GeomSpider,
+      data = data,
+      mapping = mapping,
+      stat = stat,
+      position = position,
+      show.legend = show.legend,
+      inherit.aes = inherit.aes,
+      params = list(
+        reference = reference,
+        elements = elements,
+        na.rm = na.rm, ...
       )
+    ),
+    ggplot2::scale_x_discrete()
+  )
 }
 
 #' @format NULL
@@ -101,9 +107,10 @@ geom_spider <- function(mapping = NULL, data = NULL, stat = "identity",
 #' @export
 GeomSpider <- ggplot2::ggproto(
   "GeomSpider",
+
   ggplot2::Geom,
 
-  required_aes = c("elements|x"),
+  required_aes = character(0),
 
   optional_aes = c(elements_data, isotopes_data, oxides_data),
 
@@ -113,13 +120,11 @@ GeomSpider <- ggplot2::ggproto(
     linetype = 1,
     alpha = NA
   ),
-
   draw_key = ggplot2::draw_key_path,
 
   extra_params = c("na.rm", "reference", "elements"),
 
   setup_data = function(data, params) {
-
     # Check all requested elements are present as columns before normalisation
     missing_elements <- setdiff(params$elements, colnames(data))
     if (length(missing_elements) > 0) {
@@ -134,7 +139,7 @@ GeomSpider <- ggplot2::ggproto(
     elements <- params$elements
 
     if (!is.null(params$reference)) {
-      data     <- normalise_data(data, reference = params$reference)
+      data <- normalise_data(data, reference = params$reference)
       elements <- paste0(elements, "_", params$reference)
 
       # verify normalised columns exist
@@ -170,12 +175,14 @@ GeomSpider <- ggplot2::ggproto(
     # Preserve declared element order on x axis
     data_long$x <- factor(data_long$x, levels = params$elements)
 
-    data_long
+    data <- data_long
+
+    data
   },
-
   draw_group = function(data, panel_params, coord) {
-
-    if (nrow(data) < 2) return(grid::nullGrob())
+    if (nrow(data) < 2) {
+      return(grid::nullGrob())
+    }
 
     # Replace NA alpha with 1
     data$alpha[is.na(data$alpha)] <- 1
@@ -199,12 +206,14 @@ GeomSpider <- ggplot2::ggproto(
     }
 
     # NA handling — breaks in line at missing elements
-    not_na  <- !is.na(data$y)
+    not_na <- !is.na(data$y)
     run_ids <- cumsum(c(TRUE, diff(not_na) != 0))
 
     grobs <- lapply(unique(run_ids[not_na]), function(run) {
       segment <- data[not_na & run_ids == run, , drop = FALSE]
-      if (nrow(segment) < 2) return(NULL)
+      if (nrow(segment) < 2) {
+        return(NULL)
+      }
 
       coords <- coord$transform(segment, panel_params)
       grid::polylineGrob(
@@ -219,7 +228,9 @@ GeomSpider <- ggplot2::ggproto(
     })
 
     grobs <- Filter(Negate(is.null), grobs)
-    if (length(grobs) == 0) return(grid::nullGrob())
+    if (length(grobs) == 0) {
+      return(grid::nullGrob())
+    }
     do.call(grid::grobTree, grobs)
   }
 )

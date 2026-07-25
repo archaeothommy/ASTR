@@ -105,25 +105,37 @@ supplied data.
 following aesthetic values (required aesthetics are in bold):
 \itemize{
 \item \strong{\code{elements}} (character vector with the list of elements to be plotted)
-\item ...
+\item \code{colour}
+\item \code{linewidth}
+\item \code{linetype}
+\item \code{alpha}
 
 Learn more about setting these aesthetics in \code{vignette("ggplot2-specs")}.
 }
 }
 
 \examples{
-# include example with data[[standard_groups$REE]]
-# include example demonstrating that aes(elements = c()) must be called in the geom and not ggplot()
-
 library(ggplot2)
 
 test <- data.frame(
-  Sample = c("A","B"),
-  Yb = c(8,9),
-  La = c(10,5),
-  Ce = c(20,8)
+  Sample = c("A", "B"),
+  La = c(10, 5),
+  Ce = c(20, 8),
+  Nd = c(15, 6)
 )
 
-ggplot(test) + geom_spider(mapping = aes(x = standard_groups$REE, color = Sample))
+# elements must be supplied in the geom, not in ggplot()
+ggplot(test) +
+  geom_spider(aes(elements = c(La, Ce, Nd), colour = Sample))
+
+# using a pre-made element set
+ggplot(test) +
+  geom_spider(aes(elements = standard_groups$REE, colour = Sample))
+
+# with chondrite normalisation
+ggplot(test) +
+  geom_spider(aes(elements = c(La, Ce, Nd), colour = Sample),
+    reference = "chondrite"
+  )
 
 }
