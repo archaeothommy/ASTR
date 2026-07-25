@@ -63,9 +63,11 @@ geom_spider <- function(mapping = NULL, data = NULL, stat = "identity",
                         show.legend = NA, inherit.aes = TRUE,
                         ...) {
 
+  # rename aesthetic x to elements
+  if(!is.null(mapping$x)) {names(mapping)[names(mapping) == "x"] <- "elements"}
+
   # extract elements from aesthetic `elements`
-  elements <- as.character(rlang::get_expr(mapping$elements))[-1]
-  print(elements)
+  elements <- rlang::eval_tidy(mapping$elements)
 
   if (length(elements) <= 1) {
     stop("At least two elements must be provided to draw a spidergram.")
@@ -76,10 +78,9 @@ geom_spider <- function(mapping = NULL, data = NULL, stat = "identity",
     mapping[[i]] <- rlang::set_expr(mapping$elements, str2lang(i))
   }
 
-  mapping$elements <- NULL # avoid error of not finding required aesthetic
-  list(
-    suppressWarnings(
-      ggplot2::layer(
+  mapping$elements <- NULL # remove unnecessary aesthetic
+
+  ggplot2::layer(
         geom = GeomSpider,
         data = data,
         mapping = mapping,
@@ -93,10 +94,6 @@ geom_spider <- function(mapping = NULL, data = NULL, stat = "identity",
           na.rm = na.rm, ...
         )
       )
-    ),
-    # Discrete x scale so element names render correctly on x axis
-    ggplot2::scale_x_discrete()
-  )
 }
 
 #' @format NULL
@@ -106,7 +103,9 @@ GeomSpider <- ggplot2::ggproto(
   "GeomSpider",
   ggplot2::Geom,
 
-  required_aes = character(0),
+  required_aes = c("elements|x"),
+
+  optional_aes = c(elements_data, isotopes_data, oxides_data),
 
   default_aes = ggplot2::aes(
     colour = "black",
