@@ -25,7 +25,7 @@
 #' @examples
 #' sample_df <- data.frame(
 #'   ID = 1:5,
-#'   Sn = c(5, 1, 4, 0.5, 2),
+#'   Sn = c(5, 1, 4, NA, 2),
 #'   Zn = c(12, 20, 6, 2, 10),
 #'   Pb = c(1, 0.5, 5, 9, 12)
 #' )
@@ -35,7 +35,7 @@
 #' sample_df <- as_ASTR(
 #'   data.frame(
 #'     ID = 1:8,
-#'     SnO_wtP = c(0.5, 0.5, 5, 5, 0.5, 5, 5, 5),
+#'     SnO_wtP = c(0.5, 0.5, 5, 5, 0.5, 5, 5, NA),
 #'     ZnO_wtP = c(0.5, 0.5, 0.5, 0.5, 5, 5, 0.5, 5),
 #'     PbO_wtP = c(0.5, 5, 0.5, 5, 0.5, 0.5, 5, 5)
 #'   )
@@ -61,56 +61,68 @@ copper_alloy_bb <- function(
   # Create subset with just ID and classification column
   copper_alloy <- data.frame(
     ID_sample = df[[id_column]],
-    Sn = df[[elements["Sn"]]],
-    Zn = df[[elements["Zn"]]],
-    Pb = df[[elements["Pb"]]],
-    result = rep("Unclassified", nrow(df)),
+    Sn        = df[[elements["Sn"]]],
+    Zn        = df[[elements["Zn"]]],
+    Pb        = df[[elements["Pb"]]],
+    result    = rep("Unclassified", nrow(df)),
     stringsAsFactors = FALSE
   )
 
+  # Identify rows where no element is NA — only these will be classified
+  na_mask <- !is.na(copper_alloy$Sn) & !is.na(copper_alloy$Zn) & !is.na(copper_alloy$Pb)
+
   # Base alloy classes
-
   # Copper: Zn < 3 and Sn < 3
-  copper_alloy$result[copper_alloy$Zn < 3 & copper_alloy$Sn < 3] <- "Copper"
+  copper_alloy$result[na_mask &
+                        copper_alloy$Zn < 3 &
+                        copper_alloy$Sn < 3] <- "Copper"
 
-  # Copper/brass: 3 ≤ Zn < 8 and Sn < 3
-  copper_alloy$result[copper_alloy$Zn >= 3 &
+  # Copper/brass: 3 <= Zn < 8 and Sn < 3
+  copper_alloy$result[na_mask &
+                        copper_alloy$Zn >= 3 &
                         copper_alloy$Zn < 8 &
                         copper_alloy$Sn < 3] <- "Copper/brass"
 
-  # Bronze: Sn ≥ 3 and Zn < 3 * Sn
-  copper_alloy$result[copper_alloy$Sn >= 3 &
+  # Bronze: Sn >= 3 and Zn < 3 * Sn
+  copper_alloy$result[na_mask &
+                        copper_alloy$Sn >= 3 &
                         copper_alloy$Zn < 3 * copper_alloy$Sn] <- "Bronze"
 
-  # Bronze/gunmetal: Sn ≥ 3 and Zn between 0.33*Sn and 0.67*Sn
-  copper_alloy$result[copper_alloy$Sn >= 3 &
+  # Bronze/gunmetal: Sn >= 3 and Zn between 0.33*Sn and 0.67*Sn
+  copper_alloy$result[na_mask &
+                        copper_alloy$Sn >= 3 &
                         copper_alloy$Zn > 0.33 * copper_alloy$Sn &
                         copper_alloy$Zn < 0.67 * copper_alloy$Sn] <- "Bronze/gunmetal"
 
-  # Gunmetal: Zn > 0.67*Sn and Zn < 2.5*Sn and Sn ≥ 3
-  copper_alloy$result[copper_alloy$Sn >= 3 &
+  # Gunmetal: Zn > 0.67*Sn and Zn < 2.5*Sn and Sn >= 3
+  copper_alloy$result[na_mask &
+                        copper_alloy$Sn >= 3 &
                         copper_alloy$Zn > 0.67 * copper_alloy$Sn &
                         copper_alloy$Zn < 2.5 * copper_alloy$Sn] <- "Gunmetal"
 
-  # Brass/gunmetal: Zn > 2.5*Sn and Zn <= 4*Sn AND (Zn ≥ 8 OR Sn ≥ 3)
-  copper_alloy$result[(copper_alloy$Zn >= 8 | copper_alloy$Sn >= 3) &
+  # Brass/gunmetal: Zn > 2.5*Sn and Zn <= 4*Sn AND (Zn >= 8 OR Sn >= 3)
+  copper_alloy$result[na_mask &
+                        (copper_alloy$Zn >= 8 | copper_alloy$Sn >= 3) &
                         copper_alloy$Zn > 2.5 * copper_alloy$Sn &
                         copper_alloy$Zn <= 4 * copper_alloy$Sn] <- "Brass/gunmetal"
 
-  # Brass: Zn ≥ 8 and Zn > 4*Sn
-  copper_alloy$result[copper_alloy$Zn >= 8 &
+  # Brass: Zn >= 8 and Zn > 4*Sn
+  copper_alloy$result[na_mask &
+                        copper_alloy$Zn >= 8 &
                         copper_alloy$Zn > 4 * copper_alloy$Sn] <- "Brass"
 
-  # Apply lead modifiers
+  # Apply lead modifiers only to non-NA rows
   ## (Leaded): Pb between 4 and 8
-  copper_alloy$result[copper_alloy$Pb >= 4 &
-                        copper_alloy$Pb <= 8] <- paste(
-    "(Leaded)",
-    copper_alloy$result[copper_alloy$Pb >= 4 & copper_alloy$Pb <= 8]
+  prefix_leaded <- na_mask & copper_alloy$Pb >= 4 & copper_alloy$Pb <= 8
+  copper_alloy$result[prefix_leaded] <- paste(
+    "(Leaded)", copper_alloy$result[prefix_leaded]
   )
 
   ## Leaded: Pb > 8
-  copper_alloy$result[copper_alloy$Pb > 8] <- paste("Leaded", copper_alloy$result[copper_alloy$Pb > 8])
+  prefix_high_lead <- na_mask & copper_alloy$Pb > 8
+  copper_alloy$result[prefix_high_lead] <- paste(
+    "Leaded", copper_alloy$result[prefix_high_lead]
+  )
 
   # Merge results back to original dataframe by ID
   copper_alloy_bb <- copper_alloy$result[match(df[[id_column]], copper_alloy$ID_sample)]

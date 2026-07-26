@@ -139,8 +139,8 @@ interact with them.
 \itemize{
 \item \strong{as_ASTR}: Transforms an R \code{data.frame} to an object of class
 \code{ASTR}.
-\item \strong{read_ASTR}: Reads data from a file (.csv, .xls, .xlsx) into
-an object of class \code{ASTR}.
+\item \strong{read_ASTR}: Reads data from a file (.csv, .xls, .xlsx) and
+converts it into an object of class \code{ASTR}.
 \item \strong{validate}: Performs additional validation on \code{ASTR} and returns
 a \code{data.frame} as a workable list of potential issues.
 \item \strong{get_..._columns}: Subsets \code{ASTR} tables to columns of a certain
