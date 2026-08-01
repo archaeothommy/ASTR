@@ -168,7 +168,7 @@ Planetary Science Letters 26(2), pp. 207–221.
 \url{https://dx.doi.org/10.1016/0012-821X(75)90088-6}.
 }
 \seealso{
-Other Pb isotope functions: 
+Other Pb isotope functions:
 \code{\link{age_models}}
 }
 \concept{Pb isotope functions}

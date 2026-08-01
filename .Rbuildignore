@@ -13,3 +13,5 @@
 ^doc$
 ^Meta$
 ^CODE_OF_CONDUCT\.md$
+^\.positai$
+^\.claude$

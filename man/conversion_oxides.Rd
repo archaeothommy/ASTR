@@ -24,7 +24,7 @@ conversion_oxides
 Conversion factors from oxides to elements
 }
 \seealso{
-Other chemical reference data: 
+Other chemical reference data:
 \code{\link{elements_data}},
 \code{\link{isotopes_data}},
 \code{\link{oxides_data}},
