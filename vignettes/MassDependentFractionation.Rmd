@@ -14,10 +14,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-library(ASTR)
-```
-
 <!-- This method is adapted from the provenance algorithm identified by @albarede24, which was originally tested on lead isotope ratios within ancient Greek coinage. The algorithm accounts for both natural and analytical isotope fractionation. It proposes a statistical measure to determine the distances between the lead isotope compositions of ores and artifacts. Finally, this measure allows for statistical testing at any specified confidence level. -->
 
 ## Stadandared Euclidean distance

@@ -61,6 +61,18 @@ reference:
     Datasets included in the package
   contents:
   - ArgentinaDatabase
+- title: Machine Learning & Provenance Analsis
+  desc: >
+    ML classifier training, and proveanceing of samples using eucldian distance and
+    ML probalities.
+  contents:
+  - as.ref_data
+  - pb_iso_train_data
+  - pb_iso_prov_predict
+  - pb_iso_prov_dist
+  - pb_iso_endmembers
+  - summary.pbisoendmembers
+  - ml_model
 
 articles:
 - title: ASTR schema
@@ -79,3 +91,5 @@ articles:
     These articles illustrate the use of specific functions in the package.
   contents:
   - KDE2_vignette
+  - Pb_Iso_endmembers
+  - MassDependentFractionation

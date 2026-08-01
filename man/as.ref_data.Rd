@@ -25,3 +25,12 @@ Data preprocessing and cleaning ensure the reliability and accuracy of provenanc
 This step results in the removal of all NA values from the selected Isotope tables, and groups.
 The step also should exclude the groups which have low sample data (in the case of (Shnyr et al., (2026) it was 5).
 }
+\seealso{
+Other Pb isotope functions:
+\code{\link{age_models}},
+\code{\link[=geom_sk_lines]{geom_sk_lines()}},
+\code{\link[=pb_iso_endmembers]{pb_iso_endmembers()}},
+\code{\link[=pb_iso_prov_dist]{pb_iso_prov_dist()}},
+\code{\link[=pb_iso_train_data]{pb_iso_train_data()}}
+}
+\concept{Pb isotope functions}

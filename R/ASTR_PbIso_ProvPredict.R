@@ -16,6 +16,8 @@
 #' ref.data object with Isotope groupings and Isotope columns of
 #' 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb
 #' with shorter names.
+#'
+#' @family Pb isotope functions
 #' @export
 as.ref_data <- function(x, cols, group, min_groupsize = 5) {
   if (!all(cols %in% names(x))) {
@@ -120,16 +122,18 @@ as.ref_data <- function(x, cols, group, min_groupsize = 5) {
 #' definitive source for the sample group.
 #'
 #' @inherit pb_iso_endmembers references examples
+#'
+#' @family Pb isotope functions
 #' @export
 pb_iso_train_data <- function(ref,
-                       .minSize = 20,
-                       .minPts_fac = 0.1,
-                       .eps = 0.18,
-                       .eta = 0.1,
-                       .max_depth = 6,
-                       .nrounds = 100,
-                       nthread = 4L,
-                       ...) {
+                              .minSize = 20,
+                              .minPts_fac = 0.1,
+                              .eps = 0.18,
+                              .eta = 0.1,
+                              .max_depth = 6,
+                              .nrounds = 100,
+                              nthread = 4L,
+                              ...) {
   if (!"ref.data" %in% class(ref)) {
     stop(
       "ref must be of class ref.data. Use function `ref_data`
@@ -289,8 +293,8 @@ xgboost_predict <- function(x, model_list = NULL, .probablity) {
 #' @seealso train_data
 #' @export
 pb_iso_prov_predict <- function(x,
-                            model_list = NULL,
-                            .probablity = 0.95) {
+                                model_list = NULL,
+                                .probablity = 0.95) {
   if (inherits(x, "pbisoendmembers")) {
     target_groups <- x[3:4]
     pred <- lapply(target_groups, function(grp) {

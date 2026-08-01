@@ -20,15 +20,15 @@
 #'
 #' @returns List of data frame or character vector
 #' @inherit pb_iso_endmembers examples
+#'
+#' @family Pb isotope functions
 #' @export
 pb_iso_prov_dist <- function(x,
-                         ref,
-                         dist_type = stop("Distance type should be Defined 'ed' or 'mfd'"),
-                         .n = 1,
-                         s = 0.001,
-                         ...) {
-
-
+                             ref,
+                             dist_type = stop("Distance type should be Defined 'ed' or 'mfd'"),
+                             .n = 1,
+                             s = 0.001,
+                             ...) {
   # Euc Dist ----------------------------------------------------------------
 
   euc_dist <- function(x, ref, .n, ...) {

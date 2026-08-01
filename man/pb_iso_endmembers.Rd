@@ -72,3 +72,12 @@ pb_iso_prov_dist(end_members, ref_data, dist_type = "mfd")
 # Get XGBOOST predicted ml_resutls
 pb_iso_prov_predict(end_members, ml_model)
 }
+\seealso{
+Other Pb isotope functions:
+\code{\link{age_models}},
+\code{\link[=as.ref_data]{as.ref_data()}},
+\code{\link[=geom_sk_lines]{geom_sk_lines()}},
+\code{\link[=pb_iso_prov_dist]{pb_iso_prov_dist()}},
+\code{\link[=pb_iso_train_data]{pb_iso_train_data()}}
+}
+\concept{Pb isotope functions}

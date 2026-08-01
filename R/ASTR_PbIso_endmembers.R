@@ -27,6 +27,9 @@
 #'      \item{clamp}{Clamping values}
 #'      \item{pca}{List of PCA analysis}
 #' @importFrom stats prcomp shapiro.test
+#'
+#' @family Pb isotope functions
+#'
 #' @export
 #' @examples
 #'
@@ -56,10 +59,10 @@
 #' # Get XGBOOST predicted ml_resutls
 #' pb_iso_prov_predict(end_members, ml_model)
 pb_iso_endmembers <- function(x,
-                       col = NULL,
-                       tolerance = c(0.01, 0.01),
-                       clamp = c(Inf, Inf),
-                       ...) {
+                              col = NULL,
+                              tolerance = c(0.01, 0.01),
+                              clamp = c(Inf, Inf),
+                              ...) {
   requireNamespace("stats")
   # Argument Checks
   if (!inherits(x, "data.frame") && !inherits(x, "matrix")) {

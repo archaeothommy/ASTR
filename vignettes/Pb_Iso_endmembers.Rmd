@@ -13,6 +13,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 
 
 ```{r setup}
+knitr::opts_chunk$set(include = FALSE)
 library(ASTR)
 ```
 
@@ -59,9 +60,7 @@ PCA values are represented by two list items.
 
 ```{r PCA}
 col_names <- c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")
-df <- ASTR::ArgentinaDatabase[
-  ASTR::ArgentinaDatabase$`Mining area` == "Distrito El Aguilar",
-  col_names]
+df <- ASTR::ArgentinaDatabase[ASTR::ArgentinaDatabase$`Mining area` == "Distrito El Aguilar", col_names]
 end_members <- pb_iso_endmembers(df, names(df), tolerance = c(0.01, 0.01))
 # Readings which are identified as by the PCA
 print(end_members$pca_ends)

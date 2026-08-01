@@ -69,3 +69,12 @@ Albarede, F., Davis, G., Blichert-Toft, J., Gentelli, L., Gitler, H., Pinto, M.,
 A new algorithm for using Pb isotopes to determine the provenance of bullion in ancient Greek coinage.
 Journal of Archaeological Science, 163, 105919. https://doi.org/10.1016/j.jas.2023.105919
 }
+\seealso{
+Other Pb isotope functions:
+\code{\link{age_models}},
+\code{\link[=as.ref_data]{as.ref_data()}},
+\code{\link[=geom_sk_lines]{geom_sk_lines()}},
+\code{\link[=pb_iso_endmembers]{pb_iso_endmembers()}},
+\code{\link[=pb_iso_train_data]{pb_iso_train_data()}}
+}
+\concept{Pb isotope functions}

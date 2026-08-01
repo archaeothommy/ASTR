@@ -145,3 +145,12 @@ Shnyr, E., Kuflik, T., Desai, K., & Eshel, T. (2026).
 Determining the origins of Phonetician silver: Exploring the potential of machine learning for lead isotope analysis.
 Journal of Archaeological Science, 188, 106–499. https://doi.org/10.1016/j.jas.2026.106499
 }
+\seealso{
+Other Pb isotope functions:
+\code{\link{age_models}},
+\code{\link[=as.ref_data]{as.ref_data()}},
+\code{\link[=geom_sk_lines]{geom_sk_lines()}},
+\code{\link[=pb_iso_endmembers]{pb_iso_endmembers()}},
+\code{\link[=pb_iso_prov_dist]{pb_iso_prov_dist()}}
+}
+\concept{Pb isotope functions}

@@ -169,6 +169,10 @@ Planetary Science Letters 26(2), pp. 207–221.
 }
 \seealso{
 Other Pb isotope functions:
-\code{\link{age_models}}
+\code{\link{age_models}},
+\code{\link[=as.ref_data]{as.ref_data()}},
+\code{\link[=pb_iso_endmembers]{pb_iso_endmembers()}},
+\code{\link[=pb_iso_prov_dist]{pb_iso_prov_dist()}},
+\code{\link[=pb_iso_train_data]{pb_iso_train_data()}}
 }
 \concept{Pb isotope functions}
