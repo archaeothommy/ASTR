@@ -1,0 +1,134 @@
+---
+title: "Endmembers"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Endmembers}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+
+```{r setup}
+library(ASTR)
+```
+
+# Introduction
+
+Lead isotope analysis is a widely employed technique for determining the provenance of ancient artefacts, achieved by comparing the lead (Pb) isotope ratios of an artefact with those of known ore deposits.
+However, a significant limitation of this method arises from the complexity of ancient metallurgy.
+It is improbable that all metal at a given archaeological site originated from a single ore source, and the historical practice of recycling and mixing metals further complicates analysis.
+Consequently, when metals from two distinct ore sources are combined, the resulting Pb isotope ratios deviate from those of the original sources.
+This phenomenon is graphically represented as a “mixing line,” which plots the isotopic composition of the mixed metal between the two or more
+parent ore sources [@stos-gale01].
+
+To mitigate the complexities introduced by metal mixing, [@eshel19] proposed a methodology utilizing "end-members" from a sample group.
+End-members are defined as the samples that lie at the extremes of a mixing line, and they are presumed to represent unmixed metals with the most direct relationship to their parent ore sources.
+In cases where two primary ore sources are involved in the metal mixture, this approach allows for the clear distinction of three distinct groups: the two end-member groups, which correspond to the unmixed parent materials, and a third group representing the samples that are a result of the mixing process between the two.
+
+This while defining endmembers as distinct groups is not always precise, it is preferable than analysing individual data-points separately, as it provides a more structured and meaningful interpretation of isotopic variability [@eshel19].
+Then, assuming that the endmembers reflects a single ore, the provenance is suggested based on the highest probability of the cluster, considering all the results.
+
+# Use of liaendmembers
+
+A major challenge for reproducibility has been the visual identification of endmember clusters. To address this, [@A.D.G+24] proposed a method using *Principal Component Analysis (PCA)* on <sup>204</sup>Pb-normalized data to determine the number of endmembers in a sample set. This approach maps the maximum and minimum values of the principal component to the isotope vectors.
+
+Trends in the three dimensional space of
+<sup>206</sup>Pb/<sup>204</sup>Pb-
+<sup>207</sup>Pb/<sup>204</sup>Pb-
+<sup>208</sup>Pb/<sup>204</sup>Pb
+, is determined by the principle component analysis scores of each vector $\vec{p}_{i}$ as $[c_1, c_2, c_3]$ using the \texttt{stat::prcomp()} function.
+The collection of vectors is considered to represent mixing between two end members, $c_a$ and $c_b$, when $c_1$ explains 95\% of the variance of the group,
+where:
+
+$$
+	(c_{a} = \min c_{1}) \mapsto \vec{p_{a}} \;and\;
+	(c_{b} = \max c_{1}) \mapsto \vec{p_{b}}
+$$
+
+
+This package achieves this with the use of the `stats::prcomp()` function, which is incorporated into the `endmemebers()` functions.
+In addition, the PCA values are subject to the Shapiro and Wilk normality using the `stats::shapiro.test()` function.
+If PC2 and PC3 are not normally distributed, the function generates a message informing the users that PC2 and PC3 may not be attributed to random noise.
+
+
+PCA values are represented by two list items.
+
+```{r PCA}
+col_names <- c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")
+df <- ASTR::ArgentinaDatabase[
+  ASTR::ArgentinaDatabase$`Mining area` == "Distrito El Aguilar",
+  col_names]
+end_members <- pb_iso_endmembers(df, names(df), tolerance = c(0.01, 0.01))
+# Readings which are identified as by the PCA
+print(end_members$pca_ends)
+
+# Results of the PCA
+print(end_members$pca)
+
+```
+
+However, this method is limited as it only identifies two points, which are unlikely to fully represent all endmembers.
+While, $\vec{p_{a}}$ and $\vec{p_{b}}$ represent the most distinct ends of the set, additional end members can be identified using $\vec{p_i}$.
+
+Samples from the same ore body share the same geological age and consequently align along a single isochron. While the two-stage model [@stacey1975] provides an imperfect representation of isotopic age, the true distribution of samples from an endmember set follows the slope of the geochron. Therefore, a more accurate definition of endmembers involves identifying them as a set of vectors that lie near a line parallel to the geochron, passing through the principal vector mapped to either the minimum or maximum values of the first principal component of the entire data set. This refined method enables the identification of a comprehensive set of samples that constitute an endmember group.
+
+A vector $\vec{e_i}$, as defined above,  is considered an endmember if it lies within tolerance of $\varepsilon$ from the line $\overline{p_i}$ which passes through $\vec{p_i}$ parallel to the geocron  in the Cartesian plane of $\left(\frac{^{206}\text{Pb}}{^{204}\text{Pb}},\frac{^{207}\text{Pb}}{^{204}\text{Pb}}\right)$
+
+$$
+f(\vec{e}, \vec{p}) = |e_2 - (p_1 - (S\times p_2))| < \varepsilon
+$$
+
+Where $S$ is the slope of the geochron.
+The values for $\varepsilon$ was chosen to be 0.01 as default.
+This value was manually set for optimal results based on trial and error, and can be further refined based on the data.
+
+In addition to the $\varepsilon$, endmember points may be further constrained by clamping their distance from the principle point, using the euclidean distance.
+This may be required if tow distance ores source share the same goechron.
+
+$$
+f(\vec{e}, \vec{p}) = ||\vec{e} - \vec{p}|| < d
+$$
+
+Where $d$ is the euclidean distance. The default parameter is chosen to be `Inf` as in most cases this clamping may not be required.
+
+```{r clamp example}
+# Example with no clamping
+no_clamp <- pb_iso_endmembers(df, names(df))
+print(no_clamp$group2)
+
+# Example with clamping
+clamp <- pb_iso_endmembers(df, names(df), clamp = c(Inf, 0.1))
+print(clamp$group2)
+
+```
+
+This results in the creation for two sets of endmembers $E_a$ and $E_b$, where:
+
+$$
+	E_i = \left\{\vec{p_i}, \vec{e_i^1},\ldots, \vec{e_i^n}\right\}
+$$
+
+In the package $E$ is represented as group1 and group2
+
+```{r endmember groups}
+head(end_members$group1)
+head(end_members$group2)
+# Additionally the samples which are not part of the two groups are considered as mixing
+head(end_members$mixing)
+```
+
+However, if $|E_i| < 2$ then it is difficult to consider only $\vec{p_i} \in E_i$ as an endmember, and so $p_i$ is considered only a possible end member.
+Then when happens the package will inform the user with a message.
+
+## Summary Function
+
+The data can be summarized using the `summary()` function
+
+```{r summary}
+summary(end_members)
+```
+

@@ -1,0 +1,49 @@
+---
+title: "Mass-dependent fractionation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Mass-dependent fractionation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ASTR)
+```
+
+<!-- This method is adapted from the provenance algorithm identified by @albarede24, which was originally tested on lead isotope ratios within ancient Greek coinage. The algorithm accounts for both natural and analytical isotope fractionation. It proposes a statistical measure to determine the distances between the lead isotope compositions of ores and artifacts. Finally, this measure allows for statistical testing at any specified confidence level. -->
+
+## Stadandared Euclidean distance
+
+The standard model for estimating three-dimensional distances for lead isotope values involves measuring the Euclidean distance between two vectors, $\vec{x}$ and $\vec{x}'$. This calculation follows the established formula:$$d(\vec{x}, \vec{x}') = \sqrt{\sum_{i=1}^{n} (x_i - x'_i)^2}$$
+
+This is the method used by the function `isoprov_dist()` when the `dist_type` value is set to `"ed"` which stands for 'Eucilidian distance'.
+
+According to @A.D.B+24, the standard method fails to account for statistical errors. These errors are addressed by weighting the data with the full covariance matrix $W$ of the NIST 981 lead isotope reference material. The adjusted distance is calculated as:$$d = \sqrt{(\mathbf{x} - \mathbf{x}')^T W^{-1} (\mathbf{x} - \mathbf{x}')}$$In this formula, $T$ denotes the transpose of the vector.
+
+## Algorisum acounting for Mass-dependant fractionation
+
+The methodology by @A.D.B+24 utilizes the distance $d_i$ between an artifact and the mass-dependent fractionation line passing through ore $i$. This is implemented by setting the dist_type parameter to "mfd". Provided lead isotope ratios differ by less than one decimal point, respective fractionation lines are considered parallel. The distance $d_i$ is computed using the vector $\vec{\Delta X_i} = (\vec{x}_i - \vec{x}_0)$, where $\vec{x}_0$ represents the artifact and $\vec{x}_i$ represents the ore.The artifact is represented as:$$\vec{x}_0=\left[\left(^{206}Pb/^{204}Pb\right)_0,\left(^{207}Pb/^{204}Pb\right)_0,\left(^{208}Pb/^{204}Pb\right)_0\right]$$The ore is represented as:$$\vec{x}_i=\left[\left(^{206}Pb/^{204}Pb\right)_i,\left(^{207}Pb/^{204}Pb\right)_i,\left(^{208}Pb/^{204}Pb\right)_i\right]$$The mass-dependent fractionation line is defined by the vector $\vec{v}$:$$\vec{v}=\left[2\left(^{206}Pb/^{204}Pb\right)_0,3\left(^{207}Pb/^{204}Pb\right)_0,4\left(^{208}Pb/^{204}Pb\right)_0\right]$$The digits in $\vec{v}$ correspond to the atomic mass differences of the isotopes. With $\vec{n} = \vec{v}/||\vec{v}||$ as the unit vector, distance $d_i$ is calculated via the cross-product:$$d_i = ||\vec{\Delta X_i} \times \vec{n}||$$The fractionation factor $f_i$ is computed as a dot product:$$f_i = \vec{\Delta X_i} \cdot \vec{n}$$To obtain a dimensionless distance, the error matrix $W$ is defined as:$$W=
+\begin{bmatrix}
+2x^*_x & 0 & 0\\
+0 & 3x^*_y & 0\\
+0 & 0 & 4x^*_z\\
+\end{bmatrix}
+\begin{bmatrix}
+1 & 0.96 & 0.94\\
+0.96 & 1 & 0.96\\
+0.94 & 0.96 & 1
+\end{bmatrix}
+\begin{bmatrix}
+2x^*_x & 0 & 0\\
+0 & 3x^*_y & 0\\
+0 & 0 & 4x^*_z\\
+\end{bmatrix}$$The outer matrices are diagonal standard deviation matrices for common lead, with a fractionation factor $s$ of 0.001. Squared distances $|d|^2$ are normalized to the two-dimensional shadow of $W$ perpendicular to $\vec{n}$. This requires Gram-Schmidt orthogonalization to find perpendicular vectors. Since $W$ is derived from reference materials, this metric is not a formal Mahalanobis distance. Normalized squared distances follow a chi-squared distribution with two degrees of freedom. Consequently, ores with $|d|^2$ values exceeding 5.99 are rejected at the 95% confidence level.
+
