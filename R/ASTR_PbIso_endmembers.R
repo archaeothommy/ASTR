@@ -87,7 +87,7 @@ pb_iso_endmembers <- function(x,
 
   isotope_matrix <- x
   if (nrow(isotope_matrix) < 3) {
-    warning("To few samples. Suggest to  be more than 3")
+    stop("To few samples. Suggest to  be more than 3")
   }
   # Conduct PCA and check if there are only 2 end memebrs
   pca_result <- prcomp(isotope_matrix, scale = FALSE)
