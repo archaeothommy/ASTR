@@ -18,7 +18,7 @@
 #' @param ... Additional Parameters
 #'
 #' @returns
-#' An object of class 'liaendmembers' as a list of 6
+#' An object of class 'pbisoendmembers' as a list of 6
 #'      \item{data}{Isotope data}
 #'      \item{pca_ends}{Endmembers maped using PCA}
 #'      \item{group1,group2}{End member groups}
@@ -39,7 +39,7 @@
 #' ref_data <- as.ref_data(ASTR::ArgentinaDatabase, col_names, "Mining area")
 #'
 #' # Create object with class liaendmembers
-#' end_members <- endmembers(
+#' end_members <- pb_iso_endmembers(
 #'         df,
 #'         col_names,
 #'         tolerance = c(0.01, 0.01),
@@ -55,7 +55,7 @@
 #' \dontrun{ml_model <- train_data(ref_data)}
 #' # Get XGBOOST predicted ml_resutls
 #' isoprov_predict(end_members, ml_model)
-endmembers <- function(x,
+pb_iso_endmembers <- function(x,
                        col = NULL,
                        tolerance = c(0.01, 0.01),
                        clamp = c(Inf, Inf),
@@ -157,15 +157,15 @@ endmembers <- function(x,
     pca = pca_result
   )
   endmember_list <-
-    structure(endmember_list, class = c("liaendmembers", "list"))
+    structure(endmember_list, class = c("pbisoendmembers", "list"))
   return(endmember_list)
 }
 
 #' Summary of LIA Endmember groups
 #'
-#' Summary of Lead Isotope analysis 'liaendmemebr' object
+#' Summary of Lead Isotope analysis 'pbisoendmembers' object
 #'
-#' @param object An object of class "liaendmembers"
+#' @param object An object of class "pbisoendmembers"
 #' @param ... further arguments passed to or from other methods.
 #'
 #'
@@ -178,8 +178,8 @@ endmembers <- function(x,
 #' \item{Data}{A data frame of the lead isotope ratios that were used.}
 #'
 #' @export
-#' @inherit endmembers examples
-summary.liaendmembers <- function(object, ...) {
+#' @inherit pb_iso_endmembers examples
+summary.pbisoendmembers <- function(object, ...) {
   cat("Summary of End memebers:\n\n")
   cat("Tolarance:", object$tolarance, "\n")
   cat("Clamp:", object$clamp, "\n\n")

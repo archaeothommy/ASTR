@@ -111,7 +111,7 @@ mf_dist <- function(x, ref, .n, s, ...) {
 #' Mass-fractionation follows the procedure outlined in Albarede et.al (2024)
 #'
 #' @param x Matrix, data frame of Pb Isotopes with columns in the order of
-#' 206Pb/204Pb, 207Pb/204Pb,208Pb/204Pb or a `liaendmember` object.
+#' 206Pb/204Pb, 207Pb/204Pb,208Pb/204Pb or a `pbisoendmembers` object.
 #' @param ref `ref.data` object used for Reference analysis.
 #' @param .n Length of result output (Default = 1)
 #' @param dist_type Distance type to use, simple euclidean ('ed') or
@@ -125,7 +125,7 @@ mf_dist <- function(x, ref, .n, s, ...) {
 #' Journal of Archaeological Science, 163, 105919. https://doi.org/10.1016/j.jas.2023.105919
 #'
 #' @returns List of data frame or character vector
-#' @inherit endmembers examples
+#' @inherit pb_iso_endmembers examples
 #' @export
 isoprov_dist <- function(x,
                          ref,
@@ -134,7 +134,7 @@ isoprov_dist <- function(x,
                          s = 0.001,
                          ...) {
   dist_type <- match.arg(dist_type, c("ed", "mfd"))
-  if (inherits(x, "liaendmembers")) {
+  if (inherits(x, "pbisoendmembers")) {
     target_groups <- x[3:4]
     if (dist_type == "ed") {
       out <- lapply(target_groups, function(grp) {

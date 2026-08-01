@@ -15,7 +15,7 @@ isoprov_dist(
 }
 \arguments{
 \item{x}{Matrix, data frame of Pb Isotopes with columns in the order of
-206Pb/204Pb, 207Pb/204Pb,208Pb/204Pb or a \code{liaendmember} object.}
+206Pb/204Pb, 207Pb/204Pb,208Pb/204Pb or a \code{pbisoendmembers} object.}
 
 \item{ref}{\code{ref.data} object used for Reference analysis.}
 
@@ -47,7 +47,7 @@ col_names]
 ref_data <- as.ref_data(ASTR::ArgentinaDatabase, col_names, "Mining area")
 
 # Create object with class liaendmembers
-end_members <- endmembers(
+end_members <- pb_iso_endmembers(
         df,
         col_names,
         tolerance = c(0.01, 0.01),

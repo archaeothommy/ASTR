@@ -123,7 +123,7 @@ col_names]
 ref_data <- as.ref_data(ASTR::ArgentinaDatabase, col_names, "Mining area")
 
 # Create object with class liaendmembers
-end_members <- endmembers(
+end_members <- pb_iso_endmembers(
         df,
         col_names,
         tolerance = c(0.01, 0.01),
