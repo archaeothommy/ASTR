@@ -69,3 +69,13 @@
 #' @source <https://globalid.dmt-lb.de/>
 #' @name ArgentinaDatabase
 "ArgentinaDatabase"
+
+#' Machine Learning model for lead isotope provenaces
+#'
+#' Lead isotope data model based on ArgentinaDatabase for machine learning provenance.
+#'
+#' @format A list of xgb models, with length equal to number of groups.
+#'
+#' @source <https://globalid.dmt-lb.de/>
+#' @name ml_model
+"ml_model"

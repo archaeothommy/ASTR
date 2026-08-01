@@ -45,7 +45,7 @@ Suggests:
     vdiffr
 Imports:
     checkmate,
-    dplyr  (>= 1.2.0),
+    dplyr (>= 1.2.0),
     geometry,
     magrittr,
     purrr,
@@ -59,8 +59,11 @@ Imports:
     vctrs,
     ggplot2,
     ks,
-    units, 
-    rootSolve
+    units,
+    rootSolve,
+    dbscan,
+    smotefamily,
+    xgboost
 Config/testthat/edition: 3
 Depends: 
     R (>= 3.5)
