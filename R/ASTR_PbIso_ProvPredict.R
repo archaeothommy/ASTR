@@ -121,7 +121,7 @@ as.ref_data <- function(x, cols, group, min_groupsize = 5) {
 #'
 #' @inherit pb_iso_endmembers references examples
 #' @export
-train_data <- function(ref,
+pb_iso_train_data <- function(ref,
                        .minSize = 20,
                        .minPts_fac = 0.1,
                        .eps = 0.18,
@@ -288,7 +288,7 @@ xgboost_predict <- function(x, model_list = NULL, .probablity) {
 #' data.frame object or list of data.frames
 #' @seealso train_data
 #' @export
-isoprov_predict <- function(x,
+pb_iso_prov_predict <- function(x,
                             model_list = NULL,
                             .probablity = 0.95) {
   if (inherits(x, "pbisoendmembers")) {

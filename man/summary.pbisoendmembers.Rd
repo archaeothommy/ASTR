@@ -42,11 +42,11 @@ end_members <- pb_iso_endmembers(
 # Print summary of the liaendmembers object
 summary(end_members)
 # Get Uclidian distance
-isoprov_dist(end_members, ref_data, dist_type = "ed")
+pb_iso_prov_dist(end_members, ref_data, dist_type = "ed")
 # Get Mass Fractionnation Corrected distance
-isoprov_dist(end_members, ref_data, dist_type = "mfd")
+pb_iso_prov_dist(end_members, ref_data, dist_type = "mfd")
 # Train XGBOOST model on Reference data
-\dontrun{ml_model <- train_data(ref_data)}
+\dontrun{ml_model <- pb_iso_train_data(ref_data)}
 # Get XGBOOST predicted ml_resutls
-isoprov_predict(end_members, ml_model)
+pb_iso_prov_predict(end_members, ml_model)
 }

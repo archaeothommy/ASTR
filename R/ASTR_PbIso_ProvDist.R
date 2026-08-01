@@ -127,7 +127,7 @@ mf_dist <- function(x, ref, .n, s, ...) {
 #' @returns List of data frame or character vector
 #' @inherit pb_iso_endmembers examples
 #' @export
-isoprov_dist <- function(x,
+pb_iso_prov_dist <- function(x,
                          ref,
                          dist_type = stop("Distance type should be Defined 'ed' or 'mfd'"),
                          .n = 1,
