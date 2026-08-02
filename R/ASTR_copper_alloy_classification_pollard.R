@@ -47,13 +47,11 @@
 #' @family copper alloy classifications
 #' @export
 #'
-copper_alloy_pollard <- function(
-    df,
-    elements = c(Sn = "Sn", Zn = "Zn", Pb = "Pb"),
-    id_column = "ID",
-    group_as_symbol = FALSE,
-    ...) {
-
+copper_alloy_pollard <- function(df,
+                                 elements = c(Sn = "Sn", Zn = "Zn", Pb = "Pb"),
+                                 id_column = "ID",
+                                 group_as_symbol = FALSE,
+                                 ...) {
   if (inherits(df, "ASTR")) {
     df <- convert_concentration_units(df, elements, "wtP", ...)
     elements <- c(Sn = "Sn", Zn = "Zn", Pb = "Pb")
@@ -71,19 +69,12 @@ copper_alloy_pollard <- function(
   )
 
   # Identify rows where any element is NA — these stay Unclassified
-  flags$has_na <- apply(
-    flags[, c("Sn_flag", "Zn_flag", "Pb_flag")],
-    1,
-    function(row) any(is.na(row))
-  )
+  flags$has_na <- apply(flags[, c("Sn_flag", "Zn_flag", "Pb_flag")], 1, function(row) {
+    any(is.na(row))
+  })
 
   # Convert flags into a pattern string
-  flags$pattern <- apply(
-    flags[, c("Sn_flag", "Zn_flag", "Pb_flag")],
-    1,
-    paste0,
-    collapse = ""
-  )
+  flags$pattern <- apply(flags[, c("Sn_flag", "Zn_flag", "Pb_flag")], 1, paste0, collapse = "")
 
   # Lookup table for Table 2 classifications
   lookup <- data.frame(
@@ -112,34 +103,23 @@ copper_alloy_pollard <- function(
   )
 
   # Join with lookup table, preserving row order
-  out <- merge(
-    flags[, c("ID_sample", "pattern", "has_na")],
-    lookup,
-    by = "pattern",
-    all.x = TRUE
-  )
+  out <- merge(flags[, c("ID_sample", "pattern", "has_na")], lookup, by = "pattern", all.x = TRUE)
 
   # Add correct output column — NA in any element = Unclassified
   if (!group_as_symbol) {
-    copper_alloy_pollard <- ifelse(
-      out$has_na[match(df[[id_column]], out$ID_sample)],
-      "Unclassified",
-      out$alloy_name[match(df[[id_column]], out$ID_sample)]
-    )
+    copper_alloy_pollard <-
+      ifelse(out$has_na[match(df[[id_column]], out$ID_sample)],
+             "Unclassified", out$alloy_name[match(df[[id_column]], out$ID_sample)])
   } else {
-    copper_alloy_pollard <- ifelse(
-      out$has_na[match(df[[id_column]], out$ID_sample)],
-      "Unclassified",
-      out$alloy_symbol[match(df[[id_column]], out$ID_sample)]
-    )
+    copper_alloy_pollard <-
+      ifelse(out$has_na[match(df[[id_column]], out$ID_sample)],
+             "Unclassified", out$alloy_symbol[match(df[[id_column]], out$ID_sample)])
   }
 
   if (inherits(df, "ASTR")) {
     df_out <- df[c(colnames(get_contextual_columns(df)), elements)]
     df_out[["copper_alloy_pollard"]] <- copper_alloy_pollard
-    df_out[["copper_alloy_pollard"]] <- add_ASTR_class(
-      df_out[["copper_alloy_pollard"]], "ASTR_context"
-    )
+    df_out[["copper_alloy_pollard"]] <- add_ASTR_class(df_out[["copper_alloy_pollard"]], "ASTR_context")
   } else {
     df_out <- df
     df_out[["copper_alloy_pollard"]] <- copper_alloy_pollard

@@ -55,16 +55,22 @@
 #' @family copper alloy classifications
 #' @export
 #'
-copper_group_bray <- function(
-    df,
-    elements = c(As = "As", Sb = "Sb", Ag = "Ag", Ni = "Ni"),
-    id_column = "ID",
-    group_as_number = FALSE,
-    ...) {
-
+copper_group_bray <- function(df,
+                              elements = c(As = "As",
+                                           Sb = "Sb",
+                                           Ag = "Ag",
+                                           Ni = "Ni"),
+                              id_column = "ID",
+                              group_as_number = FALSE,
+                              ...) {
   if (inherits(df, "ASTR")) {
     df <- convert_concentration_units(df, elements, "wtP", ...)
-    elements <- c(As = "As", Sb = "Sb", Ag = "Ag", Ni = "Ni") # rename in case input was in oxides
+    elements <- c(
+      As = "As",
+      Sb = "Sb",
+      Ag = "Ag",
+      Ni = "Ni"
+    ) # rename in case input was in oxides
     threshold <- units::set_units(0.1, "wtP")
   } else {
     threshold <- 0.1 # wt%, set in Bray et al. (2015)
@@ -80,18 +86,11 @@ copper_group_bray <- function(
   )
 
   # Convert flags into a pattern string
-  flags$has_na <- apply(
-    flags[, c("As_flag", "Sb_flag", "Ag_flag", "Ni_flag")],
-    1,
-    function(row) any(is.na(row))
-  )
+  flags$has_na <- apply(flags[, c("As_flag", "Sb_flag", "Ag_flag", "Ni_flag")], 1, function(row) {
+    any(is.na(row))
+  })
 
-  flags$pattern <- apply(
-    flags[, c("As_flag", "Sb_flag", "Ag_flag", "Ni_flag")],
-    1,
-    paste0,
-    collapse = ""
-  )
+  flags$pattern <- apply(flags[, c("As_flag", "Sb_flag", "Ag_flag", "Ni_flag")], 1, paste0, collapse = "")
 
   # Lookup table (16 Bray groups)
   lookup <- data.frame(
@@ -136,27 +135,21 @@ copper_group_bray <- function(
   )
 
   # Join with lookup table, preserving row order
-  out <- merge(
-    flags[, c("ID_sample", "pattern", "has_na")],
-    lookup,
-    by = "pattern",
-    all.x = TRUE,
-    sort = TRUE
-  )
+  out <- merge(flags[, c("ID_sample", "pattern", "has_na")],
+               lookup,
+               by = "pattern",
+               all.x = TRUE,
+               sort = TRUE)
 
   # Add correct output column — NA in any element = Unclassified
   if (!group_as_number) {
-    copper_group_bray <- ifelse(
-      out$has_na[match(df[[id_column]], out$ID_sample)],
-      "Unclassified",
-      out$group_name[match(df[[id_column]], out$ID_sample)]
-    )
+    copper_group_bray <-
+      ifelse(out$has_na[match(df[[id_column]], out$ID_sample)],
+             "Unclassified", out$group_name[match(df[[id_column]], out$ID_sample)])
   } else {
-    copper_group_bray <- ifelse(
-      out$has_na[match(df[[id_column]], out$ID_sample)],
-      NA_integer_,
-      out$group_number[match(df[[id_column]], out$ID_sample)]
-    )
+    copper_group_bray <-
+      ifelse(out$has_na[match(df[[id_column]], out$ID_sample)],
+             NA_integer_, out$group_number[match(df[[id_column]], out$ID_sample)])
   }
 
   # Return ASTR object or plain data frame
