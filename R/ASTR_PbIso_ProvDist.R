@@ -13,7 +13,7 @@
 #' @param s Mass-fractionation factor (Default = 0.001)
 #' @param ... Additional params
 #'
-#' @importFrom utils head stack
+#'
 #' @references Albarede, F., Davis, G., Blichert-Toft, J., Gentelli, L., Gitler, H., Pinto, M., & Telouk, P. (2024).
 #' A new algorithm for using Pb isotopes to determine the provenance of bullion in ancient Greek coinage.
 #' Journal of Archaeological Science, 163, 105919. https://doi.org/10.1016/j.jas.2023.105919

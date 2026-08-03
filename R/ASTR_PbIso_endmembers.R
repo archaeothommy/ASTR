@@ -26,7 +26,6 @@
 #'      \item{tolerance}{Totlarance value}
 #'      \item{clamp}{Clamping values}
 #'      \item{pca}{List of PCA analysis}
-#' @importFrom stats prcomp shapiro.test
 #'
 #' @family Pb isotope functions
 #'
