@@ -216,7 +216,7 @@ describe("pb_iso_prov_predict()", {
     )
 
     expect_s3_class(pred, "data.frame")
-    expect_named(pred, c("pb64", "pb74", "pb84", "group", "prob"))
+    expect_named(pred, c("group", "pb64", "pb74", "pb84", "prob"))
     expect_true(nrow(pred) > 0)
     expect_false(is.unsorted(rev(pred$prob))) # Verify descending sort order
   })

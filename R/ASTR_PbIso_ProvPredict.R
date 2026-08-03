@@ -136,6 +136,9 @@ pb_iso_train_data <- function(ref,
     )
   }
 
+
+  # Package Check -----------------------------------------------------------
+
   if (!requireNamespace("dbscan")) {
 
     if (!rlang::is_interactive()) {
@@ -311,7 +314,7 @@ xgboost_predict <- function(x, model_list = NULL, .probablity) {
 
   final_df <- do.call(rbind, all_model_results)
 
-  names(final_df) <- c("pb64", "pb74", "pb84", "group", "prob")
+  names(final_df) <- c("group", "pb64", "pb74", "pb84", "prob")
   final_df$group <- gsub("_", " ", final_df$group)
 
   final_df <- final_df[order(final_df$prob, decreasing = TRUE), ]
