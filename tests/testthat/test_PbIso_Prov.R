@@ -1,268 +1,223 @@
-library(testthat)
-
 # ==============================================================================
-# Helpers & Synthetic Data Generators
+# Helper / Test Data Generators
 # ==============================================================================
 
-make_synthetic_isotope_data <- function(n_per_group = 25, seed = 123) {
-  set.seed(seed)
-
-  # Group A: Centered near (18.2, 15.6, 38.2)
-  gA <- data.frame(
-    Region = "RegionA",
-    ratio_206 = rnorm(n_per_group, mean = 18.2, sd = 0.02),
-    ratio_207 = rnorm(n_per_group, mean = 15.6, sd = 0.02),
-    ratio_208 = rnorm(n_per_group, mean = 38.2, sd = 0.02)
+make_mock_astr <- function(n = 10, groups = c("RegionA", "RegionB")) {
+  set.seed(42)
+  df <- data.frame(
+    sample_id = paste0("S", seq_len(n)),
+    region = rep_len(groups, n),
+    `206Pb/204Pb` = runif(n, 18.0, 19.5),
+    `207Pb/204Pb` = runif(n, 15.4, 15.8),
+    `208Pb/204Pb` = runif(n, 38.0, 39.5),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
   )
-
-  # Group B: Centered near (18.8, 15.8, 38.8)
-  gB <- data.frame(
-    Region = "RegionB",
-    ratio_206 = rnorm(n_per_group, mean = 18.8, sd = 0.02),
-    ratio_207 = rnorm(n_per_group, mean = 15.8, sd = 0.02),
-    ratio_208 = rnorm(n_per_group, mean = 38.8, sd = 0.02)
-  )
-
-  rbind(gA, gB)
+  class(df) <- c("ASTR", "data.frame")
+  df
 }
 
-make_mock_endmembers_object <- function() {
-  grp1 <- matrix(c(18.2, 15.6, 38.2, 18.21, 15.61, 38.21),
-                 ncol = 3,
-                 byrow = TRUE)
-  colnames(grp1) <- c("pb64", "pb74", "pb84")
-
-  grp2 <- matrix(c(18.8, 15.8, 38.8, 18.81, 15.81, 38.81),
-                 ncol = 3,
-                 byrow = TRUE)
-  colnames(grp2) <- c("pb64", "pb74", "pb84")
-
-  obj <- list(
-    data = NULL,
-    pca_ends = NULL,
-    group1 = grp1,
-    group2 = grp2
+make_mock_large_astr <- function(samples_per_group = 25) {
+  set.seed(123)
+  g1 <- data.frame(
+    region = "RegionA",
+    `206Pb/204Pb` = rnorm(samples_per_group, 18.2, 0.01),
+    `207Pb/204Pb` = rnorm(samples_per_group, 15.5, 0.01),
+    `208Pb/204Pb` = rnorm(samples_per_group, 38.2, 0.01),
+    check.names = FALSE, stringsAsFactors = FALSE
   )
-  class(obj) <- c("pbisoendmembers", "list")
-  return(obj)
+  g2 <- data.frame(
+    region = "RegionB",
+    `206Pb/204Pb` = rnorm(samples_per_group, 19.1, 0.01),
+    `207Pb/204Pb` = rnorm(samples_per_group, 15.7, 0.01),
+    `208Pb/204Pb` = rnorm(samples_per_group, 39.1, 0.01),
+    check.names = FALSE, stringsAsFactors = FALSE
+  )
+  df <- rbind(g1, g2)
+  class(df) <- c("ASTR", "data.frame")
+  df
 }
 
+
 # ==============================================================================
-# 1. Tests for as.ref_data()
+# 1. Internal Helpers
 # ==============================================================================
 
-describe("as.ref_data()", {
-  it("creates a ref.data object with cleaned and renamed columns", {
-    raw_df <- make_synthetic_isotope_data(n_per_group = 10)
+test_that(".pb_iso_cols returns expected column names", {
+  expect_equal(.pb_iso_cols(), c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb"))
+})
 
-    ref <- as.ref_data(
-      x = raw_df,
-      cols = c("ratio_206", "ratio_207", "ratio_208"),
-      group = "Region",
-      min_groupsize = 5
+test_that(".validate_iso_cols validates column presence correctly", {
+  good_df <- make_mock_astr(3)
+  bad_df <- data.frame(`206Pb/204Pb` = 18.1, check.names = FALSE)
+
+  expect_silent(.validate_iso_cols(good_df))
+  expect_error(
+    .validate_iso_cols(bad_df),
+    "Dataset is missing required lead isotope columns"
+  )
+})
+
+test_that(".ensure_pbiso_ref validates and converts reference objects", {
+  good_astr <- make_mock_astr(10)
+  non_astr <- data.frame(`206Pb/204Pb` = 18.1)
+
+  expect_error(.ensure_pbiso_ref(non_astr, "region"), "`ref` must be of class 'ASTR'.")
+
+  # Converts standard ASTR to ASTR_Pbiso_ref_data
+  ref_out <- .ensure_pbiso_ref(good_astr, ref_group = "region", min_groupsize = 2)
+  expect_s3_class(ref_out, "ASTR_Pbiso_ref_data")
+})
+
+test_that(".tag_astr_context tags specified columns with attribute", {
+  df <- data.frame(a = 1:3, b = 4:6)
+  tagged <- .tag_astr_context(df, c("a", "missing_col"))
+
+  expect_equal(attr(tagged$a, "ASTR_class"), "ASTR_context")
+  expect_null(attr(tagged$b, "ASTR_class"))
+})
+
+test_that(".check_required_packages handles installed and missing packages", {
+  # Standard installed packages pass silently
+  expect_silent(.check_required_packages(c("stats", "utils")))
+
+  # Missing package non-interactive handling
+  mockery_env <- new.env()
+  rlang::with_interactive(value = FALSE, {
+    expect_error(
+      .check_required_packages("nonExistentPackage12345"),
+      "Function requires package\\(s\\): nonExistentPackage12345"
     )
-
-    expect_s3_class(ref, "ref.data")
-    expect_s3_class(ref, "data.frame")
-    expect_named(ref, c("groups", "pb64", "pb74", "pb84"))
-    expect_equal(nrow(ref), 20)
-  })
-
-  it("removes rows with NA values in selected columns or group", {
-    raw_df <- make_synthetic_isotope_data(n_per_group = 10)
-    raw_df[3, "ratio_206"] <- NA
-    raw_df[12, "Region"] <- NA
-
-    ref <- as.ref_data(
-      x = raw_df,
-      cols = c("ratio_206", "ratio_207", "ratio_208"),
-      group = "Region",
-      min_groupsize = 5
-    )
-
-    expect_equal(nrow(ref), 18)
-    expect_false(any(is.na(ref)))
-  })
-
-  it("filters out groups smaller than min_groupsize", {
-    raw_df <- make_synthetic_isotope_data(n_per_group = 10)
-    small_group <- data.frame(
-      Region = "RegionC",
-      ratio_206 = c(18.5, 18.5, 18.5),
-      ratio_207 = c(15.7, 15.7, 15.7),
-      ratio_208 = c(38.5, 38.5, 38.5)
-    )
-    df_combined <- rbind(raw_df, small_group)
-
-    ref <- as.ref_data(
-      x = df_combined,
-      cols = c("ratio_206", "ratio_207", "ratio_208"),
-      group = "Region",
-      min_groupsize = 5
-    )
-
-    expect_false("RegionC" %in% ref$groups)
-    expect_equal(unique(ref$groups), c("RegionA", "RegionB"))
-  })
-
-  it("throws an error when specified columns are missing", {
-    raw_df <- make_synthetic_isotope_data(n_per_group = 5)
-
-    expect_error(as.ref_data(
-      x = raw_df,
-      cols = c("missing_206", "ratio_207", "ratio_208"),
-      group = "Region"
-    ),
-    "column names not found")
   })
 })
 
+
 # ==============================================================================
-# 2. Tests for pb_iso_train_data()
+# 2. Reference Data Preprocessing (as_pbiso_ref_data)
 # ==============================================================================
 
-describe("pb_iso_train_data()", {
-  it("throws error if input ref is not of class ref.data", {
-    raw_df <- make_synthetic_isotope_data(n_per_group = 10)
+test_that("as_pbiso_ref_data.ASTR processes groups, handles NAs, and assigns S3 class", {
+  raw_df <- make_mock_astr(12, groups = c("A", "B", "C"))
+  # Add NAs and a tiny group C
+  raw_df[1, "206Pb/204Pb"] <- NA
+  raw_df[2:3, "region"] <- "C" # Group C has size 2
 
-    expect_error(pb_iso_train_data(ref = raw_df),
-                 "ref must be of class ref.data")
-  })
+  ref_data <- as_pbiso_ref_data(raw_df, group = "region", min_groupsize = 4)
 
-  it("successfully trains XGBoost models on a valid ref.data object",
-     {
-       raw_df <- make_synthetic_isotope_data(n_per_group = 25, seed = 42)
-       ref <- as.ref_data(
-         x = raw_df,
-         cols = c("ratio_206", "ratio_207", "ratio_208"),
-         group = "Region",
-         min_groupsize = 20
-       )
-
-       models <- pb_iso_train_data(
-         ref = ref,
-         .minSize = 20,
-         .minPts_fac = 0.1,
-         .eps = 0.18,
-         .nrounds = 5,
-         nthread = 1
-       )
-
-       expect_type(models, "list")
-       expect_true(length(models) > 0)
-       expect_s3_class(models[[1]], "xgb.Booster")
-     })
-
-  it("handles filtering small groups below .minSize during clustering",
-     {
-       raw_df <- make_synthetic_isotope_data(n_per_group = 25, seed = 99)
-       # Group A: 25 samples, Group B: 10 samples
-       raw_df <- raw_df[c(1:25, 26:35), ]
-
-       ref <- as.ref_data(
-         x = raw_df,
-         cols = c("ratio_206", "ratio_207", "ratio_208"),
-         group = "Region",
-         min_groupsize = 5
-       )
-
-       models <- pb_iso_train_data(
-         ref = ref,
-         .minSize = 20,
-         # Group B (<20) passes through unclustered or skipped
-         .nrounds = 5,
-         nthread = 1
-       )
-
-       expect_type(models, "list")
-     })
+  expect_s3_class(ref_data, "ASTR_Pbiso_ref_data")
+  expect_false(any(is.na(ref_data)))
+  expect_false("B" %in% ref_data$region) # Excluded because count < min_groupsize
+  expect_equal(names(ref_data), c("region", .pb_iso_cols()))
 })
 
+
 # ==============================================================================
-# 3. Tests for pb_iso_prov_predict() and xgboost_predict()
+# 3. Distance Metrics (euc_dist, mf_dist, pb_iso_prov_dist)
 # ==============================================================================
 
-describe("pb_iso_prov_predict()", {
-  # Setup shared trained model for prediction tests
-  setup_models <- function() {
-    raw_df <- make_synthetic_isotope_data(n_per_group = 25, seed = 123)
-    ref <- as.ref_data(
-      x = raw_df,
-      cols = c("ratio_206", "ratio_207", "ratio_208"),
-      group = "Region",
-      min_groupsize = 20
-    )
-    pb_iso_train_data(
-      ref = ref,
-      .minSize = 20,
-      .nrounds = 10,
-      nthread = 1
-    )
-  }
+test_that("euc_dist.ASTR calculates Euclidean distances and joins results", {
+  query <- make_mock_astr(2, groups = c("Q1", "Q2"))
+  ref <- make_mock_astr(10, groups = c("Ref1", "Ref2"))
 
-  it("predicts provenance for a simple data frame or matrix input", {
-    models <- setup_models()
+  res <- euc_dist(query, ref = ref, ref_group = "region", .n = 1)
 
-    test_samples <- data.frame(
-      pb64 = c(18.2, 18.8),
-      pb74 = c(15.6, 15.8),
-      pb84 = c(38.2, 38.8)
-    )
+  expect_true("ed_dist" %in% names(res))
+  expect_true("ed_ref_region" %in% names(res))
+  expect_equal(nrow(res), 2)
+  expect_equal(attr(res$ed_dist, "ASTR_class"), "ASTR_context")
+})
 
-    pred <- pb_iso_prov_predict(
-      x = test_samples,
-      model_list = models,
-      .probablity = 0.1 # Low threshold to guarantee hits in test
-    )
+test_that("mf_dist.ASTR calculates Mass-Fractionation distances", {
+  query <- make_mock_astr(2)
+  ref <- make_mock_astr(10)
 
-    expect_s3_class(pred, "data.frame")
-    expect_named(pred, c("group", "pb64", "pb74", "pb84", "prob"))
-    expect_true(nrow(pred) > 0)
-    expect_false(is.unsorted(rev(pred$prob))) # Verify descending sort order
-  })
+  res <- mf_dist(query, ref = ref, ref_group = "region", .n = 1, s = 0.001)
 
-  it("returns NULL when no sample passes the .probablity threshold", {
-    models <- setup_models()
+  expect_true("mf_dist_sq" %in% names(res))
+  expect_true("mf_ref_region" %in% names(res))
+  expect_equal(nrow(res), 2)
+  expect_equal(attr(res$mf_dist_sq, "ASTR_class"), "ASTR_context")
+})
 
-    test_samples <- data.frame(
-      pb64 = c(18.2),
-      pb74 = c(15.6),
-      pb84 = c(38.2)
-    )
+test_that("pb_iso_prov_dist.ASTR switches distance models correctly", {
+  query <- make_mock_astr(2)
+  ref <- make_mock_astr(10)
 
-    pred <- pb_iso_prov_predict(
-      x = test_samples,
-      model_list = models,
-      .probablity = 0.99999 # Impossibly high threshold
-    )
+  res_ed <- pb_iso_prov_dist(query, ref = ref, ref_group = "region", dist_type = "ed")
+  expect_true("ed_dist" %in% names(res_ed))
 
-    expect_null(pred)
-  })
+  res_mf <- pb_iso_prov_dist(query, ref = ref, ref_group = "region", dist_type = "mf")
+  expect_true("mf_dist_sq" %in% names(res_mf))
 
-  it("handles pbisoendmembers S3 objects correctly", {
-    models <- setup_models()
-    end_obj <- make_mock_endmembers_object()
+  res_all <- pb_iso_prov_dist(query, ref = ref, ref_group = "region", dist_type = "all")
+  expect_true(all(c("ed_dist", "mf_dist_sq") %in% names(res_all)))
+})
 
-    pred_list <- pb_iso_prov_predict(x = end_obj,
-                                     model_list = models,
-                                     .probablity = 0.1)
 
-    expect_type(pred_list, "list")
-    expect_named(pred_list, c("group1", "group2"))
-    expect_s3_class(pred_list$group1, "data.frame")
-    expect_s3_class(pred_list$group2, "data.frame")
-  })
+# ==============================================================================
+# 4. Machine Learning Training Pipeline (pb_iso_train_data)
+# ==============================================================================
 
-  it("handles empty or NULL groups inside pbisoendmembers object", {
-    models <- setup_models()
-    end_obj <- make_mock_endmembers_object()
-    end_obj$group1 <- NULL # Simulate empty target group
+test_that("pb_iso_train_data executes full DBSCAN, SMOTE, and XGBoost workflow", {
+  large_dataset <- make_mock_large_astr(samples_per_group = 25)
 
-    pred_list <- pb_iso_prov_predict(x = end_obj,
-                                     model_list = models,
-                                     .probablity = 0.1)
+  # Test direct dispatch on ASTR object
+  models <- pb_iso_train_data(
+    ref = large_dataset,
+    ref_group = "region",
+    min_groupsize = 5,
+    .minSize = 20,
+    .minPts_fac = 0.1,
+    .eps = 0.5, # Generous eps for test clustering
+    .nrounds = 5,
+    nthread = 1
+  )
 
-    expect_null(pred_list$group1)
-    expect_s3_class(pred_list$group2, "data.frame")
-  })
+  expect_type(models, "list")
+  expect_gt(length(models), 0)
+  expect_s3_class(models[[1]], "xgb.Booster")
+})
+
+test_that("helper_train_function validates .minPts_fac boundaries", {
+  ref_obj <- as_pbiso_ref_data(make_mock_astr(10), group = "region", min_groupsize = 1)
+
+  expect_error(
+    helper_train_function(ref_obj, .minPts_fac = 1.5),
+    "\\.minPts_fac must be between 0 and 1\\."
+  )
+  expect_error(
+    helper_train_function(ref_obj, .minPts_fac = 0),
+    "\\.minPts_fac must be between 0 and 1\\."
+  )
+})
+
+
+# ==============================================================================
+# 5. ML Prediction (pb_iso_prov_predict)
+# ==============================================================================
+
+test_that("pb_iso_prov_predict.ASTR predicts probabilities using trained models", {
+  large_dataset <- make_mock_large_astr(samples_per_group = 25)
+  models <- pb_iso_train_data(
+    ref = large_dataset,
+    ref_group = "region",
+    .minSize = 20,
+    .eps = 0.5,
+    .nrounds = 5,
+    nthread = 1
+  )
+
+  query <- make_mock_astr(3)
+
+  # Error on NULL/empty models
+  expect_error(pb_iso_prov_predict(query, model_list = NULL), "`model_list` is NULL or empty\\.")
+  expect_error(pb_iso_prov_predict(query, model_list = list()), "`model_list` is NULL or empty\\.")
+
+  # Valid prediction
+  preds <- pb_iso_prov_predict(query, model_list = models, .top = 1)
+
+  expect_true(all(c("ml_group", "ml_prob") %in% names(preds)))
+  expect_equal(nrow(preds), 3)
+  expect_equal(attr(preds$ml_group, "ASTR_class"), "ASTR_context")
+  expect_equal(attr(preds$ml_prob, "ASTR_class"), "ASTR_context")
 })

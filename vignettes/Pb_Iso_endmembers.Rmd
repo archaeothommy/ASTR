@@ -61,13 +61,9 @@ PCA values are represented by two list items.
 ```{r PCA}
 col_names <- c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")
 df <- ASTR::ArgentinaDatabase[ASTR::ArgentinaDatabase$`Mining area` == "Distrito El Aguilar", col_names]
-end_members <- pb_iso_endmembers(df, names(df), tolerance = c(0.01, 0.01))
-# Readings which are identified as by the PCA
-print(end_members$pca_ends)
-
-# Results of the PCA
-print(end_members$pca)
-
+df$rowname <- seq_len(nrow(df))
+df <- as_ASTR(df, id_column = "rowname")
+pb_iso_endmembers(df)
 ```
 
 However, this method is limited as it only identifies two points, which are unlikely to fully represent all endmembers.
@@ -96,13 +92,11 @@ Where $d$ is the euclidean distance. The default parameter is chosen to be `Inf`
 
 ```{r clamp example}
 # Example with no clamping
-no_clamp <- pb_iso_endmembers(df, names(df))
-print(no_clamp$group2)
-
+no_clamp <- pb_iso_endmembers(df)
+no_clamp[no_clamp$end_membr == "group2", ]
 # Example with clamping
-clamp <- pb_iso_endmembers(df, names(df), clamp = c(Inf, 0.1))
-print(clamp$group2)
-
+clamp <- pb_iso_endmembers(df, , clamp = c(Inf, 0.1))
+clamp[clamp$end_membr == "group2", ]
 ```
 
 This results in the creation for two sets of endmembers $E_a$ and $E_b$, where:
@@ -111,23 +105,7 @@ $$
 	E_i = \left\{\vec{p_i}, \vec{e_i^1},\ldots, \vec{e_i^n}\right\}
 $$
 
-In the package $E$ is represented as group1 and group2
-
-```{r endmember groups}
-head(end_members$group1)
-head(end_members$group2)
-# Additionally the samples which are not part of the two groups are considered as mixing
-head(end_members$mixing)
-```
+In the package $E$ is represented as group1 and group2.
 
 However, if $|E_i| < 2$ then it is difficult to consider only $\vec{p_i} \in E_i$ as an endmember, and so $p_i$ is considered only a possible end member.
 Then when happens the package will inform the user with a message.
-
-## Summary Function
-
-The data can be summarized using the `summary()` function
-
-```{r summary}
-summary(end_members)
-```
-

@@ -28,7 +28,7 @@
 #' @family Pb isotope functions
 #'
 #' @export
-pb_iso_endmembers <- function(x, ...){
+pb_iso_endmembers <- function(x, ...) {
   UseMethod("pb_iso_endmembers")
 }
 

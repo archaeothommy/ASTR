@@ -2,23 +2,18 @@
 % Please edit documentation in R/ASTR_PbIso_endmembers.R
 \name{pb_iso_endmembers}
 \alias{pb_iso_endmembers}
+\alias{pb_iso_endmembers.ASTR}
 \title{Find Endmembers from a list of LIA points}
 \usage{
-pb_iso_endmembers(
-  x,
-  col = NULL,
-  tolerance = c(0.01, 0.01),
-  clamp = c(Inf, Inf),
-  ...
-)
+pb_iso_endmembers(x, ...)
+
+\method{pb_iso_endmembers}{ASTR}(x, tolerance = c(0.01, 0.01), clamp = c(Inf, Inf), ...)
 }
 \arguments{
-\item{x}{data.frame or matrix object containing
-Pb 206/204, 207/204, 208/204 isotope ratios.}
+\item{x}{ASTR object containing
+206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb isotope ratios.}
 
-\item{col}{Isotope column names containing Pb
-206/204, 207/204, 208/204 isotope ratios.
-Names must contains the significant numbers 6, 7 and 8.}
+\item{...}{Additional Parameters}
 
 \item{tolerance}{Vector of length two, with corresponding group 1 and group
 2 tolerance value for points considered to be intercepted.
@@ -26,56 +21,27 @@ Names must contains the significant numbers 6, 7 and 8.}
 
 \item{clamp}{Limit filter for points away from the principle component end
 based on Euclidean distance, (Default c(Inf, Inf))}
-
-\item{...}{Additional Parameters}
 }
 \value{
-An object of class 'pbisoendmembers' as a list of 6
-\item{data}{Isotope data}
-\item{pca_ends}{Endmembers maped using PCA}
-\item{group1,group2}{End member groups}
-\item{mixing}{Mixing Group}
-\item{tolerance}{Totlarance value}
-\item{clamp}{Clamping values}
-\item{pca}{List of PCA analysis}
+If \code{x} is an \link[=ASTR]{ASTR object}, with additional class attribute
+\code{ASTR_Pbiso_endmembr}, the output is an object of the
+same type including the ID column, the contextual columns, the lead isotope
+ratios used for calculation of the age model parameters,
+and the endmember groups. In all other cases, the data frame provided as input
+with columns added for the calculated endmember groups.
+
+Endmember groups consist of group1, group2 and groupmix
+groupmix represents the values along the mixing line.
 }
 \description{
 Finds endmembers from a set of
 Lead Isotope Points using Principle Component
-analysis and the Geochron slope according to the two-stage model.
-}
-\examples{
-
-# Create data structure
-
-col_names <- c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")
-df <- ASTR::ArgentinaDatabase[
-ASTR::ArgentinaDatabase$`Mining area` == "Distrito El Aguilar",
-col_names]
-ref_data <- as.ref_data(ASTR::ArgentinaDatabase, col_names, "Mining area")
-
-# Create object with class liaendmembers
-end_members <- pb_iso_endmembers(
-        df,
-        col_names,
-        tolerance = c(0.01, 0.01),
-        clamp = c(Inf, Inf)
-)
-# Print summary of the liaendmembers object
-summary(end_members)
-# Get Uclidian distance
-pb_iso_prov_dist(end_members, ref_data, dist_type = "ed")
-# Get Mass Fractionnation Corrected distance
-pb_iso_prov_dist(end_members, ref_data, dist_type = "mfd")
-# Train XGBOOST model on Reference data
-\dontrun{ml_model <- pb_iso_train_data(ref_data)}
-# Get XGBOOST predicted ml_resutls
-pb_iso_prov_predict(end_members, ml_model)
+analysis and the Geochron slope according to the two-stage model by Stacy-Kramers 1975.
 }
 \seealso{
 Other Pb isotope functions:
 \code{\link{age_models}},
-\code{\link[=as.ref_data]{as.ref_data()}},
+\code{\link[=as_pbiso_ref_data]{as_pbiso_ref_data()}},
 \code{\link[=geom_sk_lines]{geom_sk_lines()}},
 \code{\link[=pb_iso_prov_dist]{pb_iso_prov_dist()}},
 \code{\link[=pb_iso_train_data]{pb_iso_train_data()}}

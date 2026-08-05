@@ -1,3 +1,88 @@
+# Helper functions --------------------------------------------------------
+
+# Isotopes relevant for ASTR Schema
+.pb_iso_cols <- function() {
+  c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")
+}
+
+# Validate Iso columns
+.validate_iso_cols <- function(x) {
+  iso <- .pb_iso_cols()
+  if (!all(iso %in% names(x))) {
+    stop("Dataset is missing required lead isotope columns: ",
+         paste(iso, collapse = ", "))
+  }
+}
+
+
+# Ensures ref is of type ASTR_Pbiso_ref_data
+.ensure_pbiso_ref <- function(ref, ref_group, ...) {
+  if (!inherits(ref, "ASTR")) {
+    stop("`ref` must be of class 'ASTR'.")
+  }
+  .validate_iso_cols(ref)
+  if (!inherits(ref, "ASTR_Pbiso_ref_data")) {
+    ref <- as_pbiso_ref_data(ref, group = ref_group, ...)
+  }
+  ref
+}
+
+# Re tags new columns as context
+.tag_astr_context <- function(df, cols) {
+  for (col in cols) {
+    if (col %in% names(df)) {
+      attr(df[[col]], "ASTR_class") <- "ASTR_context"
+    }
+  }
+  df
+}
+
+# Checks if required functions are installed and if now prompts for install
+.check_required_packages <- function(pkgs) {
+  missing_pkgs <- pkgs[!sapply(pkgs, requireNamespace, quietly = TRUE)]
+  if (length(missing_pkgs) > 0) {
+    if (!rlang::is_interactive()) {
+      stop("Function requires package(s): ",
+           paste(missing_pkgs, collapse = ", "))
+    }
+    ans <- readline(sprintf(
+      "Package(s) '%s' required. Install now? [Y/n]: ",
+      paste(missing_pkgs, collapse = ", ")
+    ))
+    if (tolower(ans) %in% c("yes", "y")) {
+      utils::install.packages(missing_pkgs)
+    } else {
+      stop("Please install missing package(s) manually.")
+    }
+  }
+}
+
+# Formats distance functions
+.format_dist_results <- function(x,
+                                 ref,
+                                 dist_matrix,
+                                 dist_col_name,
+                                 prefix,
+                                 .n) {
+  results_list <- lapply(seq_len(nrow(dist_matrix)), function(i) {
+    query_vals <- x[i, , drop = FALSE]
+    row_dists <- dist_matrix[i, ]
+    hit_indices <- order(row_dists)[seq_len(min(.n, length(row_dists)))]
+
+    match_ref <- ref[hit_indices, , drop = FALSE]
+    names(match_ref) <- paste0(prefix, "_ref_", names(match_ref))
+
+    out <- cbind(query_vals[rep(1, length(hit_indices)), , drop = FALSE], dist_val = row_dists[hit_indices], match_ref)
+    out
+  })
+
+  final_df <- do.call(rbind, results_list)
+  names(final_df)[names(final_df) == "dist_val"] <- dist_col_name
+
+  final_df <- .tag_astr_context(final_df, dist_col_name)
+  dplyr::left_join(x, final_df)
+}
+
 # Reference Data Function --------------------------------------------------
 
 #' Create Reference data object for LIA endmember distance and probability estimate functions.
@@ -17,20 +102,15 @@
 #'
 #' @family Pb isotope functions
 #' @export
-as_pbiso_ref_data <- function(x, ...){
+as_pbiso_ref_data <- function(x, ...) {
   UseMethod("as_pbiso_ref_data")
 }
 
 #' @rdname as_pbiso_ref_data
 #' @export
 as_pbiso_ref_data.ASTR <- function(x, group, min_groupsize = 5) {
-
-  iso <- c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")
-  if(!all(iso %in% names(x))) {
-    stop("Reference data as incomplete Isotope names")
-  }
-  x <- na.omit(x[,c(group, iso)])
-  x
+  .validate_iso_cols(x)
+  x <- na.omit(x[, c(group, .pb_iso_cols())])
 
   if (!is.null(min_groupsize)) {
     counts <- table(x[[group]])
@@ -40,7 +120,6 @@ as_pbiso_ref_data.ASTR <- function(x, group, min_groupsize = 5) {
   class(x) <- c("ASTR_Pbiso_ref_data", class(x))
   x
 }
-
 
 # Distance Functions ------------------------------------------------------
 
@@ -70,9 +149,11 @@ as_pbiso_ref_data.ASTR <- function(x, group, min_groupsize = 5) {
 #' @returns List of data frame or character vector
 #' @inherit pb_iso_endmembers examples
 #'
+#' @importFrom dplyr full_join
+#'
 #' @family Pb isotope functions
 #' @export
-pb_iso_prov_dist <- function(x, ...){
+pb_iso_prov_dist <- function(x, ...) {
   UseMethod("pb_iso_prov_dist")
 }
 
@@ -85,7 +166,6 @@ pb_iso_prov_dist.ASTR <- function(x,
                                   .n = 1,
                                   s = 0.001,
                                   ...) {
-
   switch(
     dist_type,
     ed = euc_dist(x, ref, ref_group, .n),
@@ -108,12 +188,10 @@ euc_dist <- function(x, ...) {
 #' @rdname pb_iso_prov_dist
 #' @export
 euc_dist.ASTR <- function(x, ref, ref_group, .n = 1, ...) {
-  if (!inherits(ref, "ASTR")) {
-    stop("ref must be of class ASTR")
-  }
-  ref <- as_pbiso_ref_data(ref, ref_group, ...)
-  x_iso <- x[, c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")]
-  x_mat <- as.matrix(x_iso)
+
+  ref <- .ensure_pbiso_ref(ref, ref_group, ...)
+
+  x_mat <- as.matrix(x[, .pb_iso_cols()])
   ref_mat <- as.matrix(ref[, -1])
 
   norm_x <- rowSums(x_mat^2)
@@ -123,27 +201,14 @@ euc_dist.ASTR <- function(x, ref, ref_group, .n = 1, ...) {
   dist_sq <- sweep(sweep(-2 * dot_product, 1, norm_x, "+"), 2, norm_ref, "+")
   dist_matrix <- sqrt(pmax(dist_sq, 0))
 
-  # Process each row of x
-  results_list <- lapply(seq_len(nrow(dist_matrix)), function(i) {
-    query_vals <- x[i, , drop = FALSE]
-    row_dists <- dist_matrix[i, ]
-    hits_indices <- order(row_dists)[1:.n] # Get indices of top .n
-
-    match_ref <- ref[hits_indices, ]
-    # Rename reference columns to distinguish from query
-    names(match_ref) <- paste0("ed_ref_", names(match_ref))
-
-    out <- cbind(query_vals[rep(1, .n), drop = FALSE], dist = row_dists[hits_indices], match_ref)
-
-    return(out)
-  })
-  final_df <- do.call(rbind, results_list) %>%
-    select("ed_dist" = dist, everything())
-  attr(final_df$ed_dist, "ASTR_class") <- "ASTR_context"
-  # final_df <- final_df[order(final_df$dist), ]
-  # rownames(final_df) <- NULL
-  # return(final_df)
-  left_join(x, final_df)
+  .format_dist_results(
+    x = x,
+    ref = ref,
+    dist_matrix = dist_matrix,
+    dist_col_name = "ed_dist",
+    prefix = "ed",
+    .n = .n
+  )
 }
 
 #' @rdname pb_iso_prov_dist
@@ -154,80 +219,55 @@ mf_dist <- function(x, ...) {
 
 #' @rdname pb_iso_prov_dist
 #' @export
-mf_dist.ASTR <- function(x, ref, ref_group, .n = 1, s = 0.001, ...) {
+mf_dist.ASTR <- function(x,
+                         ref,
+                         ref_group,
+                         .n = 1,
+                         s = 0.001,
+                         ...) {
 
-  if (!inherits(ref, "ASTR")) {
-    stop("ref must be of class ASTR")
-  }
-  ref <- as_pbiso_ref_data(ref, ref_group, ...)
+  ref <- .ensure_pbiso_ref(ref, ref_group, ...)
 
-  x_iso <- x[, c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")]
-
-  x_df <- as.data.frame(x_iso)
-  x_mat <- as.matrix(x_iso)
-  ox_mat <- as.matrix(ref[-1])
-  #ref_groups <- ref[[1]]
+  x_mat <- as.matrix(x[, .pb_iso_cols()])
+  ox_mat <- as.matrix(ref[, -1])
 
   # Constant Correlation Matrix R for Pb isotopes
   R <- matrix(c(1, 0.96, 0.94, 0.96, 1, 0.96, 0.94, 0.96, 1),
               nrow = 3,
               byrow = TRUE)
 
-  results_list <- lapply(seq_len(nrow(x_mat)), function(j) {
-    x0 <- x_mat[j, ]
+  dist_matrix <- matrix(NA_real_, nrow = nrow(x_mat), ncol = nrow(ox_mat))
 
-    # Geometry Setup
+  for (j in seq_len(nrow(x_mat))) {
+    x0 <- x_mat[j, ]
     v <- x0 * c(2, 3, 4)
     n <- v / sqrt(sum(v^2))
 
-    # Weighting Matrix W
     sd_diag <- diag(c(2, 3, 4) * s * x0)
     W <- sd_diag %*% R %*% sd_diag
 
-    # Projection setup (Gram-Schmidt)
-    basis1 <- if (abs(n[1]) < 0.9)
-      c(1, 0, 0)
-    else
-      c(0, 1, 0)
+    basis1 <- if (abs(n[1]) < 0.9) c(1, 0, 0) else c(0, 1, 0)
     u1 <- basis1 - (sum(basis1 * n)) * n
     u1 <- u1 / sqrt(sum(u1^2))
     u2 <- c(n[2] * u1[3] - n[3] * u1[2], n[3] * u1[1] - n[1] * u1[3], n[1] * u1[2] - n[2] * u1[1])
     P <- cbind(u1, u2)
 
-    # Project W into 2D and invert
     W_p_inv <- solve(t(P) %*% W %*% P)
-
-    # Distance Calculation
     delta_X <- sweep(ox_mat, 2, x0, "-")
     dx_p <- delta_X %*% P
-    d_sq <- rowSums((dx_p %*% W_p_inv) * dx_p)
 
-    # Sorting and Data Merging
-    # Get indices of the top .n matches for THIS artifact
-    hit_indices <- order(d_sq)[1:.n]
+    dist_matrix[j, ] <- rowSums((dx_p %*% W_p_inv) * dx_p)
+  }
 
-    query_vals <- x_df[j, , drop = FALSE]
-    match_ref <- ref[hit_indices, ]
-    names(match_ref) <- paste0("mf_ref_", names(match_ref))
-
-    # Combine: Query | Distance | Match Metadata & Values
-    out <- cbind(
-      query_vals[rep(1, .n), , drop = FALSE],
-      mf_dist_sq = d_sq[hit_indices],
-      match_ref)
-
-
-
-    return(out)
-  })
-
-  # Finalize
-  final_df <- do.call(rbind, results_list)
-  attr(final_df$mf_dist_sq, "ASTR_class") <- "ASTR_context"
-  # final_df <- final_df[order(final_df$dist), ]
-  left_join(x, final_df)
+  .format_dist_results(
+    x = x,
+    ref = ref,
+    dist_matrix = dist_matrix,
+    dist_col_name = "mf_dist_sq",
+    prefix = "mf",
+    .n = .n
+  )
 }
-
 
 # ML model Training function ----------------------------------------------
 
@@ -310,7 +350,7 @@ mf_dist.ASTR <- function(x, ref, ref_group, .n = 1, s = 0.001, ...) {
 #'
 #' @family Pb isotope functions
 #' @export
-pb_iso_train_data <- function(ref, ...){
+pb_iso_train_data <- function(ref, ...) {
   UseMethod("pb_iso_train_data")
 }
 
@@ -337,6 +377,7 @@ pb_iso_train_data.ASTR_Pbiso_ref_data <- function(ref,
     ...
   )
 }
+
 #' @rdname pb_iso_train_data
 #' @export
 pb_iso_train_data.ASTR <- function(ref,
@@ -350,7 +391,6 @@ pb_iso_train_data.ASTR <- function(ref,
                                    .nrounds = 100,
                                    nthread = 4L,
                                    ...) {
-
   # Format reference data using the helper
   ref <- as_pbiso_ref_data(ref, ref_group, min_groupsize = min_groupsize, ...)
 
@@ -377,66 +417,18 @@ helper_train_function <- function(ref,
                                   .max_depth = 6,
                                   .nrounds = 100,
                                   nthread = 4L,
-                                  ...
-
-) {
+                                  ...) {
   # Package Check -----------------------------------------------------------
 
-  if (!requireNamespace("dbscan")) {
-
-    if (!rlang::is_interactive()) {
-      stop("Function requires the package `dbscan`.")
-    }
-
-    answer <- readline("Package `dbscan` required to import Excel files.
-                       Do you want to install it now? [Y/n]: ")
-
-    if (tolower(answer) %in% c("yes", "y")) {
-      utils::install.packages("dbscan")
-    } else {
-      stop("Please install 'dbscan' manually.")
-    }
-  }
-
-  if (!requireNamespace("smotefamily")) {
-
-    if (!rlang::is_interactive()) {
-      stop("Function requires the package `smotefamily`.")
-    }
-
-    answer <- readline("Package `smotefamily` required.
-                       Do you want to install it now? [Y/n]: ")
-
-    if (tolower(answer) %in% c("yes", "y")) {
-      utils::install.packages("smotefamily")
-    } else {
-      stop("Please install 'smotefamily' manually.")
-    }
-  }
-
-  if (!requireNamespace("xgboost")) {
-
-    if (!rlang::is_interactive()) {
-      stop("Function requires the package `xgboost`.")
-    }
-
-    answer <- readline("Package `xgboost` required.
-                       Do you want to install it now? [Y/n]: ")
-
-    if (tolower(answer) %in% c("yes", "y")) {
-      utils::install.packages("xgboost")
-    } else {
-      stop("Please install 'xgboost' manually.")
-    }
-  }
+  .check_required_packages(c("dbscan", "smotefamily", "xgboost"))
 
   ox <- ref
   uni_groups <- unique(ox[[1]])
 
   # DBSCAN ------------------------------------------------------------------
   dbscan_groups <- function(g_name) {
-    if (!.minPts_fac > 0 && !.minPts_fac < 1) {
-      stop(".minPts_fac should be bettwee 0 or 1")
+    if (.minPts_fac <= 0 || .minPts_fac >= 1) {
+      stop(".minPts_fac must be between 0 and 1.")
     }
     group_df <- ox[ox[[1]] == g_name, ]
 
@@ -519,7 +511,6 @@ helper_train_function <- function(ref,
   list <- setNames(lapply(subgroups, train_group_model), subgroups)
 }
 
-
 # XGBOOST Prediction ------------------------------------------------------
 
 #' Predict Isotope Provenance
@@ -535,45 +526,32 @@ helper_train_function <- function(ref,
 #' @seealso train_data
 #' @export
 pb_iso_prov_predict <- function(x, ...) {
-UseMethod("pb_iso_prov_predict")
+  UseMethod("pb_iso_prov_predict")
 }
 
 #' @rdname pb_iso_prov_predict
 #' @export
-pb_iso_prov_predict.ASTR <- function(x,
-                                     model_list = NULL,
-                                     .top = 1) {
-
-  target_cols <- c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")
-  if (!all(target_cols %in% names(x))) {
-    stop("Data set is missing required isotope ratio columns.")
-  }
+pb_iso_prov_predict.ASTR <- function(x, model_list = NULL, .top = 1) {
+  .validate_iso_cols(x)
 
   if (is.null(model_list) || length(model_list) == 0) {
-    stop("model_list is NULL or empty.")
+    stop("`model_list` is NULL or empty.")
   }
 
-  # Extract feature matrix
-  x_iso <- x[, target_cols, drop = FALSE]
-  dtest <- xgboost::xgb.DMatrix(as.matrix(x_iso))
+  dtest <- xgboost::xgb.DMatrix(as.matrix(x[, .pb_iso_cols(), drop = FALSE]))
 
-  # 1. Generate probability matrix (Rows = Samples, Cols = Models)
   prob_list <- lapply(names(model_list), function(m_name) {
     m <- model_list[[m_name]]
     if (is.null(m)) return(NULL)
     predict(m, dtest)
   })
 
-  # Remove NULL models and bind into matrix
   valid_models <- names(model_list)[!sapply(prob_list, is.null)]
   prob_matrix <- do.call(cbind, prob_list[!sapply(prob_list, is.null)])
   colnames(prob_matrix) <- valid_models
 
-  # 2. Extract Top K Groups Per Row
   results <- lapply(seq_len(nrow(prob_matrix)), function(i) {
     row_probs <- prob_matrix[i, ]
-
-    # Get indices of top N probabilities for row i
     top_idx <- order(row_probs, decreasing = TRUE)[seq_len(min(.top, length(row_probs)))]
 
     data.frame(
@@ -586,17 +564,11 @@ pb_iso_prov_predict.ASTR <- function(x,
 
   pred_df <- do.call(rbind, results)
 
-  # Optional: Bind predictions back to the original dataset 'x'
-  # return(cbind(x[pred_df$row_id, ], pred_df[, c("group", "prob")]))
-
   x_temp <- x
   x_temp$row_id <- seq_len(nrow(x_temp))
 
-  res <- left_join(x_temp, pred_df, by = join_by("row_id")) %>%
-    select(-row_id)
+  res <- dplyr::left_join(x_temp, pred_df, by = dplyr::join_by("row_id"))
+  res$row_id <- NULL
 
-  attr(res$ml_group, "ASTR_class") <- "ASTR_context"
-  attr(res$ml_prob, "ASTR_class") <- "ASTR_context"
-  return(res)
+  .tag_astr_context(res, c("ml_group", "ml_prob"))
 }
-
