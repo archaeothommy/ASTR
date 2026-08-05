@@ -18,192 +18,142 @@
 #' @param ... Additional Parameters
 #'
 #' @returns
-#' An object of class 'pbisoendmembers' as a list of 6
-#'      \item{data}{Isotope data}
-#'      \item{pca_ends}{Endmembers maped using PCA}
-#'      \item{group1,group2}{End member groups}
-#'      \item{mixing}{Mixing Group}
-#'      \item{tolerance}{Totlarance value}
-#'      \item{clamp}{Clamping values}
-#'      \item{pca}{List of PCA analysis}
+#' If `x` is an [ASTR object][ASTR], the output is an object of the
+#' same type including the ID column, the contextual columns, the lead isotope
+#' ratios used for calculation of the age model parameters,
+#' and the endmember groups. In all other cases, the data frame provided as input
+#' with columns added for the calculated endmember groups.
+#'
+#' Endmember groups consist of group1, group2 and groupmix
+#' groupmix represents the values along the mixing line.
 #'
 #' @family Pb isotope functions
 #'
 #' @export
-#' @examples
-#'
-#' # Create data structure
-#'
-#' col_names <- c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")
-#' df <- ASTR::ArgentinaDatabase[
-#' ASTR::ArgentinaDatabase$`Mining area` == "Distrito El Aguilar",
-#' col_names]
-#' ref_data <- as.ref_data(ASTR::ArgentinaDatabase, col_names, "Mining area")
-#'
-#' # Create object with class liaendmembers
-#' end_members <- pb_iso_endmembers(
-#'         df,
-#'         col_names,
-#'         tolerance = c(0.01, 0.01),
-#'         clamp = c(Inf, Inf)
-#' )
-#' # Print summary of the liaendmembers object
-#' summary(end_members)
-#' # Get Uclidian distance
-#' pb_iso_prov_dist(end_members, ref_data, dist_type = "ed")
-#' # Get Mass Fractionnation Corrected distance
-#' pb_iso_prov_dist(end_members, ref_data, dist_type = "mfd")
-#' # Train XGBOOST model on Reference data
-#' \dontrun{ml_model <- pb_iso_train_data(ref_data)}
-#' # Get XGBOOST predicted ml_resutls
-#' pb_iso_prov_predict(end_members, ml_model)
-pb_iso_endmembers <- function(x,
-                              col = NULL,
-                              tolerance = c(0.01, 0.01),
-                              clamp = c(Inf, Inf),
-                              ...) {
-  requireNamespace("stats")
-  # Argument Checks
-  if (!inherits(x, "data.frame") && !inherits(x, "matrix")) {
-    stop(paste(deparse(substitute(x)), "is not a dataframe or a matrix"))
+test_pb_iso_endmembers <- function(x,
+                                   col = NULL,
+                                   tolerance = c(0.01, 0.01),
+                                   clamp = c(Inf, Inf),
+                                   ...) {
+  # Main Analysis Function
+  calc_pb_iso_endmembers <- function(x, iso_cols, tolerance, clamp, ...) {
+    # Subset and convert matrix
+    x_iso_mat <- as.matrix(x[, iso_cols])
+
+    if (!is.numeric(x_iso_mat)) {
+      stop("Non-numeric values in isotope columns")
+    }
+
+    rownames(x_iso_mat) <- seq_len(nrow(x_iso_mat))
+    isotope_matrix <- x_iso_mat
+
+    if (nrow(isotope_matrix) < 3) {
+      stop("Too few samples. Suggest more than 3.")
+    }
+
+    # --- PCA Process ---
+    pca_result <- stats::prcomp(isotope_matrix, scale = FALSE)
+    pca_values <- pca_result$x
+    rownames(pca_values) <- rownames(isotope_matrix)
+
+    pca_summary <- summary(pca_result)
+    pc1_var <- pca_summary$importance[["Cumulative Proportion", "PC1"]]
+
+    if (pc1_var < 0.95) {
+      message("PC1 represents less than 95% of the Variance. There may be more than two end members.")
+      print(pca_summary)
+    }
+
+    # Normality tests
+    norm_test_pc1 <- stats::shapiro.test(pca_values[, "PC1"])$p.value < 0.95
+    norm_test_pc2 <- stats::shapiro.test(pca_values[, "PC2"])$p.value > 0.95
+    norm_test_pc3 <- stats::shapiro.test(pca_values[, "PC3"])$p.value > 0.95
+
+    if (!(norm_test_pc1 && norm_test_pc2 && norm_test_pc3)) {
+      message(
+        "PC2 or PC3 are not normally distributed. This may indicate variation is not random noise."
+      )
+    }
+
+    # End member extraction
+    pca_ends <- pca_values[pca_values[, "PC1"] %in% range(pca_values[, "PC1"]), ]
+    isotope_ends <- isotope_matrix[as.numeric(rownames(pca_ends)), ]
+
+    geo_slope <- 0.626208
+
+    end_member_filter <- function(idx, tol, clmp) {
+      col_7 <- grep("7", colnames(isotope_ends))
+      col_6 <- grep("6", colnames(isotope_ends))
+
+      geo_intercept <- isotope_ends[idx, col_7] - (isotope_ends[idx, col_6] * geo_slope)
+      point_intercept <- (geo_slope * isotope_matrix[, col_6]) + geo_intercept
+      prob_end <- abs(isotope_matrix[, col_7] - point_intercept) < tol
+      geochron_end <- isotope_matrix[prob_end, , drop = FALSE]
+
+      dists <- apply(geochron_end, 1, function(a) {
+        end_pt <- isotope_ends[idx, ]
+        sqrt(sum((end_pt - a)^2))
+      })
+
+      geochron_end[dists < clmp, , drop = FALSE]
+    }
+
+    end_group1 <- rownames(end_member_filter(1, tolerance[[1]], clamp[[1]]))
+    end_group2 <- rownames(end_member_filter(2, tolerance[[2]], clamp[[2]]))
+
+    if (length(end_group1) < 2 || length(end_group2) < 2) {
+      message(
+        "End Member group has less than two points. Likelihood of point being an endmember is low."
+      )
+    }
+
+    if (any(end_group1 %in% end_group2)) {
+      warning("Overlap in endmembers between groups. Suggest lower tolerance value.")
+    }
+
+    mixing_group <- setdiff(rownames(isotope_matrix), c(end_group1, end_group2))
+
+    # Assign results
+    x$end_membr <- NA_character_
+    x[end_group1, "end_membr"] <- "group1"
+    x[end_group2, "end_membr"] <- "group2"
+    x[mixing_group, "end_membr"] <- "groupmix"
+
+    return(x)
   }
 
+  # AS
+  if (inherits(x, "ASTR")) {
+    target_cols <- c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")
+    if (!all(target_cols %in% names(x))) {
+      stop("Data set is missing required isotope ratio columns.")
+    }
+
+    res <- calc_pb_iso_endmembers(x,
+                                  iso_cols = target_cols,
+                                  tolerance = tolerance,
+                                  clamp = clamp,
+                                  ...)
+
+    # Assign custom attribute for ASTR method
+    attr(res$end_membr, "ASTR_class") <- "ASTR_context"
+    return(res)
+  }
+
+  if (!inherits(x, c("data.frame", "matrix"))) {
+    stop(deparse(substitute(x)), " is not a dataframe or a matrix")
+  }
   if (is.null(col)) {
     stop("Column names needed!")
   }
-
   if (length(grep("6|7|8", col)) != 3) {
-    stop("Incorrect number or names of colums")
+    stop("Incorrect number or names of columns")
   }
 
-  x <- x[, col]
-
-  if (inherits(x, "data.frame")) {
-    x <- as.matrix(x)
-  }
-
-  if (!is.numeric(x)) {
-    stop("Non-numeric values in dataframe or matrix")
-  }
-  row.names(x) <- seq_len(nrow(x))
-
-  isotope_matrix <- x
-  if (nrow(isotope_matrix) < 3) {
-    stop("To few samples. Suggest to  be more than 3")
-  }
-  # Conduct PCA and check if there are only 2 end memebrs
-  pca_result <- prcomp(isotope_matrix, scale = FALSE)
-  pca_values <- pca_result$x
-  row.names(pca_values) <- row.names(isotope_matrix)
-  sum <- summary(pca_result)
-  pc1_vla <- sum$importance[["Cumulative Proportion", "PC1"]]
-  if (pc1_vla < 0.95) {
-    message("PC1 represents less than 95% of the Variance, There may be more than two end members.")
-    print(sum)
-  }
-
-  # Check if PC2 and PC3 are normally distributed
-  norm_test_pc1 <- shapiro.test(pca_values[, "PC1"])$p.value < 0.95
-  norm_test_pc2 <- shapiro.test(pca_values[, "PC2"])$p.value > 0.95
-  norm_test_pc3 <- shapiro.test(pca_values[, "PC3"])$p.value > 0.95
-
-  if (!(norm_test_pc1 && norm_test_pc2 && norm_test_pc3)) {
-    message(
-      "PC2 or PC3 are not normally distributed. This may indicate that their variation may not be random noise."
-    )
-  }
-
-  # Derive end Memebrs
-  pca_ends <- pca_values[pca_values[, "PC1"] %in% c(min(pca_values[, "PC1"]), max(pca_values[, "PC1"])), ]
-
-  isotpe_ends <- isotope_matrix[as.numeric(row.names(pca_ends)), ]
-
-  geo_slope <- 0.626208
-
-  end_member_filter <- function(x, tolerance, clamp, ...) {
-    geo_intercept <-
-      isotpe_ends[x, grep("7", colnames(isotpe_ends))] - isotpe_ends[x, grep("6", colnames(isotpe_ends))] * geo_slope
-    point_itercept <- geo_slope * isotope_matrix[, grep("6", colnames(isotpe_ends))] + geo_intercept
-    prob_end <- abs(isotope_matrix[, grep("7", colnames(isotpe_ends))] - point_itercept) < tolerance
-    geochorn_end <- isotope_matrix[prob_end, , drop = FALSE]
-
-    dist <- apply(geochorn_end, 1, \(a) {
-      end <- isotpe_ends[x, ]
-      dist <- sqrt(sum((unlist(end) - a)^2))
-      dist
-    })
-    geochorn_end[dist < clamp, , drop = FALSE]
-  }
-
-  end_group1 <- end_member_filter(1, tolerance[[1]], clamp[[1]])
-  end_group2 <- end_member_filter(2, tolerance[[2]], clamp[[2]])
-
-  if (nrow(end_group1) < 2 || nrow(end_group2) < 2) {
-    message(
-      "End Member group has less than two points. Likely hood of the point being an endmember is low"
-    )
-  }
-  if (any(row.names(end_group1) %in% row.names(end_group2))) {
-    warning("Overlap in endmembers between gorups. Suggest lower tolerance value.")
-  }
-  mixing_group <- isotope_matrix[-as.integer(c(row.names(end_group1), row.names(end_group2))), ]
-
-  endmember_list <- list(
-    data = isotope_matrix,
-    pca_ends = isotpe_ends,
-    group1 = end_group1,
-    group2 = end_group2,
-    mixing = mixing_group,
-    tolarance = tolerance,
-    clamp = clamp,
-    pca = pca_result
-  )
-  endmember_list <-
-    structure(endmember_list, class = c("pbisoendmembers", "list"))
-  return(endmember_list)
-}
-
-#' Summary of LIA Endmember groups
-#'
-#' Summary of Lead Isotope analysis 'pbisoendmembers' object
-#'
-#' @param object An object of class "pbisoendmembers"
-#' @param ... further arguments passed to or from other methods.
-#'
-#'
-#' @returns
-#' A list containing:
-#'
-#' \item{Counts}{The number of observations in each group}
-#' \item{Tolerance}{Tolerance values used in the calculation.}
-#' \item{Clamp}{Clamping values used in the calculation.}
-#' \item{Data}{A data frame of the lead isotope ratios that were used.}
-#'
-#' @export
-#' @inherit pb_iso_endmembers examples
-summary.pbisoendmembers <- function(object, ...) {
-  cat("Summary of End memebers:\n\n")
-  cat("Tolarance:", object$tolarance, "\n")
-  cat("Clamp:", object$clamp, "\n\n")
-  cat("PCA Endmembers\n")
-  print(object$pca_ends)
-  cat("\n")
-  count <- data.frame(
-    "Group1" = nrow(object$group1),
-    "Group2" = nrow(object$group2),
-    "Mixing" = nrow(object$mixing),
-    "Total" = sum(nrow(object$data))
-  )
-  row.names(count) <- "Counts"
-  print(count)
-  cat(rep("-", 18), "\n")
-  print(summary(object$pca))
-  invisible(
-    list(
-      "Counts" = unlist(count),
-      "Tolarance" = object$tolarance,
-      "Clamp" = object$clamp,
-      "Data" = object$data
-    )
-  )
+  res <- calc_pb_iso_endmembers(x,
+                                iso_cols = col,
+                                tolerance = tolerance,
+                                clamp = clamp,
+                                ...)
+  return(res)
 }
