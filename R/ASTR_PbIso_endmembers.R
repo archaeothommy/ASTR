@@ -3,13 +3,10 @@
 #' @description
 #' Finds endmembers from a set of
 #' Lead Isotope Points using Principle Component
-#' analysis and the Geochron slope according to the two-stage model.
+#' analysis and the Geochron slope according to the two-stage model by Stacy-Kramers 1975.
 #'
-#' @param x data.frame or matrix object containing
-#' Pb 206/204, 207/204, 208/204 isotope ratios.
-#' @param col Isotope column names containing Pb
-#' 206/204, 207/204, 208/204 isotope ratios.
-#' Names must contains the significant numbers 6, 7 and 8.
+#' @param x ASTR object containing
+#' 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb isotope ratios.
 #' @param tolerance Vector of length two, with corresponding group 1 and group
 #'  2 tolerance value for points considered to be intercepted.
 #'      (Default c(0.01, 0.01))
@@ -18,7 +15,8 @@
 #' @param ... Additional Parameters
 #'
 #' @returns
-#' If `x` is an [ASTR object][ASTR], the output is an object of the
+#' If `x` is an [ASTR object][ASTR], with additional class attribute
+#' `ASTR_Pbiso_endmembr`, the output is an object of the
 #' same type including the ID column, the contextual columns, the lead isotope
 #' ratios used for calculation of the age model parameters,
 #' and the endmember groups. In all other cases, the data frame provided as input
@@ -30,8 +28,13 @@
 #' @family Pb isotope functions
 #'
 #' @export
-test_pb_iso_endmembers <- function(x,
-                                   col = NULL,
+pb_iso_endmembers <- function(x, ...){
+  UseMethod("pb_iso_endmembers")
+}
+
+#' @rdname pb_iso_endmembers
+#' @export
+pb_iso_endmembers.ASTR <- function(x,
                                    tolerance = c(0.01, 0.01),
                                    clamp = c(Inf, Inf),
                                    ...) {
@@ -122,38 +125,20 @@ test_pb_iso_endmembers <- function(x,
     return(x)
   }
 
-  # AS
-  if (inherits(x, "ASTR")) {
-    target_cols <- c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")
-    if (!all(target_cols %in% names(x))) {
-      stop("Data set is missing required isotope ratio columns.")
-    }
-
-    res <- calc_pb_iso_endmembers(x,
-                                  iso_cols = target_cols,
-                                  tolerance = tolerance,
-                                  clamp = clamp,
-                                  ...)
-
-    # Assign custom attribute for ASTR method
-    attr(res$end_membr, "ASTR_class") <- "ASTR_context"
-    return(res)
-  }
-
-  if (!inherits(x, c("data.frame", "matrix"))) {
-    stop(deparse(substitute(x)), " is not a dataframe or a matrix")
-  }
-  if (is.null(col)) {
-    stop("Column names needed!")
-  }
-  if (length(grep("6|7|8", col)) != 3) {
-    stop("Incorrect number or names of columns")
+  target_cols <- c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")
+  if (!all(target_cols %in% names(x))) {
+    stop("Data set is missing required isotope ratio columns.")
   }
 
   res <- calc_pb_iso_endmembers(x,
-                                iso_cols = col,
+                                iso_cols = target_cols,
                                 tolerance = tolerance,
                                 clamp = clamp,
                                 ...)
+
+  # Assign custom attribute for ASTR method
+  attr(res$end_membr, "ASTR_class") <- "ASTR_context"
+  class(res) <- c("ASTR_Pbiso_endmembr", class(res))
   return(res)
+
 }

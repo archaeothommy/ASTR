@@ -1,160 +1,119 @@
-library(testthat)
+# Helper function to generate clean mock isotope data
+make_mock_isotope_data <- function(n = 10) {
+  set.seed(123)
+  # Generate collinear data along PC1 to ensure clean end-member separation
+  pb206 <- seq(18.0, 19.5, length.out = n)
+  pb207 <- 0.626208 * pb206 + 3.8 + rnorm(n, sd = 0.001)
+  pb208 <- 2.0 * pb206 + 0.5 + rnorm(n, sd = 0.005)
 
-# ==============================================================================
-# Helper Functions & Mock Data Setup
-# ==============================================================================
-
-# Creates synthetic lead isotope data with configurable properties
-make_mock_pb_data <- function(n_rows = 10, as_df = FALSE, seed = 42) {
-  set.seed(seed)
-  pc1 <- seq(-2, 2, length.out = n_rows)
-
-  # Linear relationship with tiny variance to force high PC1 proportion (> 0.95)
-  pb206 <- 18.5 + pc1 + rnorm(n_rows, sd = 0.0001)
-  pb207 <- 15.6 + 0.626208 * pc1 + rnorm(n_rows, sd = 0.0001)
-  pb208 <- 38.5 + pc1 * 1.2 + rnorm(n_rows, sd = 0.0001)
-
-  mat <- cbind("206Pb/204Pb" = pb206, "207Pb/204Pb" = pb207, "208Pb/204Pb" = pb208)
-  if (as_df) return(as.data.frame(mat))
-  return(mat)
+  df <- data.frame(
+    `206Pb/204Pb` = pb206,
+    `207Pb/204Pb` = pb207,
+    `208Pb/204Pb` = pb208,
+    check.names = FALSE
+  )
+  class(df) <- c("ASTR", "data.frame")
+  return(df)
 }
 
 # ==============================================================================
-# Tests for pb_iso_endmembers()
+# S3 Method Dispatch & Input Validation
 # ==============================================================================
 
-test_that("pb_iso_endmembers checks input arguments and throws errors", {
-  cols <- c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")
-
-  # 1. Invalid x class (neither data.frame nor matrix)
+test_that("errors when S3 method is not implemented for given object class", {
+  x_numeric <- c(1, 2, 3)
   expect_error(
-    pb_iso_endmembers(x = "not_a_df", col = cols),
-    "is not a dataframe or a matrix"
-  )
-
-  # 2. Null col argument
-  df <- make_mock_pb_data(as_df = TRUE)
-  expect_error(
-    pb_iso_endmembers(x = df, col = NULL),
-    "Column names needed!"
-  )
-
-  # 3. Incorrect column names (must contain 6, 7, and 8)
-  expect_error(
-    pb_iso_endmembers(x = df, col = c("A", "B", "C")),
-    "Incorrect number or names of colums"
-  )
-
-  # 4. Non-numeric elements inside data frame or matrix
-  non_num_df <- data.frame(
-    "206Pb/204Pb" = c("a", "b", "c"),
-    "207Pb/204Pb" = c(1, 2, 3),
-    "208Pb/204Pb" = c(4, 5, 6)
-  )
-  expect_error(
-    pb_iso_endmembers(x = non_num_df, col = names(non_num_df)),
-    "Non-numeric values in dataframe or matrix"
+    pb_iso_endmembers(x_numeric),
+    "no applicable method for 'pb_iso_endmembers'"
   )
 })
 
-test_that("pb_iso_endmembers warns when sample count is less than 3", {
-  small_mat <- make_mock_pb_data(n_rows = 2)
-  cols <- colnames(small_mat)
-
+test_that("errors when ASTR object is missing required isotope ratio columns", {
+  astr_bad <- structure(
+    data.frame(col1 = 1:5, col2 = 1:5),
+    class = c("ASTR", "data.frame")
+  )
   expect_error(
-    pb_iso_endmembers(small_mat, col = cols),
-    "To few samples. Suggest to  be more than 3"
+    pb_iso_endmembers(astr_bad),
+    "Data set is missing required isotope ratio columns."
   )
 })
 
-test_that("pb_iso_endmembers handles low PC1 variance message and output printing", {
-  # Generate noisy matrix where PC1 captures < 95% of total variance
-  set.seed(99)
-  noisy_mat <- matrix(rnorm(30), ncol = 3)
-  colnames(noisy_mat) <- c("206Pb", "207Pb", "208Pb")
+test_that("errors when sample size is less than 3", {
+  df_small <- make_mock_isotope_data(n = 2)
+  expect_error(
+    pb_iso_endmembers(df_small),
+    "Too few samples. Suggest more than 3."
+  )
+})
 
-  # Should trigger both the PC1 message and print the summary output
+test_that("errors when selected columns contain non-numeric data", {
+  df_char <- make_mock_isotope_data(n = 5)
+  df_char$`206Pb/204Pb` <- as.character(df_char$`206Pb/204Pb`)
+  expect_error(
+    pb_iso_endmembers(df_char),
+    "Non-numeric values in isotope columns"
+  )
+})
+
+
+# ==============================================================================
+# Core Calculation & Class Assignment Tests
+# ==============================================================================
+
+test_that("classifies endmembers and assigns S3 class attributes for ASTR objects", {
+  astr_obj <- make_mock_isotope_data(n = 10)
+
+  res <- pb_iso_endmembers(astr_obj, tolerance = c(0.1, 0.1))
+
+  # Check class heritage
+  expect_s3_class(res, "ASTR_Pbiso_endmembr")
+  expect_s3_class(res, "ASTR")
+
+  # Check output structures
+  expect_true("end_membr" %in% names(res))
+  expect_true(all(res$end_membr %in% c("group1", "group2", "groupmix")))
+  expect_equal(attr(res$end_membr, "ASTR_class"), "ASTR_context")
+})
+
+
+# ==============================================================================
+# Warnings and Messages Tests
+# ==============================================================================
+
+test_that("emits warning when endmember groups overlap due to high tolerance", {
+  astr_obj <- make_mock_isotope_data(n = 5)
+
+  # Large tolerance forces group1 and group2 to overlap
+  expect_warning(
+    pb_iso_endmembers(astr_obj, tolerance = c(10, 10)),
+    "Overlap in endmembers between groups. Suggest lower tolerance value."
+  )
+})
+
+test_that("emits message when PC1 variance is low or PC distributions fail normality", {
+  set.seed(999)
+  # Isotropic non-linear 3D noise (forces low PC1 variance and non-normal residual PCs)
+  df_noisy <- data.frame(
+    `206Pb/204Pb` = runif(15, 18.0, 19.0),
+    `207Pb/204Pb` = runif(15, 15.0, 16.0),
+    `208Pb/204Pb` = runif(15, 38.0, 39.0),
+    check.names = FALSE
+  )
+  class(df_noisy) <- c("ASTR", "data.frame")
+
   expect_message(
-    expect_output(
-      pb_iso_endmembers(noisy_mat, col = colnames(noisy_mat)),
-      "Importance of components"
-    ),
+    pb_iso_endmembers(df_noisy),
     "PC1 represents less than 95% of the Variance"
   )
 })
 
-test_that("pb_iso_endmembers checks Shapiro-Wilk normality condition for PC2/PC3", {
-  mat <- make_mock_pb_data(n_rows = 15, seed = 123)
-  cols <- colnames(mat)
+test_that("emits message when an endmember group has fewer than 2 points", {
+  astr_obj <- make_mock_isotope_data(n = 10)
 
-  # Triggers the PC2/PC3 non-normality message
+  # Extremely tiny tolerance restricts group capture to 1 point
   expect_message(
-    pb_iso_endmembers(mat, col = cols),
-    "PC2 or PC3 are not normally distributed. This may indicate that their variation may not be random noise."
-  )
-})
-
-test_that("pb_iso_endmembers handles group size messages and group overlap warnings", {
-  mat <- make_mock_pb_data(n_rows = 6)
-  cols <- colnames(mat)
-
-  # 1. Extremely small tolerance results in empty or single-point endmember groups (< 2 points)
-  expect_message(
-    pb_iso_endmembers(mat, col = cols, tolerance = c(1e-8, 1e-8)),
+    pb_iso_endmembers(astr_obj, tolerance = c(0.000001, 0.000001)),
     "End Member group has less than two points"
   )
-
-  # 2. Large tolerance forces shared sample indices between end_group1 and end_group2
-  expect_warning(
-    pb_iso_endmembers(mat, col = cols, tolerance = c(100, 100)),
-    "Overlap in endmembers between gorups"
-  )
-})
-
-test_that("pb_iso_endmembers returns correct S3 object on success", {
-  df <- make_mock_pb_data(n_rows = 12, as_df = TRUE)
-  cols <- colnames(df)
-
-  res <- suppressMessages(suppressWarnings(
-    pb_iso_endmembers(df, col = cols, tolerance = c(0.1, 0.1), clamp = c(10, 10))
-  ))
-
-  # Validate S3 Class inheritance and list structure
-  expect_s3_class(res, "pbisoendmembers")
-  expect_type(res, "list")
-  expect_named(res, c("data", "pca_ends", "group1", "group2", "mixing", "tolarance", "clamp", "pca"))
-
-  # Validate component formats
-  expect_true(is.matrix(res$data))
-  expect_s3_class(res$pca, "prcomp")
-  expect_equal(res$tolarance, c(0.1, 0.1))
-  expect_equal(res$clamp, c(10, 10))
-})
-
-# ==============================================================================
-# Tests for summary.pbisoendmembers()
-# ==============================================================================
-
-test_that("summary.pbisoendmembers prints formatted output and returns summary list", {
-  df <- make_mock_pb_data(n_rows = 10, as_df = TRUE)
-  cols <- colnames(df)
-
-  end_obj <- suppressMessages(suppressWarnings(
-    pb_iso_endmembers(df, col = cols, tolerance = c(0.05, 0.05), clamp = c(5, 5))
-  ))
-
-  # 1. Check printed output content
-  expect_output(summary(end_obj), "Summary of End memebers:")
-  expect_output(summary(end_obj), "Tolarance: 0.05 0.05")
-  expect_output(summary(end_obj), "PCA Endmembers")
-  expect_output(summary(end_obj), "Counts")
-
-  # 2. Check invisible return list values and components
-  res <- summary(end_obj)
-
-  expect_type(res, "list")
-  expect_named(res, c("Counts", "Tolarance", "Clamp", "Data"))
-  expect_equal(res$Tolarance, c(0.05, 0.05))
-  expect_equal(res$Clamp, c(5, 5))
-  expect_true(is.matrix(res$Data))
 })

@@ -58,12 +58,22 @@ isotopes_data <- c(
   "232Th", "231Pa", "234U", "235U", "238U"
 )
 
+# GlobaLID Data update
+
+GlobaLID <- readr::read_csv("https://raw.githubusercontent.com/archmetalDBM/GlobaLID-database/refs/heads/main/GlobaLID.csv") %>%
+  select("Political province/region", "206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")
+
+GlobaLID_ASTR <- as_ASTR(GlobaLID , id_column = "Political province/region", drop_columns = TRUE)
+
+save(GlobaLID_ASTR, file = "data/GlobaLID_ASTR.rda")
+
 usethis::use_data(
   elements_data,
   oxides_data,
   special_oxide_states,
   isotopes_data,
   conversion_oxides,
+  GlobaLID_ASTR,
   overwrite = TRUE, internal = FALSE
 )
 
