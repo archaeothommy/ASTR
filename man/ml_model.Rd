@@ -14,6 +14,6 @@ A list of xgb models, with length equal to number of groups.
 ml_model
 }
 \description{
-Lead isotope data model based on ArgentinaDatabase for machine learning provenance.
+Lead isotope data model based on GlobaLID for machine learning provenance.
 }
 \keyword{datasets}

@@ -72,10 +72,33 @@
 
 #' Machine Learning model for lead isotope provenaces
 #'
-#' Lead isotope data model based on ArgentinaDatabase for machine learning provenance.
+#' Lead isotope data model based on GlobaLID for machine learning provenance.
 #'
 #' @format A list of xgb models, with length equal to number of groups.
 #'
 #' @source <https://globalid.dmt-lb.de/>
 #' @name ml_model
 "ml_model"
+
+
+#' LIA points of Silver Hoards from Israel
+#'
+#' Lead Isotope ratios of a Phoenician Silver Hoard from Tel Dor.
+#' Reference Data set of Isotope rations using [as_ASTR()]
+#' @name data
+#' @format ASTR object with 3 Pb Isotope variables
+#' \describe{
+#'   \item{206Pb/204Pb}{Lead Isotope ratio of 206Pb/204Pb}
+#'   \item{207Pb/204Pb}{Lead Isotope ratio of 207Pb/204Pb}
+#'   \item{208Pb/204Pb}{Lead Isotope ratio of 208Pb/204Pb}
+#' }
+#'
+#' @source Eshel, T., Erel, Y., Yahalom-Mack, N., Tirosh, O., & Gilboa, A.
+#'   (2019). Lead isotopes in silver reveal earliest Phoenician quest for metals
+#'   in the west Mediterranean. Proceedings of the National Academy of Sciences,
+#'   116(13), 6007–6012.
+#'   \href{https://doi.org/10.1073/pnas.1817951116}{10.1073/pnas.1817951116}
+#'
+#' @family Pb isotope functions
+#' @name tel_dor
+"tel_dor"

@@ -29,6 +29,7 @@ The step also should exclude the groups which have low sample data (in the case 
 \seealso{
 Other Pb isotope functions:
 \code{\link{age_models}},
+\code{\link{data}},
 \code{\link[=geom_sk_lines]{geom_sk_lines()}},
 \code{\link[=pb_iso_endmembers]{pb_iso_endmembers()}},
 \code{\link[=pb_iso_prov_dist]{pb_iso_prov_dist()}},

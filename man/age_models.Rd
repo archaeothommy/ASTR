@@ -125,6 +125,7 @@ isotope evolution by a two-stage model. Earth and Planetary Science Letters
 \seealso{
 Other Pb isotope functions:
 \code{\link[=as_pbiso_ref_data]{as_pbiso_ref_data()}},
+\code{\link{data}},
 \code{\link[=geom_sk_lines]{geom_sk_lines()}},
 \code{\link[=pb_iso_endmembers]{pb_iso_endmembers()}},
 \code{\link[=pb_iso_prov_dist]{pb_iso_prov_dist()}},

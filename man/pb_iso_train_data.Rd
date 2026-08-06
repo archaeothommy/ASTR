@@ -139,6 +139,7 @@ Journal of Archaeological Science, 188, 106–499. https://doi.org/10.1016/j.jas
 Other Pb isotope functions:
 \code{\link{age_models}},
 \code{\link[=as_pbiso_ref_data]{as_pbiso_ref_data()}},
+\code{\link{data}},
 \code{\link[=geom_sk_lines]{geom_sk_lines()}},
 \code{\link[=pb_iso_endmembers]{pb_iso_endmembers()}},
 \code{\link[=pb_iso_prov_dist]{pb_iso_prov_dist()}}

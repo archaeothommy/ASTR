@@ -23,7 +23,7 @@ pb_iso_endmembers(x, ...)
 based on Euclidean distance, (Default c(Inf, Inf))}
 }
 \value{
-If \code{x} is an \link[=ASTR]{ASTR object}, with additional class attribute
+An \link[=ASTR]{ASTR object}, with additional class attribute
 \code{ASTR_Pbiso_endmembr}, the output is an object of the
 same type including the ID column, the contextual columns, the lead isotope
 ratios used for calculation of the age model parameters,
@@ -36,12 +36,19 @@ groupmix represents the values along the mixing line.
 \description{
 Finds endmembers from a set of
 Lead Isotope Points using Principle Component
-analysis and the Geochron slope according to the two-stage model by Stacy-Kramers 1975.
+analysis and the Geochron slope according to the two-stage model by Stacy-Kramers 1975, following the process outlined in (Shnyr et al., (2026)
+}
+\references{
+Shnyr, E., Kuflik, T., Desai, K., & Eshel, T. (2026).
+Determining the origins of Phoenician silver: Exploring the potential of
+machine learning for lead isotope analysis. Journal of Archaeological
+Science, 188, 106–499. https://doi.org/10.1016/j.jas.2026.106499
 }
 \seealso{
 Other Pb isotope functions:
 \code{\link{age_models}},
 \code{\link[=as_pbiso_ref_data]{as_pbiso_ref_data()}},
+\code{\link{data}},
 \code{\link[=geom_sk_lines]{geom_sk_lines()}},
 \code{\link[=pb_iso_prov_dist]{pb_iso_prov_dist()}},
 \code{\link[=pb_iso_train_data]{pb_iso_train_data()}}
