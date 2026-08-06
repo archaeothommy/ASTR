@@ -1,19 +1,15 @@
 ---
-title: "Endmembers"
+title: "Lead Isotope Endmembers"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Endmembers}
+  %\VignetteIndexEntry{Lead Isotope Endmembers}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+bibliography: references.bib
 ---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
-```
-
-
-```{r setup}
-knitr::opts_chunk$set(include = FALSE)
 library(ASTR)
 ```
 
@@ -51,19 +47,15 @@ $$
 $$
 
 
-This package achieves this with the use of the `stats::prcomp()` function, which is incorporated into the `endmemebers()` functions.
+This is achived with the use of the `stats::prcomp()` function, which is incorporated into the `pb_iso_endmembers()` function.
 In addition, the PCA values are subject to the Shapiro and Wilk normality using the `stats::shapiro.test()` function.
 If PC2 and PC3 are not normally distributed, the function generates a message informing the users that PC2 and PC3 may not be attributed to random noise.
 
-
-PCA values are represented by two list items.
+The ASTR object is with Lead isotpe rations 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb
+are apendted with lead `end_membr` column identivying each sample as wither belonging to an endmember group or the mixing group
 
 ```{r PCA}
-col_names <- c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")
-df <- ASTR::ArgentinaDatabase[ASTR::ArgentinaDatabase$`Mining area` == "Distrito El Aguilar", col_names]
-df$rowname <- seq_len(nrow(df))
-df <- as_ASTR(df, id_column = "rowname")
-pb_iso_endmembers(df)
+pb_iso_endmembers(tel_dor)
 ```
 
 However, this method is limited as it only identifies two points, which are unlikely to fully represent all endmembers.
@@ -92,10 +84,10 @@ Where $d$ is the euclidean distance. The default parameter is chosen to be `Inf`
 
 ```{r clamp example}
 # Example with no clamping
-no_clamp <- pb_iso_endmembers(df)
+no_clamp <- pb_iso_endmembers(tel_dor)
 no_clamp[no_clamp$end_membr == "group2", ]
 # Example with clamping
-clamp <- pb_iso_endmembers(df, , clamp = c(Inf, 0.1))
+clamp <- pb_iso_endmembers(tel_dor, clamp = c(Inf, 0.1))
 clamp[clamp$end_membr == "group2", ]
 ```
 
@@ -105,7 +97,9 @@ $$
 	E_i = \left\{\vec{p_i}, \vec{e_i^1},\ldots, \vec{e_i^n}\right\}
 $$
 
-In the package $E$ is represented as group1 and group2.
+In the function output $E$ is represented as group1 and group2.
 
 However, if $|E_i| < 2$ then it is difficult to consider only $\vec{p_i} \in E_i$ as an endmember, and so $p_i$ is considered only a possible end member.
 Then when happens the package will inform the user with a message.
+
+# Refrence
