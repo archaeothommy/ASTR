@@ -70,6 +70,23 @@
 #' @name ArgentinaDatabase
 "ArgentinaDatabase"
 
+#' GloabaLID lead isotope database
+#'
+#' ASTR object containing Lead isotope data along with "Political province/regions"
+#' as grouping variable.
+#'
+#' @format ASTR object with 1 contextual and 3 Pb Isotope variables
+#'  \describe{
+#'   \item{Political province/regions}{Regional grouping of lead isotope data}
+#'   \item{206Pb/204Pb}{Lead Isotope ratio of 206Pb/204Pb}
+#'   \item{207Pb/204Pb}{Lead Isotope ratio of 207Pb/204Pb}
+#'   \item{208Pb/204Pb}{Lead Isotope ratio of 208Pb/204Pb}
+#' }
+#'
+#' @source <https://globalid.dmt-lb.de/>
+#' @name GlobaLID_ASTR
+"GlobaLID_ASTR"
+
 #' Machine Learning model for lead isotope provenaces
 #'
 #' Lead isotope data model based on GlobaLID for machine learning provenance.
@@ -79,7 +96,6 @@
 #' @source <https://globalid.dmt-lb.de/>
 #' @name ml_model
 "ml_model"
-
 
 #' LIA points of Silver Hoards from Israel
 #'

@@ -3,7 +3,7 @@
 #' @description
 #' Finds endmembers from a set of
 #' Lead Isotope Points using Principle Component
-#' analysis and the Geochron slope according to the two-stage model by Stacy-Kramers 1975.
+#' analysis and the Geochron slope according to the two-stage model by Stacy-Kramers 1975, following the process outlined in (Shnyr et al., (2026)
 #'
 #' @param x ASTR object containing
 #' 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb isotope ratios.
@@ -14,9 +14,14 @@
 #' based on Euclidean distance, (Default c(Inf, Inf))
 #' @param ... Additional Parameters
 #'
+#' @references Shnyr, E., Kuflik, T., Desai, K., & Eshel, T. (2026).
+#' Determining the origins of Phoenician silver: Exploring the potential of
+#' machine learning for lead isotope analysis. Journal of Archaeological
+#' Science, 188, 106–499. https://doi.org/10.1016/j.jas.2026.106499
+#'
 #' @returns
-#' If `x` is an [ASTR object][ASTR], with additional class attribute
-#' `ASTR_Pbiso_endmembr`, the output is an object of the
+#' An [ASTR object][ASTR], with additional class attribute
+#' `ASTR_Pbiso_endmembr`. The output is an object of the
 #' same type including the ID column, the contextual columns, the lead isotope
 #' ratios used for calculation of the age model parameters,
 #' and the endmember groups. In all other cases, the data frame provided as input

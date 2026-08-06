@@ -24,7 +24,7 @@ based on Euclidean distance, (Default c(Inf, Inf))}
 }
 \value{
 An \link[=ASTR]{ASTR object}, with additional class attribute
-\code{ASTR_Pbiso_endmembr}, the output is an object of the
+\code{ASTR_Pbiso_endmembr}. The output is an object of the
 same type including the ID column, the contextual columns, the lead isotope
 ratios used for calculation of the age model parameters,
 and the endmember groups. In all other cases, the data frame provided as input
