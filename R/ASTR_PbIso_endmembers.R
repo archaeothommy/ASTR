@@ -3,7 +3,8 @@
 #' @description
 #' Finds endmembers from a set of
 #' Lead Isotope Points using Principle Component
-#' analysis and the Geochron slope according to the two-stage model by Stacy-Kramers 1975, following the process outlined in (Shnyr et al., (2026)
+#' analysis and the Geochron slope according to the two-stage model by
+#' Stacy-Kramers 1975, following the process outlined in (Shnyr et al., (2026)
 #'
 #' @param x ASTR object containing
 #' 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb isotope ratios.
