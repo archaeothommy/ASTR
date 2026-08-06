@@ -530,6 +530,8 @@ helper_train_function <- function(ref,
 #' @returns
 #' data.frame object or list of data.frames
 #' @seealso train_data
+#'
+#' @family Pb isotope functions
 #' @export
 pb_iso_prov_predict <- function(x, ...) {
   UseMethod("pb_iso_prov_predict")
