@@ -35,11 +35,17 @@ pb_iso_train_data(ref, ...)
 )
 }
 \arguments{
-\item{ref}{\code{ref.data} object created by ref_data.}
+\item{ref}{ref \code{ASTR} object containing
+206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb or \code{ASTR_Pbiso_ref_data} object}
 
 \item{...}{
   Arguments passed on to \code{\link[dbscan:dbscan]{dbscan::dbscan}}, \code{\link[xgboost:xgb.train]{xgboost::xgb.train}}
   \describe{
+    \item{\code{weights}}{numeric; weights for the data points. Only needed to perform
+weighted clustering.}
+    \item{\code{borderPoints}}{logical; should border points be assigned to clusters.
+The default is \code{TRUE} for regular DBSCAN. If \code{FALSE} then border
+points are considered noise (see DBSCAN* in Campello et al, 2013).}
     \item{\code{early_stopping_rounds}}{Number of boosting rounds after which training will be stopped
 if there is no improvement in performance (as measured by the evaluatiation metric that is
 supplied or selected by default for the objective) on the evaluation data passed under
@@ -74,6 +80,10 @@ Increasing this value will make the model more complex and more likely to over f
 
 \item{nthread}{Number of threads for parallel processing. When choosing it,
 please keep thread contention and hyper threading in mind. (Default = 4)}
+
+\item{ref_group}{Name of the column containing isotope groups as character string.}
+
+\item{min_groupsize}{Integer value for the minimum number samples in a group. (Default = 5)}
 }
 \value{
 List of xgboot.model objects.

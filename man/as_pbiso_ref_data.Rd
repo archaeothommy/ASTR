@@ -7,11 +7,13 @@
 \usage{
 as_pbiso_ref_data(x, ...)
 
-\method{as_pbiso_ref_data}{ASTR}(x, group, min_groupsize = 5)
+\method{as_pbiso_ref_data}{ASTR}(x, group, min_groupsize = 5, ...)
 }
 \arguments{
 \item{x}{ASTR object containing
 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb isotope ratios.}
+
+\item{...}{Additional params}
 
 \item{group}{Name of the column containing isotope groups as character string.}
 

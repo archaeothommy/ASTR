@@ -84,7 +84,6 @@
 #' }
 #'
 #' @source <https://globalid.dmt-lb.de/>
-#' @name GlobaLID_ASTR
 "GlobaLID_ASTR"
 
 #' Machine Learning model for lead isotope provenaces
@@ -94,7 +93,6 @@
 #' @format A list of xgb models, with length equal to number of groups.
 #'
 #' @source <https://globalid.dmt-lb.de/>
-#' @name ml_model
 "ml_model"
 
 #' LIA points of Silver Hoards from Israel
@@ -116,5 +114,4 @@
 #'   \href{https://doi.org/10.1073/pnas.1817951116}{10.1073/pnas.1817951116}
 #'
 #' @family Pb isotope functions
-#' @name tel_dor
 "tel_dor"
