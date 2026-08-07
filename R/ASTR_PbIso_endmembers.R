@@ -40,6 +40,19 @@ pb_iso_endmembers <- function(x, ...) {
 
 #' @rdname pb_iso_endmembers
 #' @export
+#'
+#' @examples
+#' # example code
+#' pb_iso_endmembers(tel_dor)
+#'
+#' # No clamping
+#' no_clamp <- pb_iso_endmembers(tel_dor)
+#' no_clamp[no_clamp$end_membr == "group2", ]
+#' # Clamping reduces the group size by distance from the principle endmember
+#' clamp <- pb_iso_endmembers(tel_dor, clamp = c(Inf, 0.1))
+#' clamp[clamp$end_membr == "group2", ]
+#' # Reducing tolerance values narrows the grouping around the Geocron
+#' pb_iso_endmembers(tel_dor, tolerance = c(0.001, 0.001))
 pb_iso_endmembers.ASTR <- function(x,
                                    tolerance = c(0.01, 0.01),
                                    clamp = c(Inf, Inf),
