@@ -27,7 +27,7 @@ End-members are defined as the samples that lie at the extremes of a mixing line
 In cases where two primary ore sources are involved in the metal mixture, this approach allows for the clear distinction of three distinct groups: the two end-member groups, which correspond to the unmixed parent materials, and a third group representing the samples that are a result of the mixing process between the two.
 
 This while defining endmembers as distinct groups is not always precise, it is preferable than analysing individual data-points separately, as it provides a more structured and meaningful interpretation of isotopic variability [@eshel19].
-Then, assuming that the endmembers reflects a single ore, the provenance is suggested based on the highest probability of the cluster, considering all the results.
+Then, assuming that the endmembers reflects a single ore, the provenance is suggested based on the highest probability of the cluster, considering all the results [@shnyr26].
 
 # Use of liaendmembers
 
