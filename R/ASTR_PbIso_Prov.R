@@ -147,7 +147,7 @@ as_pbiso_ref_data.ASTR <- function(x, group, min_groupsize = 5, ...) {
 #' A new algorithm for using Pb isotopes to determine the provenance of bullion in ancient Greek coinage.
 #' Journal of Archaeological Science, 163, 105919. https://doi.org/10.1016/j.jas.2023.105919
 #'
-#' @returns List of data frame or character vector
+#' @returns ASTR object of matched x, ref and coresponding distance values.
 #' @inherit pb_iso_endmembers examples
 #'
 #' @importFrom dplyr full_join
