@@ -100,7 +100,7 @@
 #' @returns
 #' `ASTR_Pbiso_ref_data` object with Isotope groupings and Isotope columns of
 #' 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb.
-#'
+#' @importFrom stats na.omit
 #' @family Pb isotope functions
 #' @export
 #'
@@ -165,9 +165,9 @@ as_pbiso_ref_data.ASTR <- function(x, group, min_groupsize = 5, ...) {
 #'                                    names(GlobaLID_ASTR)[[2]],
 #'                                    min_groupsize = 5)
 #' # Euclidean Distance
-#' euc_dist(tel_dor, GlobalLID_ASTR_ref, .n = 1)
+#' euc_dist(tel_dor, GlobaLID_ASTR_ref, .n = 1)
 #' # Mass Fractionation correction
-#' mf_dist(tel_dor, GlobalLID_ASTR_ref, .n = 1, s = 0.001)
+#' mf_dist(tel_dor, GlobaLID_ASTR_ref, .n = 1, s = 0.001)
 #'
 #' # Wrapper function where the ref data is not of class 'ASTR_Pbiso_ref_data'
 #' pb_iso_prov_dist(tel_dor,
@@ -213,7 +213,6 @@ euc_dist <- function(x, ...) {
 #' @rdname pb_iso_prov_dist
 #' @export
 euc_dist.ASTR <- function(x, ref, ref_group, .n = 1, ...) {
-
   ref <- .ensure_pbiso_ref(ref, ref_group, ...)
 
   x_mat <- as.matrix(x[, .pb_iso_cols()])
@@ -250,7 +249,6 @@ mf_dist.ASTR <- function(x,
                          .n = 1,
                          s = 0.001,
                          ...) {
-
   ref <- .ensure_pbiso_ref(ref, ref_group, ...)
 
   x_mat <- as.matrix(x[, .pb_iso_cols()])
@@ -271,7 +269,10 @@ mf_dist.ASTR <- function(x,
     sd_diag <- diag(c(2, 3, 4) * s * x0)
     W <- sd_diag %*% R %*% sd_diag
 
-    basis1 <- if (abs(n[1]) < 0.9) c(1, 0, 0) else c(0, 1, 0)
+    basis1 <- if (abs(n[1]) < 0.9)
+      c(1, 0, 0)
+    else
+      c(0, 1, 0)
     u1 <- basis1 - (sum(basis1 * n)) * n
     u1 <- u1 / sqrt(sum(u1^2))
     u2 <- c(n[2] * u1[3] - n[3] * u1[2], n[3] * u1[1] - n[1] * u1[3], n[1] * u1[2] - n[2] * u1[1])
@@ -386,13 +387,15 @@ pb_iso_train_data <- function(ref, ...) {
 #' @rdname pb_iso_train_data
 #' @export
 #'
+#' @importFrom stats setNames
+#'
 #' @examples
 #' # Create a 'ASTR_Pbiso_ref_data' object
-#' GlobalLID_ASTR_ref <- as_pbiso_ref_data(GlobaLID_ASTR,
+#' GlobaLID_ASTR_ref <- as_pbiso_ref_data(GlobaLID_ASTR,
 #'                   names(GlobaLID_ASTR)[[2]],
 #'                   min_groupsize = 5)
 #' # Train machine learning modle
-#' ml_model <- pb_iso_train_data(GlobalLID_ASTR_ref, .minSize = 200)
+#' \dontrun{ml_model <- pb_iso_train_data(GlobaLID_ASTR_ref)}
 #'
 #' # Predict using pre-trianed modle
 #' pb_iso_prov_predict(tel_dor, model_list = ml_model, .top = 1)
@@ -562,6 +565,8 @@ helper_train_function <- function(ref,
 #' @param .top Number of highest probality values considred for final output (Default = 1)
 #' @param ... Additional params
 #'
+#' @importFrom stats predict
+#'
 #' @returns
 #' data.frame object or list of data.frames
 #' @seealso train_data
@@ -574,7 +579,10 @@ pb_iso_prov_predict <- function(x, ...) {
 
 #' @rdname pb_iso_prov_predict
 #' @export
-pb_iso_prov_predict.ASTR <- function(x, model_list = NULL, .top = 1, ...) {
+pb_iso_prov_predict.ASTR <- function(x,
+                                     model_list = NULL,
+                                     .top = 1,
+                                     ...) {
   .validate_iso_cols(x)
 
   if (is.null(model_list) || length(model_list) == 0) {
@@ -585,7 +593,8 @@ pb_iso_prov_predict.ASTR <- function(x, model_list = NULL, .top = 1, ...) {
 
   prob_list <- lapply(names(model_list), function(m_name) {
     m <- model_list[[m_name]]
-    if (is.null(m)) return(NULL)
+    if (is.null(m))
+      return(NULL)
     predict(m, dtest)
   })
 

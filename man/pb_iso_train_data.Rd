@@ -142,11 +142,11 @@ definitive source for the sample group.
 
 \examples{
 # Create a 'ASTR_Pbiso_ref_data' object
-GlobalLID_ASTR_ref <- as_pbiso_ref_data(GlobaLID_ASTR,
+GlobaLID_ASTR_ref <- as_pbiso_ref_data(GlobaLID_ASTR,
                   names(GlobaLID_ASTR)[[2]],
                   min_groupsize = 5)
 # Train machine learning modle
-ml_model <- pb_iso_train_data(GlobalLID_ASTR_ref, .minSize = 200)
+\dontrun{ml_model <- pb_iso_train_data(GlobaLID_ASTR_ref)}
 
 # Predict using pre-trianed modle
 pb_iso_prov_predict(tel_dor, model_list = ml_model, .top = 1)

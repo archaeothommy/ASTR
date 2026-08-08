@@ -61,9 +61,9 @@ GlobaLID_ASTR_ref <- as_pbiso_ref_data(GlobaLID_ASTR,
                                    names(GlobaLID_ASTR)[[2]],
                                    min_groupsize = 5)
 # Euclidean Distance
-euc_dist(tel_dor, GlobalLID_ASTR_ref, .n = 1)
+euc_dist(tel_dor, GlobaLID_ASTR_ref, .n = 1)
 # Mass Fractionation correction
-mf_dist(tel_dor, GlobalLID_ASTR_ref, .n = 1, s = 0.001)
+mf_dist(tel_dor, GlobaLID_ASTR_ref, .n = 1, s = 0.001)
 
 # Wrapper function where the ref data is not of class 'ASTR_Pbiso_ref_data'
 pb_iso_prov_dist(tel_dor,
