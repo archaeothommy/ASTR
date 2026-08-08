@@ -36,7 +36,21 @@ groupmix represents the values along the mixing line.
 \description{
 Finds endmembers from a set of
 Lead Isotope Points using Principle Component
-analysis and the Geochron slope according to the two-stage model by Stacy-Kramers 1975, following the process outlined in (Shnyr et al., (2026)
+analysis and the Geochron slope according to the two-stage model by
+Stacy-Kramers 1975, following the process outlined in (Shnyr et al., (2026)
+}
+\examples{
+# example code
+pb_iso_endmembers(tel_dor)
+
+# No clamping
+no_clamp <- pb_iso_endmembers(tel_dor)
+no_clamp[no_clamp$end_membr == "group2", ]
+# Clamping reduces the group size by distance from the principle endmember
+clamp <- pb_iso_endmembers(tel_dor, clamp = c(Inf, 0.1))
+clamp[clamp$end_membr == "group2", ]
+# Reducing tolerance values narrows the grouping around the Geocron
+pb_iso_endmembers(tel_dor, tolerance = c(0.001, 0.001))
 }
 \references{
 Shnyr, E., Kuflik, T., Desai, K., & Eshel, T. (2026).
@@ -51,6 +65,7 @@ Other Pb isotope functions:
 \code{\link{data}},
 \code{\link[=geom_sk_lines]{geom_sk_lines()}},
 \code{\link[=pb_iso_prov_dist]{pb_iso_prov_dist()}},
+\code{\link[=pb_iso_prov_predict]{pb_iso_prov_predict()}},
 \code{\link[=pb_iso_train_data]{pb_iso_train_data()}}
 }
 \concept{Pb isotope functions}

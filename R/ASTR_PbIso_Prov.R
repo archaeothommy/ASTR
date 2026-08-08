@@ -103,6 +103,11 @@
 #'
 #' @family Pb isotope functions
 #' @export
+#'
+#' @examples
+#' as_pbiso_ref_data(GlobaLID_ASTR,
+#'                   names(GlobaLID_ASTR)[[2]],
+#'                   min_groupsize = 5)
 as_pbiso_ref_data <- function(x, ...) {
   UseMethod("as_pbiso_ref_data")
 }
@@ -154,6 +159,25 @@ as_pbiso_ref_data.ASTR <- function(x, group, min_groupsize = 5, ...) {
 #'
 #' @family Pb isotope functions
 #' @export
+#'
+#' @examples
+#' GlobaLID_ASTR_ref <- as_pbiso_ref_data(GlobaLID_ASTR,
+#'                                    names(GlobaLID_ASTR)[[2]],
+#'                                    min_groupsize = 5)
+#' # Euclidean Distance
+#' euc_dist(tel_dor, GlobalLID_ASTR_ref, .n = 1)
+#' # Mass Fractionation correction
+#' mf_dist(tel_dor, GlobalLID_ASTR_ref, .n = 1, s = 0.001)
+#'
+#' # Wrapper function where the ref data is not of class 'ASTR_Pbiso_ref_data'
+#' pb_iso_prov_dist(tel_dor,
+#'                  GlobaLID_ASTR,
+#'                  ref_group = names(GlobaLID_ASTR)[[2]],
+#'                  dist_type = "all")
+#' # Warapper function where ref data is of class 'ASTR_Pbiso_ref_data'
+#' pb_iso_prov_dist(tel_dor,
+#'                  GlobaLID_ASTR_ref,
+#'                  dist_type = "all")
 pb_iso_prov_dist <- function(x, ...) {
   UseMethod("pb_iso_prov_dist")
 }
@@ -361,6 +385,17 @@ pb_iso_train_data <- function(ref, ...) {
 
 #' @rdname pb_iso_train_data
 #' @export
+#'
+#' @examples
+#' # Create a 'ASTR_Pbiso_ref_data' object
+#' GlobalLID_ASTR_ref <- as_pbiso_ref_data(GlobaLID_ASTR,
+#'                   names(GlobaLID_ASTR)[[2]],
+#'                   min_groupsize = 5)
+#' # Train machine learning modle
+#' ml_model <- pb_iso_train_data(GlobalLID_ASTR_ref, .minSize = 200)
+#'
+#' # Predict using pre-trianed modle
+#' pb_iso_prov_predict(tel_dor, model_list = ml_model, .top = 1)
 pb_iso_train_data.ASTR_Pbiso_ref_data <- function(ref,
                                                   .minSize = 20,
                                                   .minPts_fac = 0.1,

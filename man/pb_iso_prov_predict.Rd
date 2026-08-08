@@ -26,4 +26,14 @@ Predicts Pb Isotope provenance of a sample matrix in reference to a xgboost trai
 }
 \seealso{
 train_data
+
+Other Pb isotope functions:
+\code{\link{age_models}},
+\code{\link[=as_pbiso_ref_data]{as_pbiso_ref_data()}},
+\code{\link{data}},
+\code{\link[=geom_sk_lines]{geom_sk_lines()}},
+\code{\link[=pb_iso_endmembers]{pb_iso_endmembers()}},
+\code{\link[=pb_iso_prov_dist]{pb_iso_prov_dist()}},
+\code{\link[=pb_iso_train_data]{pb_iso_train_data()}}
 }
+\concept{Pb isotope functions}

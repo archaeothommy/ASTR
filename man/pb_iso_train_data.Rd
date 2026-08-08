@@ -140,6 +140,17 @@ results demonstrate varying probabilities for potential clusters as the
 definitive source for the sample group.
 }
 
+\examples{
+# Create a 'ASTR_Pbiso_ref_data' object
+GlobalLID_ASTR_ref <- as_pbiso_ref_data(GlobaLID_ASTR,
+                  names(GlobaLID_ASTR)[[2]],
+                  min_groupsize = 5)
+# Train machine learning modle
+ml_model <- pb_iso_train_data(GlobalLID_ASTR_ref, .minSize = 200)
+
+# Predict using pre-trianed modle
+pb_iso_prov_predict(tel_dor, model_list = ml_model, .top = 1)
+}
 \references{
 Shnyr, E., Kuflik, T., Desai, K., & Eshel, T. (2026).
 Determining the origins of Phonetician silver: Exploring the potential of machine learning for lead isotope analysis.
@@ -152,6 +163,7 @@ Other Pb isotope functions:
 \code{\link{data}},
 \code{\link[=geom_sk_lines]{geom_sk_lines()}},
 \code{\link[=pb_iso_endmembers]{pb_iso_endmembers()}},
-\code{\link[=pb_iso_prov_dist]{pb_iso_prov_dist()}}
+\code{\link[=pb_iso_prov_dist]{pb_iso_prov_dist()}},
+\code{\link[=pb_iso_prov_predict]{pb_iso_prov_predict()}}
 }
 \concept{Pb isotope functions}

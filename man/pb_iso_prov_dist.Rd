@@ -49,12 +49,31 @@ mass-fractionation corrected ('mfd')}
 \item{s}{Mass-fractionation factor (Default = 0.001)}
 }
 \value{
-List of data frame or character vector
+ASTR object of matched x, ref and coresponding distance values.
 }
 \description{
 Calculate the euclidean distance of each isotope sample to a reference dataset,
 and gives the closest regions to the groups.
 Mass-fractionation follows the procedure outlined in Albarede et.al (2024)
+}
+\examples{
+GlobaLID_ASTR_ref <- as_pbiso_ref_data(GlobaLID_ASTR,
+                                   names(GlobaLID_ASTR)[[2]],
+                                   min_groupsize = 5)
+# Euclidean Distance
+euc_dist(tel_dor, GlobalLID_ASTR_ref, .n = 1)
+# Mass Fractionation correction
+mf_dist(tel_dor, GlobalLID_ASTR_ref, .n = 1, s = 0.001)
+
+# Wrapper function where the ref data is not of class 'ASTR_Pbiso_ref_data'
+pb_iso_prov_dist(tel_dor,
+                 GlobaLID_ASTR,
+                 ref_group = names(GlobaLID_ASTR)[[2]],
+                 dist_type = "all")
+# Warapper function where ref data is of class 'ASTR_Pbiso_ref_data'
+pb_iso_prov_dist(tel_dor,
+                 GlobaLID_ASTR_ref,
+                 dist_type = "all")
 }
 \references{
 Albarede, F., Davis, G., Blichert-Toft, J., Gentelli, L., Gitler, H., Pinto, M., & Telouk, P. (2024).
@@ -68,6 +87,7 @@ Other Pb isotope functions:
 \code{\link{data}},
 \code{\link[=geom_sk_lines]{geom_sk_lines()}},
 \code{\link[=pb_iso_endmembers]{pb_iso_endmembers()}},
+\code{\link[=pb_iso_prov_predict]{pb_iso_prov_predict()}},
 \code{\link[=pb_iso_train_data]{pb_iso_train_data()}}
 }
 \concept{Pb isotope functions}

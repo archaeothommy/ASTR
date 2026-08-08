@@ -129,6 +129,7 @@ Other Pb isotope functions:
 \code{\link[=geom_sk_lines]{geom_sk_lines()}},
 \code{\link[=pb_iso_endmembers]{pb_iso_endmembers()}},
 \code{\link[=pb_iso_prov_dist]{pb_iso_prov_dist()}},
+\code{\link[=pb_iso_prov_predict]{pb_iso_prov_predict()}},
 \code{\link[=pb_iso_train_data]{pb_iso_train_data()}}
 }
 \concept{Pb isotope functions}
