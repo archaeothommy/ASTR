@@ -99,7 +99,7 @@
 #'
 #' Lead Isotope ratios of a Phoenician Silver Hoard from Tel Dor.
 #' Reference Data set of Isotope rations using [as_ASTR()]
-#' @name data
+#' @name tel_dor
 #' @format ASTR object with 3 Pb Isotope variables
 #' \describe{
 #'   \item{206Pb/204Pb}{Lead Isotope ratio of 206Pb/204Pb}

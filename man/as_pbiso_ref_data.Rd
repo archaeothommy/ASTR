@@ -36,11 +36,11 @@ as_pbiso_ref_data(GlobaLID_ASTR,
 \seealso{
 Other Pb isotope functions:
 \code{\link{age_models}},
-\code{\link{data}},
 \code{\link[=geom_sk_lines]{geom_sk_lines()}},
 \code{\link[=pb_iso_endmembers]{pb_iso_endmembers()}},
 \code{\link[=pb_iso_prov_dist]{pb_iso_prov_dist()}},
 \code{\link[=pb_iso_prov_predict]{pb_iso_prov_predict()}},
-\code{\link[=pb_iso_train_data]{pb_iso_train_data()}}
+\code{\link[=pb_iso_train_data]{pb_iso_train_data()}},
+\code{\link{tel_dor}}
 }
 \concept{Pb isotope functions}
