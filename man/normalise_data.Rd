@@ -4,70 +4,75 @@
 \alias{normalise_data}
 \title{Data normalisation}
 \usage{
-normalise_data(df, reference, id_column = "ID", ...)
+normalise_data(
+  df,
+  type = c("hundred", "geochem", "element", "sample"),
+  reference = NULL,
+  id_column = "ID",
+  ...
+)
 }
 \arguments{
 \item{df}{A data frame in wide format.}
 
-\item{reference}{Character string specifying the normalisation to apply.
-Must be one of the following:
+\item{type}{Character string specifying the type of normalisation. See
+details for available normalisations.}
+
+\item{reference}{Character string specifying the reference used for
+normalisation. Must be one of the following:
 \itemize{
-\item A geochemical reference composition name — see \link{references_geochem}
-for available options (e.g. \code{"chondrite"}, \code{"MORB"}).
-\item A column name in \code{df} — normalises all numeric columns against that
-element.
-\item An ID value in \code{df} — normalises all numeric columns against that
-sample.
-\item \code{"100\%"} — rescales all numeric columns to sum to 100.
+\item \code{type = "geochem"}: A geochemical reference composition name; See
+\link{references_geochem} for available options.
+\item \code{type = "element"}: A column name in \code{df} against which all other
+columns with numeric values should be normalised to.
+\item \code{type = "sample"}: The ID of a sample/data point in \code{df} against which
+all other rows should be normalised to.
 }}
 
-\item{id_column}{String with the column name of the sample IDs in \code{df}.
-Only used when normalising against a sample. Default is \code{"ID"}.}
+\item{id_column}{String with the column name of the sample IDs in \code{df}. Only
+used when normalising against a sample. Default is \code{"ID"}.}
 
 \item{...}{Additional arguments passed to the underlying normalisation
 function.}
 }
 \value{
-The normalised data frame. The exact output depends on the
-normalisation applied — see the respective function for details.
+The normalised data frame.
 }
 \description{
 Wrapper function for data normalisation. Dispatches to the appropriate
-normalisation function based on the value of \code{reference}.
+normalisation function based on the value of \code{type}.
 }
 \details{
 The following normalisations are currently supported:
 \itemize{
-\item Geochemical reference compositions — normalises elemental
-concentrations against a reference composition such as chondrite or MORB.
-Dispatch is triggered when \code{reference} matches a name in
-\link{references_geochem}. See \link{normalise_geochem} for details and
-\link{references_geochem} for the list of available reference compositions.
-\item Element normalisation — normalises all numeric columns against a
-single element in the data. Dispatch is triggered when \code{reference}
-matches a column name in \code{df}.
-\item Sample normalisation — normalises all numeric columns against a
-single sample or data point in the dataset. Dispatch is triggered when
-\code{reference} matches a value in the ID column of \code{df}.
-\item Normalisation to 100\% — rescales all numeric columns so that their
-sum equals 100. Triggered when \code{reference = "100\%"}.
+\item \strong{Geochemical reference compositions} (\code{type = "geochem"}) — normalises
+chemical concentrations against a reference composition such as chondrite or
+MORB. See \link{normalise_geochem} for details.
+\item \strong{Element normalisation} (\code{type = "element"}) — normalises all numeric
+columns against a single element in the data. See \link{normalise_element} for
+details.
+\item \strong{Sample normalisation} (\code{type = "sample"}) — normalises all numeric
+columns against a single sample or data point in the dataset. See
+\link{normalise_sample} for details.
+\item \strong{Normalisation to 100\%} (\code{type = "hundred"}) — rescales all numeric
+columns so that their row sums equal 100. See \link{normalise_100} for details.
 }
 }
 \examples{
 df <- data.frame(
-  ID  = c("A", "B", "C"),
-  La  = c(10,   5,   8),
-  Ce  = c(20,   8,  15),
-  Nd  = c(15,   6,  12)
+  ID = c("A", "B", "C"),
+  La = c(10, 5, 8),
+  Ce = c(20, 8, 15),
+  Nd = c(15, 6, 12)
 )
 
 # Geochemical reference normalisation
 normalise_data(df, reference = "chondrite")
 
-# Element normalisation — normalise against La
+# Element normalisation
 normalise_data(df, reference = "La")
 
-# Sample normalisation — normalise against sample "A"
+# Sample normalisation
 normalise_data(df, reference = "A", id_column = "ID")
 
 # Normalisation to 100\%
@@ -75,7 +80,10 @@ normalise_data(df, reference = "100\%")
 
 }
 \seealso{
-Other Data normalisation: 
-\code{\link{normalise_geochem}()}
+Other data normalisation functions: 
+\code{\link{normalise_100}()},
+\code{\link{normalise_element}()},
+\code{\link{normalise_geochem}()},
+\code{\link{normalise_sample}()}
 }
-\concept{Data normalisation}
+\concept{data normalisation functions}

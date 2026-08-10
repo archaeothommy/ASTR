@@ -73,7 +73,10 @@ references_geochem$"31X 7835.8A"
 
 }
 \seealso{
-Other Data normalisation: 
-\code{\link{normalise_data}()}
+Other data normalisation functions: 
+\code{\link{normalise_100}()},
+\code{\link{normalise_data}()},
+\code{\link{normalise_element}()},
+\code{\link{normalise_sample}()}
 }
-\concept{Data normalisation}
+\concept{data normalisation functions}

@@ -11,7 +11,7 @@
 #'
 #' @return The input data frame with normalised values.
 #'
-#' @family Data normalisation
+#' @family data normalisation functions
 #' @export
 #'
 #' @examples
@@ -24,17 +24,22 @@
 #' normalise_sample(df, reference = "A", id_column = "ID")
 #'
 normalise_sample <- function(df, reference, id_column = "ID") {
+
   checkmate::assert_data_frame(df)
   checkmate::assert_string(reference)
   checkmate::assert_choice(id_column, colnames(df))
+
   if (!reference %in% df[[id_column]]) {
     stop("ID '", reference, "' not found in column '", id_column, "'.")
   }
+
   numeric_cols <- names(df)[sapply(df, is.numeric)]
   ref_row <- df[df[[id_column]] == reference, numeric_cols, drop = FALSE]
+
   if (nrow(ref_row) > 1) {
     stop("More than one row matches ID '", reference, "'. IDs must be unique.")
   }
+
   df[numeric_cols] <- sweep(df[numeric_cols], 2, as.numeric(ref_row), "/")
   df
 }

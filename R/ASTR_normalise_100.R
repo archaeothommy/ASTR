@@ -9,7 +9,7 @@
 #' @return The input data frame with numeric columns rescaled so that each
 #'   row sums to 100.
 #'
-#' @family Data normalisation
+#' @family data normalisation functions
 #' @export
 #'
 #' @examples
@@ -21,9 +21,12 @@
 #' )
 #' normalise_to_100(df)
 #'
-normalise_to_100 <- function(df) {
+normalise_100 <- function(df) {
+
   checkmate::assert_data_frame(df)
+
   numeric_cols <- names(df)[sapply(df, is.numeric)]
+
   df[numeric_cols] <- normalise_rows(df[numeric_cols])
   df
 }

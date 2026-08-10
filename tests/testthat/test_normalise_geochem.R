@@ -57,5 +57,3 @@ test_that("ASTR objects handled as intended", {
   )
 
 })
-
-

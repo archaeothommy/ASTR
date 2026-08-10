@@ -1,46 +1,40 @@
 #' Data normalisation
 #'
 #' Wrapper function for data normalisation. Dispatches to the appropriate
-#' normalisation function based on the value of `reference`.
+#' normalisation function based on the value of `type`.
 #'
 #' The following normalisations are currently supported:
-#'
-#' * **Geochemical reference compositions** — normalises elemental
-#'   concentrations against a reference composition such as chondrite or MORB.
-#'   Dispatch is triggered when `reference` matches a name in
-#'   [references_geochem]. See [normalise_geochem_reference] for details.
-#'
-#' * **Element normalisation** — normalises all numeric columns against a
-#'   single element in the data. Dispatch is triggered when `reference`
-#'   matches a column name in `df`. See [normalise_element] for details.
-#'
-#' * **Sample normalisation** — normalises all numeric columns against a
-#'   single sample or data point in the dataset. Dispatch is triggered when
-#'   `reference` matches a value in the ID column of `df`. See
-#'   [normalise_sample] for details.
-#'
-#' * **Normalisation to 100%** — rescales all numeric columns so that their
-#'   row sums equal 100. Triggered when `reference = "100%"`. See
-#'   [normalise_rows] for details.
+#' * **Geochemical reference compositions** (`type = "geochem"`) — normalises
+#' chemical concentrations against a reference composition such as chondrite or
+#' MORB. See [normalise_geochem] for details.
+#' * **Element normalisation** (`type = "element"`) — normalises all numeric
+#' columns against a single element in the data. See [normalise_element] for
+#' details.
+#' * **Sample normalisation** (`type = "sample"`) — normalises all numeric
+#' columns against a single sample or data point in the dataset. See
+#' [normalise_sample] for details.
+#' * **Normalisation to 100%** (`type = "hundred"`) — rescales all numeric
+#' columns so that their row sums equal 100. See [normalise_100] for details.
 #'
 #' @param df A data frame in wide format.
-#' @param reference Character string specifying the normalisation to apply.
-#'   Must be one of the following:
-#'   * A geochemical reference composition name — see [references_geochem]
-#'     for available options (e.g. `"chondrite"`, `"MORB"`).
-#'   * A column name in `df` — normalises all numeric columns against that
-#'     element.
-#'   * An ID value in `df` — normalises all numeric columns against that
-#'     sample.
-#'   * `"100%"` — rescales all numeric columns so that row sums equal 100.
-#' @param id_column String with the column name of the sample IDs in `df`.
-#'   Only used when normalising against a sample. Default is `"ID"`.
+#' @param type Character string specifying the type of normalisation. See
+#'   details for available normalisations.
+#' @param reference Character string specifying the reference used for
+#'   normalisation. Must be one of the following:
+#'   * `type = "geochem"`: A geochemical reference composition name; See
+#'   [references_geochem] for available options.
+#'   * `type = "element"`: A column name in `df` against which all other
+#'   columns with numeric values should be normalised to.
+#'   * `type = "sample"`: The ID of a sample/data point in `df` against which
+#'   all other rows should be normalised to.
+#' @param id_column String with the column name of the sample IDs in `df`. Only
+#'   used when normalising against a sample. Default is `"ID"`.
 #' @param ... Additional arguments passed to the underlying normalisation
 #'   function.
 #'
 #' @return The normalised data frame.
 #'
-#' @family Data normalisation
+#' @family data normalisation functions
 #' @export
 #'
 #' @examples
@@ -63,23 +57,22 @@
 #' # Normalisation to 100%
 #' normalise_data(df, reference = "100%")
 #'
-normalise_data <- function(df, reference, id_column = "ID", ...) {
+normalise_data <- function(
+  df,
+  type = c("hundred", "geochem", "element", "sample"),
+  reference = NULL,
+  id_column = "ID",
+  ...
+) {
+
+  type <- match.arg(type)
 
   checkmate::assert_data_frame(df)
-  checkmate::assert_string(reference)
-
-  # Determine dispatch type
-  type <- dplyr::case_when(
-    reference %in% names(references_geochem) ~ "geochem",
-    reference == "100%" ~ "hundred",
-    reference %in% colnames(df) ~ "element",
-    id_column %in% colnames(df) && reference %in% df[[id_column]] ~ "sample",
-    .default = "unknown"
-  )
+  checkmate::assert_string(reference, null.ok = TRUE)
 
   switch(type,
-    geochem = normalise_geochem_reference(df, reference = reference, ...),
-    hundred = normalise_to_100(df),
+    geochem = normalise_geochem(df, reference = reference),
+    hundred = normalise_100(df),
     element = normalise_element(df, reference = reference),
     sample = normalise_sample(df, reference = reference, id_column = id_column),
     stop(

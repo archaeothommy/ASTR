@@ -1,6 +1,6 @@
 #' Normalise data against a single element
 #'
-#' Normalises all numeric columns in a data frame by dividing by the values
+#' Normalises values in all numeric columns in a data frame by dividing them by the values
 #' of a reference element column.
 #'
 #' @param df A data frame in wide format.
@@ -10,7 +10,7 @@
 #' @return The input data frame with normalised values. The reference element
 #'   column is not divided by itself.
 #'
-#' @family Data normalisation
+#' @family data normalisation functions
 #' @export
 #'
 #' @examples
@@ -22,15 +22,18 @@
 #' )
 #' normalise_element(df, reference = "La")
 #'
-normalise_element <- function(df, reference) {
+normalise_element <- function(df, reference = colnames(df)) {
+
+  reference <- match.arg(reference)
+
   checkmate::assert_data_frame(df)
-  checkmate::assert_choice(reference, colnames(df))
+
   if (!is.numeric(df[[reference]])) {
     stop("Column '", reference, "' is not numeric and cannot be used for normalisation.")
   }
+
   numeric_cols <- names(df)[sapply(df, is.numeric)]
   numeric_cols <- setdiff(numeric_cols, reference)
-  divisor <- df[[reference]]
-  df[numeric_cols] <- lapply(df[numeric_cols], function(x) x / divisor)
+  df[numeric_cols] <- lapply(df[numeric_cols], function(x) x / df[[reference]])
   df
 }

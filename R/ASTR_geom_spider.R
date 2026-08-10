@@ -112,7 +112,7 @@ GeomSpider <- ggplot2::ggproto(
 
   required_aes = character(0),
 
-  optional_aes = c(elements_data, isotopes_data, oxides_data),
+  optional_aes = c(ASTR::elements_data, ASTR::isotopes_data, ASTR::oxides_data),
 
   default_aes = ggplot2::aes(
     colour = "black",
