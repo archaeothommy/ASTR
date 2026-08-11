@@ -139,7 +139,7 @@ GeomSpider <- ggplot2::ggproto(
     elements <- params$elements
 
     if (!is.null(params$reference)) {
-      data <- normalise_data(data, reference = params$reference)
+      data <- normalise_data(data, type = "geochem", reference = params$reference)
       elements <- paste0(elements, "_", params$reference)
 
       # verify normalised columns exist
