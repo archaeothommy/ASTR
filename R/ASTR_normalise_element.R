@@ -1,11 +1,13 @@
 #' Normalise data against a single element
 #'
 #' Normalises values in all numeric columns in a data frame by dividing them by the values
-#' of a reference element column.
+#' of a reference element column.All numeric columns are divided by the values of the reference
+#' element, expressing each element as a ratio relative to the reference.
 #'
 #' @param df A data frame in wide format.
 #' @param reference Character string with the column name of the element to
-#'   normalise against. Must be a numeric column in `df`.
+#'   normalise against. Must be a numeric column in `df`.The ratio between
+#'   each numeric column and this element is calculated.
 #'
 #' @return The input data frame with normalised values. The reference element
 #'   column is not divided by itself.

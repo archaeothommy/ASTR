@@ -33,12 +33,13 @@ normalise_sample <- function(df, reference, id_column = "ID") {
     stop("ID '", reference, "' not found in column '", id_column, "'.")
   }
 
-  numeric_cols <- names(df)[sapply(df, is.numeric)]
-  ref_row <- df[df[[id_column]] == reference, numeric_cols, drop = FALSE]
-
-  if (nrow(ref_row) > 1) {
+  # Check ID uniqueness
+  if (sum(df[[id_column]] == reference) > 1) {
     stop("More than one row matches ID '", reference, "'. IDs must be unique.")
   }
+
+  numeric_cols <- names(df)[sapply(df, is.numeric)]
+  ref_row <- df[df[[id_column]] == reference, numeric_cols, drop = FALSE]
 
   df[numeric_cols] <- sweep(df[numeric_cols], 2, as.numeric(ref_row), "/")
   df
