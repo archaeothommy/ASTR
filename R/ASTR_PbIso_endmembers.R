@@ -1,19 +1,17 @@
-#' Find Endmembers from a list of LIA points
+#' Find endmembers from a list of LIA points.
 #'
 #' @description
-#' Finds endmembers from a set of
-#' Lead Isotope Points using Principle Component
-#' analysis and the Geochron slope according to the two-stage model by
-#' Stacy-Kramers 1975, following the process outlined in (Shnyr et al., (2026)
+#' Finds endmembers from a set of lead isotope points using principal component
+#' analysis and the geochron slope according to the two-stage model by
+#' Stacy and Kramers (1975), following the process outlined in Shnyr et al. (2026).
 #'
-#' @param x ASTR object containing
-#' 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb isotope ratios.
-#' @param tolerance Vector of length two, with corresponding group 1 and group
-#'  2 tolerance value for points considered to be intercepted.
+#' @param x ASTR object containing 206Pb/204Pb, 207Pb/204Pb, and 208Pb/204Pb isotope ratios.
+#' @param tolerance Vector of length two, with corresponding tolerance values for group 1 and group
+#'  2 for points considered to lie on the respective geochron lines.
 #'      (Default c(0.01, 0.01))
-#' @param clamp Limit filter for points away from the principle component end
-#' based on Euclidean distance, (Default c(Inf, Inf))
-#' @param ... Additional Parameters
+#' @param clamp Limit filter for points away from the principal component end
+#' based on Euclidean distance. (Default c(Inf, Inf))
+#' @param ... Additional parameters
 #'
 #' @references Shnyr, E., Kuflik, T., Desai, K., & Eshel, T. (2026).
 #' Determining the origins of Phoenician silver: Exploring the potential of
@@ -21,14 +19,14 @@
 #' Science, 188, 106–499. https://doi.org/10.1016/j.jas.2026.106499
 #'
 #' @returns
-#' An [ASTR object][ASTR], with additional class attribute
+#' An [ASTR object][ASTR] with additional class attribute
 #' `ASTR_Pbiso_endmembr`. The output is an object of the
 #' same type including the ID column, the contextual columns, the lead isotope
 #' ratios used for calculation of the age model parameters,
 #' and the endmember groups. In all other cases, the data frame provided as input
 #' with columns added for the calculated endmember groups.
 #'
-#' Endmember groups consist of group1, group2 and groupmix
+#' Endmember groups consist of group1, group2, and groupmix.
 #' groupmix represents the values along the mixing line.
 #'
 #' @family Pb isotope functions
@@ -48,16 +46,16 @@ pb_iso_endmembers <- function(x, ...) {
 #' # No clamping
 #' no_clamp <- pb_iso_endmembers(tel_dor)
 #' no_clamp[no_clamp$end_membr == "group2", ]
-#' # Clamping reduces the group size by distance from the principle endmember
+#' # Clamping reduces the group size by distance from the principal endmember
 #' clamp <- pb_iso_endmembers(tel_dor, clamp = c(Inf, 0.1))
 #' clamp[clamp$end_membr == "group2", ]
-#' # Reducing tolerance values narrows the grouping around the Geocron
+#' # Reducing tolerance values narrows the grouping around the geocron
 #' pb_iso_endmembers(tel_dor, tolerance = c(0.001, 0.001))
 pb_iso_endmembers.ASTR <- function(x,
                                    tolerance = c(0.01, 0.01),
                                    clamp = c(Inf, Inf),
                                    ...) {
-  # Main Analysis Function
+  # Main analysis function
   calc_pb_iso_endmembers <- function(x, iso_cols, tolerance, clamp, ...) {
     # Subset and convert matrix
     x_iso_mat <- as.matrix(x[, iso_cols])
@@ -70,10 +68,10 @@ pb_iso_endmembers.ASTR <- function(x,
     isotope_matrix <- x_iso_mat
 
     if (nrow(isotope_matrix) < 3) {
-      stop("Too few samples. Suggest more than 3.")
+      stop("Too few samples. More than 3 samples are recommended.")
     }
 
-    # --- PCA Process ---
+    # --- PCA process ---
     pca_result <- stats::prcomp(isotope_matrix, scale = FALSE)
     pca_values <- pca_result$x
     rownames(pca_values) <- rownames(isotope_matrix)
@@ -82,7 +80,7 @@ pb_iso_endmembers.ASTR <- function(x,
     pc1_var <- pca_summary$importance[["Cumulative Proportion", "PC1"]]
 
     if (pc1_var < 0.95) {
-      message("PC1 represents less than 95% of the Variance. There may be more than two end members.")
+      message("PC1 represents less than 95% of the Variance. There may be more than two endmembers.")
       print(pca_summary)
     }
 
@@ -93,11 +91,11 @@ pb_iso_endmembers.ASTR <- function(x,
 
     if (!(norm_test_pc1 && norm_test_pc2 && norm_test_pc3)) {
       message(
-        "PC2 or PC3 are not normally distributed. This may indicate variation is not random noise."
+        "PC2 or PC3 are not normally distributed. This may indicate that the variation is not random noise."
       )
     }
 
-    # End member extraction
+    # Endmember extraction
     pca_ends <- pca_values[pca_values[, "PC1"] %in% range(pca_values[, "PC1"]), ]
     isotope_ends <- isotope_matrix[as.numeric(rownames(pca_ends)), ]
 
@@ -125,12 +123,12 @@ pb_iso_endmembers.ASTR <- function(x,
 
     if (length(end_group1) < 2 || length(end_group2) < 2) {
       message(
-        "End Member group has less than two points. Likelihood of point being an endmember is low."
+        "Endmember group has less than two points. The likelihood of a point being an endmember is low."
       )
     }
 
     if (any(end_group1 %in% end_group2)) {
-      warning("Overlap in endmembers between groups. Suggest lower tolerance value.")
+      warning("Overlap in endmembers between groups. A lower tolerance value is suggested.")
     }
 
     mixing_group <- setdiff(rownames(isotope_matrix), c(end_group1, end_group2))

@@ -1,11 +1,11 @@
 # Helper functions --------------------------------------------------------
 
-# Isotopes relevant for ASTR Schema
+# Isotopes relevant for the ASTR schema
 .pb_iso_cols <- function() {
   c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")
 }
 
-# Validate Iso columns
+# Validate isotope columns
 .validate_iso_cols <- function(x) {
   iso <- .pb_iso_cols()
   if (!all(iso %in% names(x))) {
@@ -15,7 +15,7 @@
 }
 
 
-# Ensures ref is of type ASTR_Pbiso_ref_data
+# Ensures reference is of type ASTR_Pbiso_ref_data
 .ensure_pbiso_ref <- function(ref, ref_group, ...) {
   if (!inherits(ref, "ASTR")) {
     stop("`ref` must be of class 'ASTR'.")
@@ -27,7 +27,7 @@
   ref
 }
 
-# Re tags new columns as context
+# Retags new columns as context
 .tag_astr_context <- function(df, cols) {
   for (col in cols) {
     if (col %in% names(df)) {
@@ -37,7 +37,7 @@
   df
 }
 
-# Checks if required functions are installed and if now prompts for install
+# Checks if required packages are installed and prompts for installation if needed
 .check_required_packages <- function(pkgs) {
   missing_pkgs <- pkgs[!sapply(pkgs, requireNamespace, quietly = TRUE)]
   if (length(missing_pkgs) > 0) {
@@ -57,7 +57,7 @@
   }
 }
 
-# Formats distance functions
+# Formats distance results
 .format_dist_results <- function(x,
                                  ref,
                                  dist_matrix,
@@ -83,22 +83,20 @@
   dplyr::left_join(x, final_df)
 }
 
-# Reference Data Function --------------------------------------------------
+# Reference data function --------------------------------------------------
 
-#' Create Reference data object for LIA endmember distance and probability estimate functions.
-#'
+#' Create reference data object for LIA endmember distance and probability estimation functions.
 #' Data preprocessing and cleaning ensure the reliability and accuracy of provenance analysis.
-#' This step results in the removal of all NA values from the selected Isotope tables, and groups.
-#' The step also should exclude the groups which have low sample data (in the case of (Shnyr et al., (2026) it was 5).
+#' This step results in the removal of all NA values from the selected isotope tables and groups.
+#' The step should also exclude groups with a low number samples (in the case of Shnyr et al. (2026), this was 5).
 #'
-#' @param x ASTR object containing
-#' 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb isotope ratios.
+#' @param x ASTR object containing 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb isotope ratios.
 #' @param group Name of the column containing isotope groups as character string.
-#' @param min_groupsize Integer value for the minimum number samples in a group. (Default = 5)
-#' @param ... Additional params
+#' @param min_groupsize Integer value for the minimum number of samples in a group. (Default = 5)
+#' @param ... Additional parameters
 #'
 #' @returns
-#' `ASTR_Pbiso_ref_data` object with Isotope groupings and Isotope columns of
+#' `ASTR_Pbiso_ref_data` object with isotope groupings and isotope columns of
 #' 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb.
 #' @importFrom stats na.omit
 #' @family Pb isotope functions
@@ -127,32 +125,28 @@ as_pbiso_ref_data.ASTR <- function(x, group, min_groupsize = 5, ...) {
   x
 }
 
-# Distance Functions ------------------------------------------------------
+# Distance functions ------------------------------------------------------
 
-#' Euclidean Distance for Pb Isotope rations to ore Sources
+#' Euclidean distance for Pb isotope ratios to ore sources
 #'
-#' Calculate the euclidean distance of each isotope sample to a reference dataset,
+#' Calculates the Euclidean distance of each isotope sample to a reference data set
 #' and gives the closest regions to the groups.
-#' Mass-fractionation follows the procedure outlined in Albarede et.al (2024)
+#' Mass fractionation follows the procedure outlined in Albarede et al. (2024).
 #'
-#' @param x ASTR object containing
-#' 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb isotope ratios for analysis.
-#' @param ref ASTR object containing
-#' 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb isotope ratios as provenance refrence.
-#' @param ref_group Name of the column containing isotope
-#' groups as character string.
-#' @param dist_type Distance type to use, simple euclidean ('ed') or
-#' mass-fractionation corrected ('mfd')
-#' @param .n Length of result output (Default = 1)
-#' @param s Mass-fractionation factor (Default = 0.001)
-#' @param ... Additional params
+#' @param x ASTR object containing 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb isotope ratios for analysis.
+#' @param ref ASTR object containing 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb isotope ratios as a provenance reference.
+#' @param ref_group Name of the column containing isotope groups as a character string.
+#' @param dist_type Distance type to use, simple Euclidean ('ed') or mass-fractionation corrected ('mfd').
+#' @param .n Length of result output (Default = 1).
+#' @param s Mass fractionation factor (Default = 0.001).
+#' @param ... Additional parameters.
 #'
 #'
 #' @references Albarede, F., Davis, G., Blichert-Toft, J., Gentelli, L., Gitler, H., Pinto, M., & Telouk, P. (2024).
 #' A new algorithm for using Pb isotopes to determine the provenance of bullion in ancient Greek coinage.
 #' Journal of Archaeological Science, 163, 105919. https://doi.org/10.1016/j.jas.2023.105919
 #'
-#' @returns ASTR object of matched x, ref and coresponding distance values.
+#' @returns ASTR object of matched x, reference, and corresponding distance values.
 #' @inherit pb_iso_endmembers examples
 #'
 #' @importFrom dplyr full_join
@@ -164,17 +158,17 @@ as_pbiso_ref_data.ASTR <- function(x, group, min_groupsize = 5, ...) {
 #' GlobaLID_ASTR_ref <- as_pbiso_ref_data(GlobaLID_ASTR,
 #'                                    names(GlobaLID_ASTR)[[2]],
 #'                                    min_groupsize = 5)
-#' # Euclidean Distance
+#' # Euclidean distance
 #' euc_dist(tel_dor, GlobaLID_ASTR_ref, .n = 1)
-#' # Mass Fractionation correction
+#' # Mass fractionation correction
 #' mf_dist(tel_dor, GlobaLID_ASTR_ref, .n = 1, s = 0.001)
 #'
-#' # Wrapper function where the ref data is not of class 'ASTR_Pbiso_ref_data'
+#' # Wrapper function where the reference data is of class 'ASTR_Pb_iso_ref_data'
 #' pb_iso_prov_dist(tel_dor,
 #'                  GlobaLID_ASTR,
 #'                  ref_group = names(GlobaLID_ASTR)[[2]],
 #'                  dist_type = "all")
-#' # Warapper function where ref data is of class 'ASTR_Pbiso_ref_data'
+#' # Wrapper function where reference data is not of class 'ASTR_Pb_iso_ref_data'
 #' pb_iso_prov_dist(tel_dor,
 #'                  GlobaLID_ASTR_ref,
 #'                  dist_type = "all")
@@ -295,53 +289,53 @@ mf_dist.ASTR <- function(x,
   )
 }
 
-# ML model Training function ----------------------------------------------
+# ML model training function----------------------------------------------
 
-#' Train XGBOOST Model
+#' Train XGBoost model
 #'
-#' Trains XGBOOST model for predictive isotope analysis using DBSCAN clustering.
-#' SMOTE data imputation for training data set, and XGBOOST, following the method
-#' of Shnyr et.al (2026)
+#' Trains an XGBoost model for predictive isotope analysis using DBSCAN clustering.
+#' SMOTE data imputation for the training data set and XGBoost, following the method
+#' of Shnyr et al. (2026).
 #'
 #' @references Shnyr, E., Kuflik, T., Desai, K., & Eshel, T. (2026).
-#' Determining the origins of Phonetician silver: Exploring the potential of machine learning for lead isotope analysis.
+#' Determining the origins of Phoenician silver: Exploring the potential of machine learning for lead isotope analysis.
 #' Journal of Archaeological Science, 188, 106–499. https://doi.org/10.1016/j.jas.2026.106499
 #'
 #' @param ref ref `ASTR` object containing
 #' 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb or `ASTR_Pbiso_ref_data` object
 #' @param ref_group Name of the column containing isotope groups as character string.
-#' @param min_groupsize Integer value for the minimum number samples in a group. (Default = 5)
+#' @param min_groupsize Integer value for the minimum number of samples in a group. (Default = 5).
 #' @param .minSize Minimum number of samples in group to be used for clustering (Default = 20).
-#' @param .minPts_fac scaling factor minimum needed points from each group,
-#' ranging from 0:1. (Default = 0.1)
+#' @param .minPts_fac Scaling factor for the minimum number of points needed from each group,
+#' ranging from 0 to 1. (Default = 0.1)
 #' @param .eps size (radius) of the epsilon neighbourhood. (Default = 0.18)
-#' @param .eta Step size shrinkage used in update to prevent over fitting.
+#' @param .eta Step size shrinkage used in update to prevent overfitting.
 #' After each boosting step, we can directly get the weights of new features,
 #' and eta shrinks the feature weights to make the boosting process more conservative. (Default = 0.1)
 #' @param .max_depth Maximum depth of a tree.
-#' Increasing this value will make the model more complex and more likely to over fit.
-#' 0 indicates no limit on depth. Beware that XGBoost aggressively consumes memory when training a deep tree.
+#' Increasing this value will make the model more complex and more likely to overfit.
+#' Zero indicates no limit on depth. Beware that XGBoost aggressively consumes memory when training a deep tree.
 #' "exact" tree method requires non-zero value. (Default = 6)
-#' @param .nrounds Max number of boosting iterations. (Default = 100)
+#' @param .nrounds Maximum number of boosting iterations. (Default = 100)
 #' @param nthread Number of threads for parallel processing. When choosing it,
 #' please keep thread contention and hyper threading in mind. (Default = 4)
-#' @param ... Additional params
+#' @param ... Additional parameters.
 #' @inheritDotParams dbscan::dbscan weights borderPoints
-#' @inheritDotParams xgboost::xgb.train early_stopping_rounds maximize
+#' @inheritDotParams XGBoost::xgb.train early_stopping_rounds maximize
 #'
 #' @returns
-#' List of xgboot.model objects.
+#' List of XGBoost model objects.
 #'
 #' @details
 #'
-#' The Machine learning workflow as descrived by (Shnyr et al., 2026)
-#' for data prepraation, clustering, class balanceing, classifications are dissucussed here.
+#' The Machine learning workflow described by Shnyr et al. (2026)
+#' for data preparation, clustering, class balancing, and classification is discussed here.
 #'
 #' @inherit as.ref_data description
 #'
 #' @section DBSCAN clustering and outlier identification:
-#'Density-Based Spatial Clustering of Applications with Noise (DBSCAN)
-#'algorithm to identify outliers and subgroup patterns. This method facilitated
+#'The Density-Based Spatial Clustering of Applications with Noise (DBSCAN)
+#'algorithm is used to identify outliers and subgroup patterns. This method facilitated
 #'outlier removal and cluster formation within lead isotopic data, effectively
 #'reducing inter-regional overlaps. Systematic evaluation of the neighborhood
 #'radius (eps) utilized the Silhouette Score and Davies–Bouldin Index. The
@@ -351,7 +345,7 @@ mf_dist.ASTR <- function(x,
 #'dynamically established at 10\% of the total samples per region. This
 #'strategy adapts the density threshold to varying sample sizes, adhering to
 #'established proportional scaling practices. To ensure reliability, analysis
-#'was restricted to regions with >= 20 samples. This constraint successfully
+#'was restricted to regions with ≥ 20 samples. This constraint successfully
 #'minimized noise-related bias. Finally, regions forming multiple clusters
 #'received systematic labels, while single-cluster regions remained unassigned.
 #'
@@ -360,16 +354,16 @@ mf_dist.ASTR <- function(x,
 #' The Synthetic Minority Over-sampling Technique (SMOTE) generates synthetic
 #' data points for the minority class through interpolation. This process
 #' balances class distribution and enhances learning by introducing variety
-#' while reducing overfitting risks. This study transformed the dataset into a
+#' while reducing overfitting risks. This study transformed the data set into a
 #' binary classification problem. Synthetic sample counts were dynamically
 #' adjusted based on minority cluster density to maintain appropriate balance.
 #' This step mitigated class imbalance, preventing predictive bias and
 #' improving classifier performance.
 #'
-#' @section XGBoost Model training:
+#' @section XGBoost model training:
 #' XGBoost algorithm was used to train a binary classification model using
 #' three isotopic ratios as input features. The regional cluster names derived
-#' from DBSCAN served as target labels. The re sampled dataset was partitioned
+#' from DBSCAN served as target labels. The resampled data set was partitioned
 #' into training and testing sets, treating each cluster as an independent
 #' classification problem. This iterative process involved data encoding, SMOTE
 #' application, and individual XGBoost model training for every cluster. Final
@@ -390,14 +384,14 @@ pb_iso_train_data <- function(ref, ...) {
 #' @importFrom stats setNames
 #'
 #' @examples
-#' # Create a 'ASTR_Pbiso_ref_data' object
+#' # Create an 'ASTR_Pbiso_ref_data' object
 #' GlobaLID_ASTR_ref <- as_pbiso_ref_data(GlobaLID_ASTR,
 #'                   names(GlobaLID_ASTR)[[2]],
 #'                   min_groupsize = 5)
-#' # Train machine learning modle
+#' # Train machine learning model
 #' \dontrun{ml_model <- pb_iso_train_data(GlobaLID_ASTR_ref)}
 #'
-#' # Predict using pre-trianed modle
+#' # Predict using a pre-trianed model
 #' pb_iso_prov_predict(tel_dor, model_list = ml_model, .top = 1)
 pb_iso_train_data.ASTR_Pbiso_ref_data <- function(ref,
                                                   .minSize = 20,
@@ -461,7 +455,7 @@ helper_train_function <- function(ref,
                                   .nrounds = 100,
                                   nthread = 4L,
                                   ...) {
-  # Package Check -----------------------------------------------------------
+  # Package check -----------------------------------------------------------
 
   .check_required_packages(c("dbscan", "smotefamily", "xgboost"))
 
@@ -514,13 +508,13 @@ helper_train_function <- function(ref,
     final_df
   }
   smote_df_final <- do.call(rbind, lapply(subgroups, apply_smote))
-  # XGBOOST Implementation --------------------------------------------------
+  # XGBOOST implementation --------------------------------------------------
   # Define a function to train a binary model for a specific group
   train_group_model <- function(target_group, data = smote_df_final) {
-    # Create binary labels: 1 if target_group, 0 otherwise
+    # Create binary labels: 1 for target_group, 0 otherwise
     labels <- ifelse(data$group == target_group, 1, 0)
 
-    # Check if we have both classes represented
+    # Check if both classes are represented
     if (length(unique(labels)) < 2) {
       warning(paste(
         "Skipping group",
@@ -540,7 +534,7 @@ helper_train_function <- function(ref,
       max_depth = .max_depth,
       nthread = nthread,
       eval_metric = "logloss",
-      # scale_pos_weight can help if your group is much smaller than the rest
+      # scale_pos_weight can help if the target group is much smaller than the rest
       scale_pos_weight = sum(labels == 0) / sum(labels == 1)
     )
 
@@ -556,20 +550,20 @@ helper_train_function <- function(ref,
 
 # XGBOOST Prediction ------------------------------------------------------
 
-#' Predict Isotope Provenance
+#' Predict isotope provenance
 #'
-#' Predicts Pb Isotope provenance of a sample matrix in reference to a xgboost trained list
+#' Predicts Pb isotope provenance of a sample matrix using a XGBoost trained list
 #'
-#' @param x Matrix of `pbisoendmembers` object of pbisotope samples
-#' @param model_list Model list generated by `train_data()`
-#' @param .top Number of highest probality values considred for final output (Default = 1)
-#' @param ... Additional params
+#' @param x Matrix of `pb_iso_endmembers` object of pb isotope samples.
+#' @param model_list Model list generated by `train_data()`.
+#' @param .top Number of highest probability values considered for final output. (Default = 1)
+#' @param ... Additional parameters.
 #'
 #' @importFrom stats predict
 #'
 #' @returns
-#' data.frame object or list of data.frames
-#' @seealso train_data
+#' data frame object or list of data frames
+#' @seealso pb_iso_train_data
 #'
 #' @family Pb isotope functions
 #' @export

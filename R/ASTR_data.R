@@ -1,6 +1,6 @@
 #' Chemical elements
 #'
-#' List of chemical elements as their symbols, sorted according to alphabet.
+#' List of chemical elements as their symbols, sorted alphabetically.
 #'
 #' @format a vector
 #'
@@ -10,7 +10,7 @@
 
 #' Oxides
 #'
-#' List of oxides, sorted according to alphabet.
+#' List of oxides, sorted alphabetically.
 #'
 #' @format a vector
 #'
@@ -20,7 +20,7 @@
 
 #' Special oxide states
 #'
-#' List of values that are treated like oxides, but are no chemical oxides.
+#' List of values that are treated like oxides, but are not chemical oxides.
 #'
 #' @format a vector
 #'
@@ -31,8 +31,8 @@
 #' Isotopes
 #'
 #' List of naturally occurring isotopes, retrieved from
-#' https://www.ciaaw.org/isotopic-abundances.htm, sorted according to chemical
-#' element and isotope number
+#' https://www.ciaaw.org/isotopic-abundances.htm, sorted by chemical
+#' element and isotope number.
 #'
 #' @format a vector
 #'
@@ -51,7 +51,7 @@
 #'   \item{OxideWeight}{The molar mass of the oxide.}
 #'   \item{ElementToOxide}{The factor used in the conversion from the chemical element to its oxide.}
 #'   \item{OxideToElement}{The factor used in the conversion from the oxide to its chemical element.}
-#'   \item{OxidationState}{The oxidation state of the kation as numeric value.}
+#'   \item{OxidationState}{The oxidation state of the cation as a numeric value.}
 #' }
 #'
 #' @family chemical reference data
@@ -64,7 +64,7 @@
 #'
 #' @format `ArgentinaDatabase`
 #'
-#' A dataframe with 112 rows and 49 columns
+#' A data frame with 112 rows and 49 columns
 #'
 #' @source <https://globalid.dmt-lb.de/>
 #' @name ArgentinaDatabase
@@ -72,21 +72,21 @@
 
 #' GloabaLID lead isotope database
 #'
-#' ASTR object containing Lead isotope data along with "Political province/regions"
-#' as grouping variable.
+#' ASTR object containing lead isotope data along with "Political province/regions"
+#' as a grouping variable.
 #'
 #' @format ASTR object with 1 contextual and 3 Pb Isotope variables
 #'  \describe{
-#'   \item{Political province/regions}{Regional grouping of lead isotope data}
-#'   \item{206Pb/204Pb}{Lead Isotope ratio of 206Pb/204Pb}
-#'   \item{207Pb/204Pb}{Lead Isotope ratio of 207Pb/204Pb}
-#'   \item{208Pb/204Pb}{Lead Isotope ratio of 208Pb/204Pb}
+#'   \item{Political province/regions}{Regional grouping of lead isotope data.}
+#'   \item{206Pb/204Pb}{Lead isotope ratio of 206Pb/204Pb.}
+#'   \item{207Pb/204Pb}{Lead isotope ratio of 207Pb/204Pb.}
+#'   \item{208Pb/204Pb}{Lead isotope ratio of 208Pb/204Pb.}
 #' }
 #'
 #' @source <https://globalid.dmt-lb.de/>
 "GlobaLID_ASTR"
 
-#' Machine Learning model for lead isotope provenaces
+#' Machine learning model for lead isotope provenance.
 #'
 #' Lead isotope data model based on GlobaLID for machine learning provenance.
 #'
@@ -95,16 +95,16 @@
 #' @source <https://globalid.dmt-lb.de/>
 "ml_model"
 
-#' LIA points of Silver Hoards from Israel
+#' LIA points of silver hoards from Israel
 #'
-#' Lead Isotope ratios of a Phoenician Silver Hoard from Tel Dor.
-#' Reference Data set of Isotope rations using [as_ASTR()]
+#' Lead isotope ratios of a Phoenician silver hoard from Tel Dor.
+#' Reference data set of isotope ratios using [as_ASTR()]
 #' @name tel_dor
 #' @format ASTR object with 3 Pb Isotope variables
 #' \describe{
-#'   \item{206Pb/204Pb}{Lead Isotope ratio of 206Pb/204Pb}
-#'   \item{207Pb/204Pb}{Lead Isotope ratio of 207Pb/204Pb}
-#'   \item{208Pb/204Pb}{Lead Isotope ratio of 208Pb/204Pb}
+#'   \item{206Pb/204Pb}{Lead isotope ratio of 206Pb/204Pb.}
+#'   \item{207Pb/204Pb}{Lead isotope ratio of 207Pb/204Pb.}
+#'   \item{208Pb/204Pb}{Lead isotope ratio of 208Pb/204Pb.}
 #' }
 #'
 #' @source Eshel, T., Erel, Y., Yahalom-Mack, N., Tirosh, O., & Gilboa, A.
