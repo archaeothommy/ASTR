@@ -42,11 +42,19 @@ reference:
   - atomic_conversion
   - oxide_conversion
   - conversion_oxides
+- title: Data normalisation
+  desc: >
+    Functions for normalising data
+  contents:
+  - normalise_data
+  - normalise_geochem
+  - normalise_sample
+  - normalise_element
+  - normalise_100
 - title: Calculations, Classifications, Statistics
   desc: >
     Functions for data transformation
   contents:
-  - normalise_geochem
   - copper_alloy_bb
   - copper_alloy_pollard
   - copper_group_bray
