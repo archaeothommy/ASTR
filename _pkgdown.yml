@@ -32,6 +32,8 @@ reference:
   - elements_data
   - oxides_data
   - special_oxide_states
+  - standard_groups
+  - references_geochem
 - title: Unit conversions
   desc: >
     Functions and data tables for conversions between untis not covered in
@@ -40,6 +42,15 @@ reference:
   - atomic_conversion
   - oxide_conversion
   - conversion_oxides
+- title: Data normalisation
+  desc: >
+    Functions for normalising data
+  contents:
+  - normalise_data
+  - normalise_geochem
+  - normalise_sample
+  - normalise_element
+  - normalise_100
 - title: Calculations, Classifications, Statistics
   desc: >
     Functions for data transformation
@@ -54,6 +65,7 @@ reference:
   desc: >
     Functions for plotting data
   contents:
+  - geom_spider
   - geom_kde2d
   - geom_sk_lines
 - title: Data
