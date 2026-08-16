@@ -1,11 +1,11 @@
 #' Normalise data against a sample
 #'
-#' Normalises all numeric columns in a data frame by dividing by the values
-#' of a reference sample identified by its ID.
+#' Normalises all numeric columns in a data frame by dividing them by the
+#' respective values of a reference sample.
 #'
 #' @param df A data frame in wide format.
 #' @param reference Character string with the ID value of the sample to
-#'   normalise against. Must match exactly one row in the ID column.
+#'   normalise against.
 #' @param id_column String with the column name of the sample IDs in `df`.
 #'   Default is `"ID"`.
 #'

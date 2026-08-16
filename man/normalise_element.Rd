@@ -17,8 +17,9 @@ The input data frame with normalised values. The reference element
 column is not divided by itself.
 }
 \description{
-Normalises values in all numeric columns in a data frame by dividing them by the values
-of a reference element column.
+Normalises values in all numeric columns in a data frame by dividing them by
+the values of a reference element column, expressing each element as a ratio
+relative to the reference element.
 }
 \examples{
 df <- data.frame(

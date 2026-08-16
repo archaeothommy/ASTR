@@ -6,8 +6,7 @@
 #'
 #' @param df A data frame in wide format.
 #'
-#' @return The input data frame with numeric columns rescaled so that each
-#'   row sums to 100.
+#' @return The input data frame with normalised values.
 #'
 #' @family data normalisation functions
 #' @export

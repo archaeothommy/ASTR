@@ -40,7 +40,8 @@ The normalised data frame.
 }
 \description{
 Wrapper function for data normalisation. Dispatches to the appropriate
-normalisation function based on the value of \code{type}.
+normalisation function based on the value of \code{type} (see details for
+available normalisations).
 }
 \details{
 The following normalisations are currently supported:

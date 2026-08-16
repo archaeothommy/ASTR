@@ -1,7 +1,8 @@
 #' Data normalisation
 #'
 #' Wrapper function for data normalisation. Dispatches to the appropriate
-#' normalisation function based on the value of `type`.
+#' normalisation function based on the value of `type` (see details for
+#' available normalisations).
 #'
 #' The following normalisations are currently supported:
 #' * **Geochemical reference compositions** (`type = "geochem"`) — normalises

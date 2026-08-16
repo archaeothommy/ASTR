@@ -10,7 +10,7 @@ normalise_sample(df, reference, id_column = "ID")
 \item{df}{A data frame in wide format.}
 
 \item{reference}{Character string with the ID value of the sample to
-normalise against. Must match exactly one row in the ID column.}
+normalise against.}
 
 \item{id_column}{String with the column name of the sample IDs in \code{df}.
 Default is \code{"ID"}.}
@@ -19,8 +19,8 @@ Default is \code{"ID"}.}
 The input data frame with normalised values.
 }
 \description{
-Normalises all numeric columns in a data frame by dividing by the values
-of a reference sample identified by its ID.
+Normalises all numeric columns in a data frame by dividing them by the
+respective values of a reference sample.
 }
 \examples{
 df <- data.frame(

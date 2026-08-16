@@ -10,8 +10,7 @@ normalise_100(df)
 \item{df}{A data frame in wide format.}
 }
 \value{
-The input data frame with numeric columns rescaled so that each
-row sums to 100.
+The input data frame with normalised values.
 }
 \description{
 Rescales all numeric columns in a data frame so that the row sums equal 100.

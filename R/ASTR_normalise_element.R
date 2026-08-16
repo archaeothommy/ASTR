@@ -1,13 +1,12 @@
 #' Normalise data against a single element
 #'
-#' Normalises values in all numeric columns in a data frame by dividing them by the values
-#' of a reference element column.All numeric columns are divided by the values of the reference
-#' element, expressing each element as a ratio relative to the reference.
+#' Normalises values in all numeric columns in a data frame by dividing them by
+#' the values of a reference element column, expressing each element as a ratio
+#' relative to the reference element.
 #'
 #' @param df A data frame in wide format.
 #' @param reference Character string with the column name of the element to
-#'   normalise against. Must be a numeric column in `df`.The ratio between
-#'   each numeric column and this element is calculated.
+#'   normalise against. Must be a numeric column in `df`.
 #'
 #' @return The input data frame with normalised values. The reference element
 #'   column is not divided by itself.
@@ -35,7 +34,7 @@ normalise_element <- function(df, reference = colnames(df)) {
   }
 
   numeric_cols <- names(df)[sapply(df, is.numeric)]
-  numeric_cols <- setdiff(numeric_cols, reference)
+  numeric_cols <- numeric_cols[numeric_cols != reference]
   df[numeric_cols] <- lapply(df[numeric_cols], function(x) x / df[[reference]])
   df
 }
