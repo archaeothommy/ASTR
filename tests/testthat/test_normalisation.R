@@ -1,6 +1,6 @@
 # Shared data
 df <- data.frame(
-  Sample = c("A", "B", "C", "D"),
+  ID = c("A", "B", "C", "D"),
   La = c(10, NA, 5, 20),
   Ce = c(20, 8, NA, 40),
   Nd = c(15, 6, 3, 30),
@@ -29,14 +29,14 @@ test_that("normalise_geochem handles all cases", {
 
   # Check non-element columns unchanged
   expect_equal(result$X, df$X)
-  expect_equal(result$Sample, df$Sample)
+  expect_equal(result$ID, df$ID)
 
   # Check NA values preserved
   expect_true(is.na(result$La[2]))
   expect_true(is.na(result$Ce[3]))
 
   # Error when no matching elements
-  df_none <- data.frame(Sample = c("A", "B"), X = c(1, 2))
+  df_none <- data.frame(ID = c("A", "B"), X = c(1, 2))
   expect_error(
     normalise_geochem(df_none, reference = "chondrite"),
     regexp = "does not include any element"
@@ -85,24 +85,36 @@ test_that("normalise_element works", {
 # normalise_sample
 
 test_that("normalise_sample works", {
-  result <- normalise_sample(df, reference = "A", id_column = "Sample")
-  ref_row <- df[df$Sample == "A", ]
+  result <- normalise_sample(df, reference = "A", id_column = "ID")
+  ref_row <- df[df$ID == "A", ]
   expect_equal(result$La, df$La / ref_row$La)
   expect_equal(result$Ce, df$Ce / ref_row$Ce)
-  expect_error(normalise_sample(df, reference = "Z", id_column = "Sample"))
+  expect_error(normalise_sample(df, reference = "Z", id_column = "ID"))
 
   df_dup <- rbind(df, df[1, ])
-  expect_error(normalise_sample(df_dup, reference = "A", id_column = "Sample"))
+  expect_error(normalise_sample(df_dup, reference = "A", id_column = "ID"))
   expect_error(normalise_sample(df, reference = "A", id_column = "nonexistent"))
 })
 
 # normalise_data wrapper
 
 test_that("normalise_data dispatches correctly", {
-  expect_equal(normalise_data(df, type = "geochem", reference = "chondrite"), normalise_geochem(df, "chondrite"))
-  expect_equal(normalise_data(df, type = "hundred"), normalise_100(df))
-  expect_equal(normalise_data(df, type = "element", reference = "La"), normalise_element(df, "La"))
-  expect_equal(normalise_data(df, type = "sample", reference = "A", id_column = "Sample"), normalise_sample(df, "A", id_column = "Sample"))
+  expect_equal(
+    normalise_data(df, type = "geochem", reference = "chondrite"),
+    normalise_geochem(df, "chondrite")
+  )
+  expect_equal(
+    normalise_data(df, type = "hundred"),
+    normalise_100(df)
+  )
+  expect_equal(
+    normalise_data(df, type = "element", reference = "La"),
+    normalise_element(df, "La")
+  )
+  expect_equal(
+    normalise_data(df, type = "sample", reference = "A", id_column = "ID"),
+    normalise_sample(df, "A", id_column = "ID")
+  )
 
   # errors
   expect_error(normalise_data(df, type = "wrong"))
