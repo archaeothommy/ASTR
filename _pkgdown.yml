@@ -65,6 +65,7 @@ reference:
   desc: >
     Functions for plotting data
   contents:
+  - geom_spider
   - geom_kde2d
   - geom_sk_lines
 - title: Data
