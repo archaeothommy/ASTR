@@ -1,33 +1,33 @@
-#' Find endmembers from a list of LIA points.
+#' Find endmembers from a list of lead isotope data points.
 #'
-#' @description
-#' Finds endmembers from a set of lead isotope points using principal component
-#' analysis and the geochron slope according to the two-stage model by
-#' Stacy and Kramers (1975), following the process outlined in Shnyr et al. (2026).
+#' @description Finds endmembers from a set of lead isotope data using principal
+#' component analysis and the geochron slope according to the two-stage model by
+#' Stacy and Kramers (1975), following the process outlined in Shnyr et al.
+#' (2026).
 #'
-#' @param x ASTR object containing 206Pb/204Pb, 207Pb/204Pb, and 208Pb/204Pb isotope ratios.
-#' @param tolerance Vector of length two, with corresponding tolerance values for group 1 and group
-#'  2 for points considered to lie on the respective geochron lines.
-#'      (Default c(0.01, 0.01))
+#' @param x ASTR object containing 206Pb/204Pb, 207Pb/204Pb, and 208Pb/204Pb
+#'   isotope ratios.
+#' @param tolerance Vector of length two, with corresponding tolerance values
+#'   for group 1 and group 2 for points considered to lie on the respective
+#'   geochron lines, default is `c(0.01, 0.01)`.
 #' @param clamp Limit filter for points away from the principal component end
-#' based on Euclidean distance. (Default c(Inf, Inf))
+#'   based on Euclidean distance, default is `c(Inf, Inf)`.
 #' @param ... Additional parameters
 #'
-#' @references Shnyr, E., Kuflik, T., Desai, K., & Eshel, T. (2026).
-#' Determining the origins of Phoenician silver: Exploring the potential of
-#' machine learning for lead isotope analysis. Journal of Archaeological
-#' Science, 188, 106–499. https://doi.org/10.1016/j.jas.2026.106499
+#' @references Shnyr, E., Kuflik, T., Desai, K., and Eshel, T. (2026)
+#'   Determining the origins of Phoenician silver: Exploring the potential of
+#'   machine learning for lead isotope analysis. Journal of Archaeological
+#'   Science 188, pp. 106–499. <https://doi.org/10.1016/j.jas.2026.106499>
 #'
-#' @returns
-#' An [ASTR object][ASTR] with additional class attribute
-#' `ASTR_Pbiso_endmembr`. The output is an object of the
-#' same type including the ID column, the contextual columns, the lead isotope
-#' ratios used for calculation of the age model parameters,
-#' and the endmember groups. In all other cases, the data frame provided as input
-#' with columns added for the calculated endmember groups.
+#' @returns An [ASTR object][ASTR] with additional class attribute
+#' `ASTR_Pbiso_endmembr`. The output is an object of the same type including the
+#' ID column, the contextual columns, the lead isotope ratios used for
+#' calculation of the age model parameters, and the endmember groups. In all
+#' other cases, the data frame provided as input with columns added for the
+#' calculated endmember groups.
 #'
-#' Endmember groups consist of group1, group2, and groupmix.
-#' groupmix represents the values along the mixing line.
+#' Endmember groups consist of group1, group2, and groupmix. groupmix represents
+#' the values along the mixing line.
 #'
 #' @family Pb isotope functions
 #'
@@ -46,11 +46,14 @@ pb_iso_endmembers <- function(x, ...) {
 #' # No clamping
 #' no_clamp <- pb_iso_endmembers(tel_dor)
 #' no_clamp[no_clamp$end_membr == "group2", ]
+#'
 #' # Clamping reduces the group size by distance from the principal endmember
 #' clamp <- pb_iso_endmembers(tel_dor, clamp = c(Inf, 0.1))
 #' clamp[clamp$end_membr == "group2", ]
-#' # Reducing tolerance values narrows the grouping around the geocron
+#'
+#' # Reducing tolerance values narrows the grouping around the geochron
 #' pb_iso_endmembers(tel_dor, tolerance = c(0.001, 0.001))
+#'
 pb_iso_endmembers.ASTR <- function(x,
                                    tolerance = c(0.01, 0.01),
                                    clamp = c(Inf, Inf),
@@ -80,7 +83,7 @@ pb_iso_endmembers.ASTR <- function(x,
     pc1_var <- pca_summary$importance[["Cumulative Proportion", "PC1"]]
 
     if (pc1_var < 0.95) {
-      message("PC1 represents less than 95% of the Variance. There may be more than two endmembers.")
+      message("PC1 represents less than 95% of the variance. There may be more than two endmembers.")
       print(pca_summary)
     }
 

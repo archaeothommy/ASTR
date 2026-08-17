@@ -18,19 +18,17 @@ library(ASTR)
 
 # Introduction
 
-Provenance studies using lead isotope analysis uses three ratios of the four naturally occuring
-isotopes of lead. These are: `206Pb/204Pb`, `207Pb/204Pb`, `208Pb/204Pb`.
+Provenance studies using lead isotope analysis use three ratios of the four naturally occurring lead isotopes. 
+These are: `206Pb/204Pb`, `207Pb/204Pb`, `208Pb/204Pb`.
 
-The isotopic compositions in LIA are initially represented in a 
-three dimensional coordinate system [@albarede24].
+The isotopic compositions in LIA are initially represented in a three dimensional coordinate system [@albarede24].
 
-However, current approaches to lead isotope analysis rely heavily on visual inspection or simple distance based metrics, methods that struggle to capture the complex structure and overlaps within large isotopic datasets. As a result, provenance interpretations often differ substantially between researchers, even when studying the same hoards. By contrast, an algorithmic framework provides a systematic, data driven alternative that detects patterns, reduces overlaps, and minimizes subjective interpretation. This shift not only improves reproducibility but also opens the door to identifying previously unrecognised ore sources [@shnyr26].
+However, current approaches to lead isotope analysis, such as amalia(), rely heavily on visual inspection or simple distance-based metrics, methods that struggle to capture the complex structure and overlaps within large isotopic datasets. As a result, provenance interpretations often differ substantially between researchers, even when studying the same assemblages. By contrast, an algorithmic framework provides a systematic, data-driven alternative that detects patterns, reduces overlaps, and minimizes subjective interpretation. This shift not only improves reproducibility but also opens the door to identifying previously unrecognised ore sources [@shnyr26].
 
-The lead isotope provenance functions follow 
-[the ASTR schema](VG.ASTRschema.0.0.2.html) and only accepts ASTR objects.
+The lead isotope provenance functions follow the [ASTR schema](VG.ASTRschema.0.0.2.html) and only accept ASTR objects.
 Working with ASTR objects is described [here](ASTR.showcase.html)
 
-For the purposes of demonstration, lead isotope data from the Tel Dor silver hoards will be used [@shnyr26] as sample data, and a modified [GlobaLID database](https://globalid.dmt-lb.de/), containing lead isotope ratios grouped by the Political province/region variable, will be used as reference data.
+For the purposes of demonstration, lead isotope data from the Tel Dor silver hoards will be used as sample data [@shnyr26], and a modified [GlobaLID database](https://globalid.dmt-lb.de/), containing lead isotope ratios grouped by the Political province/region variable, will be used as reference data.
 
 ```{R tel_dor demo}
 tel_dor
@@ -43,16 +41,13 @@ GlobaLID_ASTR
 # Provenance functions
 
 There are two main methods which can be used for provenance analysis.
-The first is the standard Euclidean distance function, with an added mass 
-fractionation correction [@albarede24], and the second is a machine learning
-methods, where pretrained a extreme gradient boosting (XGBoost) model is used to obtain provenance probabilities.
-In both case we use both cases, sample and reference data are provided
-ASTR obects [@shnyr26].
+The first is the standard Euclidean distance function, with an added mass fractionation correction [@albarede24], and the second is a machine learning method, where a pre-trained extreme gradient boosting (XGBoost) model is used to obtain provenance probabilities [@shnyr26].
+In both cases, sample and reference data are provided as ASTR objects.
 
 ## Creating reference data object
-Before using the functions, the reference data must be transformed into an `ASTR_Pbiso_ref_data` obtject. This can be achieved using the `as_pbiso_ref_data()` function, which removes all variables except the `ASTR_context` designated as the grouping variable and the lead isotope ratios.
+Before using the functions, the reference data must be transformed into an `ASTR_Pbiso_ref_data` object. This can be achieved using the `as_pbiso_ref_data()` function, which removes all variables except the `ASTR_context` designated as the grouping variable and the lead isotope ratios.
 The reference dataset can sometimes contain groups with too few samples for reliable analysis. It is therefore advisable to exclude these groups from the reference dataset.
-The `min_groupsize` aargument can be used to set an integer cutoff value. Only groups containing at least `min_groupsize` samples will be retained.
+The `min_groupsize` argument can be used to set an integer cutoff value. Only groups containing at least `min_groupsize` samples will be retained.
 
 ```{R as_pbiso_ref_data demo}
 GlobalLID_ASTR_ref <- as_pbiso_ref_data(GlobaLID_ASTR, group = "Political province/region", min_groupsize = 5)
@@ -61,35 +56,50 @@ GlobalLID_ASTR_ref
 
 ## Standard Euclidean distance
 
-The standard model for estimating three dimensional distances for lead isotope values involves measuring the Euclidean distance between two vectors, $\vec{x}$ and $\vec{x}'$. This calculation follows the established formula:$$d(\vec{x}, \vec{x}') = \sqrt{\sum_{i=1}^{n} (x_i - x'_i)^2}$$
+The standard model for estimating three dimensional distances for lead isotope values involves measuring the Euclidean distance between two vectors, $\vec{x}$ and $\vec{x'}$. This calculation follows the established formula:
 
-This is the method used by the function `pb_iso_prov_dist()` when the `dist_type` value is set to `"ed"` which stands for 'Euclidian distance'.
+$$d(\vec{x}, \vec{x'}) = \sqrt{\sum_{i=1}^{n} (x_i - x'_i)^2}$$
 
-According to @A.D.B+24, the standard method fails to account for statistical errors. These errors are addressed by weighting the data with the full covariance matrix $W$ of the NIST 981 lead isotope reference material. The adjusted distance is calculated as:$$d = \sqrt{(\mathbf{x} - \mathbf{x}')^T W^{-1} (\mathbf{x} - \mathbf{x}')}$$. In this formula, $T$ denotes the transpose of the vector.
+This is the method used by the function `pb_iso_prov_dist()` when the `dist_type` value is set to `"ed"`, which stands for 'Euclidean distance'.
+
+According to @A.D.B+24, the standard method fails to account for statistical errors. These errors are addressed by weighting the data with the full covariance matrix $W$ of the NIST 981 lead isotope reference material. The adjusted distance is calculated as:
+
+$$d = \sqrt{(\mathbf{x} - \mathbf{x}')^T W^{-1} (\mathbf{x} - \mathbf{x}')}$$. 
+
+In this formula, $T$ denotes the transpose of the vector.
 
 ```{R euc_dis function demo}
 euc_dist(tel_dor, GlobalLID_ASTR_ref, .n = 1)
 ```
 
-## Algorithm accounting for mass dependant fractionation
+## Algorithm accounting for mass dependent fractionation
 
-Recently, @albarede24 introduced a Pb-isotope provenance algorithm that significantly improves the correction of mass-dependent fractionation, a long standing challenge in lead isotope analysis.
+Recently, @albarede24 introduced a Pb isotope provenance algorithm that significantly improves the correction of mass-dependent fractionation, a long standing challenge in lead isotope analysis.
 
-The methodology utilizes the distance $d_i$ between an artifact and the mass dependent fractionation line passing through ore $i$. This is implemented by setting the dist_type parameter to "mfd". Provided that lead isotope ratios differ by less than one decimal point, the respective fractionation lines are considered parallel. 
+The methodology utilizes the distance $d_i$ between an artifact and the mass-dependent fractionation line passing through ore $i$. This is implemented by setting `dist_type` to `"mfd"`. Provided that lead isotope ratios differ by less than one decimal point, the respective fractionation lines are considered parallel. 
 
-The distance $d_i$ is computed using the vector $\vec{\Delta X_i} = (\vec{x}_i - \vec{x}_0)$, where $\vec{x}_0$ represents the artifact and $\vec{x}_i$ represents the ore.The artifact is represented as: $$\vec{x}_0=\left[\left(^{206}Pb/^{204}Pb\right)_0,\left(^{207}Pb/^{204}Pb\right)_0,\left(^{208}Pb/^{204}Pb\right)_0\right]$$
+The distance $d_i$ is computed using the vector $\vec{\Delta X_i} = (\vec{x}_i - \vec{x}_0)$, where $\vec{x}_0$ represents the artifact and $\vec{x}_i$ represents the ore.The artifact is represented as:
+
+$$\vec{x}_0=\left[\left(^{206}Pb/^{204}Pb\right)_0,\left(^{207}Pb/^{204}Pb\right)_0,\left(^{208}Pb/^{204}Pb\right)_0\right]$$
 
 The ore is represented as:
+
 $$\vec{x}_i=\left[\left(^{206}Pb/^{204}Pb\right)_i,\left(^{207}Pb/^{204}Pb\right)_i,\left(^{208}Pb/^{204}Pb\right)_i\right]$$
 
-The mass-dependent fractionation line is defined by the vector $\vec{v}$:$$\vec{v}=\left[2\left(^{206}Pb/^{204}Pb\right)_0,3\left(^{207}Pb/^{204}Pb\right)_0,4\left(^{208}Pb/^{204}Pb\right)_0\right]$$
+The mass-dependent fractionation line is defined by the vector $\vec{v}$:
 
-The digits in $\vec{v}$ correspond to the atomic mass differences of the isotopes. With $\vec{n} = \vec{v}/||\vec{v}||$ as the unit vector, the distance $d_i$ is calculated using the cross-product:$$d_i = ||\vec{\Delta X_i} \times \vec{n}||$$
+$$\vec{v}=\left[2\left(^{206}Pb/^{204}Pb\right)_0,3\left(^{207}Pb/^{204}Pb\right)_0,4\left(^{208}Pb/^{204}Pb\right)_0\right]$$
+
+The digits in $\vec{v}$ correspond to the atomic mass differences of the isotopes. With $\vec{n} = \vec{v}/||\vec{v}||$ as the unit vector, the distance $d_i$ is calculated using the cross-product:
+
+$$d_i = ||\vec{\Delta X_i} \times \vec{n}||$$
 
 The fractionation factor $f_i$ is computed as a dot product:
+
 $$f_i = \vec{\Delta X_i} \cdot \vec{n}$$
 
 To obtain a dimensionless distance, the error matrix $W$ is defined as:
+
 $$W=
 \begin{bmatrix}
 2x^*_x & 0 & 0\\
@@ -107,14 +117,18 @@ $$W=
 0 & 0 & 4x^*_z\\
 \end{bmatrix}$$
 
-The outer matrices are diagonal standard deviation matrices for common lead, with a fractionation factor $s$ of 0.001. Squared distances $|d|^2$ are normalized to the two dimensional shadow of $W$ perpendicular to $\vec{n}$. This requires Gram Schmidt orthogonalization to find perpendicular vectors. Since $W$ is derived from reference materials, this metric is not a formal Mahalanobis distance. Normalized squared distances follow a chi squared distribution with two degrees of freedom. Consequently, ores with $|d|^2$ values exceeding 5.99 are rejected at the 95% confidence level.
+The outer matrices are diagonal standard deviation matrices for common lead, with a fractionation factor $s$ of 0.001. 
+Squared distances $|d|^2$ are normalised to the two dimensional shadow of $W$ perpendicular to $\vec{n}$. 
+This requires Gram Schmidt orthogonalisation to find perpendicular vectors. 
+Since $W$ is derived from reference materials, this metric is not a formal Mahalanobis distance. 
+Normalised squared distances follow a chi squared distribution with two degrees of freedom. 
+Consequently, ores with $|d|^2$ values exceeding 5.99 are rejected at the 95% confidence level.
 
 ```{R mf_dist function demo}
 mf_dist(tel_dor, GlobalLID_ASTR_ref, .n = 1, s = 0.001)
 ```
 
-The `pb_iso_prov_dist()` provides a wrapper for them and allows to calculate all age models simultaneously. This an all functions also use the `as_pbiso_ref_data()`
-function, regular `ASTR objects` to lead isotope reference data.
+The `pb_iso_prov_dist()` provides a wrapper for them and allows to calculate all age models simultaneously. This an all functions also use the `as_pbiso_ref_data()` function, regular `ASTR objects` to lead isotope reference data.
 
 ```{R pb_iso_prov_dist function demo}
 pb_iso_prov_dist(tel_dor, GlobaLID_ASTR, ref_group = "Political province/region",
@@ -125,9 +139,10 @@ pb_iso_prov_dist(tel_dor, GlobaLID_ASTR, ref_group = "Political province/region"
 
 Models trained using `pb_iso_train_data()` go through a data processing pipeline 
 as outlined by [@shnyr26]:
-- Outlier identification
-- SMOTE data imputation
-- XGBoost Classification and model training.
+
+* Outlier identification
+* SMOTE data imputation
+* XGBoost Classification and model training.
 
 ### Outlier identification
 
