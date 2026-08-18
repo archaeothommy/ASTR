@@ -4,7 +4,7 @@
 \alias{pb_iso_train_data}
 \alias{pb_iso_train_data.ASTR_Pbiso_ref_data}
 \alias{pb_iso_train_data.ASTR}
-\title{Train XGBOOST Model}
+\title{Train XGBoost model}
 \usage{
 pb_iso_train_data(ref, ...)
 
@@ -35,126 +35,125 @@ pb_iso_train_data(ref, ...)
 )
 }
 \arguments{
-\item{ref}{ref \code{ASTR} object containing
-206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb or \code{ASTR_Pbiso_ref_data} object}
+\item{ref}{\code{ASTR} object containing 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb or
+\code{ASTR_Pbiso_ref_data} object.}
 
 \item{...}{
-  Arguments passed on to \code{\link[dbscan:dbscan]{dbscan::dbscan}}, \code{\link[xgboost:xgb.train]{xgboost::xgb.train}}
+  Arguments passed on to \code{\link[dbscan:dbscan]{dbscan::dbscan}}, \code{\link[XGBoost:xgb.train]{XGBoost::xgb.train}}
   \describe{
     \item{\code{weights}}{numeric; weights for the data points. Only needed to perform
 weighted clustering.}
     \item{\code{borderPoints}}{logical; should border points be assigned to clusters.
 The default is \code{TRUE} for regular DBSCAN. If \code{FALSE} then border
 points are considered noise (see DBSCAN* in Campello et al, 2013).}
-    \item{\code{early_stopping_rounds}}{Number of boosting rounds after which training will be stopped
-if there is no improvement in performance (as measured by the evaluatiation metric that is
-supplied or selected by default for the objective) on the evaluation data passed under
-\code{evals}.
-
-Must pass \code{evals} in order to use this functionality. Setting this parameter adds the
-\code{\link[xgboost:xgb.cb.early.stop]{xgb.cb.early.stop()}} callback.
-
-If \code{NULL}, early stopping will not be used.}
-    \item{\code{maximize}}{If \code{feval} and \code{early_stopping_rounds} are set, then this parameter must be set as well.
-When it is \code{TRUE}, it means the larger the evaluation score the better.
-This parameter is passed to the \code{\link[xgboost:xgb.cb.early.stop]{xgb.cb.early.stop()}} callback.}
   }}
 
-\item{.minSize}{Minimum number of samples in group to be used for clustering (Default = 20).}
+\item{.minSize}{Minimum number of samples in group to be used for clustering,
+default value is \code{20}.}
 
-\item{.minPts_fac}{scaling factor minimum needed points from each group,
-ranging from 0:1. (Default = 0.1)}
+\item{.minPts_fac}{Scaling factor for the minimum number of points needed
+from each group, ranging from 0 to 1, default value is \code{0.1}.}
 
-\item{.eps}{size (radius) of the epsilon neighbourhood. (Default = 0.18)}
+\item{.eps}{Size (radius) of the epsilon neighbourhood, default value is
+\code{0.18}.}
 
-\item{.eta}{Step size shrinkage used in update to prevent over fitting.
-After each boosting step, we can directly get the weights of new features,
-and eta shrinks the feature weights to make the boosting process more conservative. (Default = 0.1)}
+\item{.eta}{Step size shrinkage used in update to prevent overfitting. After
+each boosting step, we can directly get the weights of new features, and
+eta shrinks the feature weights to make the boosting process more
+conservative. Default value is \code{0.1}.}
 
-\item{.max_depth}{Maximum depth of a tree.
-Increasing this value will make the model more complex and more likely to over fit.
-0 indicates no limit on depth. Beware that XGBoost aggressively consumes memory when training a deep tree.
-"exact" tree method requires non-zero value. (Default = 6)}
+\item{.max_depth}{Maximum depth of a tree. Increasing this value will make
+the model more complex and more likely to overfit. Zero indicates no limit
+on depth. Beware that XGBoost aggressively consumes memory when training a
+deep tree. "exact" tree method requires non-zero value. Default value is
+\code{6}.}
 
-\item{.nrounds}{Max number of boosting iterations. (Default = 100)}
+\item{.nrounds}{Maximum number of boosting iterations, default value is
+\code{100}.}
 
-\item{nthread}{Number of threads for parallel processing. When choosing it,
-please keep thread contention and hyper threading in mind. (Default = 4)}
+\item{nthread}{Integer setting the number of threads for parallel processing.
+When choosing it, please keep thread contention and hyper threading in
+mind. Default value is \code{4L}.}
 
-\item{ref_group}{Name of the column containing isotope groups as character string.}
+\item{ref_group}{Character string with name of the column containing isotope
+groups.}
 
-\item{min_groupsize}{Integer value for the minimum number samples in a group. (Default = 5)}
+\item{min_groupsize}{Integer value for the minimum number of samples in a
+group, default value is \code{5}.}
 }
 \value{
-List of xgboot.model objects.
+List of XGBoost model objects.
 }
 \description{
-Trains XGBOOST model for predictive isotope analysis using DBSCAN clustering.
-SMOTE data imputation for training data set, and XGBOOST, following the method
-of Shnyr et.al (2026)
+Trains an XGBoost model for predictive isotope analysis using DBSCAN
+clustering. SMOTE data imputation for the training data set and XGBoost,
+following the method of Shnyr et al. (2026).
 }
 \details{
-The Machine learning workflow as descrived by (Shnyr et al., 2026)
-for data prepraation, clustering, class balanceing, classifications are dissucussed here.
+The Machine learning workflow described by Shnyr et al. (2026) for
+data preparation, clustering, class balancing, and classification is
+discussed here.
 }
-\section{DBSCAN clustering and outlier identification}{
-
-Density-Based Spatial Clustering of Applications with Noise (DBSCAN)
-algorithm to identify outliers and subgroup patterns. This method facilitated
-outlier removal and cluster formation within lead isotopic data, effectively
+\section{\emph{DBSCAN clustering and outlier identification}}{
+ The Density-Based
+Spatial Clustering of Applications with Noise (DBSCAN) algorithm is used to
+identify outliers and subgroup patterns. This method facilitates outlier
+removal and cluster formation within lead isotopic data, effectively
 reducing inter-regional overlaps. Systematic evaluation of the neighborhood
 radius (eps) utilized the Silhouette Score and Davies–Bouldin Index. The
-optimal parameter, eps = 0.18, yielded a Silhouette Score of 0.691 and a
+optimal parameter, \code{eps = 0.18}, yielded a Silhouette Score of 0.691 and a
 Davies–Bouldin Index of 0.347. This result indicates the formation of
 well-separated, compact clusters. The minimum points parameter (minPts) was
-dynamically established at 10\\% of the total samples per region. This
+dynamically established at 10\% of the total samples per region. This
 strategy adapts the density threshold to varying sample sizes, adhering to
 established proportional scaling practices. To ensure reliability, analysis
-was restricted to regions with >= 20 samples. This constraint successfully
+was restricted to regions with ≥ 20 samples. This constraint successfully
 minimized noise-related bias. Finally, regions forming multiple clusters
-received systematic labels, while single-cluster regions remained unassigned.
+received systematic labels, while single-cluster regions remained
+unassigned.
 }
 
-\section{SMOTE application}{
-
-
-The Synthetic Minority Over-sampling Technique (SMOTE) generates synthetic
-data points for the minority class through interpolation. This process
-balances class distribution and enhances learning by introducing variety
-while reducing overfitting risks. This study transformed the dataset into a
-binary classification problem. Synthetic sample counts were dynamically
-adjusted based on minority cluster density to maintain appropriate balance.
-This step mitigated class imbalance, preventing predictive bias and
-improving classifier performance.
+\section{\emph{SMOTE application}}{
+ The Synthetic Minority Over-sampling Technique
+(SMOTE) generates synthetic data points for the minority class through
+interpolation. This process balances class distribution and enhances
+learning by introducing variety while reducing overfitting risks. This
+study transformed the data set into a binary classification problem.
+Synthetic sample counts were dynamically adjusted based on minority cluster
+density to maintain appropriate balance. This step mitigated class
+imbalance, preventing predictive bias and improving classifier performance.
 }
 
-\section{XGBoost Model training}{
-
-XGBoost algorithm was used to train a binary classification model using
-three isotopic ratios as input features. The regional cluster names derived
-from DBSCAN served as target labels. The re sampled dataset was partitioned
-into training and testing sets, treating each cluster as an independent
-classification problem. This iterative process involved data encoding, SMOTE
-application, and individual XGBoost model training for every cluster. Final
-results demonstrate varying probabilities for potential clusters as the
-definitive source for the sample group.
+\section{\emph{XGBoost model training}}{
+ XGBoost algorithm was used to train a
+binary classification model using three isotopic ratios as input features.
+The regional cluster names derived from DBSCAN served as target labels. The
+resampled data set was partitioned into training and testing sets, treating
+each cluster as an independent classification problem. This iterative
+process involved data encoding, SMOTE application, and individual XGBoost
+model training for every cluster. Final results demonstrate varying
+probabilities for potential clusters as the definitive source for the
+sample group.
 }
 
 \examples{
-# Create a 'ASTR_Pbiso_ref_data' object
+# Create an 'ASTR_Pbiso_ref_data' object
 GlobaLID_ASTR_ref <- as_pbiso_ref_data(GlobaLID_ASTR,
                   names(GlobaLID_ASTR)[[2]],
                   min_groupsize = 5)
-# Train machine learning modle
+
+# Train machine learning model
 \dontrun{ml_model <- pb_iso_train_data(GlobaLID_ASTR_ref)}
 
-# Predict using pre-trianed modle
+# Predict using a pre-trianed model
 pb_iso_prov_predict(tel_dor, model_list = ml_model, .top = 1)
+
 }
 \references{
-Shnyr, E., Kuflik, T., Desai, K., & Eshel, T. (2026).
-Determining the origins of Phonetician silver: Exploring the potential of machine learning for lead isotope analysis.
-Journal of Archaeological Science, 188, 106–499. https://doi.org/10.1016/j.jas.2026.106499
+Shnyr, E., Kuflik, T., Desai, K., and Eshel, T. (2026)
+Determining the origins of Phoenician silver: Exploring the potential of
+machine learning for lead isotope analysis. Journal of Archaeological
+Science 188, pp. 106–499. \url{https://doi.org/10.1016/j.jas.2026.106499}
 }
 \seealso{
 Other Pb isotope functions:

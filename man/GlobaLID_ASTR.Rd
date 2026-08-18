@@ -7,10 +7,10 @@
 \format{
 ASTR object with 1 contextual and 3 Pb Isotope variables
 \describe{
-\item{Political province/regions}{Regional grouping of lead isotope data}
-\item{206Pb/204Pb}{Lead Isotope ratio of 206Pb/204Pb}
-\item{207Pb/204Pb}{Lead Isotope ratio of 207Pb/204Pb}
-\item{208Pb/204Pb}{Lead Isotope ratio of 208Pb/204Pb}
+\item{Political province/regions}{Regional grouping of lead isotope data.}
+\item{206Pb/204Pb}{Lead isotope ratio of 206Pb/204Pb.}
+\item{207Pb/204Pb}{Lead isotope ratio of 207Pb/204Pb.}
+\item{208Pb/204Pb}{Lead isotope ratio of 208Pb/204Pb.}
 }
 }
 \source{
@@ -20,7 +20,7 @@ ASTR object with 1 contextual and 3 Pb Isotope variables
 GlobaLID_ASTR
 }
 \description{
-ASTR object containing Lead isotope data along with "Political province/regions"
-as grouping variable.
+ASTR object containing lead isotope data along with "Political province/regions"
+as a grouping variable.
 }
 \keyword{datasets}

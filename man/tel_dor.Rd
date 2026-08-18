@@ -3,28 +3,27 @@
 \docType{data}
 \name{tel_dor}
 \alias{tel_dor}
-\title{LIA points of Silver Hoards from Israel}
+\title{LIA points of silver hoard from Tell Dor (Israel)}
 \format{
-ASTR object with 3 Pb Isotope variables
+ASTR object with 3 Pb isotope variables
 \describe{
-\item{206Pb/204Pb}{Lead Isotope ratio of 206Pb/204Pb}
-\item{207Pb/204Pb}{Lead Isotope ratio of 207Pb/204Pb}
-\item{208Pb/204Pb}{Lead Isotope ratio of 208Pb/204Pb}
+\item{206Pb/204Pb}{Lead isotope ratio of 206Pb/204Pb.}
+\item{207Pb/204Pb}{Lead isotope ratio of 207Pb/204Pb.}
+\item{208Pb/204Pb}{Lead isotope ratio of 208Pb/204Pb.}
 }
 }
 \source{
-Eshel, T., Erel, Y., Yahalom-Mack, N., Tirosh, O., & Gilboa, A.
+Eshel, T., Erel, Y., Yahalom-Mack, N., Tirosh, O., and Gilboa, A.
 (2019). Lead isotopes in silver reveal earliest Phoenician quest for metals
-in the west Mediterranean. Proceedings of the National Academy of Sciences,
-116(13), 6007–6012.
-\href{https://doi.org/10.1073/pnas.1817951116}{10.1073/pnas.1817951116}
+in the west Mediterranean. Proceedings of the National Academy of Sciences
+116(13), 6007–6012. \url{https://doi.org/10.1073/pnas.1817951116}
 }
 \usage{
 tel_dor
 }
 \description{
-Lead Isotope ratios of a Phoenician Silver Hoard from Tel Dor.
-Reference Data set of Isotope rations using \code{\link[=as_ASTR]{as_ASTR()}}
+Lead isotope ratios of a Phoenician silver hoard from Tel Dor.
+Reference data set of isotope ratios using \code{\link[=as_ASTR]{as_ASTR()}}
 }
 \seealso{
 Other Pb isotope functions:

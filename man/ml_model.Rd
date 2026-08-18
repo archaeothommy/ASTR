@@ -3,7 +3,7 @@
 \docType{data}
 \name{ml_model}
 \alias{ml_model}
-\title{Machine Learning model for lead isotope provenaces}
+\title{Machine learning model for lead isotope provenance.}
 \format{
 A list of xgb models, with length equal to number of groups.
 }

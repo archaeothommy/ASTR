@@ -3,41 +3,41 @@
 \name{pb_iso_endmembers}
 \alias{pb_iso_endmembers}
 \alias{pb_iso_endmembers.ASTR}
-\title{Find Endmembers from a list of LIA points}
+\title{Find endmembers from a list of lead isotope data points.}
 \usage{
 pb_iso_endmembers(x, ...)
 
 \method{pb_iso_endmembers}{ASTR}(x, tolerance = c(0.01, 0.01), clamp = c(Inf, Inf), ...)
 }
 \arguments{
-\item{x}{ASTR object containing
-206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb isotope ratios.}
+\item{x}{ASTR object containing 206Pb/204Pb, 207Pb/204Pb, and 208Pb/204Pb
+isotope ratios.}
 
-\item{...}{Additional Parameters}
+\item{...}{Additional parameters}
 
-\item{tolerance}{Vector of length two, with corresponding group 1 and group
-2 tolerance value for points considered to be intercepted.
-(Default c(0.01, 0.01))}
+\item{tolerance}{Vector of length two, with corresponding tolerance values
+for group 1 and group 2 for points considered to lie on the respective
+geochron lines, default is \code{c(0.01, 0.01)}.}
 
-\item{clamp}{Limit filter for points away from the principle component end
-based on Euclidean distance, (Default c(Inf, Inf))}
+\item{clamp}{Limit filter for points away from the principal component end
+based on Euclidean distance, default is \code{c(Inf, Inf)}.}
 }
 \value{
-An \link[=ASTR]{ASTR object}, with additional class attribute
-\code{ASTR_Pbiso_endmembr}. The output is an object of the
-same type including the ID column, the contextual columns, the lead isotope
-ratios used for calculation of the age model parameters,
-and the endmember groups. In all other cases, the data frame provided as input
-with columns added for the calculated endmember groups.
+An \link[=ASTR]{ASTR object} with additional class attribute
+\code{ASTR_Pbiso_endmembr}. The output is an object of the same type including the
+ID column, the contextual columns, the lead isotope ratios used for
+calculation of the age model parameters, and the endmember groups. In all
+other cases, the data frame provided as input with columns added for the
+calculated endmember groups.
 
-Endmember groups consist of group1, group2 and groupmix
-groupmix represents the values along the mixing line.
+Endmember groups consist of group1, group2, and groupmix. groupmix represents
+the values along the mixing line.
 }
 \description{
-Finds endmembers from a set of
-Lead Isotope Points using Principle Component
-analysis and the Geochron slope according to the two-stage model by
-Stacy-Kramers 1975, following the process outlined in (Shnyr et al., (2026)
+Finds endmembers from a set of lead isotope data using principal
+component analysis and the geochron slope according to the two-stage model by
+Stacy and Kramers (1975), following the process outlined in Shnyr et al.
+(2026).
 }
 \examples{
 # example code
@@ -46,17 +46,20 @@ pb_iso_endmembers(tel_dor)
 # No clamping
 no_clamp <- pb_iso_endmembers(tel_dor)
 no_clamp[no_clamp$end_membr == "group2", ]
-# Clamping reduces the group size by distance from the principle endmember
+
+# Clamping reduces the group size by distance from the principal endmember
 clamp <- pb_iso_endmembers(tel_dor, clamp = c(Inf, 0.1))
 clamp[clamp$end_membr == "group2", ]
-# Reducing tolerance values narrows the grouping around the Geocron
+
+# Reducing tolerance values narrows the grouping around the geochron
 pb_iso_endmembers(tel_dor, tolerance = c(0.001, 0.001))
+
 }
 \references{
-Shnyr, E., Kuflik, T., Desai, K., & Eshel, T. (2026).
+Shnyr, E., Kuflik, T., Desai, K., and Eshel, T. (2026)
 Determining the origins of Phoenician silver: Exploring the potential of
 machine learning for lead isotope analysis. Journal of Archaeological
-Science, 188, 106–499. https://doi.org/10.1016/j.jas.2026.106499
+Science 188, pp. 106–499. \url{https://doi.org/10.1016/j.jas.2026.106499}
 }
 \seealso{
 Other Pb isotope functions:

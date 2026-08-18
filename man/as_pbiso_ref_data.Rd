@@ -3,35 +3,46 @@
 \name{as_pbiso_ref_data}
 \alias{as_pbiso_ref_data}
 \alias{as_pbiso_ref_data.ASTR}
-\title{Create Reference data object for LIA endmember distance and probability estimate functions.}
+\title{Create reference data object for LIA endmember distance and probability
+estimation functions. Data preprocessing and cleaning ensure the reliability
+and accuracy of provenance analysis. This step results in the removal of all
+NA values from the selected isotope tables and groups. The step should also
+exclude groups with a low number samples (in the case of Shnyr et al. (2026),
+this was 5).}
 \usage{
 as_pbiso_ref_data(x, ...)
 
 \method{as_pbiso_ref_data}{ASTR}(x, group, min_groupsize = 5, ...)
 }
 \arguments{
-\item{x}{ASTR object containing
-206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb isotope ratios.}
+\item{x}{ASTR object containing 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb isotope
+ratios.}
 
-\item{...}{Additional params}
+\item{...}{Additional parameters}
 
-\item{group}{Name of the column containing isotope groups as character string.}
+\item{group}{Name of the column containing isotope groups as character
+string.}
 
-\item{min_groupsize}{Integer value for the minimum number samples in a group. (Default = 5)}
+\item{min_groupsize}{Integer value for the minimum number of samples in a
+group, default value is \code{5}.}
 }
 \value{
-\code{ASTR_Pbiso_ref_data} object with Isotope groupings and Isotope columns of
-206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb.
+\code{ASTR_Pbiso_ref_data} object with isotope groupings and isotope
+columns of 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb.
 }
 \description{
-Data preprocessing and cleaning ensure the reliability and accuracy of provenance analysis.
-This step results in the removal of all NA values from the selected Isotope tables, and groups.
-The step also should exclude the groups which have low sample data (in the case of (Shnyr et al., (2026) it was 5).
+Create reference data object for LIA endmember distance and probability
+estimation functions. Data preprocessing and cleaning ensure the reliability
+and accuracy of provenance analysis. This step results in the removal of all
+NA values from the selected isotope tables and groups. The step should also
+exclude groups with a low number samples (in the case of Shnyr et al. (2026),
+this was 5).
 }
 \examples{
 as_pbiso_ref_data(GlobaLID_ASTR,
                   names(GlobaLID_ASTR)[[2]],
                   min_groupsize = 5)
+
 }
 \seealso{
 Other Pb isotope functions:
