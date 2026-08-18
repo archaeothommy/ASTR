@@ -145,19 +145,16 @@ pb_iso_endmembers.ASTR <- function(x,
     return(x)
   }
 
-  target_cols <- c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")
-  if (!all(target_cols %in% names(x))) {
-    stop("Data set is missing required isotope ratio columns.")
-  }
+  .validate_iso_cols(x)
 
   res <- calc_pb_iso_endmembers(x,
-                                iso_cols = target_cols,
+                                iso_cols = .pb_iso_cols(),
                                 tolerance = tolerance,
                                 clamp = clamp,
                                 ...)
 
   # Assign custom attribute for ASTR method
-  attr(res$end_membr, "ASTR_class") <- "ASTR_context"
+  res <- .tag_astr_context(res, c("end_membr"))
   class(res) <- c("ASTR_Pbiso_endmembr", class(res))
   return(res)
 
