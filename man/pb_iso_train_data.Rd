@@ -91,7 +91,7 @@ mind. Default value is \code{4L}.}
 groups.}
 
 \item{min_groupsize}{Integer value for the minimum number of samples in a
-group, default value is \code{5}.}
+group, default value is \code{5L}.}
 }
 \value{
 List of XGBoost model objects.

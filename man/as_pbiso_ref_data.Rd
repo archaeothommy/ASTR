@@ -12,7 +12,7 @@ this was 5).}
 \usage{
 as_pbiso_ref_data(x, ...)
 
-\method{as_pbiso_ref_data}{ASTR}(x, group, min_groupsize = 5, ...)
+\method{as_pbiso_ref_data}{ASTR}(x, group, min_groupsize = 5L, ...)
 }
 \arguments{
 \item{x}{ASTR object containing 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb isotope
@@ -24,7 +24,7 @@ ratios.}
 string.}
 
 \item{min_groupsize}{Integer value for the minimum number of samples in a
-group, default value is \code{5}.}
+group, default value is \code{5L}.}
 }
 \value{
 \code{ASTR_Pbiso_ref_data} object with isotope groupings and isotope
