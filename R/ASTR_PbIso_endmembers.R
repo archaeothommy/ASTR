@@ -154,7 +154,7 @@ pb_iso_endmembers.ASTR <- function(x,
                                 ...)
 
   # Assign custom attribute for ASTR method
-  res <- .tag_astr_context(res, c("end_membr"))
+  res <- tag_astr_context(res, c("end_membr"))
   class(res) <- c("ASTR_Pbiso_endmembr", class(res))
   return(res)
 

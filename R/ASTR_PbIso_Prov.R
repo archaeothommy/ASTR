@@ -27,16 +27,6 @@
   ref
 }
 
-# Retags new columns as context
-.tag_astr_context <- function(df, cols) {
-  for (col in cols) {
-    if (col %in% names(df)) {
-      attr(df[[col]], "ASTR_class") <- "ASTR_context"
-    }
-  }
-  df
-}
-
 # Checks if required packages are installed and prompts for installation if needed
 .check_required_packages <- function(pkgs) {
   missing_pkgs <- pkgs[!sapply(pkgs, requireNamespace, quietly = TRUE)]
@@ -79,7 +69,7 @@
   final_df <- do.call(rbind, results_list)
   names(final_df)[names(final_df) == "dist_val"] <- dist_col_name
 
-  final_df <- .tag_astr_context(final_df, dist_col_name)
+  final_df <- tag_astr_context(final_df, dist_col_name)
   dplyr::left_join(x, final_df)
 }
 
@@ -651,5 +641,5 @@ pb_iso_prov_predict.ASTR <- function(x,
   res <- dplyr::left_join(x_temp, pred_df, by = dplyr::join_by("row_id"))
   res$row_id <- NULL
 
-  .tag_astr_context(res, c("ml_group", "ml_prob"))
+  tag_astr_context(res, c("ml_group", "ml_prob"))
 }

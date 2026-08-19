@@ -69,9 +69,9 @@ test_that(".ensure_pbiso_ref validates and converts reference objects", {
   expect_s3_class(ref_out, "ASTR_Pbiso_ref_data")
 })
 
-test_that(".tag_astr_context tags specified columns with attribute", {
+test_that("tag_astr_context tags specified columns with attribute", {
   df <- data.frame(a = 1:3, b = 4:6)
-  tagged <- .tag_astr_context(df, c("a", "missing_col"))
+  tagged <- tag_astr_context(df, c("a", "missing_col"))
 
   expect_equal(attr(tagged$a, "ASTR_class"), "ASTR_context")
   expect_null(attr(tagged$b, "ASTR_class"))

@@ -87,3 +87,16 @@ transform_notation <- function(unit) {
   }
   unit
 }
+
+#' Retags new columns as context
+#'
+#' @param df [ASTR object][ASTR]
+#' @param cols vector of column names which will be attributed as 'ASTR_context'
+tag_astr_context <- function(df, cols) {
+  for (col in cols) {
+    if (col %in% names(df)) {
+      attr(df[[col]], "ASTR_class") <- "ASTR_context"
+    }
+  }
+  df
+}
