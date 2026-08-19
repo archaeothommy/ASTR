@@ -62,9 +62,9 @@ $$d(\vec{x}, \vec{x'}) = \sqrt{\sum_{i=1}^{n} (x_i - x'_i)^2}$$
 
 This is the method used by the function `pb_iso_prov_dist()` when the `dist_type` value is set to `"ed"`, which stands for 'Euclidean distance'.
 
-According to @A.D.B+24, the standard method fails to account for statistical errors. These errors are addressed by weighting the data with the full covariance matrix $W$ of the NIST 981 lead isotope reference material. The adjusted distance is calculated as:
+According to @albarede24a, the standard method fails to account for statistical errors. These errors are addressed by weighting the data with the full covariance matrix $W$ of the NIST 981 lead isotope reference material. The adjusted distance is calculated as:
 
-$$d = \sqrt{(\mathbf{x} - \mathbf{x}')^T W^{-1} (\mathbf{x} - \mathbf{x}')}$$. 
+$$d = \sqrt{(x - x')^T W^{-1} (x - x')}$$. 
 
 In this formula, $T$ denotes the transpose of the vector.
 
@@ -118,17 +118,17 @@ $$W=
 \end{bmatrix}$$
 
 The outer matrices are diagonal standard deviation matrices for common lead, with a fractionation factor $s$ of 0.001. 
-Squared distances $|d|^2$ are normalised to the two dimensional shadow of $W$ perpendicular to $\vec{n}$. 
+Squared distances $d^2$ are normalised to the two dimensional shadow of $W$ perpendicular to $\vec{n}$. 
 This requires Gram Schmidt orthogonalisation to find perpendicular vectors. 
 Since $W$ is derived from reference materials, this metric is not a formal Mahalanobis distance. 
 Normalised squared distances follow a chi squared distribution with two degrees of freedom. 
-Consequently, ores with $|d|^2$ values exceeding 5.99 are rejected at the 95% confidence level.
+Consequently, ores with $d^2$ values exceeding 5.99 are rejected at the 95% confidence level.
 
 ```{R mf_dist function demo}
 mf_dist(tel_dor, GlobalLID_ASTR_ref, n = 1, s = 0.001)
 ```
 
-The `pb_iso_prov_dist()` provides a wrapper for them and allows to calculate all age models simultaneously. This an all functions also use the `as_pbiso_ref_data()` function, regular `ASTR objects` to lead isotope reference data.
+The `pb_iso_prov_dist()` provides a wrapper for them and allows to calculate all age models simultaneously. All distance functions use the `as_pbiso_ref_data()` function, regular `ASTR objects` to lead isotope reference data.
 
 ```{R pb_iso_prov_dist function demo}
 pb_iso_prov_dist(tel_dor, GlobaLID_ASTR, ref_group = "Political province/region",

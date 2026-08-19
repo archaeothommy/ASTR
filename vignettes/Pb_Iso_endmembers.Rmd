@@ -31,7 +31,7 @@ Then, assuming that each endmember reflect a single ore deposit or mining distri
 
 # Use of `pb_iso_endmembers()`
 
-A major challenge for reproducibility has been the visual identification of endmember clusters. To address this, [@A.D.G+24] proposed a method using principal component analysis (PCA) on ^204^Pb normalized data to determine the number of endmembers in a sample set. This approach maps the maximum and minimum values of the principal component to the isotope vectors.
+A major challenge for reproducibility has been the visual identification of endmember clusters. To address this, [@albarede24] proposed a method using principal component analysis (PCA) on ^204^Pb normalized data to determine the number of endmembers in a sample set. This approach maps the maximum and minimum values of the principal component to the isotope vectors.
 
 Trends in the three dimensional space of ^206^Pb/^204^Pb, ^207^Pb/^204^Pb, and ^208^Pb/^204^Pb are determined by the principal component analysis scores of each vector $\vec{p}_{i}$ as $[c_1, c_2, c_3]$ using the `stat::prcomp()` function.
 The collection of vectors is considered to represent mixing between two endmembers, $c_a$ and $c_b$, when $c_1$ explains 95\% of the variance of the group,
