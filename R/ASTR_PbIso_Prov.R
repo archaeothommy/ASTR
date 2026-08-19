@@ -33,11 +33,11 @@
                                  dist_matrix,
                                  dist_col_name,
                                  prefix,
-                                 .n) {
+                                 n) {
   results_list <- lapply(seq_len(nrow(dist_matrix)), function(i) {
     query_vals <- x[i, , drop = FALSE]
     row_dists <- dist_matrix[i, ]
-    hit_indices <- order(row_dists)[seq_len(min(.n, length(row_dists)))]
+    hit_indices <- order(row_dists)[seq_len(min(n, length(row_dists)))]
 
     match_ref <- ref[hit_indices, , drop = FALSE]
     names(match_ref) <- paste0(prefix, "_ref_", names(match_ref))
@@ -115,9 +115,9 @@ as_pbiso_ref_data.ASTR <- function(x, group, min_groupsize = 5, ...) {
 #'   isotope ratios as a provenance reference.
 #' @param ref_group Name of the column containing isotope groups as a character
 #'   string.
-#' @param dist_type Distance type to use, simple Euclidean (`"ed"`) or
-#'   mass-fractionation corrected (`"mfd"`).
-#' @param .n Length of result output, default value is `1`.
+#' @param dist_type Distance type to use, simple Euclidean (`"ed"`),
+#'   mass-fractionation corrected (`"mfd"`), or both (`"all"`)
+#' @param n Length of result output, default value is `1`.
 #' @param s Mass fractionation factor, default value is `0.001`.
 #' @param ... Additional parameters.
 #'
@@ -144,10 +144,10 @@ as_pbiso_ref_data.ASTR <- function(x, group, min_groupsize = 5, ...) {
 #'                                    min_groupsize = 5)
 #'
 #' # Euclidean distance
-#' euc_dist(tel_dor, GlobaLID_ASTR_ref, .n = 1)
+#' euc_dist(tel_dor, GlobaLID_ASTR_ref, n = 1)
 #'
 #' # Mass fractionation correction
-#' mf_dist(tel_dor, GlobaLID_ASTR_ref, .n = 1, s = 0.001)
+#' mf_dist(tel_dor, GlobaLID_ASTR_ref, n = 1, s = 0.001)
 #'
 #' # Wrapper function where the reference data is of class 'ASTR_Pb_iso_ref_data'
 #' pb_iso_prov_dist(tel_dor,
@@ -170,16 +170,16 @@ pb_iso_prov_dist.ASTR <- function(x,
                                   ref,
                                   ref_group,
                                   dist_type = c("ed", "mf", "all"),
-                                  .n = 1,
+                                  n = 1,
                                   s = 0.001,
                                   ...) {
   switch(
     dist_type,
-    ed = euc_dist(x, ref, ref_group, .n),
-    mf = mf_dist(x, ref, ref_group, .n, s),
+    ed = euc_dist(x, ref, ref_group, n),
+    mf = mf_dist(x, ref, ref_group, n, s),
     all = {
-      euc <- euc_dist(x, ref, ref_group, .n)
-      mfd <- mf_dist(x, ref, ref_group, .n, s)
+      euc <- euc_dist(x, ref, ref_group, n)
+      mfd <- mf_dist(x, ref, ref_group, n, s)
       full_join(euc, mfd)
     }
   )
@@ -194,7 +194,7 @@ euc_dist <- function(x, ...) {
 
 #' @rdname pb_iso_prov_dist
 #' @export
-euc_dist.ASTR <- function(x, ref, ref_group, .n = 1, ...) {
+euc_dist.ASTR <- function(x, ref, ref_group, n = 1, ...) {
   ref <- .ensure_pbiso_ref(ref, ref_group, ...)
 
   x_mat <- as.matrix(x[, .pb_iso_cols()])
@@ -213,7 +213,7 @@ euc_dist.ASTR <- function(x, ref, ref_group, .n = 1, ...) {
     dist_matrix = dist_matrix,
     dist_col_name = "ed_dist",
     prefix = "ed",
-    .n = .n
+    n = n
   )
 }
 
@@ -228,7 +228,7 @@ mf_dist <- function(x, ...) {
 mf_dist.ASTR <- function(x,
                          ref,
                          ref_group,
-                         .n = 1,
+                         n = 1,
                          s = 0.001,
                          ...) {
 
@@ -274,7 +274,7 @@ mf_dist.ASTR <- function(x,
     dist_matrix = dist_matrix,
     dist_col_name = "mf_dist_sq",
     prefix = "mf",
-    .n = .n
+    n = n
   )
 }
 
@@ -320,7 +320,7 @@ mf_dist.ASTR <- function(x,
 #' @param ... Additional parameters.
 #'
 #' @inheritDotParams dbscan::dbscan weights borderPoints
-#' @inheritDotParams XGBoost::xgb.train early_stopping_rounds maximize
+#' @inheritDotParams xgboost::xgb.train early_stopping_rounds maximize
 #'
 #' @returns List of XGBoost model objects.
 #'

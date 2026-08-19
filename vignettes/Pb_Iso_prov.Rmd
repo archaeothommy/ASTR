@@ -69,7 +69,7 @@ $$d = \sqrt{(\mathbf{x} - \mathbf{x}')^T W^{-1} (\mathbf{x} - \mathbf{x}')}$$.
 In this formula, $T$ denotes the transpose of the vector.
 
 ```{R euc_dis function demo}
-euc_dist(tel_dor, GlobalLID_ASTR_ref, .n = 1)
+euc_dist(tel_dor, GlobalLID_ASTR_ref, n = 1)
 ```
 
 ## Algorithm accounting for mass dependent fractionation
@@ -125,7 +125,7 @@ Normalised squared distances follow a chi squared distribution with two degrees 
 Consequently, ores with $|d|^2$ values exceeding 5.99 are rejected at the 95% confidence level.
 
 ```{R mf_dist function demo}
-mf_dist(tel_dor, GlobalLID_ASTR_ref, .n = 1, s = 0.001)
+mf_dist(tel_dor, GlobalLID_ASTR_ref, n = 1, s = 0.001)
 ```
 
 The `pb_iso_prov_dist()` provides a wrapper for them and allows to calculate all age models simultaneously. This an all functions also use the `as_pbiso_ref_data()` function, regular `ASTR objects` to lead isotope reference data.

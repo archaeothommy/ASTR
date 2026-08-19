@@ -119,7 +119,7 @@ test_that("euc_dist.ASTR calculates Euclidean distances and joins results", {
   query <- make_mock_astr(2, groups = c("Q1", "Q2"))
   ref <- make_mock_astr(10, groups = c("Ref1", "Ref2"))
 
-  res <- euc_dist(query, ref = ref, ref_group = "region", .n = 1)
+  res <- euc_dist(query, ref = ref, ref_group = "region", n = 1)
 
   expect_true("ed_dist" %in% names(res))
   expect_true("ed_ref_region" %in% names(res))
@@ -131,7 +131,7 @@ test_that("mf_dist.ASTR calculates Mass-Fractionation distances", {
   query <- make_mock_astr(2)
   ref <- make_mock_astr(10)
 
-  res <- mf_dist(query, ref = ref, ref_group = "region", .n = 1, s = 0.001)
+  res <- mf_dist(query, ref = ref, ref_group = "region", n = 1, s = 0.001)
 
   expect_true("mf_dist_sq" %in% names(res))
   expect_true("mf_ref_region" %in% names(res))

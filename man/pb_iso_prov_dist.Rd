@@ -16,18 +16,18 @@ pb_iso_prov_dist(x, ...)
   ref,
   ref_group,
   dist_type = c("ed", "mf", "all"),
-  .n = 1,
+  n = 1,
   s = 0.001,
   ...
 )
 
 euc_dist(x, ...)
 
-\method{euc_dist}{ASTR}(x, ref, ref_group, .n = 1, ...)
+\method{euc_dist}{ASTR}(x, ref, ref_group, n = 1, ...)
 
 mf_dist(x, ...)
 
-\method{mf_dist}{ASTR}(x, ref, ref_group, .n = 1, s = 0.001, ...)
+\method{mf_dist}{ASTR}(x, ref, ref_group, n = 1, s = 0.001, ...)
 }
 \arguments{
 \item{x}{ASTR object containing 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb isotope
@@ -41,10 +41,10 @@ isotope ratios as a provenance reference.}
 \item{ref_group}{Name of the column containing isotope groups as a character
 string.}
 
-\item{dist_type}{Distance type to use, simple Euclidean (\code{"ed"}) or
-mass-fractionation corrected (\code{"mfd"}).}
+\item{dist_type}{Distance type to use, simple Euclidean (\code{"ed"}),
+mass-fractionation corrected (\code{"mfd"}), or both (\code{"all"})}
 
-\item{.n}{Length of result output, default value is \code{1}.}
+\item{n}{Length of result output, default value is \code{1}.}
 
 \item{s}{Mass fractionation factor, default value is \code{0.001}.}
 }
@@ -63,10 +63,10 @@ GlobaLID_ASTR_ref <- as_pbiso_ref_data(GlobaLID_ASTR,
                                    min_groupsize = 5)
 
 # Euclidean distance
-euc_dist(tel_dor, GlobaLID_ASTR_ref, .n = 1)
+euc_dist(tel_dor, GlobaLID_ASTR_ref, n = 1)
 
 # Mass fractionation correction
-mf_dist(tel_dor, GlobaLID_ASTR_ref, .n = 1, s = 0.001)
+mf_dist(tel_dor, GlobaLID_ASTR_ref, n = 1, s = 0.001)
 
 # Wrapper function where the reference data is of class 'ASTR_Pb_iso_ref_data'
 pb_iso_prov_dist(tel_dor,

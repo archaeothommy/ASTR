@@ -109,7 +109,7 @@ tag_astr_context <- function(df, cols) {
 #'
 #' @param pkgs character vector of package names
 #'
-#' @keyword internal
+#' @keywords internal
 #'
 check_required_packages <- function(pkgs) {
   missing_pkgs <- pkgs[!sapply(pkgs, requireNamespace, quietly = TRUE)]

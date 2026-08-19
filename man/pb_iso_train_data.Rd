@@ -39,13 +39,25 @@ pb_iso_train_data(ref, ...)
 \code{ASTR_Pbiso_ref_data} object.}
 
 \item{...}{
-  Arguments passed on to \code{\link[dbscan:dbscan]{dbscan::dbscan}}, \code{\link[XGBoost:xgb.train]{XGBoost::xgb.train}}
+  Arguments passed on to \code{\link[dbscan:dbscan]{dbscan::dbscan}}, \code{\link[xgboost:xgb.train]{xgboost::xgb.train}}
   \describe{
     \item{\code{weights}}{numeric; weights for the data points. Only needed to perform
 weighted clustering.}
     \item{\code{borderPoints}}{logical; should border points be assigned to clusters.
 The default is \code{TRUE} for regular DBSCAN. If \code{FALSE} then border
 points are considered noise (see DBSCAN* in Campello et al, 2013).}
+    \item{\code{early_stopping_rounds}}{Number of boosting rounds after which training will be stopped
+if there is no improvement in performance (as measured by the evaluatiation metric that is
+supplied or selected by default for the objective) on the evaluation data passed under
+\code{evals}.
+
+Must pass \code{evals} in order to use this functionality. Setting this parameter adds the
+\code{\link[xgboost:xgb.cb.early.stop]{xgb.cb.early.stop()}} callback.
+
+If \code{NULL}, early stopping will not be used.}
+    \item{\code{maximize}}{If \code{feval} and \code{early_stopping_rounds} are set, then this parameter must be set as well.
+When it is \code{TRUE}, it means the larger the evaluation score the better.
+This parameter is passed to the \code{\link[xgboost:xgb.cb.early.stop]{xgb.cb.early.stop()}} callback.}
   }}
 
 \item{.minSize}{Minimum number of samples in group to be used for clustering,
