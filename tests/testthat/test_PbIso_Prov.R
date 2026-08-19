@@ -77,15 +77,15 @@ test_that("tag_astr_context tags specified columns with attribute", {
   expect_null(attr(tagged$b, "ASTR_class"))
 })
 
-test_that(".check_required_packages handles installed and missing packages", {
+test_that("check_required_packages handles installed and missing packages", {
   # Standard installed packages pass silently
-  expect_silent(.check_required_packages(c("stats", "utils")))
+  expect_silent(check_required_packages(c("stats", "utils")))
 
   # Missing package non-interactive handling
   mockery_env <- new.env()
   rlang::with_interactive(value = FALSE, {
     expect_error(
-      .check_required_packages("nonExistentPackage12345"),
+      check_required_packages("nonExistentPackage12345"),
       "Function requires package\\(s\\): nonExistentPackage12345"
     )
   })
