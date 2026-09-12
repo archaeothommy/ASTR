@@ -248,18 +248,18 @@ mf_dist.ASTR <- function(x,
   for (j in seq_len(nrow(x_mat))) {
     x0 <- x_mat[j, ]
     v <- x0 * c(2, 3, 4)
-    n <- v / sqrt(sum(v^2))
+    n0 <- v / sqrt(sum(v^2))
 
     sd_diag <- diag(c(2, 3, 4) * s * x0)
     W <- sd_diag %*% R %*% sd_diag
 
-    basis1 <- if (abs(n[1]) < 0.9)
+    basis1 <- if (abs(n0[1]) < 0.9)
       c(1, 0, 0)
     else
       c(0, 1, 0)
-    u1 <- basis1 - (sum(basis1 * n)) * n
+    u1 <- basis1 - (sum(basis1 * n0)) * n0
     u1 <- u1 / sqrt(sum(u1^2))
-    u2 <- c(n[2] * u1[3] - n[3] * u1[2], n[3] * u1[1] - n[1] * u1[3], n[1] * u1[2] - n[2] * u1[1])
+    u2 <- c(n0[2] * u1[3] - n0[3] * u1[2], n0[3] * u1[1] - n0[1] * u1[3], n0[1] * u1[2] - n0[2] * u1[1])
     P <- cbind(u1, u2)
 
     W_p_inv <- solve(t(P) %*% W %*% P)

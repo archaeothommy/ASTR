@@ -131,7 +131,7 @@ pb_iso_endmembers.ASTR <- function(x,
     }
 
     if (any(end_group1 %in% end_group2)) {
-      warning("Overlap in endmembers between groups. A lower tolerance value is suggested.")
+      message("Overlap in endmembers between groups. A lower tolerance value is suggested.")
     }
 
     mixing_group <- setdiff(rownames(isotope_matrix), c(end_group1, end_group2))
