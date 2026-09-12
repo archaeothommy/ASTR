@@ -50,7 +50,7 @@ The reference dataset can sometimes contain groups with too few samples for reli
 The `min_groupsize` argument can be used to set an integer cutoff value. Only groups containing at least `min_groupsize` samples will be retained.
 
 ```{R as_pbiso_ref_data demo}
-GlobalLID_ASTR_ref <- as_pbiso_ref_data(GlobaLID_ASTR, group = "Political province/region", min_groupsize = 5)
+GlobalLID_ASTR_ref <- as_pbiso_ref_data(GlobaLID_ASTR, group = "Political province/region", min_groupsize = 5L)
 GlobalLID_ASTR_ref
 ```
 
