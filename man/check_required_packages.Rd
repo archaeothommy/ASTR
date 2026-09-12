@@ -4,7 +4,7 @@
 \alias{check_required_packages}
 \title{Checks if required packages are installed and prompts for installation if needed}
 \usage{
-check_required_packages(pkgs, .reader = readline)
+check_required_packages(pkgs)
 }
 \arguments{
 \item{pkgs}{character vector of package names}

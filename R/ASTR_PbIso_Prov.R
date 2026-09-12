@@ -579,6 +579,8 @@ pb_iso_prov_predict <- function(x, ...) {
 
 #' @rdname pb_iso_prov_predict
 #' @export
+#'
+#' @inherit pb_iso_train_data examples
 pb_iso_prov_predict.ASTR <- function(x,
                                      model_list = NULL,
                                      .top = 1,
