@@ -173,6 +173,7 @@ pb_iso_prov_dist.ASTR <- function(x,
                                   n = 1,
                                   s = 0.001,
                                   ...) {
+  dist_type <- match.arg(dist_type)
   switch(
     dist_type,
     ed = euc_dist(x, ref, ref_group, n),
