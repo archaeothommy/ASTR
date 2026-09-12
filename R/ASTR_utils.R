@@ -87,3 +87,45 @@ transform_notation <- function(unit) {
   }
   unit
 }
+
+#' Retags new columns as context
+#'
+#' @param df [ASTR object][ASTR]
+#' @param cols charater vector of column names.
+#'
+#' @keywords internal
+#'
+tag_astr_context <- function(df, cols) {
+  for (col in cols) {
+    if (col %in% names(df)) {
+      attr(df[[col]], "ASTR_class") <- "ASTR_context"
+    }
+  }
+  df
+}
+
+
+#' Checks if required packages are installed and prompts for installation if needed
+#'
+#' @param pkgs character vector of package names
+#'
+#' @keywords internal
+#'
+check_required_packages <- function(pkgs) {
+  missing_pkgs <- pkgs[!sapply(pkgs, requireNamespace, quietly = TRUE)]
+  if (length(missing_pkgs) > 0) {
+    if (!rlang::is_interactive()) {
+      stop("Function requires package(s): ",
+           paste(missing_pkgs, collapse = ", "))
+    }
+    ans <- readline(sprintf(
+      "Package(s) '%s' required. Install now? [Y/n]: ",
+      paste(missing_pkgs, collapse = ", ")
+    ))
+    if (tolower(ans) %in% c("yes", "y")) {
+      utils::install.packages(missing_pkgs)
+    } else {
+      stop("Please install missing package(s) manually.")
+    }
+  }
+}

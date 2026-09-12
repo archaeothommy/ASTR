@@ -74,8 +74,8 @@ of Archaeological Science 56, pp. 202-209.
 \url{https://doi.org/10.1016/j.jas.2014.12.013}.
 }
 \seealso{
-Other copper alloy classifications: 
-\code{\link{copper_alloy_bb}()},
-\code{\link{copper_alloy_pollard}()}
+Other copper alloy classifications:
+\code{\link[=copper_alloy_bb]{copper_alloy_bb()}},
+\code{\link[=copper_alloy_pollard]{copper_alloy_pollard()}}
 }
 \concept{copper alloy classifications}

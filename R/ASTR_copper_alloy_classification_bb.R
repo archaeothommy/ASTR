@@ -45,12 +45,10 @@
 #' @family copper alloy classifications
 #' @export
 #'
-copper_alloy_bb <- function(
-    df,
-    elements = c(Sn = "Sn", Zn = "Zn", Pb = "Pb"),
-    id_column = "ID",
-    ...) {
-
+copper_alloy_bb <- function(df,
+                            elements = c(Sn = "Sn", Zn = "Zn", Pb = "Pb"),
+                            id_column = "ID",
+                            ...) {
   if (inherits(df, "ASTR")) {
     df <- convert_concentration_units(df, elements, "wtP")
     elements <- c(Sn = "Sn", Zn = "Zn", Pb = "Pb")
@@ -69,7 +67,8 @@ copper_alloy_bb <- function(
   )
 
   # Identify rows where no element is NA — only these will be classified
-  na_mask <- !is.na(copper_alloy$Sn) & !is.na(copper_alloy$Zn) & !is.na(copper_alloy$Pb)
+  na_mask <- !is.na(copper_alloy$Sn) &
+    !is.na(copper_alloy$Zn) & !is.na(copper_alloy$Pb)
 
   # Base alloy classes
   # Copper: Zn < 3 and Sn < 3
@@ -102,7 +101,8 @@ copper_alloy_bb <- function(
 
   # Brass/gunmetal: Zn > 2.5*Sn and Zn <= 4*Sn AND (Zn >= 8 OR Sn >= 3)
   copper_alloy$result[na_mask &
-                        (copper_alloy$Zn >= 8 | copper_alloy$Sn >= 3) &
+                        (copper_alloy$Zn >= 8 |
+                           copper_alloy$Sn >= 3) &
                         copper_alloy$Zn > 2.5 * copper_alloy$Sn &
                         copper_alloy$Zn <= 4 * copper_alloy$Sn] <- "Brass/gunmetal"
 
@@ -113,16 +113,13 @@ copper_alloy_bb <- function(
 
   # Apply lead modifiers only to non-NA rows
   ## (Leaded): Pb between 4 and 8
-  prefix_leaded <- na_mask & copper_alloy$Pb >= 4 & copper_alloy$Pb <= 8
-  copper_alloy$result[prefix_leaded] <- paste(
-    "(Leaded)", copper_alloy$result[prefix_leaded]
-  )
+  prefix_leaded <- na_mask &
+    copper_alloy$Pb >= 4 & copper_alloy$Pb <= 8
+  copper_alloy$result[prefix_leaded] <- paste("(Leaded)", copper_alloy$result[prefix_leaded])
 
   ## Leaded: Pb > 8
   prefix_high_lead <- na_mask & copper_alloy$Pb > 8
-  copper_alloy$result[prefix_high_lead] <- paste(
-    "Leaded", copper_alloy$result[prefix_high_lead]
-  )
+  copper_alloy$result[prefix_high_lead] <- paste("Leaded", copper_alloy$result[prefix_high_lead])
 
   # Merge results back to original dataframe by ID
   copper_alloy_bb <- copper_alloy$result[match(df[[id_column]], copper_alloy$ID_sample)]

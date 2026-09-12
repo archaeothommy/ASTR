@@ -37,16 +37,18 @@ Description: ASTR defines and implements a community reporting standard for arch
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Suggests: 
-    readxl, 
+    readxl,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
-    vdiffr
+    vdiffr,
+    dbscan,
+    smotefamily,
+    xgboost
 Imports:
     checkmate,
-    dplyr  (>= 1.2.0),
+    dplyr (>= 1.2.0),
     geometry,
     magrittr,
     purrr,
@@ -60,10 +62,12 @@ Imports:
     vctrs,
     ggplot2,
     ks,
-    units, 
+    units,
     rootSolve
 Config/testthat/edition: 3
 Depends: 
     R (>= 3.5)
 LazyData: true
+LazyDataCompression: xz
 VignetteBuilder: knitr
+Config/roxygen2/version: 8.0.0

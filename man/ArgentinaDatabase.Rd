@@ -7,7 +7,7 @@
 \format{
 \code{ArgentinaDatabase}
 
-A dataframe with 112 rows and 49 columns
+A data frame with 112 rows and 49 columns
 }
 \source{
 \url{https://globalid.dmt-lb.de/}

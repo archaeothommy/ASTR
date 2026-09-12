@@ -11,10 +11,10 @@ a vector
 special_oxide_states
 }
 \description{
-List of values that are treated like oxides, but are no chemical oxides.
+List of values that are treated like oxides, but are not chemical oxides.
 }
 \seealso{
-Other chemical reference data: 
+Other chemical reference data:
 \code{\link{conversion_oxides}},
 \code{\link{elements_data}},
 \code{\link{isotopes_data}},
