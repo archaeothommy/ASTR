@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ASTR (Archaemetric Standards and Tools in R) <img src="man/figures/logo.png" align="right" height="138" alt="ASTR website" />
+# ASTR (Archaemetric Standards and Tools in R) <img src="astr_logo.svg" align="right" height="138"/>
 
 <!-- badges: start -->
 
