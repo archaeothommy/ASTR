@@ -38,8 +38,7 @@ as_ASTR(
   df,
   id_column = "ID",
   context = c(),
-  bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
-  bdl_strategy = function() NA_character_,
+  bdl_strategy = bdl_strategy_default,
   guess_context_type = TRUE,
   na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.", "#DIV/0!", "#VALUE!",
     "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"),
@@ -56,8 +55,7 @@ read_ASTR(
   guess_context_type = TRUE,
   na = c("", "n/a", "NA", "N.A.", "N/A", "na", "-", "n.d.", "n.a.", "#DIV/0!", "#VALUE!",
     "#REF!", "#NAME?", "#NUM!", "#N/A", "#NULL!"),
-  bdl = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
-  bdl_strategy = function() NA_character_,
+  bdl_strategy = bdl_strategy_default,
   drop_columns = FALSE,
   validate = TRUE,
   ...
@@ -107,15 +105,14 @@ unify_concentration_unit(x, unit, ...)
   columns that provide contextual (non-measurement) information; may be
   column names, integer positions, or a logical inclusion vector
 
-- bdl:
-
-  strings representing “below detection limit” values. By default, the
-  following are recognized: "b.d.", "bd", "b.d.l.", "bdl", "\<LOD", "\<"
-
 - bdl_strategy:
 
-  function used to replace BDL strings. Defaults to a static function
-  returning `NA`
+  function used to replace "below detection limit" strings. See
+  [bdl_strategies](https://archaeothommy.github.io/ASTR/reference/bdl_strategies.md)
+  for the different available strategies and on how to implement a
+  custom one. Use
+  [`purrr::compose()`](https://purrr.tidyverse.org/reference/compose.html)
+  to combine different strategies (see examples).
 
 - guess_context_type:
 
@@ -201,15 +198,6 @@ not recognised as an analytical column, this will result in an error,
 unless `drop_columns = TRUE` (then it will result in warnings for the
 respective columns).
 
-Below detection limit notation (i.e. ‘b.d.’, ‘bd’, ‘b.d.l.’, ‘bdl’,
-‘\<LOD’, or ‘\<..’) for element and oxide concentrations is specified
-using the `bdl` argument. One or more notations can be used as is
-appropriate for the dataset, and can be notations not included in the
-list above. The argument `bdl_strategy` is used to specify the value for
-handling detection limits. This is to facilitate the different handling
-needs of the detection limit for future statistical applications, as
-opposed to automatically assigning such values as ‘NA’.
-
 Missing values are allowed anywhere in the data file body, and will be
 replaced by `NA` automatically.
 
@@ -260,6 +248,21 @@ validate(arch)
 #> 10 U               4 missing values
 #> 11 Co              2 missing values
 #> 12 Se             10 missing values
+
+# combining bdl strategies
+arch2 <- as_ASTR(test_df, id_column = "Sample", context = 1:7,
+  bdl_strategy = purrr::compose(
+    bdl_strategy_default,
+    bdl_strategy_negative
+  )
+)
+#> Warning: Issue when transforming column "P2O5_wt%" to numeric values: NAs introduced by coercion
+#> Warning: Issue when transforming column "LOI_wt%" to numeric values: NAs introduced by coercion
+#> Warning: Issue when transforming column "U_ppm" to numeric values: NAs introduced by coercion
+#> Warning: Issue when transforming column "Co_ppm" to numeric values: NAs introduced by coercion
+#> Warning: Issue when transforming column "Se_ppm" to numeric values: NAs introduced by coercion
+#> Warning: 43 missing values across 13 analytical columns
+#> Warning: See the full list of validation output with: ASTR::validate(<your ASTR object>).
 
 # extracting subsets of columns
 conc <- get_concentration_columns(arch) # see also other get_..._columns functions

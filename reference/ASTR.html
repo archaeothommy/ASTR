@@ -114,8 +114,7 @@ manipulation tools in the tidyverse.</p>
 <span>  <span class="va">df</span>,</span>
 <span>  id_column <span class="op">=</span> <span class="st">"ID"</span>,</span>
 <span>  context <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  bdl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"b.d."</span>, <span class="st">"bd"</span>, <span class="st">"b.d.l."</span>, <span class="st">"bdl"</span>, <span class="st">"&lt;LOD"</span>, <span class="st">"&lt;"</span><span class="op">)</span>,</span>
-<span>  bdl_strategy <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="cn">NA_character_</span>,</span>
+<span>  bdl_strategy <span class="op">=</span> <span class="va">bdl_strategy_default</span>,</span>
 <span>  guess_context_type <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  na <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"n/a"</span>, <span class="st">"NA"</span>, <span class="st">"N.A."</span>, <span class="st">"N/A"</span>, <span class="st">"na"</span>, <span class="st">"-"</span>, <span class="st">"n.d."</span>, <span class="st">"n.a."</span>, <span class="st">"#DIV/0!"</span>, <span class="st">"#VALUE!"</span>,</span>
 <span>    <span class="st">"#REF!"</span>, <span class="st">"#NAME?"</span>, <span class="st">"#NUM!"</span>, <span class="st">"#N/A"</span>, <span class="st">"#NULL!"</span><span class="op">)</span>,</span>
@@ -132,8 +131,7 @@ manipulation tools in the tidyverse.</p>
 <span>  guess_context_type <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  na <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="st">"n/a"</span>, <span class="st">"NA"</span>, <span class="st">"N.A."</span>, <span class="st">"N/A"</span>, <span class="st">"na"</span>, <span class="st">"-"</span>, <span class="st">"n.d."</span>, <span class="st">"n.a."</span>, <span class="st">"#DIV/0!"</span>, <span class="st">"#VALUE!"</span>,</span>
 <span>    <span class="st">"#REF!"</span>, <span class="st">"#NAME?"</span>, <span class="st">"#NUM!"</span>, <span class="st">"#N/A"</span>, <span class="st">"#NULL!"</span><span class="op">)</span>,</span>
-<span>  bdl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"b.d."</span>, <span class="st">"bd"</span>, <span class="st">"b.d.l."</span>, <span class="st">"bdl"</span>, <span class="st">"&lt;LOD"</span>, <span class="st">"&lt;"</span><span class="op">)</span>,</span>
-<span>  bdl_strategy <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="cn">NA_character_</span>,</span>
+<span>  bdl_strategy <span class="op">=</span> <span class="va">bdl_strategy_default</span>,</span>
 <span>  drop_columns <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  validate <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
@@ -185,14 +183,11 @@ manipulation tools in the tidyverse.</p>
 may be column names, integer positions, or a logical inclusion vector</p></dd>
 
 
-<dt id="arg-bdl">bdl<a class="anchor" aria-label="anchor" href="#arg-bdl"></a></dt>
-<dd><p>strings representing “below detection limit” values. By default,
-the following are recognized: "b.d.", "bd", "b.d.l.", "bdl", "&lt;LOD", "&lt;"</p></dd>
-
-
 <dt id="arg-bdl-strategy">bdl_strategy<a class="anchor" aria-label="anchor" href="#arg-bdl-strategy"></a></dt>
-<dd><p>function used to replace BDL strings. Defaults to a
-static function returning <code>NA</code></p></dd>
+<dd><p>function used to replace "below detection limit" strings.
+See <a href="bdl_strategies.html">bdl_strategies</a> for the different available strategies and on how to
+implement a custom one. Use <code><a href="https://purrr.tidyverse.org/reference/compose.html" class="external-link">purrr::compose()</a></code> to combine different
+strategies (see examples).</p></dd>
 
 
 <dt id="arg-guess-context-type">guess_context_type<a class="anchor" aria-label="anchor" href="#arg-guess-context-type"></a></dt>
@@ -270,14 +265,6 @@ argument. If any column in the dataframe is not specified as context and
 not recognised as an analytical column, this will result in an error,
 unless <code>drop_columns = TRUE</code> (then it will result in warnings for the
 respective columns).</p>
-<p>Below detection limit notation (i.e. ‘b.d.’, ‘bd’, ‘b.d.l.’, ‘bdl’, ‘&lt;LOD’,
-or ‘&lt;..’) for element and oxide concentrations is specified using the <code>bdl</code>
-argument. One or more notations can be used as is appropriate for the
-dataset, and can be notations not included in the list above. The argument
-<code>bdl_strategy</code> is used to specify the value for handling detection limits.
-This is to facilitate the different handling needs of the detection limit
-for future statistical applications, as opposed to automatically assigning
-such values as ‘NA’.</p>
 <p>Missing values are allowed anywhere in the data file body, and will be
 replaced by <code>NA</code> automatically.</p>
     </div>
@@ -328,6 +315,21 @@ replaced by <code>NA</code> automatically.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> U               4 missing values</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> Co              2 missing values</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> Se             10 missing values</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># combining bdl strategies</span></span></span>
+<span class="r-in"><span><span class="va">arch2</span> <span class="op">&lt;-</span> <span class="fu">as_ASTR</span><span class="op">(</span><span class="va">test_df</span>, id_column <span class="op">=</span> <span class="st">"Sample"</span>, context <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">7</span>,</span></span>
+<span class="r-in"><span>  bdl_strategy <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/compose.html" class="external-link">compose</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">bdl_strategy_default</span>,</span></span>
+<span class="r-in"><span>    <span class="va">bdl_strategy_negative</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Issue when transforming column "P2O5_wt%" to numeric values: NAs introduced by coercion</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Issue when transforming column "LOI_wt%" to numeric values: NAs introduced by coercion</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Issue when transforming column "U_ppm" to numeric values: NAs introduced by coercion</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Issue when transforming column "Co_ppm" to numeric values: NAs introduced by coercion</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Issue when transforming column "Se_ppm" to numeric values: NAs introduced by coercion</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>43 missing values across 13 analytical columns</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>See the full list of validation output with: ASTR::validate(&lt;your ASTR object&gt;).</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># extracting subsets of columns</span></span></span>
 <span class="r-in"><span><span class="va">conc</span> <span class="op">&lt;-</span> <span class="fu">get_concentration_columns</span><span class="op">(</span><span class="va">arch</span><span class="op">)</span> <span class="co"># see also other get_..._columns functions</span></span></span>

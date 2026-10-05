@@ -117,9 +117,21 @@ Functions for creating and handling ASTR objects.
   [`remove_units()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
   [`unify_concentration_unit()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
   : ASTR Schema implementation
+
 - [`rel_to_abs()`](https://archaeothommy.github.io/ASTR/reference/error_conversion.md)
   [`abs_to_rel()`](https://archaeothommy.github.io/ASTR/reference/error_conversion.md)
   : Convert between relative and absolute analytical uncertainties
+
+- [`bdl_strategy_none()`](https://archaeothommy.github.io/ASTR/reference/bdl_strategies.md)
+  [`bdl_strategy_default()`](https://archaeothommy.github.io/ASTR/reference/bdl_strategies.md)
+  [`bdl_strategy_negative()`](https://archaeothommy.github.io/ASTR/reference/bdl_strategies.md)
+  :
+
+  Strategies to replace "below detection limit" values in
+  [`as_ASTR()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md),
+  and
+  [`read_ASTR()`](https://archaeothommy.github.io/ASTR/reference/ASTR.md)
+  with the `bdl_strategy` argument
 
 ## Data subsetting
 
