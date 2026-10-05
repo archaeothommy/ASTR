@@ -206,7 +206,7 @@ parse_colnames <- function(x, context, drop_columns) {
 # 2. build constructor functions
 build_constructors <- function(
   column_table,
-  bdl, bdl_strategy,
+  bdl_strategy,
   guess_context_type, na
 ) {
   purrr::pmap(
@@ -224,7 +224,7 @@ build_constructors <- function(
         function(x) {
           # bdl
           if (consider_bdl) {
-            x <- apply_bdl_strategy(x, colname, bdl, bdl_strategy)
+            x <- bdl_strategy(x = x, colname = colname)
           }
           # type
           if (type == "numeric") {
@@ -266,14 +266,6 @@ as_numeric_info <- function(x, colname) {
     }
   )
   return(y)
-}
-
-# colname only an argument in case we want to implement more specific handling
-# eventually
-apply_bdl_strategy <- function(x, colname, bdl, bdl_strategy) {
-  bdl_values <- which(grepl(paste(bdl, collapse = "|"), x, perl = FALSE))
-  x[bdl_values] <- bdl_strategy()
-  return(x)
 }
 
 #### regex validators ####
