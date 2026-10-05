@@ -3,6 +3,8 @@
 
 # ASTR (Archaemetric Standards and Tools in R)
 
+<img src="man/figures/astr.svg" align="right" height="138"/>
+
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/archaeothommy/ASTR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/archaeothommy/ASTR/actions/workflows/R-CMD-check.yaml)
@@ -11,8 +13,6 @@ status](https://www.r-pkg.org/badges/version/ASTR)](https://CRAN.R-project.org/p
 [![Codecov test
 coverage](https://codecov.io/gh/archaeothommy/ASTR/graph/badge.svg)](https://codecov.io/gh/archaeothommy/ASTR)
 <!-- badges: end -->
-
-<img src="man/figures/astr.svg" align="right" height="138"/>
 
 ASTR defines and implements a community reporting standard for
 archaeometric datasets. It also provides easy-to-use functions for
