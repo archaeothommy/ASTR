@@ -75,6 +75,7 @@ articles:
   - VG.ASTR.Conventions.explained
   - VG.ASTR.Schema.Implementation
   - ASTR.showcase
+  - Bracketing_vignette
 - title: Specific functions
   navbar: Specific functions
   desc: >
