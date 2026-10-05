@@ -56,12 +56,12 @@ bdl_strategy_negative <- function(x, colname, ...) {
   return(x)
 }
 
-# custom strategy: replace a specific string in x with NA,
+# custom strategy: replace a specific string in x with 0,
 # but only for the columns d65Cu and d65Cu_err2SD
 your_bdl_strategy <- function(x, colname, ...) {
   if (colname \%in\% c("d65Cu", "d65Cu_err2SD")) {
     bdl_indices <- which(grepl("BDL", x, perl = FALSE))
-    x[bdl_indices] <- NA_character_
+    x[bdl_indices] <- 0
     return(x)
   } else {
     return(x)

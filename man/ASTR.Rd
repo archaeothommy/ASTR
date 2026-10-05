@@ -84,7 +84,7 @@ may be column names, integer positions, or a logical inclusion vector}
 \item{bdl_strategy}{function used to replace "below detection limit" strings.
 See \link{bdl_strategies} for the different available strategies and on how to
 implement a custom one. Use \code{\link[purrr:compose]{purrr::compose()}} to combine different
-\link{bdl_strategies} (see examples).}
+strategies (see examples).}
 
 \item{guess_context_type}{should appropriate data types for contextual
 columns be guessed automatically? Defaults to \code{TRUE}}
