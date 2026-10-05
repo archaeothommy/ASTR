@@ -6,8 +6,6 @@
 #'
 #' @param x a vector, derived from a data.frame column
 #' @param colname name of the respective data.frame column
-#' @param marker values indicating "below detection limit"
-#' @param value value to replace values identified as "below detection limit"
 #' @param ... further arguments passed to or from other methods
 #'
 #' @rdname bdl_strategies
@@ -19,8 +17,9 @@ NULL
 
 #' @rdname bdl_strategies
 #' @export
-bdl_strategy_default <- function(x, colname, marker = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"), ...) {
-  bdl_indices <- which(grepl(paste(marker, collapse = "|"), x, perl = FALSE))
+bdl_strategy_default <- function(x, colname, ...) {
+  bdl_strings <- c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<")
+  bdl_indices <- which(grepl(paste(bdl_strings, collapse = "|"), x, perl = FALSE))
   x[bdl_indices] <- NA_character_
   return(x)
 }
@@ -33,8 +32,34 @@ bdl_strategy_none <- function(x, colname, ...) {
 
 #' @rdname bdl_strategies
 #' @export
-bdl_strategy_negative <- function(x, colname, value = NA_character_, ...) {
-  bdl_indices <- which(grepl("^-\\d*\\.?\\d*\\*?\\d*\\^?\\-?\\d*$", x))
-  x[bdl_indices] <- value
+bdl_strategy_negative <- function(x, colname, ...) {
+  y <- suppressWarnings(as.numeric(x))
+  bdl_indices <- which(y < 0)
+  x[bdl_indices] <- NA_character_
   return(x)
 }
+
+bdl_strategy_negative <- function(x, colname, ...) {
+  if (colname == "cheesecake") {
+    y <- suppressWarnings(as.numeric(x))
+    bdl_indices <- which(y < 0)
+    x[bdl_indices] <- NA_character_
+    return(x)
+  } else {
+    return(x)
+  }
+}
+
+as_ASTR(
+  df = tibble::tibble(ID = "huhu", d65Cu = 15, d65Cu_err2SD = -3),
+  bdl_strategy = function(x, colname, ...) {
+    if (colname == "d65Cu_err2SD") {
+      y <- suppressWarnings(as.numeric(x))
+      bdl_indices <- which(y < 0)
+      x[bdl_indices] <- NA_character_
+      return(x)
+    } else {
+      return(x)
+    }
+  }
+)
