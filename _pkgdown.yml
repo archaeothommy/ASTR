@@ -51,6 +51,7 @@ reference:
   - age_models
   - amalia
   - pointcloud_distribution
+  - standard_sample_bracketing
 - title: Visualisation
   desc: >
     Functions for plotting data
