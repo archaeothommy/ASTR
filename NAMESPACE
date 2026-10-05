@@ -70,11 +70,11 @@ importFrom(dplyr,
   bind_rows,
   c_across,
   filter,
+  full_join,
   mutate,
   rowwise,
   select,
-  ungroup,
-  full_join
+  ungroup
 )
 importFrom(geometry,
   convhulln,
