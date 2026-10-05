@@ -86,7 +86,10 @@
 #'
 #' # combining bdl strategies
 #' arch2 <- as_ASTR(test_df, id_column = "Sample", context = 1:7,
-#'   bdl_strategy = purrr::compose(bdl_strategy_default, bdl_strategy_negative)
+#'   bdl_strategy = purrr::compose(
+#'     bdl_strategy_default,
+#'     bdl_strategy_negative
+#'   )
 #' )
 #'
 #' # extracting subsets of columns

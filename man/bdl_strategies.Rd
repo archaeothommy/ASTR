@@ -2,37 +2,70 @@
 % Please edit documentation in R/ASTR_bdl_strategies.R
 \name{bdl_strategies}
 \alias{bdl_strategies}
-\alias{bdl_strategy_default}
 \alias{bdl_strategy_none}
+\alias{bdl_strategy_default}
 \alias{bdl_strategy_negative}
-\title{Strategies to replace "below detection limit" values}
+\title{Strategies to replace "below detection limit" values in \code{\link[=as_ASTR]{as_ASTR()}},
+and \code{\link[=read_ASTR]{read_ASTR()}} with the \code{bdl_strategy} argument}
 \usage{
-bdl_strategy_default(
-  x,
-  colname,
-  marker = c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<"),
-  ...
-)
-
 bdl_strategy_none(x, colname, ...)
 
-bdl_strategy_negative(x, colname, value = "99999", ...)
+bdl_strategy_default(x, colname, ...)
+
+bdl_strategy_negative(x, colname, ...)
 }
 \arguments{
 \item{x}{a vector, derived from a data.frame column}
 
 \item{colname}{name of the respective data.frame column}
 
-\item{marker}{values indicating "below detection limit"}
-
 \item{...}{further arguments passed to or from other methods}
-
-\item{value}{value to replace values identified as "below detection limit"}
 }
 \description{
-...
+The bdl strategies are functions that get used in the preparation of
+\code{ASTR} objects: Each strategy function is applied to every column
+of the input dataset. So they are functions that get used by other functions.
+Consequently they need to have a very specific form, to match the expectations
+of the functions that call them.
+
+The provided strategies \code{bdl_strategy_default} and \code{bdl_strategy_negative} cover
+common usecases. The example code below shows how they are implemented, and how
+to build custom strategies based on that.
+When they are used with \code{\link[=as_ASTR]{as_ASTR()}} or \code{\link[=read_ASTR]{read_ASTR()}}, multiple strategies can be
+combined with \code{\link[purrr:compose]{purrr::compose()}}.
 }
 \examples{
-plot(1,1)
+# no replacement of bdl values: the input value is just returned as is
+bdl_strategy_none <- function(x, colname, ...) {
+  return(x)
+}
+
+# default strategy: a set of strings in x is replaced with NA
+bdl_strategy_default <- function(x, colname, ...) {
+  bdl_strings <- c("b.d.", "bd", "b.d.l.", "bdl", "<LOD", "<")
+  bdl_indices <- which(grepl(paste(bdl_strings, collapse = "|"), x, perl = FALSE))
+  x[bdl_indices] <- NA_character_
+  return(x)
+}
+
+# replace negative values: if a value in x is below 0 then is replaced with NA
+bdl_strategy_negative <- function(x, colname, ...) {
+  y <- suppressWarnings(as.numeric(x))
+  bdl_indices <- which(y < 0)
+  x[bdl_indices] <- NA_character_
+  return(x)
+}
+
+# custom strategy: replace a specific string in x with NA,
+# but only for the columns d65Cu and d65Cu_err2SD
+your_bdl_strategy <- function(x, colname, ...) {
+  if (colname \%in\% c("d65Cu", "d65Cu_err2SD")) {
+    bdl_indices <- which(grepl("BDL", x, perl = FALSE))
+    x[bdl_indices] <- NA_character_
+    return(x)
+  } else {
+    return(x)
+  }
+}
 
 }

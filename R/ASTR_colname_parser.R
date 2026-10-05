@@ -224,7 +224,6 @@ build_constructors <- function(
         function(x) {
           # bdl
           if (consider_bdl) {
-            #stop(print(bdl_strategy))
             x <- bdl_strategy(x = x, colname = colname)
           }
           # type
