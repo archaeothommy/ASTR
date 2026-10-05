@@ -28,10 +28,10 @@ normalise_to_100(df)
 
 }
 \seealso{
-Other data normalisation functions: 
-\code{\link{normalise_data}()},
-\code{\link{normalise_element}()},
-\code{\link{normalise_geochem}()},
-\code{\link{normalise_sample}()}
+Other data normalisation functions:
+\code{\link[=normalise_data]{normalise_data()}},
+\code{\link[=normalise_element]{normalise_element()}},
+\code{\link[=normalise_geochem]{normalise_geochem()}},
+\code{\link[=normalise_sample]{normalise_sample()}}
 }
 \concept{data normalisation functions}
