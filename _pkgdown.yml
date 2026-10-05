@@ -51,6 +51,7 @@ reference:
   - age_models
   - amalia
   - pointcloud_distribution
+  - standard_sample_bracketing
 - title: Visualisation
   desc: >
     Functions for plotting data
@@ -74,6 +75,7 @@ articles:
   - VG.ASTR.Conventions.explained
   - VG.ASTR.Schema.Implementation
   - ASTR.showcase
+  - Bracketing_vignette
 - title: Specific functions
   navbar: Specific functions
   desc: >
