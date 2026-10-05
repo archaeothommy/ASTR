@@ -104,10 +104,8 @@ test_that("bdl_strategies can be used and work as expected", {
       validate = FALSE
     ) %>% suppressWarnings()
     # 204Pb_ppm gets set to 0
-    astr$`204Pb` == units::set_units(0, "ppm") &
+    astr$`204Pb` == units::set_units(0, "ppm") &&
       # Zn_ppm stays BDL and ends as NA in a character column
       is.na(astr$Zn)
   })
 })
-
-
