@@ -1,4 +1,6 @@
-# ASTR (Archaeometric Standards and Tools in R)
+# ASTR (Archaemetric Standards and Tools in R)
+
+![](reference/figures/astr.svg)
 
 ASTR defines and implements a community reporting standard for
 archaeometric datasets. It also provides easy-to-use functions for
