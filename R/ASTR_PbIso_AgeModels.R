@@ -5,33 +5,25 @@
 #' *References*). [pb_iso_age_model()] provides a wrapper for them and allows
 #' to calculate all age models simultaneously.
 #'
-#' The implemented age models are:
-#' * Stacey & Kramers (1975): [stacey_kramers_1975()]
-#' * Cumming & Richards (1975): [cumming_richards_1975()]
-#' * Albarède & Juteau (1984): [albarede_juteau_1984()]
-#'
-#' The used model is indicated in the column names of the output by the initials
-#' of the author's last names and the publication year (e. g.`SK75` for Stacey
-#' & Kramers 1975).
-#'
 #' See the references for the respective publications of the age models. The
 #' function for the age model of Albarède & Juteau (1984) is based on the
-#' MATLAB-script of F. Albarède (version 2020-11-06). The age model published
-#' in Albarède et al. (2012) should not be used according to F. Albarède and is
+#' MATLAB-script of F. Albarède (version 2020-11-06). The age model published in
+#' Albarède et al. (2012) should not be used according to F. Albarède and is
 #' therefore not implemented. Instead, he recommends to use the age model
 #' published in Albarède & Juteau (1984).
 #'
-#' The ratio of 208Pb/204Pb is not necessary for [cumming_richards_1975].
-#' The function takes it as argument only to be consistent with the input of the
+#' The ratio of 208Pb/204Pb is not necessary for [cumming_richards_1975]. The
+#' function takes it as argument only to be consistent with the input of the
 #' other age model functions. If provided, it will be ignored.
 #'
-#' @param df The data frame from which the age model should be calculated.
+#' @param df The data frame from which the age model parameters should be
+#'   calculated.
 #' @param ratio_206_204 Name of the column with the 206Pb/204Pb ratio as
-#' character string. Default is `206Pb/204Pb`.
+#'   character string. Default is `206Pb/204Pb`.
 #' @param ratio_207_204 Name of the column with the 207Pb/204Pb ratio as
-#' character string. Default is `207Pb/204Pb`.
+#'   character string. Default is `207Pb/204Pb`.
 #' @param ratio_208_204 Name of the column with the 208Pb/204Pb ratio as
-#' character string. Default is `208Pb/204Pb`.
+#'   character string. Default is `208Pb/204Pb`.
 #' @param model Character string with the abbreviation of the model to
 #'   calculate:
 #'   * `SK75` for Stacey & Kramers (1975)
@@ -39,29 +31,37 @@
 #'   * `AJ84` for Albarède & Juteau (1984)
 #'   * `all` for all models at once
 #'
-#' @return The data frame provided as input with columns added for the model
-#' age, mu, and kappa value(s) of the respective age models. The used model is
-#' indicated in the column names of the output by the abbreviations given above.
+#' @return If `df` is an [ASTR object][ASTR], the output is an object of the
+#'   same type including the ID column, the contextual columns, the lead isotope
+#'   ratios used for calculation of the age model parameters, and the calculated
+#'   age model parameters. In all other cases, the data frame provided as input
+#'   with columns added for the calculated age model parameters.
+#'
+#'   The used age model is indicated in the column names of the output by the
+#'   abbreviations for the models given above. They represent the initials of
+#'   the author's last names and the publication year (e. g. `SK75` for Stacey &
+#'   Kramers 1975).
 #'
 #' @export
 #'
 #' @references Albarède, F. and Juteau, M. (1984) Unscrambling the lead model
-#' ages. Geochimica et Cosmochimica Acta 48(1), pp. 207-212.
-#' <https://dx.doi.org/10.1016/0016-7037(84)90364-8>.
+#'   ages. Geochimica et Cosmochimica Acta 48(1), pp. 207-212.
+#'   <https://dx.doi.org/10.1016/0016-7037(84)90364-8>.
 #'
-#' Albarède, F., Desaulty, A.-M. and Blichert-Toft, J. (2012) A geological
-#' perspective on the use of Pb isotopes in Archaeometry. Archaeometry 54, pp.
-#' 853-867. <https://doi.org/10.1111/j.1475-4754.2011.00653.x>.
+#'   Albarède, F., Desaulty, A.-M. and Blichert-Toft, J. (2012) A geological
+#'   perspective on the use of Pb isotopes in Archaeometry. Archaeometry 54, pp.
+#'   853–867. <https://doi.org/10.1111/j.1475-4754.2011.00653.x>.
 #'
-#' Cumming, G.L. and Richards, J.R. (1975) Ore lead isotope ratios in a
-#' continuously changing earth. Earth and Planetary Science Letters 28(2), pp.
-#' 155-171. <https://dx.doi.org/10.1016/0012-821X(75)90223-X>.
+#'   Cumming, G.L. and Richards, J.R. (1975) Ore lead isotope ratios in a
+#'   continuously changing earth. Earth and Planetary Science Letters 28(2), pp.
+#'   155–171. <https://dx.doi.org/10.1016/0012-821X(75)90223-X>.
 #'
-#' Stacey, J.S. and Kramers, J.D. (1975) Approximation of terrestrial lead
-#' isotope evolution by a two-stage model. Earth and Planetary Science Letters
-#' 26(2), pp. 207-221. <https://dx.doi.org/10.1016/0012-821X(75)90088-6<.
+#'   Stacey, J.S. and Kramers, J.D. (1975) Approximation of terrestrial lead
+#'   isotope evolution by a two-stage model. Earth and Planetary Science Letters
+#'   26(2), pp. 207–221. <https://dx.doi.org/10.1016/0012-821X(75)90088-6>.
 #'
 #' @name age_models
+#' @family Pb isotope functions
 #' @aliases stacey_kramers_1975
 #' @aliases cumming_richards_1975
 #' @aliases albarede_juteau_1984
@@ -86,33 +86,47 @@ pb_iso_age_model <- function(df,
                              ratio_207_204 = "207Pb/204Pb",
                              ratio_208_204 = "208Pb/204Pb",
                              model = c("SK75", "CR75", "AJ84", "all")) {
-  checkmate::assert_character(model)
+  match.arg(model)
 
   switch(model,
     SK75 = stacey_kramers_1975(df, ratio_206_204, ratio_207_204, ratio_208_204),
     CR75 = cumming_richards_1975(df, ratio_206_204, ratio_207_204),
     AJ84 = albarede_juteau_1984(df, ratio_206_204, ratio_207_204, ratio_208_204),
-    all = cbind(
-      df,
-      stacey_kramers_1975(
-        df,
-        ratio_206_204,
-        ratio_207_204,
-        ratio_208_204
-      )[c("model_age_SK75", "mu_SK75", "kappa_SK75")],
-      cumming_richards_1975(
-        df,
-        ratio_206_204,
-        ratio_207_204
-      )[c("model_age_CR75", "mu_CR75", "kappa_CR75")],
-      albarede_juteau_1984(
-        df,
-        ratio_206_204,
-        ratio_207_204,
-        ratio_208_204
-      )[c("model_age_AJ84", "mu_AJ84", "kappa_AJ84")]
-    ),
-    stop("This model is not supported.")
+    all = {
+      result <- cbind(
+        stacey_kramers_1975(
+          df,
+          ratio_206_204,
+          ratio_207_204,
+          ratio_208_204
+        )[c("model_age_SK75", "mu_SK75", "kappa_SK75")],
+        cumming_richards_1975(
+          df,
+          ratio_206_204,
+          ratio_207_204
+        )[c("model_age_CR75", "mu_CR75", "kappa_CR75")],
+        albarede_juteau_1984(
+          df,
+          ratio_206_204,
+          ratio_207_204,
+          ratio_208_204
+        )[c("model_age_AJ84", "mu_AJ84", "kappa_AJ84")]
+      )
+
+      if (inherits(df, "ASTR")) {
+        df_out <- cbind(get_contextual_columns(df), df[c(ratio_206_204, ratio_207_204, ratio_208_204)], result)
+        df_out <- suppressWarnings(
+          as_ASTR(
+            df_out,
+            context = c(colnames(get_contextual_columns(df))[-1], colnames(result))
+          )
+        )
+      } else {
+        df_out <- cbind(df, result)
+      }
+
+      return(df_out)
+    }
   )
 }
 
@@ -147,20 +161,50 @@ stacey_kramers_1975 <- function(df,
     )$root
   }
 
+  result <- data.frame("model_age_SK75" = rep(NA, nrow(df)), "mu_SK75" = NA, "kappa_SK75" = NA)
+
   # Calculation and clean-up
 
-  model_age <- mapply(model_age_func, df[[ratio_206_204]], df[[ratio_207_204]])
-  model_age <- replace(model_age, model_age <= -10001 * 10^6 | model_age >= t0 - 1 * 10^6, NA)
+  result$model_age_SK75 <- ifelse(
+    is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]) | is.na(df[[ratio_208_204]]),
+    NA_real_,
+    mapply(model_age_func, df[[ratio_206_204]], df[[ratio_207_204]])
+  )
 
-  mu <- (df[[ratio_206_204]] - a0) / (exp(l238 * t0) - exp(l238 * model_age))
-  kappa <- (df[[ratio_208_204]] - c0) / (mu * (exp(l232 * t0) - exp(l232 * model_age)))
+  result$model_age_SK75 <- replace(
+    result$model_age_SK75, result$model_age_SK75 <= -10001 * 10^6 | result$model_age_SK75 >= t0 - 1 * 10^6,
+    NA
+  )
 
-  result <- data.frame("model_age_SK75" = model_age * 10^-6, "mu_SK75" = mu, "kappa_SK75" = kappa) %>%
-    round(3)
+  result$mu_SK75 <- ifelse(
+    is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]) | is.na(df[[ratio_208_204]]),
+    NA_real_,
+    (df[[ratio_206_204]] - a0) / (exp(l238 * t0) - exp(l238 * result$model_age_SK75))
+  )
 
-  result <- cbind(df, result)
+  result$kappa_SK75 <- ifelse(
+    is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]) | is.na(df[[ratio_208_204]]),
+    NA_real_,
+    (df[[ratio_208_204]] - c0) / (result$mu_SK75 * (exp(l232 * t0) - exp(l232 * result$model_age_SK75)))
+  )
 
-  result
+  result$model_age_SK75 <- result$model_age_SK75 * 10^-6
+  result <- round(result, 3)
+
+  if (inherits(df, "ASTR")) {
+    df_out <- cbind(get_contextual_columns(df), df[c(ratio_206_204, ratio_207_204, ratio_208_204)], result)
+    df_out <- suppressWarnings(
+      as_ASTR(
+        df_out,
+        context = c(colnames(get_contextual_columns(df))[-1], colnames(result))
+      )
+    )
+  } else {
+    df_out <- cbind(df, result)
+  }
+
+
+  return(df_out)
 }
 
 
@@ -190,9 +234,8 @@ cumming_richards_1975 <- function(df,
   model_age_func <- function(x, y) {
     stats::optimize(
       function(s, a, b) {
-        (a0 - a + 137.88 * vp *
-           ((exp(l238 * t0) * (1 - e1 * (t0 - 1 / l238))) -
-              (exp(l238 * s) * (1 - e1 * (s - 1 / l238)))))^2 +
+        (a0 - a + 137.88 * vp * ((exp(l238 * t0) * (1 - e1 * (t0 - 1 / l238))) -
+                                   (exp(l238 * s) * (1 - e1 * (s - 1 / l238)))))^2 +
           (b0 - b + vp * ((exp(l235 * t0) * (1 - e1 * (t0 - 1 / l235))) -
                             (exp(l235 * s) * (1 - e1 * (s - 1 / l235)))))^2
       },
@@ -202,21 +245,48 @@ cumming_richards_1975 <- function(df,
     )$minimum
   }
 
+  result <- data.frame("model_age_CR75" = rep(NA, nrow(df)), "mu_CR75" = NA, "kappa_CR75" = NA)
+
   # Calculation and clean-up
 
-  model_age <- mapply(model_age_func, df[[ratio_206_204]], df[[ratio_207_204]])
+  result$model_age_CR75 <- ifelse(
+    is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]),
+    NA_real_,
+    mapply(model_age_func, df[[ratio_206_204]], df[[ratio_207_204]])
+  )
 
-  model_age <- replace(model_age, model_age <= -10001 * 10^6 | model_age >= t0 - 1 * 10^6, NA)
+  result$model_age_CR75 <- replace(
+    result$model_age_CR75, result$model_age_CR75 <= -10001 * 10^6 | result$model_age_CR75 >= t0 - 1 * 10^6,
+    NA
+  )
 
-  mu <- 137.88 * vp * (1 - e1 * model_age)
-  kappa <- wp * (1 - e2 * model_age) / mu
+  result$mu_CR75 <- ifelse(
+    is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]),
+    NA_real_,
+    137.88 * vp * (1 - e1 * result$model_age_CR75)
+  )
+  result$kappa_CR75 <- ifelse(
+    is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]),
+    NA_real_,
+    wp * (1 - e2 * result$model_age_CR75) / result$mu_CR75
+  )
 
-  result <- data.frame("model_age_CR75" = model_age * 10^-6, "mu_CR75" = mu, "kappa_CR75" = kappa) %>%
-    round(3)
+  result$model_age_CR75 <- result$model_age_CR75 * 10^-6
+  result <- round(result, 3)
 
-  result <- cbind(df, result)
+  if (inherits(df, "ASTR")) {
+    df_out <- cbind(get_contextual_columns(df), df[c(ratio_206_204, ratio_207_204, ratio_208_204)], result)
+    df_out <- suppressWarnings(
+      as_ASTR(
+        df_out,
+        context = c(colnames(get_contextual_columns(df))[-1], colnames(result))
+      )
+    )
+  } else {
+    df_out <- cbind(df, result)
+  }
 
-  result
+  return(df_out)
 }
 
 #' @rdname age_models
@@ -262,16 +332,43 @@ albarede_juteau_1984 <- function(df,
     }
   }
 
+  result <- data.frame("model_age_AJ84" = rep(NA, nrow(df)), "mu_AJ84" = NA, "kappa_AJ84" = NA)
+
   # Calculation and clean-up
 
   roots <- mapply(model_age_func, df[[ratio_206_204]], df[[ratio_207_204]])
 
-  kappa <- (df[[ratio_208_204]] - zstar0) / (exp(l232 * t0) - exp(l232 * roots[1, ])) / roots[2, ]
+  result$model_age_AJ84 <- ifelse(
+    is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]) | is.na(df[[ratio_208_204]]),
+    NA_real_,
+    roots[1, ] * 10^-6
+  )
 
-  result <- data.frame("model_age_AJ84" = roots[1, ] * 10^-6, "mu_AJ84" = roots[2, ], "kappa_AJ84" = kappa) %>%
-    round(3)
+  result$mu_AJ84 <- ifelse(
+    is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]) | is.na(df[[ratio_208_204]]),
+    NA_real_,
+    roots[2, ]
+  )
 
-  result <- cbind(df, result)
+  result$kappa_AJ84 <- ifelse(
+    is.na(df[[ratio_206_204]]) | is.na(df[[ratio_207_204]]) | is.na(df[[ratio_208_204]]),
+    NA_real_,
+    (df[[ratio_208_204]] - zstar0) / (exp(l232 * t0) - exp(l232 * roots[1, ])) / roots[2, ]
+  )
 
-  result
+  result <- round(result, 3)
+
+  if (inherits(df, "ASTR")) {
+    df_out <- cbind(get_contextual_columns(df), df[c(ratio_206_204, ratio_207_204, ratio_208_204)], result)
+    df_out <- suppressWarnings(
+      as_ASTR(
+        df_out,
+        context = c(colnames(get_contextual_columns(df))[-1], colnames(result))
+      )
+    )
+  } else {
+    df_out <- cbind(df, result)
+  }
+
+  return(df_out)
 }

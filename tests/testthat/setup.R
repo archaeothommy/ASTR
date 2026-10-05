@@ -2,8 +2,10 @@
 
 # Additional packages to load for testing or setting up the test environment
 
-library(tibble)
+library(testthat)
+library(ASTR)
 library(dplyr)
+library(tibble)
 library(ggplot2)
 library(vdiffr)
 library(readxl)
