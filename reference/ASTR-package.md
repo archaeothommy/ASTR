@@ -22,6 +22,9 @@ Useful links:
 
 Authors:
 
+- Thomas Rose <roseth@posteo.com>
+  ([ORCID](https://orcid.org/0000-0002-8186-3566))
+
 - Mathias Ayine Abagna
 
 - Andrea Acevedo Mejia ([ORCID](https://orcid.org/0009-0002-7441-1737))

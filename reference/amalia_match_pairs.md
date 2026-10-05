@@ -4,7 +4,7 @@ Internal function used by
 [`amalia()`](https://archaeothommy.github.io/ASTR/reference/amalia.md)
 to generate all possible sample-reference combinations and check whether
 their isotope ratio differences fall within the combined analytical
-uncertainty for all supplied ratios simultaneously.
+uncertainty for all supplied ratios.
 
 ## Usage
 
