@@ -1,7 +1,7 @@
 age_model_data <- tibble::tibble(
-  `206Pb/204Pb` = 18,
-  `207Pb/204Pb` = 15,
-  `208Pb/204Pb` = 2
+  `206Pb/204Pb` = c(18, NA, 18),
+  `207Pb/204Pb` = c(15, 15, NA),
+  `208Pb/204Pb` = c(2, NA, 2)
 )
 
 suppressWarnings(
@@ -15,12 +15,13 @@ suppressWarnings(
 age_models_ASTR <- pb_iso_age_model(test_input, model = "all")
 
 test_that("Pb isotope age models", {
-  expect_equal(pb_iso_age_model(age_model_data, model = "SK75")[["model_age_SK75"]], -1166.946)
-  expect_equal(pb_iso_age_model(age_model_data, model = "CR75")[["mu_CR75"]], 10.478)
-  expect_equal(pb_iso_age_model(age_model_data, model = "AJ84")[["kappa_AJ84"]], -15.421)
+  expect_equal(pb_iso_age_model(age_model_data, model = "SK75")[["model_age_SK75"]][1], -1166.946)
+  expect_equal(pb_iso_age_model(age_model_data, model = "CR75")[["mu_CR75"]][1], 10.478)
+  expect_equal(pb_iso_age_model(age_model_data, model = "AJ84")[["kappa_AJ84"]][1], -15.421)
   expect_error(pb_iso_age_model(age_model_data, model = 23), "'arg' must be.*")
   expect_error(pb_iso_age_model(age_model_data, model = "23"), "'arg' should be one of.*")
   expect_length(pb_iso_age_model(age_model_data, model = "all"), 12)
+  expect_equal(pb_iso_age_model(age_model_data, model = "AJ84")[["kappa_AJ84"]][3], NA_real_)
 })
 
 test_that("ASTR objects handled as intended", {

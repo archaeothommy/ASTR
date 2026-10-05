@@ -14,7 +14,7 @@ elements_data
 List of chemical elements as their symbols, sorted according to alphabet.
 }
 \seealso{
-Other chemical reference data: 
+Other chemical reference data:
 \code{\link{conversion_oxides}},
 \code{\link{isotopes_data}},
 \code{\link{oxides_data}},

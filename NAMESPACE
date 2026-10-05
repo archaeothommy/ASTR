@@ -18,6 +18,7 @@ S3method(validate,ASTR)
 S3method(validate,default)
 export(abs_to_rel)
 export(albarede_juteau_1984)
+export(amalia)
 export(as_ASTR)
 export(at_to_wt)
 export(bdl_strategy_default)
@@ -50,28 +51,40 @@ export(unify_concentration_unit)
 export(validate)
 export(wt_to_at)
 import(ggplot2)
-importFrom(dplyr,bind_rows)
-importFrom(dplyr,c_across)
-importFrom(dplyr,filter)
-importFrom(dplyr,mutate)
-importFrom(dplyr,rowwise)
-importFrom(dplyr,select)
-importFrom(dplyr,ungroup)
-importFrom(geometry,convhulln)
-importFrom(geometry,inhulln)
-importFrom(ggplot2,GeomPoint)
-importFrom(ggplot2,GeomPolygon)
-importFrom(ggplot2,aes)
-importFrom(ggplot2,draw_key_polygon)
-importFrom(ggplot2,ggproto)
-importFrom(ggplot2,layer)
+importFrom(dplyr,
+  bind_rows,
+  c_across,
+  filter,
+  mutate,
+  rowwise,
+  select,
+  ungroup
+)
+importFrom(geometry,
+  convhulln,
+  inhulln
+)
+importFrom(ggplot2,
+  GeomPoint,
+  GeomPolygon,
+  aes,
+  draw_key_polygon,
+  ggproto,
+  layer
+)
 importFrom(grDevices,contourLines)
-importFrom(ks,contourLevels)
-importFrom(ks,kde)
+importFrom(ks,
+  contourLevels,
+  kde
+)
 importFrom(magrittr,"%>%")
 importFrom(rdist,cdist)
-importFrom(rlang,":=")
-importFrom(rlang,.data)
-importFrom(stats,aggregate)
-importFrom(stats,as.formula)
+importFrom(rlang,
+  ":=",
+  .data
+)
+importFrom(stats,
+  aggregate,
+  as.formula
+)
 importFrom(tidyselect,starts_with)
