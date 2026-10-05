@@ -16,3 +16,4 @@
 ^\.positai$
 ^\.claude$
 R/test.R$
+^logo$

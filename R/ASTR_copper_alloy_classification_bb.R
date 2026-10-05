@@ -45,10 +45,13 @@
 #' @family copper alloy classifications
 #' @export
 #'
-copper_alloy_bb <- function(df,
-                            elements = c(Sn = "Sn", Zn = "Zn", Pb = "Pb"),
-                            id_column = "ID",
-                            ...) {
+copper_alloy_bb <- function(
+  df,
+  elements = c(Sn = "Sn", Zn = "Zn", Pb = "Pb"),
+  id_column = "ID",
+  ...
+) {
+
   if (inherits(df, "ASTR")) {
     df <- convert_concentration_units(df, elements, "wtP")
     elements <- c(Sn = "Sn", Zn = "Zn", Pb = "Pb")

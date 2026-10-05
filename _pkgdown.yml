@@ -24,6 +24,7 @@ reference:
   contents:
   - ASTR
   - error_conversion
+  - bdl_strategies
 - title: Data subsetting
   desc: >
     Pre-compiled lists for easier subsetting of data

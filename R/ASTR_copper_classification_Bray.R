@@ -55,14 +55,14 @@
 #' @family copper alloy classifications
 #' @export
 #'
-copper_group_bray <- function(df,
-                              elements = c(As = "As",
-                                           Sb = "Sb",
-                                           Ag = "Ag",
-                                           Ni = "Ni"),
-                              id_column = "ID",
-                              group_as_number = FALSE,
-                              ...) {
+copper_group_bray <- function(
+  df,
+  elements = c(As = "As", Sb = "Sb", Ag = "Ag", Ni = "Ni"),
+  id_column = "ID",
+  group_as_number = FALSE,
+  ...
+) {
+
   if (inherits(df, "ASTR")) {
     df <- convert_concentration_units(df, elements, "wtP", ...)
     elements <- c(
