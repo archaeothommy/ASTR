@@ -16,7 +16,7 @@ https://www.ciaaw.org/isotopic-abundances.htm, sorted according to chemical
 element and isotope number
 }
 \seealso{
-Other chemical reference data: 
+Other chemical reference data:
 \code{\link{conversion_oxides}},
 \code{\link{elements_data}},
 \code{\link{oxides_data}},
