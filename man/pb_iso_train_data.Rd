@@ -69,13 +69,13 @@ from each group, ranging from 0 to 1, default value is \code{0.1}.}
 \item{.eps}{Size (radius) of the epsilon neighbourhood, default value is
 \code{0.18}.}
 
-\item{.eta}{Step size shrinkage used in update to prevent over fitting. After
+\item{.eta}{Step size shrinkage used in update to prevent overfitting. After
 each boosting step, we can directly get the weights of new features, and
 eta shrinks the feature weights to make the boosting process more
 conservative. Default value is \code{0.1}.}
 
 \item{.max_depth}{Maximum depth of a tree. Increasing this value will make
-the model more complex and more likely to over fit. Zero indicates no limit
+the model more complex and more likely to overfit. Zero indicates no limit
 on depth. Beware that XGBoost aggressively consumes memory when training a
 deep tree. "exact" tree method requires non-zero value. Default value is
 \code{6}.}
@@ -129,7 +129,7 @@ unassigned.
  The Synthetic Minority Over-sampling Technique
 (SMOTE) generates synthetic data points for the minority class through
 interpolation. This process balances class distribution and enhances
-learning by introducing variety while reducing over fitting risks. This
+learning by introducing variety while reducing overfitting risks. This
 study transformed the data set into a binary classification problem.
 Synthetic sample counts were dynamically adjusted based on minority cluster
 density to maintain appropriate balance. This step mitigated class
@@ -140,7 +140,7 @@ imbalance, preventing predictive bias and improving classifier performance.
  XGBoost algorithm was used to train a
 binary classification model using three isotopic ratios as input features.
 The regional cluster names derived from DBSCAN served as target labels. The
-re-sampled data set was partitioned into training and testing sets, treating
+resampled data set was partitioned into training and testing sets, treating
 each cluster as an independent classification problem. This iterative
 process involved data encoding, SMOTE application, and individual XGBoost
 model training for every cluster. Final results demonstrate varying
