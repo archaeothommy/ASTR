@@ -473,7 +473,7 @@ helper_train_function <- function(ref,
     if (nrow(group_df) < .minSize) {
       return(group_df)
     }
-    minPts <- nrow(group_df) * .minPts_fac
+    minPts <- as.integer(round(nrow(group_df) * .minPts_fac))
     res <- dbscan::dbscan(group_df[, -1], minPts = minPts, eps = .eps, ...)
     cluster <- res$cluster
     group_df <- group_df[cluster > 0, ]
