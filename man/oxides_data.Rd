@@ -11,7 +11,7 @@ a vector
 oxides_data
 }
 \description{
-List of oxides, sorted according to alphabet.
+List of oxides, sorted alphabetically.
 }
 \seealso{
 Other chemical reference data:

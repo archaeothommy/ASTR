@@ -1,4 +1,4 @@
-# see R/data.R for the documentation of these datasets
+# see R/ASTR_data.R for the documentation of these datasets
 
 #### chemical reference data ####
 
@@ -57,6 +57,8 @@ isotopes_data <- c(
   "203Tl", "205Tl", "204Pb", "206Pb", "207Pb", "208Pb", "209Bi", "230Th",
   "232Th", "231Pa", "234U", "235U", "238U"
 )
+
+
 
 usethis::use_data(
   elements_data,

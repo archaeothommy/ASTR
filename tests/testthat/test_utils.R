@@ -108,3 +108,19 @@ test_that("return_numeric_columns() throws error for non-numeric columns", {
     "These columns are not numeric: name, city"
   )
 })
+
+# Check Required packages -------------------------------------------------
+
+test_that("check_required_packages passes silently when all packages exist", {
+  expect_silent(check_required_packages(c("stats", "graphics")))
+})
+
+test_that("check_required_packages throws error in non-interactive mode", {
+  old_opt <- options(rlang.interactive = FALSE)
+  on.exit(options(old_opt), add = TRUE)
+
+  expect_error(
+    check_required_packages("fake_package_xyz123"),
+    "Function requires package\\(s\\): fake_package_xyz123"
+  )
+})

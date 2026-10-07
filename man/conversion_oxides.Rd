@@ -14,7 +14,7 @@ A data frame with 151 rows and 8 variables:
 \item{OxideWeight}{The molar mass of the oxide.}
 \item{ElementToOxide}{The factor used in the conversion from the chemical element to its oxide.}
 \item{OxideToElement}{The factor used in the conversion from the oxide to its chemical element.}
-\item{OxidationState}{The oxidation state of the kation as numeric value.}
+\item{OxidationState}{The oxidation state of the cation as a numeric value.}
 }
 }
 \usage{
