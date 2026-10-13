@@ -14,7 +14,7 @@ oxides_data
 List of oxides, sorted according to alphabet.
 }
 \seealso{
-Other chemical reference data: 
+Other chemical reference data:
 \code{\link{conversion_oxides}},
 \code{\link{elements_data}},
 \code{\link{isotopes_data}},

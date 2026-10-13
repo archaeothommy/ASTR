@@ -48,11 +48,12 @@
 #' @export
 #'
 copper_alloy_pollard <- function(
-    df,
-    elements = c(Sn = "Sn", Zn = "Zn", Pb = "Pb"),
-    id_column = "ID",
-    group_as_symbol = FALSE,
-    ...) {
+  df,
+  elements = c(Sn = "Sn", Zn = "Zn", Pb = "Pb"),
+  id_column = "ID",
+  group_as_symbol = FALSE,
+  ...
+) {
 
   if (inherits(df, "ASTR")) {
     df <- convert_concentration_units(df, elements, "wtP", ...)

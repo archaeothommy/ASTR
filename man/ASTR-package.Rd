@@ -21,6 +21,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Thomas Rose \email{roseth@posteo.com} (\href{https://orcid.org/0000-0002-8186-3566}{ORCID})
   \item Mathias Ayine Abagna
   \item Andrea Acevedo Mejia (\href{https://orcid.org/0009-0002-7441-1737}{ORCID})
   \item Gilberto Artioli (\href{https://orcid.org/0000-0002-8693-7392}{ORCID})

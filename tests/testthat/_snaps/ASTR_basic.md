@@ -1,7 +1,7 @@
 # reading of a basic example table works as expected
 
     Code
-      as.data.frame(test_input)
+      as.data.frame(test_astr)
     Output
            ID 206Pb/204Pb       Al2O3 SiO2+Al2O3     204Pb other other2      K2O
       1 troet         0.5 3 [count/s] 20 [ng/kg] 7 [mg/kg] troet     27 23 [wtP]
@@ -13,7 +13,7 @@
 ---
 
     Code
-      as.data.frame(test_input2)
+      as.data.frame(test_astr2)
     Output
                ID   Sample Lab no.                    Site latitude  longitude Type
       1    TR-001   TR-001 3421/19                  Bochum 51.48165   7.216480    1
@@ -169,7 +169,7 @@
 ---
 
     Code
-      print(test_input)
+      print(test_astr)
     Output
       [1mASTR table[22m
       Analytical columns: [0;32m206Pb/204Pb[0m, [0;32mAl2O3[0m, [0;32mSiO2+Al2O3[0m, [0;32m204Pb[0m, [0;32mK2O[0m, [0;32md18O[0m, [0;32mSiO2/FeO[0m, [0;32mMn[0m, [0;32mZn[0m, [0;32mSiO2/(FeO+MnO)[0m, [0;32mSb/As[0m, [0;32mSn[0m, [0;32mK2O+MgO+Na2O[0m

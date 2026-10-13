@@ -1,7 +1,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ASTR (Archaeometric Standards and Tools in R)
+# ASTR (Archaemetric Standards and Tools in R)
+
+<img src="man/figures/astr.svg" align="right" height="138"/>
 
 <!-- badges: start -->
 
@@ -10,7 +12,6 @@
 status](https://www.r-pkg.org/badges/version/ASTR)](https://CRAN.R-project.org/package=ASTR)
 [![Codecov test
 coverage](https://codecov.io/gh/archaeothommy/ASTR/graph/badge.svg)](https://codecov.io/gh/archaeothommy/ASTR)
-
 <!-- badges: end -->
 
 ASTR defines and implements a community reporting standard for
