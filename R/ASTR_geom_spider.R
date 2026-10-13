@@ -47,15 +47,11 @@
 #'
 #' # elements must be supplied in the geom, not in ggplot()
 #' ggplot(test) +
-#'   geom_spider(aes(elements = c(La, Ce, Nd), colour = Sample))
-#'
-#' # using a pre-made element set
-#' ggplot(test) +
-#'   geom_spider(aes(elements = standard_groups$REE, colour = Sample))
+#'   geom_spider(aes(elements = c("La", "Ce", "Nd"), colour = Sample))
 #'
 #' # with chondrite normalisation
 #' ggplot(test) +
-#'   geom_spider(aes(elements = c(La, Ce, Nd), colour = Sample),
+#'   geom_spider(aes(elements = c("La", "Ce", "Nd"), colour = Sample),
 #'     reference = "chondrite"
 #'   )
 #'
@@ -111,8 +107,6 @@ GeomSpider <- ggplot2::ggproto(
   ggplot2::Geom,
 
   required_aes = character(0),
-
-  optional_aes = c(ASTR::elements_data, ASTR::isotopes_data, ASTR::oxides_data),
 
   default_aes = ggplot2::aes(
     colour = "black",
