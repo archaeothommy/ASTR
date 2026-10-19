@@ -355,17 +355,25 @@ format.ASTR <- function(x, ..., use_markup = rlang::is_interactive(), width = cl
     use_markup = use_markup
   )
   # merge information
-  out_str <- list(title_line, analytical_line,contextual_line)
+  out_str <- list(title_line, analytical_line, contextual_line)
   invisible(paste(out_str, collapse = "\n", sep = ""))
 }
 
 # see colours: for(col in 29:47){ cat(paste0("\033[0;", col, "m", "test" ,"\033[0m","\n"))}
-add_color <- function(x, col) { paste0("\033[0;", col, "m", x, "\033[0m") }
-make_bold <- function(x) { paste0("\033[1m", x, "\033[22m") }
+add_color <- function(x, col) {
+  paste0("\033[0;", col, "m", x, "\033[0m")
+}
+make_bold <- function(x) {
+  paste0("\033[1m", x, "\033[22m")
+}
 
 wrap_column_names <- function(label, columns, colour, width, use_markup) {
-  if (!length(columns)) { return(NULL) }
-  if (use_markup) { columns <- add_color(columns, colour) }
+  if (!length(columns)) {
+    return(NULL)
+  }
+  if (use_markup) {
+    columns <- add_color(columns, colour)
+  }
   line <- paste0(label, " ", paste(columns, collapse = ", "))
   wrapped <- cli::ansi_strwrap(
     line,
