@@ -327,43 +327,59 @@ validate.ASTR <- function(x, quiet = TRUE, ...) {
 }
 
 #' @param x an object of class ASTR
+#' @param use_markup should the formatting use nice markup for the R console?
+#'   By default this is decided based on if the session is interactive
+#' @param width width of the console for which to optimize the output for.
+#'   By default this is automatically determined
 #' @rdname ASTR
 #' @export
-format.ASTR <- function(x, ...) {
-  out_str <- list()
+format.ASTR <- function(x, ..., use_markup = rlang::is_interactive(), width = cli::console_width()) {
   # compile information
-  out_str$title <- "\033[1mASTR table\033[22m"
+  title_line <- if (use_markup) make_bold("ASTR table") else "ASTR table"
   # analytical columns
-  x_analytical <- colnames(get_analytical_columns(x))
-  if (length(x_analytical[-1]) > 0) {
-    out_str$analytical_columns <- paste(
-      "Analytical columns:",
-      paste(add_color(x_analytical[-1], 32), collapse = ", ")
-    )
-  }
+  analytical <- colnames(get_analytical_columns(x))[-1L]
+  analytical_line <- wrap_column_names(
+    label      = "Analytical columns:",
+    columns    = analytical,
+    colour     = 32,
+    width      = width,
+    use_markup = use_markup
+  )
   # contextual columns
-  x_context <- colnames(get_contextual_columns(x))
-  if (length(x_context[-1]) > 0) {
-    out_str$contextual_columns <- paste(
-      "Contextual columns:",
-      paste(add_color(x_context[-1], 35), collapse = ", ")
-    )
-  }
+  contextual <- colnames(get_contextual_columns(x))[-1L]
+  contextual_line <- wrap_column_names(
+    label      = "Contextual columns:",
+    columns    = contextual,
+    colour     = 35,
+    width      = width,
+    use_markup = use_markup
+  )
   # merge information
-  return_value <- paste(out_str, collapse = "\n", sep = "")
-  invisible(return_value)
+  out_str <- list(title_line, analytical_line,contextual_line)
+  invisible(paste(out_str, collapse = "\n", sep = ""))
 }
 
 # see colours: for(col in 29:47){ cat(paste0("\033[0;", col, "m", "test" ,"\033[0m","\n"))}
-add_color <- function(x, col) {
-  paste0("\033[0;", col, "m", x, "\033[0m")
+add_color <- function(x, col) { paste0("\033[0;", col, "m", x, "\033[0m") }
+make_bold <- function(x) { paste0("\033[1m", x, "\033[22m") }
+
+wrap_column_names <- function(label, columns, colour, width, use_markup) {
+  if (!length(columns)) { return(NULL) }
+  if (use_markup) { columns <- add_color(columns, colour) }
+  line <- paste0(label, " ", paste(columns, collapse = ", "))
+  wrapped <- cli::ansi_strwrap(
+    line,
+    width  = width,
+    exdent = cli::ansi_nchar(paste0(label, " "))
+  )
+  paste(wrapped, collapse = "\n")
 }
 
 #' @rdname ASTR
 #' @export
-print.ASTR <- function(x, ...) {
+print.ASTR <- function(x, ..., use_markup = rlang::is_interactive(), width = cli::console_width()) {
   # own format function
-  cat(format(x, ...), "\n")
+  cat(format(x, ..., use_markup = use_markup, width = width), "\n")
   # add table printed like a tibble
   x %>%
     `class<-`(c("tbl", "tbl_df", "data.frame")) %>%
