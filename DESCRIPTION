@@ -45,6 +45,7 @@ Suggests:
     vdiffr
 Imports:
     checkmate,
+    cli,
     dplyr  (>= 1.2.0),
     geometry,
     magrittr,
