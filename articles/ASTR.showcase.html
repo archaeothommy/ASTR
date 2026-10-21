@@ -205,9 +205,11 @@ group A).</p>
 two more things:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">ASTR table</span></span></span>
-<span><span class="co">#&gt; Analytical columns: <span style="color: #00BB00;">Cu</span>, <span style="color: #00BB00;">Cu_err2SD</span>, <span style="color: #00BB00;">Sn</span>, <span style="color: #00BB00;">As</span>, <span style="color: #00BB00;">Sb</span>, <span style="color: #00BB00;">Ag</span>, <span style="color: #00BB00;">Ni</span>, <span style="color: #00BB00;">d65Cu</span>, <span style="color: #00BB00;">206Pb/204Pb</span>, <span style="color: #00BB00;">206Pb/204Pb_err2SD</span>, <span style="color: #00BB00;">207Pb/204Pb</span>, <span style="color: #00BB00;">207Pb/204Pb_err2SD</span>, <span style="color: #00BB00;">208Pb/204Pb</span>, <span style="color: #00BB00;">208Pb/204Pb_err2SD</span></span></span>
-<span><span class="co">#&gt; Contextual columns: <span style="color: #BB00BB;">Group</span> </span></span>
+<span><span class="co">#&gt; ASTR table</span></span>
+<span><span class="co">#&gt; Analytical columns: Cu, Cu_err2SD, Sn, As, Sb, Ag, Ni, d65Cu, 206Pb/204Pb,</span></span>
+<span><span class="co">#&gt;                     206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD,</span></span>
+<span><span class="co">#&gt;                     208Pb/204Pb, 208Pb/204Pb_err2SD</span></span>
+<span><span class="co">#&gt; Contextual columns: Group </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A data frame: 10 × 16</span></span></span>
 <span><span class="co">#&gt;    ID    Group    Cu Cu_err2SD    Sn    As    Sb    Ag    Ni d65Cu `206Pb/204Pb`</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494;">[wtP]</span>     <span style="color: #949494;">[wtP]</span> <span style="color: #949494;">[wtP]</span> <span style="color: #949494;">[wtP]</span> <span style="color: #949494;">[wtP]</span> <span style="color: #949494;">[mg/</span>… <span style="color: #949494;">[mg/</span>… <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
@@ -315,9 +317,11 @@ versions by using &lt;code&gt;%&amp;gt;%&lt;/code&gt;&lt;/p&gt;"><sup>2</sup></a
 <span></span>
 <span><span class="fu"><a href="../reference/ASTR.html">unify_concentration_unit</a></span><span class="op">(</span><span class="va">data</span>, unit <span class="op">=</span> <span class="st">"wtP"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/atomic_conversion.html">wt_to_at</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">ASTR table</span></span></span>
-<span><span class="co">#&gt; Analytical columns: <span style="color: #00BB00;">Cu</span>, <span style="color: #00BB00;">Cu_err2SD</span>, <span style="color: #00BB00;">Sn</span>, <span style="color: #00BB00;">As</span>, <span style="color: #00BB00;">Sb</span>, <span style="color: #00BB00;">Ag</span>, <span style="color: #00BB00;">Ni</span>, <span style="color: #00BB00;">d65Cu</span>, <span style="color: #00BB00;">206Pb/204Pb</span>, <span style="color: #00BB00;">206Pb/204Pb_err2SD</span>, <span style="color: #00BB00;">207Pb/204Pb</span>, <span style="color: #00BB00;">207Pb/204Pb_err2SD</span>, <span style="color: #00BB00;">208Pb/204Pb</span>, <span style="color: #00BB00;">208Pb/204Pb_err2SD</span></span></span>
-<span><span class="co">#&gt; Contextual columns: <span style="color: #BB00BB;">Group</span> </span></span>
+<span><span class="co">#&gt; ASTR table</span></span>
+<span><span class="co">#&gt; Analytical columns: Cu, Cu_err2SD, Sn, As, Sb, Ag, Ni, d65Cu, 206Pb/204Pb,</span></span>
+<span><span class="co">#&gt;                     206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD,</span></span>
+<span><span class="co">#&gt;                     208Pb/204Pb, 208Pb/204Pb_err2SD</span></span>
+<span><span class="co">#&gt; Contextual columns: Group </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A data frame: 10 × 16</span></span></span>
 <span><span class="co">#&gt;    ID    Group    Cu Cu_err2SD    Sn    As    Sb      Ag     Ni d65Cu</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494;">[atP]</span>     <span style="color: #949494;">[wtP]</span> <span style="color: #949494;">[atP]</span> <span style="color: #949494;">[atP]</span> <span style="color: #949494;">[atP]</span>   <span style="color: #949494;">[atP]</span>  <span style="color: #949494;">[atP]</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
@@ -346,9 +350,11 @@ of arsenic and antimony in the metal. Therefore, converting only copper
 and tin would be sufficient:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/atomic_conversion.html">wt_to_at</a></span><span class="op">(</span><span class="va">data</span>, elements <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cu"</span>, <span class="st">"Sn"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">ASTR table</span></span></span>
-<span><span class="co">#&gt; Analytical columns: <span style="color: #00BB00;">Cu</span>, <span style="color: #00BB00;">Cu_err2SD</span>, <span style="color: #00BB00;">Sn</span>, <span style="color: #00BB00;">As</span>, <span style="color: #00BB00;">Sb</span>, <span style="color: #00BB00;">Ag</span>, <span style="color: #00BB00;">Ni</span>, <span style="color: #00BB00;">d65Cu</span>, <span style="color: #00BB00;">206Pb/204Pb</span>, <span style="color: #00BB00;">206Pb/204Pb_err2SD</span>, <span style="color: #00BB00;">207Pb/204Pb</span>, <span style="color: #00BB00;">207Pb/204Pb_err2SD</span>, <span style="color: #00BB00;">208Pb/204Pb</span>, <span style="color: #00BB00;">208Pb/204Pb_err2SD</span></span></span>
-<span><span class="co">#&gt; Contextual columns: <span style="color: #BB00BB;">Group</span> </span></span>
+<span><span class="co">#&gt; ASTR table</span></span>
+<span><span class="co">#&gt; Analytical columns: Cu, Cu_err2SD, Sn, As, Sb, Ag, Ni, d65Cu, 206Pb/204Pb,</span></span>
+<span><span class="co">#&gt;                     206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD,</span></span>
+<span><span class="co">#&gt;                     208Pb/204Pb, 208Pb/204Pb_err2SD</span></span>
+<span><span class="co">#&gt; Contextual columns: Group </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A data frame: 10 × 16</span></span></span>
 <span><span class="co">#&gt;    ID    Group    Cu Cu_err2SD    Sn    As    Sb    Ag    Ni d65Cu `206Pb/204Pb`</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494;">[atP]</span>     <span style="color: #949494;">[wtP]</span> <span style="color: #949494;">[atP]</span> <span style="color: #949494;">[wtP]</span> <span style="color: #949494;">[wtP]</span> <span style="color: #949494;">[mg/</span>… <span style="color: #949494;">[mg/</span>… <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
@@ -378,9 +384,9 @@ Not surprising, we see that they all belong to the group “As+Sb”:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">copper_group</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/copper_group_bray.html">copper_group_bray</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span><span class="va">copper_group</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">ASTR table</span></span></span>
-<span><span class="co">#&gt; Analytical columns: <span style="color: #00BB00;">As</span>, <span style="color: #00BB00;">Sb</span>, <span style="color: #00BB00;">Ag</span>, <span style="color: #00BB00;">Ni</span></span></span>
-<span><span class="co">#&gt; Contextual columns: <span style="color: #BB00BB;">Group</span>, <span style="color: #BB00BB;">copper_group_bray</span> </span></span>
+<span><span class="co">#&gt; ASTR table</span></span>
+<span><span class="co">#&gt; Analytical columns: As, Sb, Ag, Ni</span></span>
+<span><span class="co">#&gt; Contextual columns: Group, copper_group_bray </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A data frame: 10 × 7</span></span></span>
 <span><span class="co">#&gt;    ID    Group    As    Sb     Ag     Ni copper_group_bray</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494;">[wtP]</span> <span style="color: #949494;">[wtP]</span>  <span style="color: #949494;">[wtP]</span>  <span style="color: #949494;">[wtP]</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            </span></span>
@@ -404,9 +410,9 @@ from group A:</p>
 <code class="sourceCode R"><span><span class="va">data_pb_iso</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">[</span><span class="va">data</span><span class="op">$</span><span class="va">Group</span> <span class="op">==</span> <span class="st">"B"</span>, <span class="op">]</span></span>
 <span><span class="va">age_model_params</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/age_models.html">pb_iso_age_model</a></span><span class="op">(</span><span class="va">data_pb_iso</span>, model <span class="op">=</span> <span class="st">"SK75"</span><span class="op">)</span></span>
 <span><span class="va">age_model_params</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">ASTR table</span></span></span>
-<span><span class="co">#&gt; Analytical columns: <span style="color: #00BB00;">206Pb/204Pb</span>, <span style="color: #00BB00;">207Pb/204Pb</span>, <span style="color: #00BB00;">208Pb/204Pb</span></span></span>
-<span><span class="co">#&gt; Contextual columns: <span style="color: #BB00BB;">Group</span>, <span style="color: #BB00BB;">model_age_SK75</span>, <span style="color: #BB00BB;">mu_SK75</span>, <span style="color: #BB00BB;">kappa_SK75</span> </span></span>
+<span><span class="co">#&gt; ASTR table</span></span>
+<span><span class="co">#&gt; Analytical columns: 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb</span></span>
+<span><span class="co">#&gt; Contextual columns: Group, model_age_SK75, mu_SK75, kappa_SK75 </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A data frame: 5 × 8</span></span></span>
 <span><span class="co">#&gt;   ID    Group `206Pb/204Pb` `207Pb/204Pb` `208Pb/204Pb` model_age_SK75 mu_SK75</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
@@ -433,9 +439,12 @@ is preserved by including it back in the column name:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data_unitless</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ASTR.html">remove_units</a></span><span class="op">(</span><span class="va">data</span>, recover_unit_names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">data_unitless</span></span>
-<span><span class="co">#&gt; <span style="font-weight: bold;">ASTR table</span></span></span>
-<span><span class="co">#&gt; Analytical columns: <span style="color: #00BB00;">Cu_wt%</span>, <span style="color: #00BB00;">Cu_err2SD</span>, <span style="color: #00BB00;">Sn_wt%</span>, <span style="color: #00BB00;">As_wt%</span>, <span style="color: #00BB00;">Sb_wt%</span>, <span style="color: #00BB00;">Ag_mg/kg</span>, <span style="color: #00BB00;">Ni_mg/kg</span>, <span style="color: #00BB00;">d65Cu</span>, <span style="color: #00BB00;">206Pb/204Pb</span>, <span style="color: #00BB00;">206Pb/204Pb_err2SD</span>, <span style="color: #00BB00;">207Pb/204Pb</span>, <span style="color: #00BB00;">207Pb/204Pb_err2SD</span>, <span style="color: #00BB00;">208Pb/204Pb</span>, <span style="color: #00BB00;">208Pb/204Pb_err2SD</span></span></span>
-<span><span class="co">#&gt; Contextual columns: <span style="color: #BB00BB;">Group</span> </span></span>
+<span><span class="co">#&gt; ASTR table</span></span>
+<span><span class="co">#&gt; Analytical columns: Cu_wt%, Cu_err2SD, Sn_wt%, As_wt%, Sb_wt%, Ag_mg/kg,</span></span>
+<span><span class="co">#&gt;                     Ni_mg/kg, d65Cu, 206Pb/204Pb, 206Pb/204Pb_err2SD,</span></span>
+<span><span class="co">#&gt;                     207Pb/204Pb, 207Pb/204Pb_err2SD, 208Pb/204Pb,</span></span>
+<span><span class="co">#&gt;                     208Pb/204Pb_err2SD</span></span>
+<span><span class="co">#&gt; Contextual columns: Group </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A data frame: 10 × 16</span></span></span>
 <span><span class="co">#&gt;    ID    Group `Cu_wt%` Cu_err2SD `Sn_wt%` `As_wt%` `Sb_wt%` `Ag_mg/kg`</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>

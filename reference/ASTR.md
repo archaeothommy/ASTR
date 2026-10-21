@@ -64,10 +64,20 @@ read_ASTR(
 validate(x, quiet = TRUE, ...)
 
 # S3 method for class 'ASTR'
-format(x, ...)
+format(
+  x,
+  ...,
+  use_markup = rlang::is_interactive(),
+  width = cli::console_width()
+)
 
 # S3 method for class 'ASTR'
-print(x, ...)
+print(
+  x,
+  ...,
+  use_markup = rlang::is_interactive(),
+  width = cli::console_width()
+)
 
 get_contextual_columns(x, ...)
 
@@ -165,6 +175,16 @@ unify_concentration_unit(x, unit, ...)
 - quiet:
 
   should warnings be printed? Defaults to `TRUE`
+
+- use_markup:
+
+  should the formatting use nice markup for the R console? By default
+  this is decided based on if the session is interactive
+
+- width:
+
+  width of the console for which to optimize the output for. By default
+  this is automatically determined
 
 - units:
 
@@ -283,8 +303,16 @@ conc$Sb <- units::set_units(arch$Sb, "ppb") %>%
 # removing all units from ASTR tables
 remove_units(arch)
 #> ASTR table
-#> Analytical columns: 143Nd/144Nd, d65Cu, d65Cu_err2SD, Na2O, BaO, Pb, MgO, Al2O3, SiO2, SiO2_errSD, P2O5, S, CaO, TiO2, MnO, FeOtot, FeOtot_err2SD, ZnO, K2O, Cu, As, LOI, Ag, Sn, Sb, Te, Bi, U, V, Cr, Co, Ni, Sr, Se, FeOtot/SiO2, (Na2O+K2O)/SiO2, 206Pb/204Pb, 206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD, 208Pb/204Pb, 208Pb/204Pb_err2SD, 207Pb/206Pb, 207Pb/206Pb_err2SD, 208Pb/206Pb, 208Pb/206Pb_err2SD
-#> Contextual columns: Sample, Lab no., Site, latitude, longitude, Type, method_comp 
+#> Analytical columns: 143Nd/144Nd, d65Cu, d65Cu_err2SD, Na2O, BaO, Pb, MgO,
+#>                     Al2O3, SiO2, SiO2_errSD, P2O5, S, CaO, TiO2, MnO, FeOtot,
+#>                     FeOtot_err2SD, ZnO, K2O, Cu, As, LOI, Ag, Sn, Sb, Te, Bi,
+#>                     U, V, Cr, Co, Ni, Sr, Se, FeOtot/SiO2, (Na2O+K2O)/SiO2,
+#>                     206Pb/204Pb, 206Pb/204Pb_err2SD, 207Pb/204Pb,
+#>                     207Pb/204Pb_err2SD, 208Pb/204Pb, 208Pb/204Pb_err2SD,
+#>                     207Pb/206Pb, 207Pb/206Pb_err2SD, 208Pb/206Pb,
+#>                     208Pb/206Pb_err2SD
+#> Contextual columns: Sample, Lab no., Site, latitude, longitude, Type,
+#>                     method_comp 
 #> # A data frame: 14 × 54
 #>    ID       Sample   `Lab no.` Site         latitude longitude  Type method_comp
 #>    <chr>    <chr>    <chr>     <chr>           <dbl>     <dbl> <dbl> <chr>      
@@ -337,7 +365,10 @@ conc_subset <- conc %>%
 # unify all concentration units
 unify_concentration_unit(conc_subset, "ppb")
 #> ASTR table
-#> Analytical columns: Na2O, BaO, Pb, MgO, Al2O3, SiO2, P2O5, S, CaO, TiO2, MnO, FeOtot, ZnO, K2O, Cu, As, LOI, Ag, Te, Bi, U, V, Cr, Co, Ni, Sr, Se 
+#> Analytical columns: Na2O, BaO, Pb, MgO, Al2O3, SiO2, P2O5, S, CaO, TiO2, MnO,
+#>                     FeOtot, ZnO, K2O, Cu, As, LOI, Ag, Te, Bi, U, V, Cr, Co,
+#>                     Ni, Sr, Se
+#> NULL 
 #> # A data frame: 6 × 28
 #>   ID         Na2O    BaO     Pb    MgO  Al2O3   SiO2   P2O5     S    CaO    TiO2
 #>   <chr>     [ppb]  [ppb]  [ppb]  [ppb]  [ppb]  [ppb]  [ppb] [atP]  [ppb]   [ppb]

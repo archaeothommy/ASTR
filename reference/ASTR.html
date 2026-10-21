@@ -140,10 +140,20 @@ manipulation tools in the tidyverse.</p>
 <span><span class="fu">validate</span><span class="op">(</span><span class="va">x</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'ASTR'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  use_markup <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/is_interactive.html" class="external-link">is_interactive</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  width <span class="op">=</span> <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/console_width.html" class="external-link">console_width</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'ASTR'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  use_markup <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/is_interactive.html" class="external-link">is_interactive</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  width <span class="op">=</span> <span class="fu">cli</span><span class="fu">::</span><span class="fu"><a href="https://cli.r-lib.org/reference/console_width.html" class="external-link">console_width</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">get_contextual_columns</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
@@ -236,6 +246,16 @@ provided for all file types except <code>.xlsx</code> or <code>.xls</code>. Defa
 
 <dt id="arg-quiet">quiet<a class="anchor" aria-label="anchor" href="#arg-quiet"></a></dt>
 <dd><p>should warnings be printed? Defaults to <code>TRUE</code></p></dd>
+
+
+<dt id="arg-use-markup">use_markup<a class="anchor" aria-label="anchor" href="#arg-use-markup"></a></dt>
+<dd><p>should the formatting use nice markup for the R console?
+By default this is decided based on if the session is interactive</p></dd>
+
+
+<dt id="arg-width">width<a class="anchor" aria-label="anchor" href="#arg-width"></a></dt>
+<dd><p>width of the console for which to optimize the output for.
+By default this is automatically determined</p></dd>
 
 
 <dt id="arg-units">units<a class="anchor" aria-label="anchor" href="#arg-units"></a></dt>
@@ -349,9 +369,17 @@ replaced by <code>NA</code> automatically.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># removing all units from ASTR tables</span></span></span>
 <span class="r-in"><span><span class="fu">remove_units</span><span class="op">(</span><span class="va">arch</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">ASTR table</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Analytical columns: <span style="color: #00BB00;">143Nd/144Nd</span>, <span style="color: #00BB00;">d65Cu</span>, <span style="color: #00BB00;">d65Cu_err2SD</span>, <span style="color: #00BB00;">Na2O</span>, <span style="color: #00BB00;">BaO</span>, <span style="color: #00BB00;">Pb</span>, <span style="color: #00BB00;">MgO</span>, <span style="color: #00BB00;">Al2O3</span>, <span style="color: #00BB00;">SiO2</span>, <span style="color: #00BB00;">SiO2_errSD</span>, <span style="color: #00BB00;">P2O5</span>, <span style="color: #00BB00;">S</span>, <span style="color: #00BB00;">CaO</span>, <span style="color: #00BB00;">TiO2</span>, <span style="color: #00BB00;">MnO</span>, <span style="color: #00BB00;">FeOtot</span>, <span style="color: #00BB00;">FeOtot_err2SD</span>, <span style="color: #00BB00;">ZnO</span>, <span style="color: #00BB00;">K2O</span>, <span style="color: #00BB00;">Cu</span>, <span style="color: #00BB00;">As</span>, <span style="color: #00BB00;">LOI</span>, <span style="color: #00BB00;">Ag</span>, <span style="color: #00BB00;">Sn</span>, <span style="color: #00BB00;">Sb</span>, <span style="color: #00BB00;">Te</span>, <span style="color: #00BB00;">Bi</span>, <span style="color: #00BB00;">U</span>, <span style="color: #00BB00;">V</span>, <span style="color: #00BB00;">Cr</span>, <span style="color: #00BB00;">Co</span>, <span style="color: #00BB00;">Ni</span>, <span style="color: #00BB00;">Sr</span>, <span style="color: #00BB00;">Se</span>, <span style="color: #00BB00;">FeOtot/SiO2</span>, <span style="color: #00BB00;">(Na2O+K2O)/SiO2</span>, <span style="color: #00BB00;">206Pb/204Pb</span>, <span style="color: #00BB00;">206Pb/204Pb_err2SD</span>, <span style="color: #00BB00;">207Pb/204Pb</span>, <span style="color: #00BB00;">207Pb/204Pb_err2SD</span>, <span style="color: #00BB00;">208Pb/204Pb</span>, <span style="color: #00BB00;">208Pb/204Pb_err2SD</span>, <span style="color: #00BB00;">207Pb/206Pb</span>, <span style="color: #00BB00;">207Pb/206Pb_err2SD</span>, <span style="color: #00BB00;">208Pb/206Pb</span>, <span style="color: #00BB00;">208Pb/206Pb_err2SD</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Contextual columns: <span style="color: #BB00BB;">Sample</span>, <span style="color: #BB00BB;">Lab no.</span>, <span style="color: #BB00BB;">Site</span>, <span style="color: #BB00BB;">latitude</span>, <span style="color: #BB00BB;">longitude</span>, <span style="color: #BB00BB;">Type</span>, <span style="color: #BB00BB;">method_comp</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ASTR table</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Analytical columns: 143Nd/144Nd, d65Cu, d65Cu_err2SD, Na2O, BaO, Pb, MgO,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     Al2O3, SiO2, SiO2_errSD, P2O5, S, CaO, TiO2, MnO, FeOtot,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     FeOtot_err2SD, ZnO, K2O, Cu, As, LOI, Ag, Sn, Sb, Te, Bi,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     U, V, Cr, Co, Ni, Sr, Se, FeOtot/SiO2, (Na2O+K2O)/SiO2,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     206Pb/204Pb, 206Pb/204Pb_err2SD, 207Pb/204Pb,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     207Pb/204Pb_err2SD, 208Pb/204Pb, 208Pb/204Pb_err2SD,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     207Pb/206Pb, 207Pb/206Pb_err2SD, 208Pb/206Pb,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     208Pb/206Pb_err2SD</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Contextual columns: Sample, Lab no., Site, latitude, longitude, Type,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     method_comp </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A data frame: 14 × 54</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    ID       Sample   `Lab no.` Site         latitude longitude  Type method_comp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span>
@@ -403,8 +431,11 @@ replaced by <code>NA</code> automatically.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># unify all concentration units</span></span></span>
 <span class="r-in"><span><span class="fu">unify_concentration_unit</span><span class="op">(</span><span class="va">conc_subset</span>, <span class="st">"ppb"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">ASTR table</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Analytical columns: <span style="color: #00BB00;">Na2O</span>, <span style="color: #00BB00;">BaO</span>, <span style="color: #00BB00;">Pb</span>, <span style="color: #00BB00;">MgO</span>, <span style="color: #00BB00;">Al2O3</span>, <span style="color: #00BB00;">SiO2</span>, <span style="color: #00BB00;">P2O5</span>, <span style="color: #00BB00;">S</span>, <span style="color: #00BB00;">CaO</span>, <span style="color: #00BB00;">TiO2</span>, <span style="color: #00BB00;">MnO</span>, <span style="color: #00BB00;">FeOtot</span>, <span style="color: #00BB00;">ZnO</span>, <span style="color: #00BB00;">K2O</span>, <span style="color: #00BB00;">Cu</span>, <span style="color: #00BB00;">As</span>, <span style="color: #00BB00;">LOI</span>, <span style="color: #00BB00;">Ag</span>, <span style="color: #00BB00;">Te</span>, <span style="color: #00BB00;">Bi</span>, <span style="color: #00BB00;">U</span>, <span style="color: #00BB00;">V</span>, <span style="color: #00BB00;">Cr</span>, <span style="color: #00BB00;">Co</span>, <span style="color: #00BB00;">Ni</span>, <span style="color: #00BB00;">Sr</span>, <span style="color: #00BB00;">Se</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ASTR table</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Analytical columns: Na2O, BaO, Pb, MgO, Al2O3, SiO2, P2O5, S, CaO, TiO2, MnO,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     FeOtot, ZnO, K2O, Cu, As, LOI, Ag, Te, Bi, U, V, Cr, Co,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     Ni, Sr, Se</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A data frame: 6 × 28</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ID         Na2O    BaO     Pb    MgO  Al2O3   SiO2   P2O5     S    CaO    TiO2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494;">[ppb]</span>  <span style="color: #949494;">[ppb]</span>  <span style="color: #949494;">[ppb]</span>  <span style="color: #949494;">[ppb]</span>  <span style="color: #949494;">[ppb]</span>  <span style="color: #949494;">[ppb]</span>  <span style="color: #949494;">[ppb]</span> <span style="color: #949494;">[atP]</span>  <span style="color: #949494;">[ppb]</span>   <span style="color: #949494;">[ppb]</span></span>

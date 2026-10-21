@@ -147,7 +147,7 @@ ggplot(
 #> No density estimate possible for group '13', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '14', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '16', plotting points instead: infinite or missing values in 'x'
-#> No density estimate possible for group '21', plotting points instead: the leading minor of order 2 is not positive
+#> No density estimate possible for group '21', plotting points instead: Levels values are zeroFALSE
 #> No density estimate possible for group '23', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '24', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '25', plotting points instead: infinite or missing values in 'x'
@@ -203,7 +203,7 @@ ggplot(
 #> No density estimate possible for group '13', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '14', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '16', plotting points instead: infinite or missing values in 'x'
-#> No density estimate possible for group '21', plotting points instead: the leading minor of order 2 is not positive
+#> No density estimate possible for group '21', plotting points instead: Levels values are zeroFALSE
 #> No density estimate possible for group '23', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '24', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '25', plotting points instead: infinite or missing values in 'x'
@@ -245,7 +245,7 @@ ggplot(
 #> No density estimate possible for group '13', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '14', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '16', plotting points instead: infinite or missing values in 'x'
-#> No density estimate possible for group '21', plotting points instead: the leading minor of order 2 is not positive
+#> No density estimate possible for group '21', plotting points instead: Levels values are zeroFALSE
 #> No density estimate possible for group '23', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '24', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '25', plotting points instead: infinite or missing values in 'x'
@@ -290,7 +290,7 @@ ggplot(
 #> No density estimate possible for group '13', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '14', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '16', plotting points instead: infinite or missing values in 'x'
-#> No density estimate possible for group '21', plotting points instead: the leading minor of order 2 is not positive
+#> No density estimate possible for group '21', plotting points instead: Levels values are zeroFALSE
 #> No density estimate possible for group '23', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '24', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '25', plotting points instead: infinite or missing values in 'x'
@@ -345,7 +345,7 @@ ggplot(
 #> No density estimate possible for group '13', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '14', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '16', plotting points instead: infinite or missing values in 'x'
-#> No density estimate possible for group '21', plotting points instead: the leading minor of order 2 is not positive
+#> No density estimate possible for group '21', plotting points instead: Levels values are zeroFALSE
 #> No density estimate possible for group '23', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '24', plotting points instead: infinite or missing values in 'x'
 #> No density estimate possible for group '25', plotting points instead: infinite or missing values in 'x'

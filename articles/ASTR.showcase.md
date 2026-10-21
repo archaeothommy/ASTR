@@ -159,7 +159,9 @@ more things:
 
 data
 #> ASTR table
-#> Analytical columns: Cu, Cu_err2SD, Sn, As, Sb, Ag, Ni, d65Cu, 206Pb/204Pb, 206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD, 208Pb/204Pb, 208Pb/204Pb_err2SD
+#> Analytical columns: Cu, Cu_err2SD, Sn, As, Sb, Ag, Ni, d65Cu, 206Pb/204Pb,
+#>                     206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD,
+#>                     208Pb/204Pb, 208Pb/204Pb_err2SD
 #> Contextual columns: Group 
 #> # A data frame: 10 × 16
 #>    ID    Group    Cu Cu_err2SD    Sn    As    Sb    Ag    Ni d65Cu `206Pb/204Pb`
@@ -282,7 +284,9 @@ library(magrittr) # import of pipe operator `%>%`
 unify_concentration_unit(data, unit = "wtP") %>%
   wt_to_at()
 #> ASTR table
-#> Analytical columns: Cu, Cu_err2SD, Sn, As, Sb, Ag, Ni, d65Cu, 206Pb/204Pb, 206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD, 208Pb/204Pb, 208Pb/204Pb_err2SD
+#> Analytical columns: Cu, Cu_err2SD, Sn, As, Sb, Ag, Ni, d65Cu, 206Pb/204Pb,
+#>                     206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD,
+#>                     208Pb/204Pb, 208Pb/204Pb_err2SD
 #> Contextual columns: Group 
 #> # A data frame: 10 × 16
 #>    ID    Group    Cu Cu_err2SD    Sn    As    Sb      Ag     Ni d65Cu
@@ -318,7 +322,9 @@ Therefore, converting only copper and tin would be sufficient:
 
 wt_to_at(data, elements = c("Cu", "Sn"))
 #> ASTR table
-#> Analytical columns: Cu, Cu_err2SD, Sn, As, Sb, Ag, Ni, d65Cu, 206Pb/204Pb, 206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD, 208Pb/204Pb, 208Pb/204Pb_err2SD
+#> Analytical columns: Cu, Cu_err2SD, Sn, As, Sb, Ag, Ni, d65Cu, 206Pb/204Pb,
+#>                     206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD,
+#>                     208Pb/204Pb, 208Pb/204Pb_err2SD
 #> Contextual columns: Group 
 #> # A data frame: 10 × 16
 #>    ID    Group    Cu Cu_err2SD    Sn    As    Sb    Ag    Ni d65Cu `206Pb/204Pb`
@@ -408,7 +414,10 @@ of the values is preserved by including it back in the column name:
 data_unitless <- remove_units(data, recover_unit_names = TRUE)
 data_unitless
 #> ASTR table
-#> Analytical columns: Cu_wt%, Cu_err2SD, Sn_wt%, As_wt%, Sb_wt%, Ag_mg/kg, Ni_mg/kg, d65Cu, 206Pb/204Pb, 206Pb/204Pb_err2SD, 207Pb/204Pb, 207Pb/204Pb_err2SD, 208Pb/204Pb, 208Pb/204Pb_err2SD
+#> Analytical columns: Cu_wt%, Cu_err2SD, Sn_wt%, As_wt%, Sb_wt%, Ag_mg/kg,
+#>                     Ni_mg/kg, d65Cu, 206Pb/204Pb, 206Pb/204Pb_err2SD,
+#>                     207Pb/204Pb, 207Pb/204Pb_err2SD, 208Pb/204Pb,
+#>                     208Pb/204Pb_err2SD
 #> Contextual columns: Group 
 #> # A data frame: 10 × 16
 #>    ID    Group `Cu_wt%` Cu_err2SD `Sn_wt%` `As_wt%` `Sb_wt%` `Ag_mg/kg`
