@@ -4,6 +4,7 @@
 
 library(testthat)
 library(ASTR)
+library(dplyr)
 library(tibble)
 library(ggplot2)
 library(vdiffr)
