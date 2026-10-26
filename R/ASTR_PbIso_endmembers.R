@@ -1,6 +1,11 @@
 # Helper function ---------------------------------------------------------
 
-.calc_pb_iso_endmembers <- function(x, iso_cols, tolerance, clamp, ...) {
+.calc_pb_iso_endmembers <- function(x,
+                                    iso_cols,
+                                    tolerance,
+                                    clamp,
+                                    geo_slope,
+                                    ...) {
   # Subset and convert matrix
   x_iso_mat <- as.matrix(x[, iso_cols])
 
@@ -42,8 +47,6 @@
   # Endmember extraction
   pca_ends <- pca_values[pca_values[, "PC1"] %in% range(pca_values[, "PC1"]), ]
   isotope_ends <- isotope_matrix[as.numeric(rownames(pca_ends)), ]
-
-  geo_slope <- 0.626208
 
   end_member_filter <- function(idx, tol, clmp) {
     col_7 <- grep("7", colnames(isotope_ends))
@@ -102,12 +105,17 @@
 #'   geochron lines, default is `c(0.01, 0.01)`.
 #' @param clamp Limit filter for points away from the principal component end
 #'   based on Euclidean distance, default is `c(Inf, Inf)`.
+#' @param geo_slope Wholenumber value of geocron slope (Default = 0.626208)
 #' @param ... Additional parameters
 #'
 #' @references Shnyr, E., Kuflik, T., Desai, K., and Eshel, T. (2026)
 #'   Determining the origins of Phoenician silver: Exploring the potential of
 #'   machine learning for lead isotope analysis. Journal of Archaeological
 #'   Science 188, pp. 106–499. <https://doi.org/10.1016/j.jas.2026.106499>
+#' @references Stacey, J. S., & Kramers, J. D. (1975). Approximation of
+#'   Terrestrial Lead Isotope Evolution by a Two-Stage Model. Earth and
+#'   Planetry Science Letters, 26, 207–221.
+
 #'
 #' @returns An [ASTR object][ASTR] with additional class attribute
 #' `ASTR_Pbiso_endmembr`. The output extends the input table in `x` with a column
@@ -144,6 +152,7 @@ pb_iso_endmembers <- function(x, ...) {
 pb_iso_endmembers.ASTR <- function(x,
                                    tolerance = c(0.01, 0.01),
                                    clamp = c(Inf, Inf),
+                                   geo_slope = 0.626208,
                                    ...) {
   # Main analysis function
 
@@ -153,6 +162,7 @@ pb_iso_endmembers.ASTR <- function(x,
                                 iso_cols = .pb_iso_cols(),
                                 tolerance = tolerance,
                                 clamp = clamp,
+                                geo_slope = geo_slope,
                                 ...)
 
   # Assign custom attribute for ASTR method
