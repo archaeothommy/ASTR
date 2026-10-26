@@ -70,7 +70,7 @@
 #' @name ArgentinaDatabase
 "ArgentinaDatabase"
 
-#' GloabaLID lead isotope database
+#' GlobaLID lead isotope database
 #'
 #' ASTR object containing lead isotope data along with "Political province/regions"
 #' as a grouping variable.
