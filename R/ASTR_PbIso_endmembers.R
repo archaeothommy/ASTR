@@ -24,7 +24,7 @@
   pc1_var <- pca_summary$importance[["Cumulative Proportion", "PC1"]]
 
   if (pc1_var < 0.95) {
-    message("PC1 represents less than 95% of the variance. There may be more than two endmembers.")
+    warning("PC1 represents less than 95% of the variance. There may be more than two endmembers.")
     print(pca_summary)
   }
 
@@ -34,7 +34,7 @@
   norm_test_pc3 <- stats::shapiro.test(pca_values[, "PC3"])$p.value > 0.95
 
   if (!(norm_test_pc1 && norm_test_pc2 && norm_test_pc3)) {
-    message(
+    warning(
       "PC2 or PC3 are not normally distributed. This may indicate that the variation is not random noise."
     )
   }
@@ -66,13 +66,14 @@
   end_group2 <- rownames(end_member_filter(2, tolerance[[2]], clamp[[2]]))
 
   if (length(end_group1) < 2 || length(end_group2) < 2) {
-    message(
+    warning(
       "Endmember group has less than two points. The likelihood of a point being an endmember is low."
     )
   }
 
   if (any(end_group1 %in% end_group2)) {
-    message("Overlap in endmembers between groups. A lower tolerance value is suggested.")
+    warning("Overlap in endmembers between groups.")
+    message("A lower tolerance value is suggested.")
   }
 
   mixing_group <- setdiff(rownames(isotope_matrix), c(end_group1, end_group2))

@@ -95,7 +95,7 @@ test_that("pb_iso_endmembers throws error when dataset has fewer than 3 samples"
 # 2. PCA Diagnostics & Messages
 # ==============================================================================
 
-test_that("pb_iso_endmembers triggers message and prints summary when PC1 variance < 95%",
+test_that("pb_iso_endmembers triggers warning and prints summary when PC1 variance < 95%",
           {
             set.seed(99)
             # Multi-directional noise so PC1 variance drops below 95%
@@ -110,8 +110,8 @@ test_that("pb_iso_endmembers triggers message and prints summary when PC1 varian
             )
             class(df_low_pc1) <- c("ASTR", "data.frame")
 
-            expect_message(
-              expect_output(pb_iso_endmembers(df_low_pc1), "Importance of components"),
+            expect_warning(
+              pb_iso_endmembers(df_low_pc1),
               "PC1 represents less than 95% of the variance. There may be more than two endmembers."
             )
           })
@@ -120,7 +120,7 @@ test_that("pb_iso_endmembers triggers message on non-normal PC distributions",
           {
             # Mock stats::shapiro.test to force normality test failures
             df <- make_mock_endmembers_astr(20)
-            expect_message(
+            expect_warning(
               pb_iso_endmembers(df),
               "PC2 or PC3 are not normally distributed. This may indicate that the variation is not random noise."
             )
@@ -136,7 +136,7 @@ test_that("pb_iso_endmembers triggers message when an endmember group has < 2 po
             df <- make_mock_endmembers_astr(15)
 
             # A tiny tolerance ensures < 2 points fall on the geochron line for group ends
-            expect_message(
+            expect_warning(
               pb_iso_endmembers(df, tolerance = c(1e-6, 1e-6)),
               "Endmember group has less than two points\\. The likelihood of a point being an endmember is low\\."
             )
@@ -147,9 +147,13 @@ test_that("pb_iso_endmembers triggers warning when groups overlap due to high to
             df <- make_mock_endmembers_astr(10)
 
             # A giant tolerance forces all points into both group1 and group2
+            expect_warning(
+              pb_iso_endmembers(df, tolerance = c(10, 10)),
+              "Overlap in endmembers between groups."
+            )
             expect_message(
               pb_iso_endmembers(df, tolerance = c(10, 10)),
-              "Overlap in endmembers between groups. A lower tolerance value is suggested."
+              "A lower tolerance value is suggested."
             )
           })
 
