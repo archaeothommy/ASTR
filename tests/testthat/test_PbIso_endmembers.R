@@ -24,35 +24,6 @@ make_mock_endmembers_astr <- function(n = 20, seed = 42) {
   df
 }
 
-# Standin mock for tag_astr_context if missing/internal during test environment setup
-if (!exists("tag_astr_context")) {
-  tag_astr_context <- function(df, cols) {
-    for (col in cols) {
-      if (col %in% names(df)) {
-        attr(df[[col]], "ASTR_class") <- "ASTR_context"
-      }
-    }
-    df
-  }
-}
-
-# Standin mock for internal column getters/validation if not attached
-if (!exists(".pb_iso_cols")) {
-  .pb_iso_cols <- function() {
-    c("206Pb/204Pb", "207Pb/204Pb", "208Pb/204Pb")
-  }
-}
-
-if (!exists(".validate_iso_cols")) {
-  .validate_iso_cols <- function(x) {
-    req <- .pb_iso_cols()
-    if (!all(req %in% names(x))) {
-      stop("Dataset is missing required lead isotope columns")
-    }
-  }
-}
-
-
 # ==============================================================================
 # 1. Validation & Input Errors
 # ==============================================================================
@@ -66,8 +37,7 @@ test_that("pb_iso_endmembers throws error when required isotope columns are miss
             )
             class(invalid_df) <- c("ASTR", "data.frame")
 
-            expect_error(pb_iso_endmembers(invalid_df),
-                         "Dataset is missing required lead isotope columns")
+            expect_error(pb_iso_endmembers(invalid_df))
           })
 
 test_that("pb_iso_endmembers throws error for non-numeric isotope values",

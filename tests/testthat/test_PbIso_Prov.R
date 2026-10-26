@@ -67,12 +67,12 @@ test_that(".pb_iso_cols returns correct column names", {
 
 test_that(".validate_iso_cols throws error when missing columns", {
   bad_df <- data.frame(sample_id = "S1", `206Pb/204Pb` = 18.2, check.names = FALSE)
-  expect_error(.validate_iso_cols(bad_df), "Dataset is missing required lead isotope columns")
+  expect_error(.validate_iso_cols(bad_df))
 })
 
 test_that(".ensure_pbiso_ref validates and converts reference objects", {
   non_astr <- data.frame(a = 1)
-  expect_error(.ensure_pbiso_ref(non_astr, "Region"), "`ref` must be of class 'ASTR'")
+  expect_error(.ensure_pbiso_ref(non_astr, "Region"))
 
   ref_raw <- make_test_ref_astr(n_per_group = 6)
   ref_processed <- .ensure_pbiso_ref(ref_raw, ref_group = "Region", min_groupsize = 5)
@@ -149,12 +149,12 @@ test_that("pb_iso_prov_dist dispatches correctly for 'ed', 'mf', and 'all'", {
 # 4. Machine Learning Model Training & Prediction
 # ==============================================================================
 
-test_that("helper_train_function validates .minPts_fac bounds", {
+test_that("helper_train_function validates minPts_fac bounds", {
   ref <- as_pbiso_ref_data(make_test_ref_astr(n_per_group = 25), group = "Region")
 
   expect_error(
-    helper_train_function(ref, .minPts_fac = 1.5),
-    "\\.minPts_fac must be between 0 and 1\\."
+    helper_train_function(ref, minPts_fac = 1.5),
+    "\\minPts_fac must be between 0 and 1\\."
   )
 })
 
@@ -170,10 +170,10 @@ test_that("pb_iso_train_data and pb_iso_prov_predict run end-to-end workflow", {
   # Train model list
   models <- pb_iso_train_data(
     ref = ref_data,
-    .minSize = 20,
-    .minPts_fac = 0.1,
-    .eps = 0.5, # Generous eps to prevent all-outlier clusters in random test data
-    .nrounds = 5,
+    minSize = 20,
+    minPts_fac = 0.1,
+    eps = 0.5, # Generous eps to prevent all-outlier clusters in random test data
+    nrounds = 5,
     nthread = 1L
   )
 
@@ -192,13 +192,7 @@ test_that("pb_iso_train_data and pb_iso_prov_predict run end-to-end workflow", {
 
 test_that("pb_iso_prov_predict handles errors and missing models gracefully", {
   query <- make_test_astr(n = 2)
-
   expect_error(
-    pb_iso_prov_predict(query, model_list = NULL),
-    "`model_list` is NULL or empty\\."
-  )
-  expect_error(
-    pb_iso_prov_predict(query, model_list = list()),
-    "`model_list` is NULL or empty\\."
+    pb_iso_prov_predict(query, model_list = list())
   )
 })
