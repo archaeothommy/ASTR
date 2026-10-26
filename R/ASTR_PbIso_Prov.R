@@ -513,7 +513,8 @@ helper_train_function <- function(ref,
     final_df$group <- target_subgroup
     final_df
   }
-  smote_df_final <- do.call(rbind, lapply(subgroups, apply_smote))
+  smote_df_final <- purrr::map(subgroups, apply_smote) %>%
+    purrr::list_rbind()
 
   # XGBOOST implementation --------------------------------------------------
 
@@ -554,7 +555,7 @@ helper_train_function <- function(ref,
 
     return(model)
   }
-  list <- setNames(lapply(subgroups, train_group_model), subgroups)
+  return(setNames(lapply(subgroups, train_group_model), subgroups))
 }
 
 # XGBOOST Prediction ------------------------------------------------------
@@ -628,4 +629,3 @@ pb_iso_prov_predict.ASTR <- function(x,
 
   tag_astr_context(res, c("ml_group", "ml_prob"))
 }
-#
