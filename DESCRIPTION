@@ -48,7 +48,8 @@ Suggests:
     xgboost
 Imports:
     checkmate,
-    dplyr (>= 1.2.0),
+    cli,
+    dplyr  (>= 1.2.0),
     geometry,
     magrittr,
     purrr,
