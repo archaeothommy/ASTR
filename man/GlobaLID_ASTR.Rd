@@ -3,7 +3,7 @@
 \docType{data}
 \name{GlobaLID_ASTR}
 \alias{GlobaLID_ASTR}
-\title{GloabaLID lead isotope database}
+\title{GlobaLID lead isotope database}
 \format{
 ASTR object with 1 contextual and 3 Pb Isotope variables
 \describe{

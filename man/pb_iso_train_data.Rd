@@ -10,12 +10,12 @@ pb_iso_train_data(ref, ...)
 
 \method{pb_iso_train_data}{ASTR_Pbiso_ref_data}(
   ref,
-  .minSize = 20,
-  .minPts_fac = 0.1,
-  .eps = 0.18,
-  .eta = 0.1,
-  .max_depth = 6,
-  .nrounds = 100,
+  minSize = 20,
+  minPts_fac = 0.1,
+  eps = 0.18,
+  eta = 0.1,
+  max_depth = 6,
+  nrounds = 100,
   nthread = 4L,
   ...
 )
@@ -24,12 +24,12 @@ pb_iso_train_data(ref, ...)
   ref,
   ref_group,
   min_groupsize = 5,
-  .minSize = 20,
-  .minPts_fac = 0.1,
-  .eps = 0.18,
-  .eta = 0.1,
-  .max_depth = 6,
-  .nrounds = 100,
+  minSize = 20,
+  minPts_fac = 0.1,
+  eps = 0.18,
+  eta = 0.1,
+  max_depth = 6,
+  nrounds = 100,
   nthread = 4L,
   ...
 )
@@ -60,27 +60,27 @@ When it is \code{TRUE}, it means the larger the evaluation score the better.
 This parameter is passed to the \code{\link[xgboost:xgb.cb.early.stop]{xgb.cb.early.stop()}} callback.}
   }}
 
-\item{.minSize}{Minimum number of samples in group to be used for clustering,
+\item{minSize}{Minimum number of samples in group to be used for clustering,
 default value is \code{20}.}
 
-\item{.minPts_fac}{Scaling factor for the minimum number of points needed
+\item{minPts_fac}{Scaling factor for the minimum number of points needed
 from each group, ranging from 0 to 1, default value is \code{0.1}.}
 
-\item{.eps}{Size (radius) of the epsilon neighbourhood, default value is
+\item{eps}{Size (radius) of the epsilon neighbourhood, default value is
 \code{0.18}.}
 
-\item{.eta}{Step size shrinkage used in update to prevent overfitting. After
+\item{eta}{Step size shrinkage used in update to prevent overfitting. After
 each boosting step, we can directly get the weights of new features, and
 eta shrinks the feature weights to make the boosting process more
 conservative. Default value is \code{0.1}.}
 
-\item{.max_depth}{Maximum depth of a tree. Increasing this value will make
+\item{max_depth}{Maximum depth of a tree. Increasing this value will make
 the model more complex and more likely to overfit. Zero indicates no limit
 on depth. Beware that XGBoost aggressively consumes memory when training a
 deep tree. "exact" tree method requires non-zero value. Default value is
 \code{6}.}
 
-\item{.nrounds}{Maximum number of boosting iterations, default value is
+\item{nrounds}{Maximum number of boosting iterations, default value is
 \code{100}.}
 
 \item{nthread}{Integer setting the number of threads for parallel processing.

@@ -7,7 +7,13 @@
 \usage{
 pb_iso_endmembers(x, ...)
 
-\method{pb_iso_endmembers}{ASTR}(x, tolerance = c(0.01, 0.01), clamp = c(Inf, Inf), ...)
+\method{pb_iso_endmembers}{ASTR}(
+  x,
+  tolerance = c(0.01, 0.01),
+  clamp = c(Inf, Inf),
+  geo_slope = 0.626208,
+  ...
+)
 }
 \arguments{
 \item{x}{ASTR object containing 206Pb/204Pb, 207Pb/204Pb, and 208Pb/204Pb
@@ -21,14 +27,14 @@ geochron lines, default is \code{c(0.01, 0.01)}.}
 
 \item{clamp}{Limit filter for points away from the principal component end
 based on Euclidean distance, default is \code{c(Inf, Inf)}.}
+
+\item{geo_slope}{Whole number value of geo-chron slope,
+Default value is \code{0.626208}}
 }
 \value{
 An \link[=ASTR]{ASTR object} with additional class attribute
-\code{ASTR_Pbiso_endmembr}. The output is an object of the same type including the
-ID column, the contextual columns, the lead isotope ratios used for
-calculation of the age model parameters, and the endmember groups. In all
-other cases, the data frame provided as input with columns added for the
-calculated endmember groups.
+\code{ASTR_Pbiso_endmembr}. The output extends the input table in \code{x} with a column
+\code{end_membr}, which stores the estimated endmember groups.
 
 Endmember groups consist of group1, group2, and groupmix. groupmix represents
 the values along the mixing line.
@@ -60,6 +66,10 @@ Shnyr, E., Kuflik, T., Desai, K., and Eshel, T. (2026)
 Determining the origins of Phoenician silver: Exploring the potential of
 machine learning for lead isotope analysis. Journal of Archaeological
 Science 188, pp. 106–499. \url{https://doi.org/10.1016/j.jas.2026.106499}
+
+Stacey, J. S., & Kramers, J. D. (1975). Approximation of
+Terrestrial Lead Isotope Evolution by a Two-Stage Model. Earth and
+Planetry Science Letters, 26, 207–221.
 }
 \seealso{
 Other Pb isotope functions:
