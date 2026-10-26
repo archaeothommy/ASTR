@@ -49,8 +49,8 @@
   isotope_ends <- isotope_matrix[as.numeric(rownames(pca_ends)), ]
 
   end_member_filter <- function(idx, tol, clmp) {
-    col_7 <- grep("7", colnames(isotope_ends))
-    col_6 <- grep("6", colnames(isotope_ends))
+    col_7 <- "207Pb/204Pb"
+    col_6 <- "206Pb/204Pb"
 
     geo_intercept <- isotope_ends[idx, col_7] - (isotope_ends[idx, col_6] * geo_slope)
     point_intercept <- (geo_slope * isotope_matrix[, col_6]) + geo_intercept
