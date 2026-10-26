@@ -460,7 +460,7 @@ helper_train_function <- function(ref,
                                   ...) {
   # Package check -----------------------------------------------------------
 
-  check_required_packages(c("dbscan", "smotefamily", "xgboost"))
+  rlang::check_installed(c("dbscan", "smotefamily", "xgboost"))
 
   ox <- ref
   uni_groups <- unique(ox[[1]])
