@@ -22,8 +22,8 @@
     "ASTR",
     .var.name = "Object of class 'ASTR' expected."
   )
-  .validate_iso_cols(ref)
-  if (checkmate::test_class(ref, "ASTR_Pbiso_ref_data")) {
+  #.validate_iso_cols(ref)
+  if (!inherits(ref, "ASTR_Pbiso_ref_data")) {
     ref <- as_pbiso_ref_data(ref, group = ref_group, ...)
   }
   ref
@@ -300,22 +300,22 @@ mf_dist.ASTR <- function(x,
 #'   groups.
 #' @param min_groupsize Integer value for the minimum number of samples in a
 #'   group, default value is `5L`.
-#' @param .minSize Minimum number of samples in group to be used for clustering,
+#' @param minSize Minimum number of samples in group to be used for clustering,
 #'   default value is `20`.
-#' @param .minPts_fac Scaling factor for the minimum number of points needed
+#' @param minPts_fac Scaling factor for the minimum number of points needed
 #'   from each group, ranging from 0 to 1, default value is `0.1`.
-#' @param .eps Size (radius) of the epsilon neighbourhood, default value is
+#' @param eps Size (radius) of the epsilon neighbourhood, default value is
 #'   `0.18`.
-#' @param .eta Step size shrinkage used in update to prevent overfitting. After
+#' @param eta Step size shrinkage used in update to prevent overfitting. After
 #'   each boosting step, we can directly get the weights of new features, and
 #'   eta shrinks the feature weights to make the boosting process more
 #'   conservative. Default value is `0.1`.
-#' @param .max_depth Maximum depth of a tree. Increasing this value will make
+#' @param max_depth Maximum depth of a tree. Increasing this value will make
 #'   the model more complex and more likely to overfit. Zero indicates no limit
 #'   on depth. Beware that XGBoost aggressively consumes memory when training a
 #'   deep tree. "exact" tree method requires non-zero value. Default value is
 #'   `6`.
-#' @param .nrounds Maximum number of boosting iterations, default value is
+#' @param nrounds Maximum number of boosting iterations, default value is
 #'   `100`.
 #' @param nthread Integer setting the number of threads for parallel processing.
 #'   When choosing it, please keep thread contention and hyper threading in
@@ -396,22 +396,22 @@ pb_iso_train_data <- function(ref, ...) {
 #' pb_iso_prov_predict(tel_dor, model_list = ml_model, .top = 1)
 #'
 pb_iso_train_data.ASTR_Pbiso_ref_data <- function(ref,
-                                                  .minSize = 20,
-                                                  .minPts_fac = 0.1,
-                                                  .eps = 0.18,
-                                                  .eta = 0.1,
-                                                  .max_depth = 6,
-                                                  .nrounds = 100,
+                                                  minSize = 20,
+                                                  minPts_fac = 0.1,
+                                                  eps = 0.18,
+                                                  eta = 0.1,
+                                                  max_depth = 6,
+                                                  nrounds = 100,
                                                   nthread = 4L,
                                                   ...) {
   helper_train_function(
     ref = ref,
-    .minSize = .minSize,
-    .minPts_fac = .minPts_fac,
-    .eps = .eps,
-    .eta = .eta,
-    .max_depth = .max_depth,
-    .nrounds = .nrounds,
+    minSize = minSize,
+    minPts_fac = minPts_fac,
+    eps = eps,
+    eta = eta,
+    max_depth = max_depth,
+    nrounds = nrounds,
     nthread = nthread,
     ...
   )
@@ -422,12 +422,12 @@ pb_iso_train_data.ASTR_Pbiso_ref_data <- function(ref,
 pb_iso_train_data.ASTR <- function(ref,
                                    ref_group,
                                    min_groupsize = 5,
-                                   .minSize = 20,
-                                   .minPts_fac = 0.1,
-                                   .eps = 0.18,
-                                   .eta = 0.1,
-                                   .max_depth = 6,
-                                   .nrounds = 100,
+                                   minSize = 20,
+                                   minPts_fac = 0.1,
+                                   eps = 0.18,
+                                   eta = 0.1,
+                                   max_depth = 6,
+                                   nrounds = 100,
                                    nthread = 4L,
                                    ...) {
 
@@ -437,12 +437,12 @@ pb_iso_train_data.ASTR <- function(ref,
   # Pass arguments explicitly by name to avoid positional shifting
   helper_train_function(
     ref = ref,
-    .minSize = .minSize,
-    .minPts_fac = .minPts_fac,
-    .eps = .eps,
-    .eta = .eta,
-    .max_depth = .max_depth,
-    .nrounds = .nrounds,
+    minSize = minSize,
+    minPts_fac = minPts_fac,
+    eps = eps,
+    eta = eta,
+    max_depth = max_depth,
+    nrounds = nrounds,
     nthread = nthread,
     ...
   )
@@ -450,12 +450,12 @@ pb_iso_train_data.ASTR <- function(ref,
 
 # Helper function
 helper_train_function <- function(ref,
-                                  .minSize = 20,
-                                  .minPts_fac = 0.1,
-                                  .eps = 0.18,
-                                  .eta = 0.1,
-                                  .max_depth = 6,
-                                  .nrounds = 100,
+                                  minSize = 20,
+                                  minPts_fac = 0.1,
+                                  eps = 0.18,
+                                  eta = 0.1,
+                                  max_depth = 6,
+                                  nrounds = 100,
                                   nthread = 4L,
                                   ...) {
   # Package check -----------------------------------------------------------
@@ -467,16 +467,16 @@ helper_train_function <- function(ref,
 
   # DBSCAN ------------------------------------------------------------------
   dbscan_groups <- function(g_name) {
-    if (.minPts_fac <= 0 || .minPts_fac >= 1) {
-      stop(".minPts_fac must be between 0 and 1.")
+    if (minPts_fac <= 0 || minPts_fac >= 1) {
+      stop("minPts_fac must be between 0 and 1.")
     }
     group_df <- ox[ox[[1]] == g_name, ]
 
-    if (nrow(group_df) < .minSize) {
+    if (nrow(group_df) < minSize) {
       return(group_df)
     }
-    minPts <- as.integer(round(nrow(group_df) * .minPts_fac))
-    res <- dbscan::dbscan(group_df[, -1], minPts = minPts, eps = .eps, ...)
+    minPts <- as.integer(round(nrow(group_df) * minPts_fac))
+    res <- dbscan::dbscan(group_df[, -1], minPts = minPts, eps = eps, ...)
     cluster <- res$cluster
     group_df <- group_df[cluster > 0, ]
     cluster_s <- cluster[cluster > 0]
@@ -489,7 +489,9 @@ helper_train_function <- function(ref,
     return(group_df)
 
   }
-  dbscan_df <- do.call(rbind, lapply(uni_groups, dbscan_groups))
+
+  dbscan_df <- purrr::map(uni_groups, dbscan_groups) %>%
+    purrr::list_rbind()
 
   # SMOTE (Multi-class handling) --------------------------------------------
   subgroups <- unique(dbscan_df[[1]])
@@ -537,8 +539,8 @@ helper_train_function <- function(ref,
     # Binary logistic parameters
     params <- list(
       objective = "binary:logistic",
-      eta = .eta,
-      max_depth = .max_depth,
+      eta = eta,
+      max_depth = max_depth,
       nthread = nthread,
       eval_metric = "logloss",
       # scale_pos_weight can help if the target group is much smaller than the rest
@@ -547,7 +549,7 @@ helper_train_function <- function(ref,
 
     model <- xgboost::xgb.train(params = params,
                                 data = dtrain,
-                                nrounds = .nrounds,
+                                nrounds = nrounds,
                                 ...)
 
     return(model)
@@ -564,7 +566,7 @@ helper_train_function <- function(ref,
 #'
 #' @param x Matrix of [pb_iso_endmembers()] object of pb isotope samples.
 #' @param model_list Model list generated by [pb_iso_train_data()].
-#' @param .top Number of highest probability values considered for final output,
+#' @param top Number of highest probability values considered for final output,
 #'   default value is `1`.
 #' @param ... Additional parameters.
 #'
@@ -585,7 +587,7 @@ pb_iso_prov_predict <- function(x, ...) {
 #' @inherit pb_iso_train_data examples
 pb_iso_prov_predict.ASTR <- function(x,
                                      model_list = NULL,
-                                     .top = 1,
+                                     top = 1,
                                      ...) {
   .validate_iso_cols(x)
 
@@ -608,7 +610,7 @@ pb_iso_prov_predict.ASTR <- function(x,
 
   results <- lapply(seq_len(nrow(prob_matrix)), function(i) {
     row_probs <- prob_matrix[i, ]
-    top_idx <- order(row_probs, decreasing = TRUE)[seq_len(min(.top, length(row_probs)))]
+    top_idx <- order(row_probs, decreasing = TRUE)[seq_len(min(top, length(row_probs)))]
 
     data.frame(
       row_id = i,
@@ -628,3 +630,4 @@ pb_iso_prov_predict.ASTR <- function(x,
 
   tag_astr_context(res, c("ml_group", "ml_prob"))
 }
+#

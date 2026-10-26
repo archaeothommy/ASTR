@@ -105,7 +105,8 @@
 #'   geochron lines, default is `c(0.01, 0.01)`.
 #' @param clamp Limit filter for points away from the principal component end
 #'   based on Euclidean distance, default is `c(Inf, Inf)`.
-#' @param geo_slope Wholenumber value of geocron slope (Default = 0.626208)
+#' @param geo_slope Whole number value of geo-chron slope,
+#'   Default value is `0.626208`
 #' @param ... Additional parameters
 #'
 #' @references Shnyr, E., Kuflik, T., Desai, K., and Eshel, T. (2026)
