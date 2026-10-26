@@ -591,9 +591,7 @@ pb_iso_prov_predict.ASTR <- function(x,
                                      ...) {
   .validate_iso_cols(x)
 
-  if (is.null(model_list) || length(model_list) == 0) {
-    stop("`model_list` is NULL or empty.")
-  }
+  checkmate::assert_list(model_list, min.len = 1)
 
   dtest <- xgboost::xgb.DMatrix(as.matrix(x[, .pb_iso_cols(), drop = FALSE]))
 
