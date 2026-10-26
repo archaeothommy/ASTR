@@ -7,21 +7,23 @@
 
 # Validate isotope columns
 .validate_iso_cols <- function(x) {
-  iso <- .pb_iso_cols()
-  if (!all(iso %in% names(x))) {
-    stop("Dataset is missing required lead isotope columns: ",
-         paste(iso, collapse = ", "))
-  }
+  checkmate::assert_subset(
+    .pb_iso_cols(),
+    names(x),
+    .var.name = "required lead isotope colums"
+  )
 }
 
 
 # Ensures reference is of type ASTR_Pbiso_ref_data
 .ensure_pbiso_ref <- function(ref, ref_group, ...) {
-  if (!inherits(ref, "ASTR")) {
-    stop("`ref` must be of class 'ASTR'.")
-  }
+  checkmate::assert_class(
+    ref,
+    "ASTR",
+    .var.name = "Object of class 'ASTR' expected."
+  )
   .validate_iso_cols(ref)
-  if (!inherits(ref, "ASTR_Pbiso_ref_data")) {
+  if (checkmate::test_class(ref, "ASTR_Pbiso_ref_data")) {
     ref <- as_pbiso_ref_data(ref, group = ref_group, ...)
   }
   ref
