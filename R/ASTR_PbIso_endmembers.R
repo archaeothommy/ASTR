@@ -160,11 +160,11 @@ pb_iso_endmembers.ASTR <- function(x,
   .validate_iso_cols(x)
 
   res <- .calc_pb_iso_endmembers(x,
-                                iso_cols = .pb_iso_cols(),
-                                tolerance = tolerance,
-                                clamp = clamp,
-                                geo_slope = geo_slope,
-                                ...)
+                                 iso_cols = .pb_iso_cols(),
+                                 tolerance = tolerance,
+                                 clamp = clamp,
+                                 geo_slope = geo_slope,
+                                 ...)
 
   # Assign custom attribute for ASTR method
   res <- tag_astr_context(res, c("end_membr"))
