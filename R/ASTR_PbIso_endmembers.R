@@ -20,11 +20,8 @@
 #'   Science 188, pp. 106–499. <https://doi.org/10.1016/j.jas.2026.106499>
 #'
 #' @returns An [ASTR object][ASTR] with additional class attribute
-#' `ASTR_Pbiso_endmembr`. The output is an object of the same type including the
-#' ID column, the contextual columns, the lead isotope ratios used for
-#' calculation of the age model parameters, and the endmember groups. In all
-#' other cases, the data frame provided as input with columns added for the
-#' calculated endmember groups.
+#' `ASTR_Pbiso_endmembr`. The output extends the input table in `x` with a column
+#'  `end_membr`, which stores the estimated endmember groups.
 #'
 #' Endmember groups consist of group1, group2, and groupmix. groupmix represents
 #' the values along the mixing line.
