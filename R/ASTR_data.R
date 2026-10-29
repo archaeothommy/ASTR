@@ -86,15 +86,6 @@
 #' @source <https://globalid.dmt-lb.de/>
 "GlobaLID_ASTR"
 
-#' Machine learning model for lead isotope provenance.
-#'
-#' Lead isotope data model based on GlobaLID for machine learning provenance.
-#'
-#' @format A list of xgb models, with length equal to number of groups.
-#'
-#' @source <https://globalid.dmt-lb.de/>
-"ml_model"
-
 #' LIA points of silver hoard from Tell Dor (Israel)
 #'
 #' Lead isotope ratios of a Phoenician silver hoard from Tel Dor.
