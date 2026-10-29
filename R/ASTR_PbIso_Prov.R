@@ -392,8 +392,8 @@ pb_iso_train_data <- function(ref, ...) {
 #' # Train machine learning model
 #' \dontrun{ml_model <- pb_iso_train_data(GlobaLID_ASTR_ref)}
 #'
-#' # Predict using a pre-trianed model
-#' pb_iso_prov_predict(tel_dor, model_list = ml_model, .top = 1)
+#' # Predict using a pre-trained model
+#' \dontrun{pb_iso_prov_predict(tel_dor, model_list = ml_model, .top = 1)}
 #'
 pb_iso_train_data.ASTR_Pbiso_ref_data <- function(ref,
                                                   minSize = 20,

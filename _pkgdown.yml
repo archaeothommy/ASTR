@@ -86,7 +86,6 @@ reference:
   - pb_iso_prov_predict
   - pb_iso_prov_dist
   - pb_iso_endmembers
-  - ml_model
 
 articles:
 - title: ASTR schema
