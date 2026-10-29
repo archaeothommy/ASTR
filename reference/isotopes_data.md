@@ -1,8 +1,8 @@
 # Isotopes
 
 List of naturally occurring isotopes, retrieved from
-https://www.ciaaw.org/isotopic-abundances.htm, sorted according to
-chemical element and isotope number
+https://www.ciaaw.org/isotopic-abundances.htm, sorted by chemical
+element and isotope number.
 
 ## Usage
 

@@ -1,7 +1,6 @@
 # Chemical elements
 
-List of chemical elements as their symbols, sorted according to
-alphabet.
+List of chemical elements as their symbols, sorted alphabetically.
 
 ## Usage
 

@@ -197,6 +197,33 @@ Datasets included in the package
 
 - [`ArgentinaDatabase`](https://archaeothommy.github.io/ASTR/reference/ArgentinaDatabase.md)
   : Lead isotope data from Argentina
+- [`GlobaLID_ASTR`](https://archaeothommy.github.io/ASTR/reference/GlobaLID_ASTR.md)
+  : GlobaLID lead isotope database
+- [`tel_dor`](https://archaeothommy.github.io/ASTR/reference/tel_dor.md)
+  : LIA points of silver hoard from Tell Dor (Israel)
+
+## Machine Learning & Provenance Analsis
+
+ML classifier training, and proveanceing of samples using eucldian
+distance and ML probalities.
+
+- [`as_pbiso_ref_data()`](https://archaeothommy.github.io/ASTR/reference/as_pbiso_ref_data.md)
+  : Create reference data object for LIA endmember distance and
+  probability estimation functions. Data preprocessing and cleaning
+  ensure the reliability and accuracy of provenance analysis. This step
+  results in the removal of all NA values from the selected isotope
+  tables and groups. The step should also exclude groups with a low
+  number samples (in the case of Shnyr et al. (2026), this was 5).
+- [`pb_iso_train_data()`](https://archaeothommy.github.io/ASTR/reference/pb_iso_train_data.md)
+  : Train XGBoost model
+- [`pb_iso_prov_predict()`](https://archaeothommy.github.io/ASTR/reference/pb_iso_prov_predict.md)
+  : Predict isotope provenance
+- [`pb_iso_prov_dist()`](https://archaeothommy.github.io/ASTR/reference/pb_iso_prov_dist.md)
+  [`euc_dist()`](https://archaeothommy.github.io/ASTR/reference/pb_iso_prov_dist.md)
+  [`mf_dist()`](https://archaeothommy.github.io/ASTR/reference/pb_iso_prov_dist.md)
+  : Euclidean distance for Pb isotope ratios to ore sources
+- [`pb_iso_endmembers()`](https://archaeothommy.github.io/ASTR/reference/pb_iso_endmembers.md)
+  : Find endmembers from a list of lead isotope data points.
 
 # Articles
 
@@ -220,3 +247,7 @@ These articles illustrate the use of specific functions in the package.
 
 - [Binary plot with kernel density
   estimation](https://archaeothommy.github.io/ASTR/articles/KDE2_vignette.md):
+- [Determination of lead isotope
+  endmembers](https://archaeothommy.github.io/ASTR/articles/Pb_Iso_endmembers.md):
+- [Lead isotope provenance
+  functions](https://archaeothommy.github.io/ASTR/articles/Pb_Iso_prov.md):

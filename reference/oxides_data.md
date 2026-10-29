@@ -1,6 +1,6 @@
 # Oxides
 
-List of oxides, sorted according to alphabet.
+List of oxides, sorted alphabetically.
 
 ## Usage
 

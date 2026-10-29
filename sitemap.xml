@@ -5,6 +5,8 @@
 <url><loc>https://archaeothommy.github.io/ASTR/LICENSE.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/articles/ASTR.showcase.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/articles/KDE2_vignette.html</loc></url>
+<url><loc>https://archaeothommy.github.io/ASTR/articles/Pb_Iso_endmembers.html</loc></url>
+<url><loc>https://archaeothommy.github.io/ASTR/articles/Pb_Iso_prov.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/articles/VG.ASTR.Conventions.explained.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/articles/VG.ASTR.Schema.0.0.2.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/articles/VG.ASTR.Schema.Implementation.html</loc></url>
@@ -15,9 +17,11 @@
 <url><loc>https://archaeothommy.github.io/ASTR/reference/ASTR-package.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/ASTR.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/ArgentinaDatabase.html</loc></url>
+<url><loc>https://archaeothommy.github.io/ASTR/reference/GlobaLID_ASTR.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/age_models.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/amalia.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/amalia_match_pairs.html</loc></url>
+<url><loc>https://archaeothommy.github.io/ASTR/reference/as_pbiso_ref_data.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/atomic_conversion.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/bdl_strategies.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/conversion_oxides.html</loc></url>
@@ -35,9 +39,15 @@
 <url><loc>https://archaeothommy.github.io/ASTR/reference/normalise_rows.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/oxide_conversion.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/oxides_data.html</loc></url>
+<url><loc>https://archaeothommy.github.io/ASTR/reference/pb_iso_endmembers.html</loc></url>
+<url><loc>https://archaeothommy.github.io/ASTR/reference/pb_iso_prov_dist.html</loc></url>
+<url><loc>https://archaeothommy.github.io/ASTR/reference/pb_iso_prov_predict.html</loc></url>
+<url><loc>https://archaeothommy.github.io/ASTR/reference/pb_iso_train_data.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/pointcloud_distribution.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/special_oxide_states.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/sum_duplicates.html</loc></url>
+<url><loc>https://archaeothommy.github.io/ASTR/reference/tag_astr_context.html</loc></url>
+<url><loc>https://archaeothommy.github.io/ASTR/reference/tel_dor.html</loc></url>
 <url><loc>https://archaeothommy.github.io/ASTR/reference/transform_notation.html</loc></url>
 </urlset>
 

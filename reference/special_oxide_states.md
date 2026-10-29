@@ -1,6 +1,7 @@
 # Special oxide states
 
-List of values that are treated like oxides, but are no chemical oxides.
+List of values that are treated like oxides, but are not chemical
+oxides.
 
 ## Usage
 

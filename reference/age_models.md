@@ -122,7 +122,13 @@ Letters 26(2), pp. 207–221.
 ## See also
 
 Other Pb isotope functions:
-[`geom_sk_lines()`](https://archaeothommy.github.io/ASTR/reference/geom_sk_lines.md)
+[`as_pbiso_ref_data()`](https://archaeothommy.github.io/ASTR/reference/as_pbiso_ref_data.md),
+[`geom_sk_lines()`](https://archaeothommy.github.io/ASTR/reference/geom_sk_lines.md),
+[`pb_iso_endmembers()`](https://archaeothommy.github.io/ASTR/reference/pb_iso_endmembers.md),
+[`pb_iso_prov_dist()`](https://archaeothommy.github.io/ASTR/reference/pb_iso_prov_dist.md),
+[`pb_iso_prov_predict()`](https://archaeothommy.github.io/ASTR/reference/pb_iso_prov_predict.md),
+[`pb_iso_train_data()`](https://archaeothommy.github.io/ASTR/reference/pb_iso_train_data.md),
+[`tel_dor`](https://archaeothommy.github.io/ASTR/reference/tel_dor.md)
 
 ## Examples
 

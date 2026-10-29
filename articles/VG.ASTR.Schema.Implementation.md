@@ -120,7 +120,7 @@ Substitution methods could be e.g. dropping the left-censored value by
 replacing it by `NA` or 0, calculating LOD/2 or LOD/√2, skipping \< of
 the left-censored value, or using regression models, enhanced censoring
 calculations, or maximum likelihood estimates ([Croghan & Egeghy,
-2003](#ref-croghan2003f); [Giskeødegård & Lydersen,
+2003](#ref-croghan2003); [Giskeødegård & Lydersen,
 2022](#ref-giske%C3%B8deg%C3%A5rd2022); [Helsel, 2006](#ref-helsel2006))
 
 ## Output

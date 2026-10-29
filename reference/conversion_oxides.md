@@ -45,7 +45,7 @@ A data frame with 151 rows and 8 variables:
 
 - OxidationState:
 
-  The oxidation state of the kation as numeric value.
+  The oxidation state of the cation as a numeric value.
 
 ## See also
 

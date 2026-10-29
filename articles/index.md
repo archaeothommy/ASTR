@@ -20,3 +20,7 @@ These articles illustrate the use of specific functions in the package.
 
 - [Binary plot with kernel density
   estimation](https://archaeothommy.github.io/ASTR/articles/KDE2_vignette.md):
+- [Determination of lead isotope
+  endmembers](https://archaeothommy.github.io/ASTR/articles/Pb_Iso_endmembers.md):
+- [Lead isotope provenance
+  functions](https://archaeothommy.github.io/ASTR/articles/Pb_Iso_prov.md):
