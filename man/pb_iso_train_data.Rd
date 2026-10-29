@@ -157,8 +157,8 @@ GlobaLID_ASTR_ref <- as_pbiso_ref_data(GlobaLID_ASTR,
 # Train machine learning model
 \dontrun{ml_model <- pb_iso_train_data(GlobaLID_ASTR_ref)}
 
-# Predict using a pre-trianed model
-pb_iso_prov_predict(tel_dor, model_list = ml_model, .top = 1)
+# Predict using a pre-trained model
+\dontrun{pb_iso_prov_predict(tel_dor, model_list = ml_model, .top = 1)}
 
 }
 \references{

@@ -178,7 +178,7 @@ ml_model <- pb_iso_train_data(GlobalLID_ASTR_ref)
 
 Providing the sample data `ASTR` object with the model created using`pb_iso_train_data()` produces a new `ASTR` object containing the provenance probabilities for the given reference data groups.
 
-```{R pb_iso_prov_predict demo}
+```{R pb_iso_prov_predict demo, eval=FALSE}
 pb_iso_prov_predict(tel_dor, model_list = ml_model, .top = 1)
 ```
 
