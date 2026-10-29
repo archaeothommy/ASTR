@@ -38,13 +38,17 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Suggests: 
-    readxl, 
+    readxl,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0),
-    vdiffr
+    vdiffr,
+    dbscan,
+    smotefamily,
+    xgboost
 Imports:
     checkmate,
+    cli,
     dplyr  (>= 1.2.0),
     geometry,
     magrittr,
@@ -60,11 +64,12 @@ Imports:
     vctrs,
     ggplot2,
     ks,
-    units, 
+    units,
     rootSolve
 Config/testthat/edition: 3
 Depends: 
     R (>= 3.5)
 LazyData: true
+LazyDataCompression: xz
 VignetteBuilder: knitr
 Config/roxygen2/version: 8.1.0
