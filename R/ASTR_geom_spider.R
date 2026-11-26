@@ -19,6 +19,9 @@
 #' @param reference Character string with what the data should be normalised to;
 #'   see [normalise_data] fur further details. If `NULL`, the default, data will
 #'   not be normalised.
+#' @param na.rm Logical; whether to remove missing values (NAs) from `y` before
+#'   drawing. If `FALSE` (the default), missing values are removed with a
+#'   warning; if `TRUE`, they are silently removed.
 #' @param ... Other arguments passed on to [ggplot2::layer()]. These are often
 #'   aesthetics used to set a fixed value, such as `colour = "red"` or `alpha =
 #'   0.5`.
@@ -34,6 +37,7 @@
 #'   Learn more about setting these aesthetics in `vignette("ggplot2-specs")`.
 #'
 #' @export
+#' @importFrom tidyr pivot_longer
 #'
 #' @examples
 #' library(ggplot2)
@@ -98,6 +102,7 @@ geom_spider <- function(mapping = NULL, data = NULL, stat = "identity",
   )
 }
 
+#' @rdname geom_spider
 #' @format NULL
 #' @usage NULL
 #' @export

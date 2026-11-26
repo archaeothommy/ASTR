@@ -2,6 +2,7 @@
 % Please edit documentation in R/ASTR_geom_spider.R
 \name{geom_spider}
 \alias{geom_spider}
+\alias{GeomSpider}
 \title{Spidergram geom for ggplot2}
 \usage{
 geom_spider(
@@ -62,6 +63,10 @@ to use \code{position_jitter()}, give the position as \code{"jitter"}.
 \item For more information and other ways to specify the position, see the
 \link[ggplot2:layer_positions]{layer position} documentation.
 }}
+
+\item{na.rm}{Logical; whether to remove missing values (NAs) from \code{y} before
+drawing. If \code{FALSE} (the default), missing values are removed with a
+warning; if \code{TRUE}, they are silently removed.}
 
 \item{reference}{Character string with what the data should be normalised to;
 see \link{normalise_data} fur further details. If \code{NULL}, the default, data will
@@ -126,15 +131,11 @@ test <- data.frame(
 
 # elements must be supplied in the geom, not in ggplot()
 ggplot(test) +
-  geom_spider(aes(elements = c(La, Ce, Nd), colour = Sample))
-
-# using a pre-made element set
-ggplot(test) +
-  geom_spider(aes(elements = standard_groups$REE, colour = Sample))
+  geom_spider(aes(elements = c("La", "Ce", "Nd"), colour = Sample))
 
 # with chondrite normalisation
 ggplot(test) +
-  geom_spider(aes(elements = c(La, Ce, Nd), colour = Sample),
+  geom_spider(aes(elements = c("La", "Ce", "Nd"), colour = Sample),
     reference = "chondrite"
   )
 

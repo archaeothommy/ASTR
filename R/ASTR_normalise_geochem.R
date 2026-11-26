@@ -41,7 +41,6 @@
 #'
 #' normalise_geochem(
 #'   df,
-#'   elements = c("La","Ce"),
 #'   reference = "chondrite"
 #' )
 #'
