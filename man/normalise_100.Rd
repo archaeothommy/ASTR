@@ -24,7 +24,7 @@ df <- data.frame(
   Ce = c(20, 8),
   Nd = c(15, 6)
 )
-normalise_to_100(df)
+normalise_100(df)
 
 }
 \seealso{
