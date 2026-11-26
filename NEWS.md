@@ -1,4 +1,4 @@
-# ASTR (development version)
+# ASTR 0.0.0.9000
 
 * Implementation of ASTR schema.
 * Support and conversions for geochemical non-SI units: *at%*, *wt%* (elements and oxides) 
