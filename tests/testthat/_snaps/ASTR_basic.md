@@ -171,9 +171,10 @@
     Code
       print(test_astr)
     Output
-      [1mASTR table[22m
-      Analytical columns: [0;32m206Pb/204Pb[0m, [0;32mAl2O3[0m, [0;32mSiO2+Al2O3[0m, [0;32m204Pb[0m, [0;32mK2O[0m, [0;32md18O[0m, [0;32mSiO2/FeO[0m, [0;32mMn[0m, [0;32mZn[0m, [0;32mSiO2/(FeO+MnO)[0m, [0;32mSb/As[0m, [0;32mSn[0m, [0;32mK2O+MgO+Na2O[0m
-      Contextual columns: [0;35mother[0m, [0;35mother2[0m 
+      ASTR table
+      Analytical columns: 206Pb/204Pb, Al2O3, SiO2+Al2O3, 204Pb, K2O, d18O, SiO2/FeO,
+                          Mn, Zn, SiO2/(FeO+MnO), Sb/As, Sn, K2O+MgO+Na2O
+      Contextual columns: other, other2 
       # A data frame: 1 x 16
         ID    `206Pb/204Pb`     Al2O3 `SiO2+Al2O3` `204Pb` other other2   K2O  d18O
         <chr>         <dbl> [count/s]      [ng/kg] [mg/kg] <chr>  <dbl> [wtP] <dbl>

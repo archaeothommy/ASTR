@@ -1,6 +1,6 @@
 # golden tests
 
-test_df <- readr::read_csv(system.file("extdata", "input_format.csv", package = "ASTR"))
+test_df <- readr::read_csv(system.file("extdata", "input_format.csv", package = "ASTR"), show_col_types = FALSE)
 
 test_astr <- read_ASTR(
   system.file("extdata", "input_format.csv", package = "ASTR"),

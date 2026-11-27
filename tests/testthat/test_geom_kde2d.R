@@ -20,12 +20,16 @@ test_KDE_ASTR <- as_ASTR(
 )
 
 test_that("geom_image", {
-  expect_doppelganger(
-    "KDE_df",
-    ggplot(test_KDE_df, aes(x = x, y = y)) + geom_kde2d(aes(x = x, y = y, colour = group))
+  suppressMessages(
+    expect_doppelganger(
+      "KDE_df",
+      ggplot(test_KDE_df, aes(x = x, y = y)) + geom_kde2d(aes(x = x, y = y, colour = group))
+    )
   )
-  expect_doppelganger(
-    "KDE_ASTR",
-    ggplot(test_KDE_ASTR, aes(x = `207Pb/206Pb`, y = `208Pb/206Pb`, colour = group)) + geom_kde2d()
+  suppressMessages(
+    expect_doppelganger(
+      "KDE_ASTR",
+      ggplot(test_KDE_ASTR, aes(x = `207Pb/206Pb`, y = `208Pb/206Pb`, colour = group)) + geom_kde2d()
+    )
   )
 })

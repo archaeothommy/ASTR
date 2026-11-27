@@ -49,9 +49,19 @@ read_ASTR(
 
 validate(x, quiet = TRUE, ...)
 
-\method{format}{ASTR}(x, ...)
+\method{format}{ASTR}(
+  x,
+  ...,
+  use_markup = rlang::is_interactive(),
+  width = cli::console_width()
+)
 
-\method{print}{ASTR}(x, ...)
+\method{print}{ASTR}(
+  x,
+  ...,
+  use_markup = rlang::is_interactive(),
+  width = cli::console_width()
+)
 
 get_contextual_columns(x, ...)
 
@@ -117,6 +127,12 @@ provided for all file types except \code{.xlsx} or \code{.xls}. Default to \verb
 \item{x}{an object of class ASTR}
 
 \item{quiet}{should warnings be printed? Defaults to \code{TRUE}}
+
+\item{use_markup}{should the formatting use nice markup for the R console?
+By default this is decided based on if the session is interactive}
+
+\item{width}{width of the console for which to optimize the output for.
+By default this is automatically determined}
 
 \item{units}{A character vector with units to be selected.}
 
