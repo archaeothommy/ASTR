@@ -167,14 +167,16 @@ test_that("pb_iso_train_data and pb_iso_prov_predict run end-to-end workflow", {
   ref_raw <- make_test_ref_astr(n_per_group = 22, groups = c("Mine_A", "Mine_B"))
   ref_data <- as_pbiso_ref_data(ref_raw, group = "Region", min_groupsize = 5)
 
-  # Train model list
-  models <- pb_iso_train_data(
-    ref = ref_data,
-    minSize = 20,
-    minPts_fac = 0.1,
-    eps = 0.5, # Generous eps to prevent all-outlier clusters in random test data
-    nrounds = 5,
-    nthread = 1L
+  # Train model list ('Skipping group ...' warnings are expected for this synthetic dataset)
+  suppressWarnings(
+    models <- pb_iso_train_data(
+      ref = ref_data,
+      minSize = 20,
+      minPts_fac = 0.1,
+      eps = 0.5, # Generous eps to prevent all-outlier clusters in random test data
+      nrounds = 5,
+      nthread = 1L
+    )
   )
 
   expect_type(models, "list")
