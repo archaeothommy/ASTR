@@ -15,13 +15,29 @@ suppressWarnings(
 age_models_ASTR <- pb_iso_age_model(test_input, model = "all")
 
 test_that("Pb isotope age models", {
-  expect_equal(pb_iso_age_model(age_model_data, model = "SK75")[["model_age_SK75"]][1], -1166.946)
-  expect_equal(pb_iso_age_model(age_model_data, model = "CR75")[["mu_CR75"]][1], 10.478)
-  expect_equal(pb_iso_age_model(age_model_data, model = "AJ84")[["kappa_AJ84"]][1], -15.421)
+  # Values are as expected
+  sk75 <- pb_iso_age_model(age_model_data, model = "SK75")
+  expect_equal(sk75[["model_age_SK75"]][1], -1166.946)
+  cr75 <- pb_iso_age_model(age_model_data, model = "CR75")
+  expect_equal(cr75[["mu_CR75"]][1], 10.478)
+  aj84 <- pb_iso_age_model(age_model_data, model = "AJ84")
+  expect_equal(aj84[["kappa_AJ84"]][1], -15.421)
+  expect_length(pb_iso_age_model(age_model_data, model = "all"), 12)
+
+  # Failure is as expected
   expect_error(pb_iso_age_model(age_model_data, model = 23), "'arg' must be.*")
   expect_error(pb_iso_age_model(age_model_data, model = "23"), "'arg' should be one of.*")
-  expect_length(pb_iso_age_model(age_model_data, model = "all"), 12)
-  expect_equal(pb_iso_age_model(age_model_data, model = "AJ84")[["kappa_AJ84"]][3], NA_real_)
+
+  # Rows with a missing input ratio yield NA for all model parameters
+  expect_true(all(is.na(sk75[["model_age_SK75"]][2:3])))
+  expect_true(all(is.na(sk75[["mu_SK75"]][2:3])))
+  expect_true(all(is.na(sk75[["kappa_SK75"]][2:3])))
+  expect_true(all(is.na(cr75[["model_age_CR75"]][2:3])))
+  expect_true(all(is.na(cr75[["mu_CR75"]][2:3])))
+  expect_true(all(is.na(cr75[["kappa_CR75"]][2:3])))
+  expect_true(all(is.na(aj84[["model_age_AJ84"]][2:3])))
+  expect_true(all(is.na(aj84[["mu_AJ84"]][2:3])))
+  expect_true(all(is.na(aj84[["kappa_AJ84"]][2:3])))
 })
 
 test_that("ASTR objects handled as intended", {

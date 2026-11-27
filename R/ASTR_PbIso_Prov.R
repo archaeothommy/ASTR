@@ -52,7 +52,7 @@
   names(final_df)[names(final_df) == "dist_val"] <- dist_col_name
 
   final_df <- tag_astr_context(final_df, dist_col_name)
-  dplyr::left_join(x, final_df)
+  dplyr::left_join(x, final_df, by = intersect(names(x), names(final_df)))
 }
 
 # Reference data function --------------------------------------------------
@@ -183,7 +183,7 @@ pb_iso_prov_dist.ASTR <- function(x,
     all = {
       euc <- euc_dist(x, ref, ref_group, n)
       mfd <- mf_dist(x, ref, ref_group, n, s)
-      full_join(euc, mfd)
+      full_join(euc, mfd, by = intersect(names(euc), names(mfd)))
     }
   )
 

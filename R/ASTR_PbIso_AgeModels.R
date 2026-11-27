@@ -151,6 +151,7 @@ stacey_kramers_1975 <- function(df,
   # Defining model age function
 
   model_age_func <- function(x, y) {
+    if (is.na(x) || is.na(y)) return(NA_real_)
     stats::uniroot(
       function(s, a, b) {
         ((exp(l235 * t0) - exp(l235 * s)) / (137.88 * (exp(l238 * t0) - exp(l238 * s)))) - ((b0 - b) / (a0 - a))
@@ -232,6 +233,7 @@ cumming_richards_1975 <- function(df,
   # Defining model age function
 
   model_age_func <- function(x, y) {
+    if (is.na(x) || is.na(y)) return(NA_real_)
     stats::optimize(
       function(s, a, b) {
         (a0 - a + 137.88 * vp * ((exp(l238 * t0) * (1 - e1 * (t0 - 1 / l238))) -

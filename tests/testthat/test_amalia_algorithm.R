@@ -25,19 +25,19 @@ ref_raw <- ArgentinaDatabase %>%
 
 test_that("amalia algorithm works correctly", {
   # These calls are spiked with erroneous inputs of the tripled that is not used to make sure that these remain ignored
-  result_204 <- amalia(
+  result_204 <- suppressMessages(amalia(
     df = df_raw, ref = ref_raw, id_sample = "Sample",
     id_ref = "ID", triplet = "204Pb", ratios_206 = "Test"
-  )
-  result_206 <- amalia(
+  ))
+  result_206 <- suppressMessages(amalia(
     df = df_raw, ref = ref_raw, id_sample = "Sample",
     id_ref = "ID", triplet = "206Pb", error_204 = "Test"
-  )
+  ))
 
-  result_both <- amalia(
+  result_both <- suppressMessages(amalia(
     df = df_raw, ref = ref_raw, id_sample = "Sample",
     id_ref = "ID", triplet = "both"
-  )
+  ))
 
   expect_type(result_204, "list")
   expect_named(result_204, c("summary_matches", "matches", "unmatched"))
@@ -59,10 +59,10 @@ test_that("amalia algorithm works correctly", {
   expect_true(all(result_both$summary_matches$n_matches >= 0))
 
   ref_empty <- ref_raw[0, ]
-  result_empty <- amalia(
+  result_empty <- suppressMessages(amalia(
     df = df_raw, ref = ref_empty, id_sample = "Sample",
     id_ref = "ID", triplet = "204Pb"
-  )
+  ))
   expect_equal(nrow(result_empty$matches), 0)
   expect_equal(nrow(result_empty$summary_matches), nrow(df_raw))
   expect_equal(length(result_empty$unmatched), nrow(df_raw))
