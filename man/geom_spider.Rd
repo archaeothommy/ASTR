@@ -99,14 +99,12 @@ and it must be provided in the call to this geom, and not in
 \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} (see Examples).
 
 The elements can be supplied either as user-defined character vector or
-pre-made sets. See \link{standard_groups} for a list of available sets and the
-examples below for how to include them. The examples below also show how to
-avoid the default sorting into alphabetical order. The geom will throw an
-error if any of the supplied elements is not matched by a column name in the
-supplied data.
+pre-made sets. See \link{standard_groups} for a list of available sets.
+The geom will throw an error if any of the supplied elements is not matched by
+a column name in the supplied data.
 }
 \section{Aesthetics}{
- ### update as needed \code{geom_spidergram()} understands the
+ \code{geom_spidergram()} understands the
 following aesthetic values (required aesthetics are in bold):
 \itemize{
 \item \strong{\code{elements}} (character vector with the list of elements to be plotted)
