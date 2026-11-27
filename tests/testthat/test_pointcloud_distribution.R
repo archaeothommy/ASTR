@@ -27,7 +27,7 @@ df$ID <- letters[1:20]
 rm(list_df, iso, groups, rand_iso)
 
 test_that("pointcloud_distribution", {
-  expect_type(pointcloud_distribution(df, ref), "list")
+  expect_type(suppressMessages(pointcloud_distribution(df, ref)), "list")
   suppressMessages({
     expect_message(pointcloud_distribution(df, ref))
   })

@@ -7,6 +7,9 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(ASTR)
+# suppressMessages: the `units` dependency prints a startup message
+# ("udunits database from ...") on first load, which would otherwise
+# clutter the test report.
+suppressMessages(library(ASTR))
 
 test_check("ASTR")

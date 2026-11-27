@@ -81,10 +81,12 @@ test_that("pb_iso_endmembers triggers warning and prints summary when PC1 varian
             class(df_low_pc1) <- c("ASTR", "data.frame")
 
             # we get multiple warnings, but only test for one here (similar below)
-            suppressWarnings(
-              expect_warning(
-                pb_iso_endmembers(df_low_pc1),
-                "PC1 represents less than 95% of the variance. There may be more than two endmembers."
+            utils::capture.output(
+              suppressWarnings(
+                expect_warning(
+                  pb_iso_endmembers(df_low_pc1),
+                  "PC1 represents less than 95% of the variance. There may be more than two endmembers."
+                )
               )
             )
           })
@@ -93,10 +95,12 @@ test_that("pb_iso_endmembers triggers message on non-normal PC distributions",
           {
             # Mock stats::shapiro.test to force normality test failures
             df <- make_mock_endmembers_astr(20)
-            suppressWarnings(
-              expect_warning(
-                pb_iso_endmembers(df),
-                "PC2 or PC3 are not normally distributed. This may indicate that the variation is not random noise."
+            suppressMessages(
+              suppressWarnings(
+                expect_warning(
+                  pb_iso_endmembers(df),
+                  "PC2 or PC3 are not normally distributed. This may indicate that the variation is not random noise."
+                )
               )
             )
           })
@@ -125,12 +129,14 @@ test_that("pb_iso_endmembers triggers warning when groups overlap due to high to
 
             # A giant tolerance forces all points into both group1 and group2
             msgs <- character()
-            withCallingHandlers(
-              pb_iso_endmembers(df, tolerance = c(10, 10)),
-              warning = function(cnd) {
-                msgs <<- c(msgs, conditionMessage(cnd))
-                invokeRestart("muffleWarning")
-              }
+            suppressMessages(
+              withCallingHandlers(
+                pb_iso_endmembers(df, tolerance = c(10, 10)),
+                warning = function(cnd) {
+                  msgs <<- c(msgs, conditionMessage(cnd))
+                  invokeRestart("muffleWarning")
+                }
+              )
             )
             # capture-then-assert: both warnings fire for the overlap case,
             # and the non-matching ones must not leak into the test output
@@ -153,8 +159,8 @@ test_that("clamping reduces group sizes by distance from principal endmember",
           {
             df <- make_mock_endmembers_astr(25)
 
-            no_clamp <- suppressWarnings(pb_iso_endmembers(df, clamp = c(Inf, Inf)))
-            clamped <- suppressWarnings(pb_iso_endmembers(df, clamp = c(Inf, 0.05)))
+            no_clamp <- suppressMessages(suppressWarnings(pb_iso_endmembers(df, clamp = c(Inf, Inf))))
+            clamped <- suppressMessages(suppressWarnings(pb_iso_endmembers(df, clamp = c(Inf, 0.05))))
 
             g2_no_clamp_count <- sum(no_clamp$end_membr == "group2", na.rm = TRUE)
             g2_clamped_count <- sum(clamped$end_membr == "group2", na.rm = TRUE)
@@ -170,7 +176,7 @@ test_that("clamping reduces group sizes by distance from principal endmember",
 test_that("pb_iso_endmembers returns expected object structure, levels, and classes",
           {
             df <- make_mock_endmembers_astr(20)
-            res <- suppressWarnings(pb_iso_endmembers(df))
+            res <- suppressMessages(suppressWarnings(pb_iso_endmembers(df)))
 
             # Class checks
             expect_s3_class(res, "ASTR_Pbiso_endmembr")
@@ -187,8 +193,8 @@ test_that("pb_iso_endmembers returns expected object structure, levels, and clas
 test_that("S3 generic dispatches properly", {
   df <- make_mock_endmembers_astr(10)
 
-  res_generic <- suppressWarnings(pb_iso_endmembers(df))
-  res_direct <- suppressWarnings(pb_iso_endmembers.ASTR(df))
+  res_generic <- suppressMessages(suppressWarnings(pb_iso_endmembers(df)))
+  res_direct <- suppressMessages(suppressWarnings(pb_iso_endmembers.ASTR(df)))
 
   expect_equal(res_generic, res_direct)
 })

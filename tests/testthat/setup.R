@@ -2,13 +2,15 @@
 
 # Additional packages to load for testing or setting up the test environment
 
-library(testthat)
-library(ASTR)
-library(tibble)
-library(ggplot2)
-library(vdiffr)
-library(readxl)
-library(units)
+suppressMessages({
+  library(testthat)
+  library(ASTR)
+  library(tibble)
+  library(ggplot2)
+  library(vdiffr)
+  library(readxl)
+  library(units)
+})
 
 # reference data sets
 
