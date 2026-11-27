@@ -154,8 +154,6 @@ In this formula, $`T`$ denotes the transpose of the vector.
 ``` r
 
 euc_dist(tel_dor, GlobalLID_ASTR_ref, n = 1)
-#> Joining with `by = join_by(ID, `206Pb/204Pb`, `207Pb/204Pb`,
-#> `208Pb/204Pb`)`
 #> ASTR table
 #> Analytical columns: 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb, ed_ref_206Pb/204Pb,
 #>                     ed_ref_207Pb/204Pb, ed_ref_208Pb/204Pb
@@ -263,8 +261,6 @@ exceeding 5.99 are rejected at the 95% confidence level.
 ``` r
 
 mf_dist(tel_dor, GlobalLID_ASTR_ref, n = 1, s = 0.001)
-#> Joining with `by = join_by(ID, `206Pb/204Pb`, `207Pb/204Pb`,
-#> `208Pb/204Pb`)`
 #> ASTR table
 #> Analytical columns: 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb, mf_ref_206Pb/204Pb,
 #>                     mf_ref_207Pb/204Pb, mf_ref_208Pb/204Pb
@@ -299,9 +295,6 @@ function, regular `ASTR objects` to lead isotope reference data.
 
 pb_iso_prov_dist(tel_dor, GlobaLID_ASTR, ref_group = "Political province/region",
                  dist_type = "all")
-#> Joining with `by = join_by(ID, `206Pb/204Pb`, `207Pb/204Pb`, `208Pb/204Pb`)`
-#> Joining with `by = join_by(ID, `206Pb/204Pb`, `207Pb/204Pb`, `208Pb/204Pb`)`
-#> Joining with `by = join_by(ID, `206Pb/204Pb`, `207Pb/204Pb`, `208Pb/204Pb`)`
 #> ASTR table
 #> Analytical columns: 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb, ed_ref_206Pb/204Pb,
 #>                     ed_ref_207Pb/204Pb, ed_ref_208Pb/204Pb, mf_ref_206Pb/204Pb,

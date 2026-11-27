@@ -96,7 +96,6 @@ GlobaLID_ASTR_ref <- as_pbiso_ref_data(GlobaLID_ASTR,
 
 # Euclidean distance
 euc_dist(tel_dor, GlobaLID_ASTR_ref, n = 1)
-#> Joining with `by = join_by(ID, `206Pb/204Pb`, `207Pb/204Pb`, `208Pb/204Pb`)`
 #> ASTR table
 #> Analytical columns: 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb, ed_ref_206Pb/204Pb,
 #>                     ed_ref_207Pb/204Pb, ed_ref_208Pb/204Pb
@@ -121,7 +120,6 @@ euc_dist(tel_dor, GlobaLID_ASTR_ref, n = 1)
 
 # Mass fractionation correction
 mf_dist(tel_dor, GlobaLID_ASTR_ref, n = 1, s = 0.001)
-#> Joining with `by = join_by(ID, `206Pb/204Pb`, `207Pb/204Pb`, `208Pb/204Pb`)`
 #> ASTR table
 #> Analytical columns: 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb, mf_ref_206Pb/204Pb,
 #>                     mf_ref_207Pb/204Pb, mf_ref_208Pb/204Pb
@@ -149,9 +147,6 @@ pb_iso_prov_dist(tel_dor,
                  GlobaLID_ASTR,
                  ref_group = names(GlobaLID_ASTR)[[2]],
                  dist_type = "all")
-#> Joining with `by = join_by(ID, `206Pb/204Pb`, `207Pb/204Pb`, `208Pb/204Pb`)`
-#> Joining with `by = join_by(ID, `206Pb/204Pb`, `207Pb/204Pb`, `208Pb/204Pb`)`
-#> Joining with `by = join_by(ID, `206Pb/204Pb`, `207Pb/204Pb`, `208Pb/204Pb`)`
 #> ASTR table
 #> Analytical columns: 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb, ed_ref_206Pb/204Pb,
 #>                     ed_ref_207Pb/204Pb, ed_ref_208Pb/204Pb, mf_ref_206Pb/204Pb,
@@ -182,9 +177,6 @@ pb_iso_prov_dist(tel_dor,
 pb_iso_prov_dist(tel_dor,
                  GlobaLID_ASTR_ref,
                  dist_type = "all")
-#> Joining with `by = join_by(ID, `206Pb/204Pb`, `207Pb/204Pb`, `208Pb/204Pb`)`
-#> Joining with `by = join_by(ID, `206Pb/204Pb`, `207Pb/204Pb`, `208Pb/204Pb`)`
-#> Joining with `by = join_by(ID, `206Pb/204Pb`, `207Pb/204Pb`, `208Pb/204Pb`)`
 #> ASTR table
 #> Analytical columns: 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb, ed_ref_206Pb/204Pb,
 #>                     ed_ref_207Pb/204Pb, ed_ref_208Pb/204Pb, mf_ref_206Pb/204Pb,

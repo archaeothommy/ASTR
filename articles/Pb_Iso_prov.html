@@ -213,8 +213,6 @@ is calculated as:</p>
 denotes the transpose of the vector.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pb_iso_prov_dist.html">euc_dist</a></span><span class="op">(</span><span class="va">tel_dor</span>, <span class="va">GlobalLID_ASTR_ref</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Joining with `by = join_by(ID, `206Pb/204Pb`, `207Pb/204Pb`,</span></span>
-<span><span class="co">#&gt; `208Pb/204Pb`)`</span></span>
 <span><span class="co">#&gt; ASTR table</span></span>
 <span><span class="co">#&gt; Analytical columns: 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb, ed_ref_206Pb/204Pb,</span></span>
 <span><span class="co">#&gt;                     ed_ref_207Pb/204Pb, ed_ref_208Pb/204Pb</span></span>
@@ -318,8 +316,6 @@ distribution with two degrees of freedom. Consequently, ores with
 values exceeding 5.99 are rejected at the 95% confidence level.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pb_iso_prov_dist.html">mf_dist</a></span><span class="op">(</span><span class="va">tel_dor</span>, <span class="va">GlobalLID_ASTR_ref</span>, n <span class="op">=</span> <span class="fl">1</span>, s <span class="op">=</span> <span class="fl">0.001</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Joining with `by = join_by(ID, `206Pb/204Pb`, `207Pb/204Pb`,</span></span>
-<span><span class="co">#&gt; `208Pb/204Pb`)`</span></span>
 <span><span class="co">#&gt; ASTR table</span></span>
 <span><span class="co">#&gt; Analytical columns: 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb, mf_ref_206Pb/204Pb,</span></span>
 <span><span class="co">#&gt;                     mf_ref_207Pb/204Pb, mf_ref_208Pb/204Pb</span></span>
@@ -348,9 +344,6 @@ functions use the <code><a href="../reference/as_pbiso_ref_data.html">as_pbiso_r
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pb_iso_prov_dist.html">pb_iso_prov_dist</a></span><span class="op">(</span><span class="va">tel_dor</span>, <span class="va">GlobaLID_ASTR</span>, ref_group <span class="op">=</span> <span class="st">"Political province/region"</span>,</span>
 <span>                 dist_type <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Joining with `by = join_by(ID, `206Pb/204Pb`, `207Pb/204Pb`, `208Pb/204Pb`)`</span></span>
-<span><span class="co">#&gt; Joining with `by = join_by(ID, `206Pb/204Pb`, `207Pb/204Pb`, `208Pb/204Pb`)`</span></span>
-<span><span class="co">#&gt; Joining with `by = join_by(ID, `206Pb/204Pb`, `207Pb/204Pb`, `208Pb/204Pb`)`</span></span>
 <span><span class="co">#&gt; ASTR table</span></span>
 <span><span class="co">#&gt; Analytical columns: 206Pb/204Pb, 207Pb/204Pb, 208Pb/204Pb, ed_ref_206Pb/204Pb,</span></span>
 <span><span class="co">#&gt;                     ed_ref_207Pb/204Pb, ed_ref_208Pb/204Pb, mf_ref_206Pb/204Pb,</span></span>
