@@ -10,7 +10,9 @@ utils::globalVariables(
     "elements_data",
     "oxides_data",
     "special_oxide_states",
-    "conversion_oxides"
+    "conversion_oxides",
+    "references_geochem",
+    "standard_groups"
   )
 )
 

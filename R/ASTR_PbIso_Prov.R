@@ -331,7 +331,7 @@ mf_dist.ASTR <- function(x,
 #'   data preparation, clustering, class balancing, and classification is
 #'   discussed here.
 #'
-#' @inherit as.ref_data description
+#' @inherit as_pbiso_ref_data description
 #'
 #' @section *DBSCAN clustering and outlier identification*: The Density-Based
 #'   Spatial Clustering of Applications with Noise (DBSCAN) algorithm is used to
